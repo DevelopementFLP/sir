@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
@@ -16,7 +16,7 @@ import { ActualUser } from 'src/app/shared/models/actualuser.interface';
   templateUrl: './login.component.html',
   styleUrls: ['./media_queries.css', './login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
 
   constructor(
     private userService: ControlUsuariosService,
@@ -42,6 +42,11 @@ export class LoginComponent {
     userName: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
+
+  ngAfterViewInit(): void {
+    if(this.txtUserName)
+      this.txtUserName.nativeElement.focus();
+  }
 
   IniciarSesion() {      
       var datosUsuario: LoginInterface = {
@@ -79,5 +84,4 @@ export class LoginComponent {
     this.userData.controls.password.hasError('invalid') ? 'La contraseña no es válida' :
     '';
   }
-
 };

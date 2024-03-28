@@ -38,8 +38,13 @@ export class MainPageComponent {
   onClick(event: Event) {
     const menuContent = this.elementRef.nativeElement.querySelector('#menuContent');
     const menuButton = this.elementRef.nativeElement.querySelector('#icon');
+    const header = this.elementRef.nativeElement.querySelector('.p-element .p-icon-wrapper .ng-tns-c9-1 .ng-star-inserted');
 
-    if (menuContent && !menuContent.contains(event.target) && menuButton && !menuButton.contains(event.target)) {
+    if (menuContent && !menuContent.contains(event.target) &&
+        menuButton && !menuButton.contains(event.target) &&
+        header && !header.contains(event.target) ||
+        event.target instanceof HTMLDivElement)
+    {
       this.mainMenuService.closeMenu();
     }
   } 
