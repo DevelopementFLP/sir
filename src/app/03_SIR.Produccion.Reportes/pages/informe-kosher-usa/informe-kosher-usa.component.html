@@ -1,0 +1,119 @@
+<div class="container-fluid kosher-usa">
+    <div class="row fs-3 text">Kosher USA</div>
+    <hr>
+
+    <div class="">
+        <p-tabView>
+            <p-tabPanel header="Producción diaria">
+                <div class="container-fluid">
+                   
+                    <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha de producción:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccion" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Hacer producción diaria" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                
+                    </div>
+                </div>
+            </p-tabPanel>
+            
+            <p-tabPanel header="Para rabino">
+                <div class="container-fluid">
+                   
+                    <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha desde:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionDesde" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha hasta:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionHasta" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Hacer reporte para rabino" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Para Alberto">
+                <div class="container-fluid">
+                   
+                    <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha desde:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionDesde" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha hasta:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionHasta" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Hacer reporte para Alberto" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                
+                    </div>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+
+</div>

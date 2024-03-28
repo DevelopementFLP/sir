@@ -1,0 +1,39 @@
+@import '~primeicons/primeicons.css';
+@import '~primeng/resources/themes/saga-blue/theme.css';
+@import '~primeng/resources/primeng.min.css';
+
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    color: #6E6E6E;
+}
+
+.gap-3 {
+    gap: 1rem!important;
+}
+.justify-content-right {
+    justify-content: right!important;
+}
+.flex-wrap {
+    flex-wrap: wrap!important;
+}
+.flex {
+    display: flex!important;
+}
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    background: var(--surface-card);
+    margin-top: 1rem;
+}
+
+.no-border {
+    border: 1px;
+    color: crimson !important;
+}

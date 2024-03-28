@@ -1,0 +1,71 @@
+
+<div class="container-fluid control-cuartos">
+    <div class="row fs-3 text">Control de ingreso de cuartos a desosado</div>
+    <hr>
+    <div class="">
+        <p-tabView>
+            <p-tabPanel header="Cargar datos">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha de producción:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccion" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Guardar" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                
+                    </div>
+            </p-tabPanel>
+            <p-tabPanel header="Informe">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha de producción desde:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionDesde" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead"><p>Fecha de producción hasta:</p></div>
+                                    <div>
+                                            <p-calendar [(ngModel)]="fechaProduccionHasta" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Generar informe" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                
+                    </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

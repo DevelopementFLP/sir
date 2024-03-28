@@ -1,0 +1,11 @@
+<div>
+    <div class="flex flex-row text-center mb-2">Línea {{linea}}</div>
+    <div class="hueseros mb-3" *ngIf="this.hueseros.length > 0">
+        <p class="hueseros__title mb-0 text-center">HUESEROS</p>
+        <rrhh-func-viewer [funcionarios]="this.hueseros"></rrhh-func-viewer>
+    </div>
+    <div class="charqueadores" *ngIf="this.charqueadores.length > 0">
+        <p class="charqueadores__title mb-0 text-center">CHARQUEADORES</p>
+        <rrhh-func-viewer [funcionarios]="this.charqueadores"></rrhh-func-viewer>
+    </div>
+</div>

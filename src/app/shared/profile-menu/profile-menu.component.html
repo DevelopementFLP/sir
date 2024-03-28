@@ -1,0 +1,25 @@
+<div class="menu">
+<span *ngIf="usuarioActual.id_perfil == 1; else menuNormal">
+        <span *ngFor="let item of dataMenu">
+                <button mat-menu-item (click)="item.accion()">
+                        <span>
+                                <mat-icon>{{ item.icon }}</mat-icon>
+                                {{ item.label }}
+                        </span>
+                </button>
+        </span>
+</span>
+
+<ng-template #menuNormal>
+        <span *ngFor="let item of dataMenu">
+                <span *ngIf="item.id != 2 ">
+                        <button mat-menu-item (click)="item.accion()">
+                                <span>
+                                        <mat-icon>{{ item.icon }}</mat-icon>
+                                        {{ item.label }}
+                                </span>
+                        </button>
+                </span>
+        </span>
+</ng-template>
+</div>

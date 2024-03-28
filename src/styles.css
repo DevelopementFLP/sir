@@ -1,0 +1,54 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "primeng/resources/themes/viva-light/theme.css";
+@import "primeng/resources/primeng.css";
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.p-fieldset .p-fieldset-legend, 
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend, 
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a {
+    width: auto;
+    margin-left: 25px;
+}
+
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    
+}
+
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a:focus {
+    border: none;
+}
+
+.p-fieldset .p-fieldset-legend {
+    margin-top: -25px;
+    width: auto;
+    margin-left: 25px;
+}
+
+.p-datepicker table th {
+    justify-content: center;
+}
+
+.p-datepicker table th > span {
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+.p-button-rounded {
+    box-shadow: 0px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.p-button-rounded:active {
+    opacity: 0.8;
+    box-shadow: none;
+}

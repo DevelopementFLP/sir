@@ -1,0 +1,13 @@
+@import "../../../../../node_modules/primeflex/primeflex.min.css";
+
+.lineas__linea[hidden] {
+    display: none; /* o visibility: hidden; */
+}
+
+.lineas__linea {
+    font-size: 0.75rem;
+}
+
+.lineas > div {
+    flex: 1;
+}

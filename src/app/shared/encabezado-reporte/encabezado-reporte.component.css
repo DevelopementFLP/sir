@@ -1,0 +1,22 @@
+.titular {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: black;
+    align-items: center;
+}
+
+.encabezado {
+    display: none;
+}
+
+.encabezado img {
+    width: 100px;
+}
+
+@media print {
+    .encabezado {
+        display: block;
+    }
+
+}

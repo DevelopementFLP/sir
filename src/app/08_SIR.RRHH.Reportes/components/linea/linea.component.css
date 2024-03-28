@@ -1,0 +1,11 @@
+.charqueadores__title,
+.hueseros__title {
+    font-weight: 500;
+}
+
+.charqueadores,
+.hueseros {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+

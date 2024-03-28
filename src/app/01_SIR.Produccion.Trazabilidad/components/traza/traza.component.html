@@ -1,0 +1,29 @@
+
+    <div class="infoTropa">
+        <div class="col especie" style="width:100px">
+            <div class="text-center p-3 border-round-sm font-bold">
+                <img [src]="getImagen(infoTraza!.especie)" alt="imagen especie" style="width: 100px;">
+            </div>
+            <div class="text-center p-3 border-round-sm font-bold ">
+                <pre class="tituloEspecie"><b>{{getEspecie(infoTraza!.especie)}}</b></pre>
+            </div>
+        </div>
+        <div class="col-3 colInfoTropa titulos">
+            <div class="text-center p-3 border-round-sm font-bold">Id:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Producto:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Código:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Fecha de faena:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Fecha de producción:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Destino:</div>
+            <div class="text-center p-3 border-round-sm font-bold">Tropa:</div>
+        </div>
+        <div class="col colInfoTropa datos">
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.id}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.producto}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.codigo}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.fechaFaena | date}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.fechaProduccion | date}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.destino || 'Sin información'}}</div>
+            <div class="text-center p-3 border-round-sm font-bold">{{infoTraza!.tropa}} {{infoTraza!.clasificacion}}</div>
+        </div>
+    </div>

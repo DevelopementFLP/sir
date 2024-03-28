@@ -1,0 +1,25 @@
+.data {
+    font-size: 1.2rem;
+    margin-left: 15px !important;
+}
+
+.error {
+    background-color: #FADBD8;
+    color: #E74C3C;
+}
+
+.regular {
+    color: yellow;
+    font-weight: bold;
+}
+
+.ok {
+    color: greenyellow;
+}
+
+@media (min-width:1200px) and (max-width:1470px) {
+    .data {
+        margin-left: 0;
+        font-size: 1rem;
+    }
+}

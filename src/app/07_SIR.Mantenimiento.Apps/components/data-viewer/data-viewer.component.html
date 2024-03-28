@@ -1,0 +1,4 @@
+<div class="dataView">
+    {{titulo}}
+    <div class="flex align-items-end dato"><p class="data" [class.error]="data <= 50 && data > 50 && porcentaje" [class.regular]="data > 50 && data < 98 && porcentaje" [class.ok]="data >=98 && porcentaje">{{ data | number:'1.0-2' }} <span *ngIf="porcentaje"> %</span></p></div>
+</div>

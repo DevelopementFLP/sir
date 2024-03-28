@@ -1,0 +1,10 @@
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    padding: 5px;
+    font-family: "Roboto", sans-serif !important;
+    font-weight: 400;
+}

@@ -1,0 +1,27 @@
+<p-card [subheader]="timeLapse" [style]="{background: '#3498DB', color: '#FBFCFC', height: '15rem'}" class="custom-card">
+    <div class="flex flex-column h-12rem justify-content-between">
+        <app-data-viewer 
+            [data]="data ? data.ok : 0" 
+            titulo="Correctas"  
+            class="flex align-items-startjustify-content-start h-4rem pl-1" 
+            style="background-color: #2E86C1;"
+            [porcentaje]="false">
+        </app-data-viewer>
+        
+        <app-data-viewer 
+            [data]="data ? data.noRead : 0"     
+            titulo="Error"      
+            class="flex align-items-start justify-content-start h-4rem pl-1" 
+            style="background-color: #2E86C1;"
+            [porcentaje]="false">
+        </app-data-viewer>
+        
+        <app-data-viewer 
+            [data]="data ? (data!.ok / (data!.noRead + data!.ok)) * 100 : 0" 
+            titulo="% Ratio Lecturas" 
+            class="flex align-items-start justify-content-start h-4rem pl-1 ratio" 
+            style="background-color: #2E86C1;"
+            [porcentaje]="true">
+        </app-data-viewer>
+    </div>
+</p-card>

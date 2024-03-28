@@ -1,0 +1,79 @@
+<div class="container-fluid noqueo">
+    <div class="row fs-3 text">Noqueo</div>
+    <hr>
+
+    <div>
+
+        <p-tabView>
+            <p-tabPanel header="Reporte">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead">
+                                        <p>Fecha de faena:</p>
+                                    </div>
+                                    <div>
+                                        <p-calendar [(ngModel)]="fechaFaena" [touchUI]="true"
+                                            [readonlyInput]="true"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="row opciones">
+                                    <div class="lead">
+                                        <p>Animales faenados:</p>
+                                    </div>
+                                    <div class="">
+                                        <input type="number" min="0" value="0" pInputText
+                                            [(ngModel)]="animalesFaenados" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4">
+                                <p-button label="Hacer informe" styleClass="p-button-rounded"></p-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        Acá va el reporte
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Configuración">
+                <table class="table" style="width: 50%;">
+                    <thead >
+                        <tr>
+                            <th>Propiedad</th>
+                            <th>Promedio</th>
+                            <th>Variación</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <td class="text-primary"><b>Tensión (V)</b></td>
+                            <td><input type="number" [(ngModel)]="promedioTension" class="form-control"/></td>
+                            <td><input type="number" [(ngModel)]="variacionTension" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary"><b>Corriente (A)</b></td>
+                            <td><input type="number" [(ngModel)]="promedioCorriente" class="form-control"/></td>
+                            <td><input type="number" [(ngModel)]="variacionCorriente" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary"><b>Tiempo (mseg)</b></td>
+                            <td><input type="number" [(ngModel)]="promedioTiempo" class="form-control"/></td>
+                            <td><input type="number" [(ngModel)]="variacionTiempo" class="form-control"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

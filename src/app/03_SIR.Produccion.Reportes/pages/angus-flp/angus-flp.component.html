@@ -1,0 +1,38 @@
+<div class="container-fluid angus-flp">
+    <div class="row fs-3 text">Angus FLP</div>
+    <hr>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="row opciones">
+                        <div class="lead"><p>Fecha de faena desde:</p></div>
+                        <div>
+                                <p-calendar [(ngModel)]="fechaFaenaDesde" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="row opciones">
+                        <div class="lead"><p>Fecha de faena hasta:</p></div>
+                        <div class="">
+                            <p-calendar [(ngModel)]="fechaFaenaHasta" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4">
+                    <p-button label="Hacer Angus FLP" styleClass="p-button-rounded"></p-button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-6">
+            Acá va el reporte
+        </div>
+
+</div>

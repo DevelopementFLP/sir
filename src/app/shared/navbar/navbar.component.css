@@ -1,0 +1,63 @@
+@import '../../../../node_modules/primeflex/primeflex.min.css';
+
+#smallTitle {
+  display: none;
+}
+
+.matToolBar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #20245D;
+    color: azure;
+  }
+
+#profileData {
+  display: flex;
+}
+
+#greetings {
+  display: flex;
+  align-items: center;
+}
+
+#hola {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+#admin {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  font-size: 16px;
+}
+
+#menuIcon 
+ {
+  vertical-align: text-bottom;
+}
+
+#menuIcon:hover{
+  cursor: pointer;
+}
+
+
+
+@media screen and (max-width: 600px) {
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #greetings {
+    display: none;
+  }
+
+  #fullTitle {
+    display: none;
+  }
+
+  #smallTitle {
+    display: block;
+  }
+}

@@ -1,0 +1,28 @@
+<mat-toolbar class="matToolBar">
+    <div class="flex flex-row">
+        <span>
+            <mat-icon id="menuIcon" (click)="toogleMenuVisibility()"><span id="icon" class="material-symbols-outlined">menu</span></mat-icon>
+            <!-- <mat-icon id="menuIconClose"><span class="material-symbols-outlined"></span>close</mat-icon> -->
+            <span id="fullTitle">Sistema Integral de Reportes</span>
+        </span>
+        <span id="smallTitle">SIR</span>
+        <span class="spacer"></span>
+    </div>
+    <div id="profileData">
+        <div id="greetings">
+            <span id="hola">Hola,&nbsp;</span><span id="nombre">{{getNombreUsuario(actualUser)}}!</span>&nbsp;<span id="admin" *ngIf="esAdmin(actualUser)">(Admin)</span>
+        </div>
+        <div id="matButton">
+            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Mi perfil">
+                <mat-icon id="user-icon"><span class="material-symbols-outlined">
+                        account_circle
+                    </span></mat-icon>
+            </button>
+        </div>
+    </div>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+   <app-profile-menu></app-profile-menu>
+</mat-menu>
+  

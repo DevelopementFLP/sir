@@ -1,0 +1,110 @@
+<div class="container-fluid packing">
+    <div class="row fs-3 text mt-3">
+        Productos a grasería desde Marel
+        
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-4 mb-5">
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="row opciones">
+                        <div class="lead">
+                            <p>Fecha desde:</p>
+                        </div>
+                        <div>
+                            <p-calendar 
+                                [(ngModel)]="fechaDesde"
+                                [dateFormat]="'dd/mm/yy'"
+                                [touchUI]="true" 
+                                [readonlyInput]="true" 
+                                [showIcon]="true"
+                                (onSelect)="handleDateSelect($event, 1)">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="row opciones">
+                        <div class="lead">
+                            <p>Fecha hasta:</p>
+                        </div>
+                        <div>
+                            <p-calendar 
+                                [(ngModel)]="fechaHasta"
+                                [dateFormat]="'dd/mm/yy'"
+                                [touchUI]="true" 
+                                [readonlyInput]="true" 
+                                [showIcon]="true"
+                                (onSelect)="handleDateSelect($event, 2)">
+                            </p-calendar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-6">
+                    <p-button label="Hacer informe" styleClass="p-button-rounded" (onClick)="getData()"></p-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8 datos" id="exportContent">
+            <div class="row">
+                <div class="col-4 propiedad">
+                    CUARTOS DELANTEROS
+                </div>
+                <div class="col-4 propiedad">
+                    CUARTOS TRASEROS
+                </div>
+                <div class="col-4 propiedad">
+                    CUARTOS TOTAL
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 valor">{{delanteros | number:'1.0'}}</div>
+                <div class="col-4 valor">{{traseros | number:'1.0'}}</div>
+                <div class="col-4 valor">{{delanteros + traseros | number:'1.0'}}</div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4 propiedad">
+                    KILOS DELANTEROS
+                </div>
+                <div class="col-4 propiedad">
+                    KILOS TRASEROS
+                </div>
+                <div class="col-4 propiedad">
+                    KILOS CUARTOS TOTAL
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 valor">{{kilosDelantero | number:'1.2-2'}}</div>
+                <div class="col-4 valor">{{kilosTraseros | number:'1.2-2'}}</div>
+                <div class="col-4 valor">{{kilosDelantero + kilosTraseros | number:'1.2-2'}}</div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4 propiedad">SALIDA CAJAS TOTAL</div>
+                <div class="col-4 propiedad">SALIDA KILOS TOTAL</div>
+            </div>
+            <div class="row">
+                <div class="col-4 valor">{{cajasTotal |  number:'1.0'}}</div>
+                <div class="col-4 valor">{{kilosTotal | number:'1.2-2'}}</div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4 propiedad">CAJAS JUMBO</div>
+                <div class="col-4 propiedad">KILOS JUMBO</div>
+            </div>
+            <div class="row">
+                <div class="col-4 valor">{{cajasJumbo | number:'1.0'}}</div>
+                <div class="col-4 valor">{{kilosJumbo | number:'1.2-2'}}</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- <sir-exportacion [dataToPrint]="exportData()"></sir-exportacion> -->

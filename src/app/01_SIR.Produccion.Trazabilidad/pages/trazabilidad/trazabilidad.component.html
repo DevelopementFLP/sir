@@ -1,0 +1,43 @@
+<div class="container-fluid traza">
+    <div class="row fs-3 text">Trazabilidad de cajas</div>
+    <hr>
+
+    <div class="row flex">
+        <div class="col-3">
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="row opciones">
+                        <p class="lead">Ids de cajas:</p>
+                    </div>
+                    <div>
+                        <textarea rows="5" cols="30" pInputTextarea [(ngModel)]="identificadores"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <p-button label="Obtener trazabilidad" styleClass="p-button-rounded"
+                        (onClick)="obtenerTrazabilidad()" [disabled]="identificadores.length == 0"></p-button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div *ngIf="listaTrazabilidad.length > 0; else sinDatos">
+                <div *ngFor="let traza of listaTrazabilidad" class="card flex justify-content-center mt-3 mb-5" style="width: 100%;">
+                    <p-fieldset legend="{{traza.id}}" [toggleable]="true">     
+                        <info-traza [infoTraza]="traza"></info-traza>
+                    </p-fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #sinDatos>
+        <div class="alert alert-info text-center" role="alert">
+            No hay información para mostrar
+        </div>
+    </ng-template>
+
+</div>
+
+<shared-loading-spinner class="text-center" *ngIf="isLoading"></shared-loading-spinner>

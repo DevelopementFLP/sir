@@ -1,0 +1,39 @@
+@import "../../../../../node_modules/primeflex/primeflex.min.css";
+
+.data--linea,
+.data--nombre,
+.data--nroFunc {
+    border: 1px solid #3498DB;
+    background-color: rgba(52,152,219, 0.1);
+    color: #0088FF;
+}
+
+.data {
+    display: flex;
+}
+
+.data > div {
+    flex: 1; /* Esto hace que todos los divs interiores ocupen el mismo espacio */
+    /* Puedes ajustar este valor según tus necesidades */
+    /* También puedes agregar otros estilos según sea necesario */
+}
+
+.data--nombre {
+    font-size: 0.75rem;
+}
+
+.data--nroFunc {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: none;
+}
+
+.data--linea {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: none;
+}
+
+@media (min-width:1200px) and (max-width:1762px) {
+   
+}

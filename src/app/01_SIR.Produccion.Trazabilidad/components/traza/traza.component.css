@@ -1,0 +1,28 @@
+.infoTropa {
+    display: flex;
+    flex-direction: row;
+}
+
+.especie {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: start;
+}
+
+.titulos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.datos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.tituloEspecie {
+    font-size: 1.2rem;
+    overflow: hidden;
+}

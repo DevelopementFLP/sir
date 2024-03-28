@@ -1,0 +1,121 @@
+<div class="container-fluid rechazo-ph">
+    <div class="row fs-3 text">Rechazos de PH</div>
+    <hr>
+
+    <div class="row">
+        <div class="sm:col-12 lg:col-6 xl:col-4 flex flex-column align-items-center mb-5">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row opciones">
+                        <div class="">
+                            <p>Fecha de faena:</p>
+                        </div>
+                        <div>
+                            <p-calendar [(ngModel)]="fechaFaena" [touchUI]="true" [readonlyInput]="true"
+                                (ngModelChange)="onFechaSelected($event)" dateFormat="dd/mm/yy" class="text-center">
+                            </p-calendar>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row opciones">
+                        <div class="">
+                            <p>Fecha de control:</p>
+                            <div class="fechasControlAgregadas">
+                                <p class="fechaControlAgregada" *ngFor="let fecha of fechasControl">{{fecha |
+                                    date:'dd/MM/yyyy'}} <span class="cerrar" aria-hidden="true"
+                                        (click)="eliminarFecha(fecha)">&nbsp;&nbsp;&times;</span></p>
+                            </div>
+                        </div>
+                        <div class="fechasControl">
+                            <p-calendar id="fechaControl" [(ngModel)]="fechaControl" [touchUI]="true"
+                                [readonlyInput]="true" (ngModelChange)="onFechaControlSelected($event)"
+                                dateFormat="dd/mm/yy" class="text-center">
+                            </p-calendar>
+                            <button id="btnAgregar" class="btn btn-outline-info"
+                                (click)="agregarFechaControl()">Agregar</button>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="row opciones">
+                        <div class="">
+                            <p>Especie:</p>
+                        </div>
+                        <div class="">
+                            <p-dropdown #listaOpciones class="p-especie" [options]="especies"
+                                [(ngModel)]="especieSeleccionada" optionLabel="name"
+                                (onChange)="onDropDownChange($event)">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <p-button label="Hacer informe" styleClass="p-button-rounded" (onClick)="getData()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+
+        <div id="imprimir" class="sm:col-12 lg:col-6 xl:col-8 flex flex-column align-items-center">
+
+            <shared-loading-spinner class="text-center" *ngIf="isLoading"></shared-loading-spinner>
+
+            <shared-encabezado-reporte></shared-encabezado-reporte>
+
+            <table class="table" *ngIf="hayDatos; else sinDatos">
+                <thead>
+                    <tr>
+                        <th scope="col" *ngIf='especie === "Vacuno"'>Clasificación</th>
+                        <th scope="col">Tropa</th>
+                        <th scope="col">{{especie === "Vacuno" ? 'Reses' : 'Carcasas'}}</th>
+                        <th scope="col">{{especie === "Vacuno" ? 'Rechazos' : 'Ovinos abasto'}}</th>
+                        <th scope="col">Del</th>
+                        <th scope="col">Al</th>
+                        <th scope="col">{{especie === "Vacuno" ? 'Nro. de reses seleccionadas para consumo interno' :
+                            'Nro. de carcasa rechazo por PH'}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let rph of animalesRechazo">
+                        <td *ngIf='especie === "Vacuno"'>&nbsp;</td>
+                        <th scope="row">{{rph.tropa}}</th>
+                        <td>{{rph.reses}}</td>
+                        <td>{{rph.rechazados}}</td>
+                        <td>{{rph.del}}</td>
+                        <td>{{rph.al}}</td>
+                        <td class="rechazos">
+                            <span class="rechazado" *ngFor="let animal of rph.resesConPHYSegregados"
+                                [ngClass]="{'segregado': rph.segregados.indexOf(animal) >= 0}">&nbsp;&nbsp;{{animal}}&nbsp;&nbsp;</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot class="footer">
+                    <tr class="table-info">
+                        <td *ngIf='especie === "Vacuno"'>&nbsp;</td>
+                        <td class="Total">Total</td>
+                        <td class="dataTotal">{{animales.length}}</td>
+                        <td class="dataTotal">{{totalRechazados}}</td>
+                        <td colspan="3" class="dataTotal">{{totalRechazados / animales.length * 100 | number:
+                            '1.2-2'}}&nbsp;%</td>
+                        <td *ngIf='especie === "Vacuno"'></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <ng-template #sinDatos>
+                <div class="alert alert-info text-center col-12" role="alert">
+                    No hay información para mostrar
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<sir-exportacion *ngIf="hayDatos"></sir-exportacion>
+
+<app-modal [visible]="visible" (cambioVisibilidad)="cambiarVisibilidad($event)" [mod]="modal">
+</app-modal>

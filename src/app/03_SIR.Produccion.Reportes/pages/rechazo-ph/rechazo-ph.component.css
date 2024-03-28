@@ -1,0 +1,98 @@
+@import '../../../../../node_modules/primeflex/primeflex.min.css';
+
+.rechazo-ph {
+    margin: 15px auto 15px 15px;
+}
+
+.p-especie {
+    width: 100%;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.fila {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.segregado {
+    background-color: black;
+    color: white;
+}
+
+.rechazado,
+.segregado {
+    border: 1px solid #5e5e5e;
+    padding: 3px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+tfoot {
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.footer {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+
+
+@media print {
+    table {
+        page-break-inside: auto; /* Permite saltar de página dentro de la tabla */
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 4px;
+    }
+
+}
+
+.fechasControl {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#btnAgregar {
+    margin-top: 5px;
+}
+
+#btnAgregar:hover {
+    color: white !important;
+}
+
+.fechasControlAgregadas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fechaControlAgregada {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.borrarFecha {
+    cursor: pointer;
+}
+
+.cerrar {
+    font-size: 1.1rem;
+}
+
+.cerrar:hover {
+    cursor: pointer;
+}

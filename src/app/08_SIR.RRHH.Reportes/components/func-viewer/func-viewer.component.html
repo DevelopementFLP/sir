@@ -1,0 +1,5 @@
+<div class="data flex flex-row" *ngFor="let funcionario of funcionarios">
+    <div class="data--nroFunc p-2" style="flex: 1">{{funcionario?.codigoEmpleado}}</div>
+    <div class="data--nombre p-2" style="flex: 4">{{funcionario.nombreEmpleado}}</div>
+    <div class="data--linea p-2" style="flex: 3">{{funcionario.nombreEstacion}}</div>
+</div>

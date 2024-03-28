@@ -1,0 +1,30 @@
+<div class="container-fluid cajas-congelado">
+    <div class="row fs-3 text">Cajas congelado</div>
+    <hr>
+
+    <div class="row">
+    <div class="col-6">
+        <div class="row mt-3">
+            <div class="col-4">
+                <div class="row opciones">
+                    <div class="lead"><p>Fecha de producción:</p></div>
+                    <div>
+                            <p-calendar [(ngModel)]="fechaSeleccionada" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="row mt-5">
+            <div class="col-4">
+                <p-button label="Hacer informe" styleClass="p-button-rounded"></p-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        Acá va el reporte
+    </div>
+
+    </div>
+</div>
