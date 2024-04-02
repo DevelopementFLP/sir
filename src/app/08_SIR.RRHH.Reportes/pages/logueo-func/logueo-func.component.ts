@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RRHHService } from '../../services/rrhh.service';
 import { Funcionario } from '../../interfaces/Funcionario.interface';
+import { formatDate } from '@angular/common';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-logueo-func',
@@ -16,6 +18,18 @@ export class LogueoFuncComponent implements OnInit {
   constructor(private rrhhService: RRHHService) {}
 
   ngOnInit(): void {
+    this.loadData();
+
+    interval(300000)
+      .subscribe(() => {
+        this.loadData();
+      })
+  }
+
+  loadData(): void {
+    this.funcionarios = [];
+    this.funcionariosPorLinea = [];
+    
     this.rrhhService.getFuncionariosLogueados()
       .subscribe( funcs => {
         this.funcionarios = funcs;
@@ -38,5 +52,9 @@ export class LogueoFuncComponent implements OnInit {
 
   getNumeroLinea(linea: string) : number {
     return  parseInt(linea.substring(1));
+  }
+
+  getFecha(): string {
+    return formatDate(new Date().toString(), "dd/MM/yyyy", "es-UY")
   }
 }

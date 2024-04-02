@@ -1,11 +1,28 @@
 @import "../../../../../node_modules/primeflex/primeflex.min.css";
 
+:root {
+    --background-linea: #0088FF;
+}
+
+.viewer {
+    color: #0088FF;
+    background-color: rgba(52,152,219, 0.1);
+}
+
+.viewer:hover {
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid;
+    background-color: #0088FF;
+    border-radius: 5px;
+    border: none;
+}
+
+
 .data--linea,
 .data--nombre,
 .data--nroFunc {
     border: 1px solid #3498DB;
-    background-color: rgba(52,152,219, 0.1);
-    color: #0088FF;
 }
 
 .data {
@@ -13,9 +30,7 @@
 }
 
 .data > div {
-    flex: 1; /* Esto hace que todos los divs interiores ocupen el mismo espacio */
-    /* Puedes ajustar este valor según tus necesidades */
-    /* También puedes agregar otros estilos según sea necesario */
+    flex: 1; 
 }
 
 .data--nombre {

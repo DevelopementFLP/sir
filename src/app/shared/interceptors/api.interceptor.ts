@@ -13,7 +13,7 @@ export class ApiInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         
         if(this._activeRequest === 0)
-            //this.ngxUiLoader.start();
+            this.ngxUiLoader.start();
 
         this._activeRequest++;
 

@@ -11,3 +11,25 @@
 .lineas > div {
     flex: 1;
 }
+
+.titulo__nombre,
+.titulo__fecha {
+    font-size: 1.5rem;
+}
+
+.titulo__fecha {
+    font-weight: 500;
+    color: rgba(46, 134, 193, 1);
+}
+
+.tag {
+    position: absolute;
+    right: 20px;
+}
+
+.tag:hover {
+    cursor: pointer;
+    background-color: #0088FF;
+    opacity: 0.8;
+    border-radius: 5px;
+}

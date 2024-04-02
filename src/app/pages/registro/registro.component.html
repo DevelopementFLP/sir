@@ -40,7 +40,7 @@
             </div>
             <div class="form-group row botones">
                 <div class="flex flex-wrap gap-3 justify-content-right">
-                    <button pButton type="button" label="Cancelar" class="p-button-outlined" routerLink="principal"></button>
+                    <button pButton type="button" label="Cancelar" class="p-button-outlined" routerLink="principal" (click)="goBack()"></button>
                     <button pButton type="button" label="Enviar" id="btnEnviar" (click)="enviarNuevaSolicitud();"></button>
                 </div>
             </div>

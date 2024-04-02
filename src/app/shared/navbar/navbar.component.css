@@ -1,5 +1,9 @@
 @import '../../../../node_modules/primeflex/primeflex.min.css';
 
+.mainTitle:hover {
+  cursor: pointer;
+}
+
 #smallTitle {
   display: none;
 }

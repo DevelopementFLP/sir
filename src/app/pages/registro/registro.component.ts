@@ -5,6 +5,7 @@ import { Modal } from 'src/app/shared/models/modal.interface';
 import { Perfil } from 'src/app/shared/models/perfil.interface';
 import { Solicitud } from 'src/app/shared/models/solicitud.interface';
 import { ModalControlService } from 'src/app/shared/services/modal-control.service';
+import { NavigationService } from 'src/app/shared/services/navigation.service';
 import { PerfilesService } from 'src/app/shared/services/perfiles.service';
 
 @Component({
@@ -35,7 +36,8 @@ export class RegistroComponent implements OnInit {
   constructor(
     private perfilesService: PerfilesService,
     private userService: ControlUsuariosService,
-    private modalService: ModalControlService
+    private modalService: ModalControlService,
+    private navigationService: NavigationService
   ) {
 
    
@@ -126,5 +128,9 @@ export class RegistroComponent implements OnInit {
   cambiarVisibilidad(visibilidad: boolean): void {
     this.visible = visibilidad;
     this.modalService.visible = visibilidad;
+  }
+
+  goBack(): void {
+    this.navigationService.navegar('');
   }
 }

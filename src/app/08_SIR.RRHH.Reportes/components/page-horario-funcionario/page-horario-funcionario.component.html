@@ -1,0 +1,62 @@
+<div class="row fs-3 text ml-3 mt-2">Horario de logueo</div>
+<hr>
+
+<div class="horario flex flex-row">
+    <div class="horario__params col-4">
+        <div class="flex flex-column justify-content-between">
+            <div class="flex flex-column mb-2">
+                <div>
+                    <p-calendar placeholder="Fecha" [(ngModel)]="fecha" [dateFormat]="'dd/mm/yy'" [touchUI]="true" [readonlyInput]="true"
+                        [showIcon]="true"  [style]="{ 'width': '180px' }"/>
+                </div>
+            </div>
+            <div class="flex flex-column">
+                <div class="flex flex-row flex-wrap align-items-center mb-2">
+                    <div class="mr-0 mb-2"><input (focus)="seleccionarTexto($event)" class="w-5rem" type="text" pInputText  id="code" #code placeholder="N° Fun" (input)="filterData(code.value, name.value)"/></div>
+                    <div class="mb-2 mr-1"><input (focus)="seleccionarTexto($event)" class="w-15rem" type="text" pInputText id="name"   #name placeholder="Nombre" (input)="filterData(code.value, name.value)"/></div>
+                    <p-button class="mb-2" [disabled]="empleadoSeleccionado == undefined" (onClick)="buscarHorario()">Buscar</p-button>
+                </div>
+                <div class="flex flex-row">
+                    <p-listbox *ngIf="filteredData.length > 0" [(ngModel)]="empleadoSeleccionado"  class="" [options]="filteredData"  [listStyle]="{'max-height': '220px'}" (onClick)="onSelectEmpleado($event)">
+                        <ng-template let-item pTemplate="item">
+                            <span>{{ item.code }} - {{ item.name }}</span>
+                        </ng-template>
+                    </p-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="horario__no-data flex flex-row justify-content-center align-items-center col-8" *ngIf="horarios.length === 0">
+        <div class="txt-no-data">
+            <h4 class="title__no-data">No hay datos para mostrar</h4>
+        </div>
+    </div>
+    
+    <div class="horario__data col-6" *ngIf="horarios.length > 0">
+        <p-card
+            [header]="infoEmpleado()"
+            [subheader]="formatearFecha(fecha!)"
+        >
+
+        <div class="datosLogueo align-items-center">
+            <div class="row">
+                <div class="col-3 titulo">Línea</div>
+                <div class="col-3 titulo">Entrada</div>
+                <div class="col-3 titulo">Salida</div>
+                <div class="col-3 titulo">Tiempo logueado</div>
+            </div>
+            <hr>
+            <div class="row align-items-end" *ngFor="let log of horarios">
+                <div class="col-3">{{log.stationName}}</div>
+                <div class="col-3">{{log.login | date:'HH:mm:ss'}}</div>
+                <div class="col-3"><span *ngIf="log.logout">{{log.logout | date:'HH:mm:ss'}}</span><span class="logged" *ngIf="!log.logout">(Logueado ahora)</span></div>
+                <div class="col-3">{{log.hours | date:'HH:mm:ss'}}</div>
+            </div>
+        </div>
+        </p-card>
+    </div>
+
+</div>
+
+<p-toast position="top-center"></p-toast>

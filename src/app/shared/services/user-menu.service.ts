@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SessionManagerService } from './session-manager.service';
 import { IMenuItem } from '../models/menuitem.interface';
+import { NavigationService } from './navigation.service';
+import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface';
 
 
 @Injectable({
@@ -8,7 +10,10 @@ import { IMenuItem } from '../models/menuitem.interface';
 })
 export class UserMenuService {
 
-  constructor(private sessionManager: SessionManagerService) {}
+  constructor(
+    private sessionManager: SessionManagerService,
+    private navigationService: NavigationService
+    ) {}
 
   dataMenu: IMenuItem[] = [
     {
@@ -16,7 +21,7 @@ export class UserMenuService {
       icon:'person',
       label: 'Mis datos',
       accion:() => {
-       
+        this.goToUser();
       },
     },
     {
@@ -24,7 +29,7 @@ export class UserMenuService {
       icon: 'settings',
       label: 'Configuración',
       accion:() => {
-       
+        
       },
     },
     {
@@ -33,13 +38,20 @@ export class UserMenuService {
       label: 'Cerrar sesión',
       accion:() => {
         this.sessionManager.clearStorage('actualUser');
-        window.location.reload();
+        this.navigationService.navegar('');
       },
     }
   ];
 
   public getDataMenu() : IMenuItem[] {
     return this.dataMenu;
-  }  
+  } 
+
+  private goToUser(): void {
+    const dataUsuarioActual: Usuario = this.sessionManager.getStorage();
+
+    if(dataUsuarioActual == null || dataUsuarioActual == undefined) return;
+    this.navigationService.navegar('principal/usuario/' + dataUsuarioActual.nombre_usuario);
+  }
 }
 

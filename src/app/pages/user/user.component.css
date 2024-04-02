@@ -1,0 +1,49 @@
+@import "../../../../node_modules/primeflex/primeflex.min.css";
+
+.datos {
+    width: 100%;
+    margin-left: 0 auto;
+}
+
+.password__title {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    color: #0088FF;
+}
+
+.password__title:hover {
+    cursor: pointer;
+}
+
+.password__fields {
+    transition: all 0.3s ease-in-out;
+}
+
+.datos__title {
+    font-size: 2rem;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+    color: #566573;
+}
+
+:host >>> .p-toast-message-custom-error {
+    background-color: #FDEDEC;
+    border: solid #FF5757;
+    border-width: 0 0 0 6px;
+    color: #FF5757;
+  }
+
+:host >>> .p-toast-icon-close {
+    color: #fff;
+  }
+
+
+  :host >>> .p-toast-message-custom-success {
+    background-color: #EAF9F3;
+    border: solid #1EA97C;
+    border-width: 0 0 0 6px;
+    color: #1EA97C;
+  }
+

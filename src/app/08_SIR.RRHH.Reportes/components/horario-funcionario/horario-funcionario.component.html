@@ -1,0 +1,18 @@
+<div class="flex flex-column">
+    <div class="subtitulo mb-3" *ngIf="esVisor"><a [routerLink]="['/principal/rrhh/horarioFuncionario']">Ver logueos de otra fecha</a><br></div>
+    <div class="datosLogueo align-items-center">
+        <div class="row">
+            <div class="col-3 titulo">Línea</div>
+            <div class="col-3 titulo">Entrada</div>
+            <div class="col-3 titulo">Salida</div>
+            <div class="col-3 titulo">Tiempo logueado</div>
+        </div>
+        <hr>
+        <div class="row align-items-end" *ngFor="let log of logueadas">
+            <div class="col-3">{{log.stationName}}</div>
+            <div class="col-3">{{log.login | date:'HH:mm:ss'}}</div>
+            <div class="col-3"><span *ngIf="log.logout">{{log.logout | date:'HH:mm:ss'}}</span><span class="logged" *ngIf="!log.logout">(Logueado ahora)</span></div>
+            <div class="col-3">{{log.hours | date:'HH:mm:ss'}}</div>
+        </div>
+    </div>
+</div>

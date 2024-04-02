@@ -13,4 +13,5 @@ export class NavigationService {
   public navegar(ruta: string): void {
     this.router.navigate(['/' + ruta ]);
   }
+
 }

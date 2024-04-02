@@ -1,0 +1,32 @@
+@import "../../../../../node_modules/primeflex/primeflex.min.css";
+
+.horario {
+    min-width: 800px;
+    height: 50vh;
+}
+
+.titular {
+    font-size: 1rem;
+    color: #5D6D7E;
+}
+
+.horario__no-data {
+    background-color: rgba(213, 216, 220, 0.3);
+    border-radius: 10px;
+}
+
+.title__no-data {
+    color: #566573;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+:host >>> .p-toast-message-custom-error {
+    background-color: #FDEDEC;
+    border: solid #FF5757;
+    border-width: 0 0 0 6px;
+    color: #FF5757;
+  }
+:host >>> .p-toast-icon-close {
+    color: #FF5757;
+  }

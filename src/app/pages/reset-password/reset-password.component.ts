@@ -40,7 +40,6 @@ export class ResetPasswordComponent {
   }
 
    public enviarSolicitudCambioContrasenia(): void {
-    console.log(this.visible);
     if (this.estanDatosCargados()){
       this.enviarSolicitud(this.nombreUsuario!.value);
       
@@ -81,5 +80,9 @@ export class ResetPasswordComponent {
   cambiarVisibilidad(visibilidad: boolean): void {
     this.visible = visibilidad;
     this.modalService.visible = visibilidad;
+  }
+
+  goBack(): void {
+    this.navigationService.navegar('');
   }
 }

@@ -39,11 +39,13 @@ export class MainPageComponent {
     const menuContent = this.elementRef.nativeElement.querySelector('#menuContent');
     const menuButton = this.elementRef.nativeElement.querySelector('#icon');
     const header = this.elementRef.nativeElement.querySelector('.p-element .p-icon-wrapper .ng-tns-c9-1 .ng-star-inserted');
+    const bodyElement = document.querySelector('body');
 
     if (menuContent && !menuContent.contains(event.target) &&
         menuButton && !menuButton.contains(event.target) &&
         header && !header.contains(event.target) ||
-        event.target instanceof HTMLDivElement)
+        event.target instanceof HTMLDivElement ||
+        event.target === bodyElement)
     {
       this.mainMenuService.closeMenu();
     }

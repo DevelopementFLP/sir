@@ -1,10 +1,22 @@
 <div class="flex flex-column">
-    <div class="flex flex-row justify-content-center mt-2"><span class="titulo__nombre">Funcionarios logueados</span>&nbsp;&nbsp;<span class="text-lg titulo__fecha">27/03/2024</span></div>
+    <div class="flex flex-row justify-content-center align-items-center mt-2">
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><circle cx="12" cy="12" r="0" fill="#0088FF"><animate attributeName="r" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" repeatCount="indefinite" values="0;11"/><animate attributeName="opacity" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" repeatCount="indefinite" values="1;0"/></circle></svg>
+        </span>
+        <span class="titulo__nombre">Funcionarios logueados</span>&nbsp;&nbsp;<span class="titulo__fecha">{{getFecha()}}</span>
+
+        <p-tag [style]="{ 'background': '#0088FF'}" class="ml-5 tag" (click)="loadData()">
+            <div class="flex align-items-center gap-2">
+                <img alt="Actualizar" src="../../../../assets/images/refresh.svg"  style="width: '36px'" />
+                <span class="text-base mr-2">Actualizar</span>
+            </div>
+        </p-tag>
+    </div>
     <hr>
     <div class="lineas flex flex-row justify-content-around flex-wrap">
         <div *ngFor="let linea of funcionariosPorLinea; let i = index">
             <ng-container *ngIf="linea != []">
-                <div class="align-items-center lineas__linea" *ngIf="linea != []" [hidden]="linea.length === 0">
+                <div class="align-items-center lineas__linea mb-5" *ngIf="linea != []" [hidden]="linea.length === 0">
                     <rrhh-linea 
                         [linea]="getNumeroLinea(linea[0].linea)" 
                         [funcionarios]="linea"

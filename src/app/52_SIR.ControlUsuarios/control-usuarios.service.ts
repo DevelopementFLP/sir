@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 
-import { urlUsuarios, urlUsuarioPorNombre, urlEnviarEmail } from '../../settings';
+import { urlUsuarios, urlUsuarioPorNombre, urlEnviarEmail, urlCambiarContrasenia } from '../../settings';
 import { Usuario } from './models/usuario.interface';
 import { Observable } from 'rxjs';
 import { HaciendaAnimal } from '../shared/models/gecos/haciendaAnimales.interface';
@@ -22,6 +22,10 @@ export class ControlUsuariosService {
 
   public obtenerUsuarioPorNombre(nombre: string): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(urlUsuarioPorNombre.replace("nombreUsuario", nombre));
+  }
+
+  public cambiarContrasenia(nueva: string, idUsuario: number): Observable<any[]> {
+    return this.http.patch<any[]>(`${urlCambiarContrasenia}?contrasenia=${nueva}&id=${idUsuario}`, {});
   }
 
   public enviarEmail():void {
@@ -47,8 +51,9 @@ export class ControlUsuariosService {
       console.log(response)
     }, 
       error => {
-      console.log("error: ", error)
     });
   }
+
+
 
 }

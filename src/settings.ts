@@ -1,8 +1,9 @@
-// export const urlAPI: string = "http://192.168.1.82:82/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
 export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
+export const urlCambiarContrasenia: string = urlAPI + "User/CambiarContrasenia";
 export const urlPCC: string = urlAPI + "Pcc";
 export const urlPerfiles: string = urlAPI + "Perfiles";
 export const urlReportes: string = urlAPI + "Reportes";
@@ -17,7 +18,10 @@ export const urlMarelDatosCaja: string = urlAPI + "MarelDatosCaja/getDatosCaja";
 export const urlEntradaMarel: string = urlAPI + "MarelDatosCaja/GetEntradaMarel";
 export const urlSalidasMarel: string = urlAPI + "MarelDatosCaja/GetSalidaMarel";
 export const urlSalidaProduccion: string = urlAPI + "SalidaProduccion/salidasProduccionConFiltro";
-export const urlRRHH: string = urlAPI + "RRHH/GetFuncionariosLogueados";
+export const urlRRHH: string = urlAPI + "RRHH/";
+export const urlLogueoLineas: string = urlRRHH + "GetFuncionariosLogueados";
+export const urlHorarioFuncionario: string = urlRRHH + "GetHorarioFuncionario";
+export const urlEmpleados: string = urlRRHH + "GetEmpleados";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

@@ -102,6 +102,12 @@
                 <div class="col-4 valor">{{cajasJumbo | number:'1.0'}}</div>
                 <div class="col-4 valor">{{kilosJumbo | number:'1.2-2'}}</div>
             </div>
+            <div class="row mt-5">
+                <div class="col-4 propiedad">KILOS A GRASERÍA</div>
+            </div>
+            <div class="row">
+                <div class="col-4 valor">{{(kilosDelantero + kilosTraseros) - kilosTotal - kilosJumbo | number:'1.2-2'}}</div>
+            </div>
         </div>
 
     </div>

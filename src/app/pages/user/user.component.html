@@ -1,1 +1,65 @@
-<p>user works!</p>
+<div class="flex flex-column justify-content-center align-items-center datos mt-5">
+
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6">
+        <div class="flex flex-column justify-content-around align-items-center">
+            <h4 class="datos__title">Mis datos</h4>
+        </div>
+    </div>
+
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6">
+        <div class="flex flex-column justify-content-around align-items-center">
+            <div class="p-inputgroup col-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                <input disabled type="text" pInputText placeholder="Nombre de usuario" [value]="currentUser.nombre_usuario">         
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6">
+        <div class="flex flex-column justify-content-around align-items-center">
+            <div class="p-inputgroup col-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                <input disabled type="text" pInputText placeholder="Nombre" [value]="currentUser.nombre_completo">         
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6 password">
+        <div class="flex flex-column justify-content-around align-items-center">
+        <div class="col-6 password__title" (click)="isPasswordVisible = !isPasswordVisible" pTooltip="Debe tener al menos 6 caracteres" tooltipPosition="left">Cambiar contraseña</div>
+    </div>
+        <div class="password__fields" *ngIf="isPasswordVisible">
+            <div class="flex flex-column justify-content-around align-items-center">
+            <div class="p-inputgroup col-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                <input [(ngModel)]="actualPassword" id="actualPassword" type="password"  pInputText placeholder="Contraseña actual"/>
+            </div>
+        </div>
+        <div class="flex flex-column justify-content-around align-items-center">
+            <div class="p-inputgroup col-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                <input [(ngModel)]="newPassword" id="newPassword" type="password"  pInputText placeholder="Nueva contraseña"/>
+            </div>
+        </div>
+        <div class="flex flex-column justify-content-around align-items-center">
+            <div class="p-inputgroup col-6">
+                <span class="p-inputgroup-addon"><i class="pi pi-lock"></i></span>
+                <input [(ngModel)]="repeatPassword" id="repeatPassword" type="password"  pInputText placeholder="Repita la nueva contraseña"/>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="col-12 sm:col-12 md:col-12 lg:col-6 botones">
+        <div class="flex flex-column justify-content-around align-items-center">
+        <div class="col-6">
+            <div class="flex justify-content-between">
+                <button [disabled]="actualPassword == '' || newPassword == '' || repeatPassword == ''" pButton class="p-button-primary" label="Guardar" icon="pi pi-check" (click)="save()"></button>
+                <button pButton class="p-button-danger" label="Salir" icon="pi pi-times" (click)="goBack()"></button>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<p-toast position="top-center"></p-toast>

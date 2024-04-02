@@ -1,11 +1,10 @@
 <mat-toolbar class="matToolBar">
-    <div class="flex flex-row">
+    <div class="flex flex-row mainTitle">
         <span>
             <mat-icon id="menuIcon" (click)="toogleMenuVisibility()"><span id="icon" class="material-symbols-outlined">menu</span></mat-icon>
-            <!-- <mat-icon id="menuIconClose"><span class="material-symbols-outlined"></span>close</mat-icon> -->
-            <span id="fullTitle">Sistema Integral de Reportes</span>
+            <span id="fullTitle" (click)="goMain()">Sistema Integral de Reportes</span>
         </span>
-        <span id="smallTitle">SIR</span>
+        <span id="smallTitle" (click)="goMain()">SIR</span>
         <span class="spacer"></span>
     </div>
     <div id="profileData">
