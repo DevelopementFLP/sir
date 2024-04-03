@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ControlUsuariosService } from 'src/app/52_SIR.ControlUsuarios/control-usuarios.service';
 import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface';
 import { Modal } from 'src/app/shared/models/modal.interface';
+import { EmailService } from 'src/app/shared/services/email.service';
 import { ModalControlService } from 'src/app/shared/services/modal-control.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
 
@@ -26,7 +27,8 @@ export class ResetPasswordComponent {
   constructor(
     private navigationService: NavigationService,
     private userService: ControlUsuariosService,
-    private modalService: ModalControlService
+    private modalService: ModalControlService,
+    private emailService: EmailService
   ) {}
 
 
@@ -47,7 +49,7 @@ export class ResetPasswordComponent {
     else {
       this.mod = {
         titulo: "Faltan datos",
-        mensaje: "Debes proporcionar el nombre de usuario que deseas cambiar la contraseña.",
+        mensaje: "Debes proporcionar el nombre de usuario para cambiar la contraseña.",
         estado: false
       };
       this.cambiarVisibilidad(true);
@@ -69,7 +71,7 @@ export class ResetPasswordComponent {
         this.cambiarVisibilidad(true);
       }
       else {
-        this.userService.enviarEmail(); 
+        this.emailService.enviarEmailPassword(nombreUsuario) 
       }
     });
 

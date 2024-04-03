@@ -6,6 +6,7 @@ import { AppRoutingModule } from "../app-routing.module";
 import { LoginComponent } from './login/login.component';
 import { MaterialThemeModule } from "../MaterialTheme/MaterialTheme.module";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PrimeNgModule } from "../prime-ng/prime-ng.module";
 
 @NgModule({
     declarations : [
@@ -19,7 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         MaterialThemeModule,
         FormsModule,
         ReactiveFormsModule,
-        AppRoutingModule
+        AppRoutingModule,
+        PrimeNgModule
     ]
 })
 export class ControlUsuariosModule {

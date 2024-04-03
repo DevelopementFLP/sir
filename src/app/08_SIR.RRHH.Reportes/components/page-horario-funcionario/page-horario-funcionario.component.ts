@@ -22,6 +22,7 @@ export class PageHorarioFuncionarioComponent implements OnInit {
   empleadoSeleccionado?: Empleado;
   horarios: HorarioEmpleado[] = [];
   empSelected!: Empleado;
+  tiempoTotal: string = '';
 
   constructor(
     private rrhhService: RRHHService,
@@ -88,8 +89,11 @@ export class PageHorarioFuncionarioComponent implements OnInit {
       .getHorarioFuncionarioPorFecha(this.fecha!, txtCodigo.value)
       .subscribe((horas) => {
         this.horarios = horas;
+        this.tiempoTotal = this.funcServie.getTiempoTotal(this.horarios);
       });
   }
+
+ 
 
   private validarFecha(): boolean {
     return this.fecha !== undefined;
@@ -103,19 +107,6 @@ export class PageHorarioFuncionarioComponent implements OnInit {
     });
   }
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.filteredData = [];
-      this.empleadoSeleccionado = undefined;
-      const txtCodigo = document.getElementById('code') as HTMLInputElement;
-      const txtNombre = document.getElementById('name') as HTMLInputElement;
-
-      txtCodigo.value = '';
-      txtNombre.value = '';
-    }
-  }
-
   infoEmpleado(): string {
     return this.empSelected.code + ' ' + this.empSelected.name;
   }
@@ -127,5 +118,18 @@ export class PageHorarioFuncionarioComponent implements OnInit {
   seleccionarTexto(event: FocusEvent): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.select();
+  }
+
+
+  borrarDatos(): void {
+    this.filteredData = [];
+      this.empleadoSeleccionado = undefined;
+      const txtCodigo = document.getElementById('code') as HTMLInputElement;
+      const txtNombre = document.getElementById('name') as HTMLInputElement;
+
+      txtCodigo.value = '';
+      txtNombre.value = '';
+
+      txtCodigo.focus()
   }
 }

@@ -14,5 +14,10 @@
             <div class="col-3"><span *ngIf="log.logout">{{log.logout | date:'HH:mm:ss'}}</span><span class="logged" *ngIf="!log.logout">(Logueado ahora)</span></div>
             <div class="col-3">{{log.hours | date:'HH:mm:ss'}}</div>
         </div>
+        <hr>
+        <div class="row tiempoTotal">
+            <div class="col-9">Tiempo total logueado</div>
+            <div class="col-3">{{tiempoTotal}}</div>
+        </div>
     </div>
 </div>

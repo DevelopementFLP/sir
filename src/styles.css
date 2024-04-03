@@ -43,21 +43,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     margin-left: 10px;
 }
 
-/* .p-button-rounded {
-    box-shadow: 0px 5px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-}
-
-.p-button-rounded:active {
-    opacity: 0.8;
-    box-shadow: none;
-} */
-
-
 .p-listbox-list-wrapper,
 .p-listbox {
     width: 300px;
 }
 
-
-
+.p-button .p-button-label {
+    font-weight: 100 !important;
+}

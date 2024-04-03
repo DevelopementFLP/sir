@@ -24,10 +24,10 @@
             </div>
             <div class="row mt-5">
               <div class="col-sm-12">
-                <span class="p-float-label">
-                  <input pInputText id="nombreUsuario" class="form-control" />
-                  <label for="nombreUsuario">Nombre de usuario</label>
-                </span>
+                <div class="p-inputgroup">
+                  <input type="text" pInputText placeholder="email" />
+                  <span class="p-inputgroup-addon">@flp.uy</span>
+              </div>
               </div>
             </div>
             <div class="row mt-5">
@@ -40,8 +40,8 @@
             </div>
             <div class="form-group row botones">
                 <div class="flex flex-wrap gap-3 justify-content-right">
-                    <button pButton type="button" label="Cancelar" class="p-button-outlined" routerLink="principal" (click)="goBack()"></button>
-                    <button pButton type="button" label="Enviar" id="btnEnviar" (click)="enviarNuevaSolicitud();"></button>
+                    <p-button label="Enviar" id="btnEnviar" (click)="enviarNuevaSolicitud();"></p-button>
+                    <p-button label="Cancelar" styleClass="p-button-danger" routerLink="principal" (click)="goBack()"></p-button>
                 </div>
             </div>
           </div>

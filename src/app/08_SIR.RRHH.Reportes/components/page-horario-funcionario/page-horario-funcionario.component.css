@@ -21,6 +21,10 @@
     font-weight: 500;
 }
 
+.tiempoTotal {
+    font-weight: 700;
+}
+
 :host >>> .p-toast-message-custom-error {
     background-color: #FDEDEC;
     border: solid #FF5757;

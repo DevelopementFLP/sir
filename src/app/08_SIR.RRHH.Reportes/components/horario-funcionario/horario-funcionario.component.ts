@@ -19,6 +19,7 @@ export class HorarioFuncionarioComponent implements OnInit {
 
   logueadas:        HorarioEmpleado[] = [];
   tiempoLogueado!:  TiempoLogueado;
+  tiempoTotal: string = '';
 
   constructor(
     private rrhhService:  RRHHService,
@@ -37,6 +38,7 @@ export class HorarioFuncionarioComponent implements OnInit {
     this.rrhhService.getHorarioFuncionario(this.numeroFunc)
       .subscribe(logs => {
         this.logueadas = logs;
+        this.tiempoTotal = this.funcService.getTiempoTotal(this.logueadas);
       });
 
       this.sendFuncData();

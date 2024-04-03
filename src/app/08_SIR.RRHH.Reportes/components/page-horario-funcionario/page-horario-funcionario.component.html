@@ -15,6 +15,7 @@
                     <div class="mr-0 mb-2"><input (focus)="seleccionarTexto($event)" class="w-5rem" type="text" pInputText  id="code" #code placeholder="N° Fun" (input)="filterData(code.value, name.value)"/></div>
                     <div class="mb-2 mr-1"><input (focus)="seleccionarTexto($event)" class="w-15rem" type="text" pInputText id="name"   #name placeholder="Nombre" (input)="filterData(code.value, name.value)"/></div>
                     <p-button class="mb-2" [disabled]="empleadoSeleccionado == undefined" (onClick)="buscarHorario()">Buscar</p-button>
+                    <p-button icon="pi pi-times" styleClass="p-button-danger" pTooltip="Borrar datos" class="ml-1 mb-2" severity="danger" (onClick)="borrarDatos()"></p-button>
                 </div>
                 <div class="flex flex-row">
                     <p-listbox *ngIf="filteredData.length > 0" [(ngModel)]="empleadoSeleccionado"  class="" [options]="filteredData"  [listStyle]="{'max-height': '220px'}" (onClick)="onSelectEmpleado($event)">
@@ -52,6 +53,11 @@
                 <div class="col-3">{{log.login | date:'HH:mm:ss'}}</div>
                 <div class="col-3"><span *ngIf="log.logout">{{log.logout | date:'HH:mm:ss'}}</span><span class="logged" *ngIf="!log.logout">(Logueado ahora)</span></div>
                 <div class="col-3">{{log.hours | date:'HH:mm:ss'}}</div>
+            </div>
+            <hr>
+            <div class="flex flex-row justify-content-end tiempoTotal">
+                <div class="col-9">Tiempo total logueado</div>
+                <div class="col-3">{{tiempoTotal}}</div>
             </div>
         </div>
         </p-card>

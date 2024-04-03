@@ -66,6 +66,9 @@ export class UserComponent implements OnInit {
       )
       .subscribe( ok => {
         this.showOk("La cotraseña se cambió correctamente.");
+        this.actualPassword = '';
+        this.newPassword = '';
+        this.repeatPassword = '';
       })
   }
 
