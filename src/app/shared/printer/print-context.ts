@@ -1,3 +1,4 @@
+import { PrintModel } from "../models/print-model.interface";
 import { PrintStrategy } from "./print-strategy";
 
 export class PrintContext {
@@ -11,7 +12,7 @@ export class PrintContext {
       this.printStrategy = printStrategy;
     }
   
-    print(data: any) {
+    print(data: PrintModel) {
       this.printStrategy.print(data);
     }
   }

@@ -1,57 +1,46 @@
-<div class="container">
-    <div class="row mt-3">
-        <div class="col-lg-12">
-            <h2 class="text-center">Sistema Integral de Reportes <small class="text-muted d-block d-lg-inline">&nbsp;Solicitud de registro de usuario</small></h2>
+<div class="contenedor">
+    <div class="content mt-5 sm:col-12 md:col-4">
+        <div class="row mb-5">
+            <div class="col-lg-12 text-center">
+                <img id="logo" class="mt-5" src="../../../assets/images/logo relleno azul.png" alt="Logo FLP">
+            </div>
         </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-6 offset-md-3">
-        <div class="card">
-          <div class="card-body">
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <span class="p-float-label">
-                  <input pInputText id="nombre"  class="form-control" />
-                  <label for="nombre">Nombre</label>
-                </span>
-              </div>
-              <div class="col-sm-6">
-                <span class="p-float-label">
-                  <input pInputText id="apellido" class="form-control" />
-                  <label for="apellido">Apellido</label>
-                </span>
-              </div>
+        <div class="flex flex-column align-items-center mb-5">
+            <p class="title">Sistema Integral de Reportes</p>
+            <p class="subtitle">Solicitud de nuevo usuario</p>
+        </div>
+        <div class="flex flex-column">
+          <div class="flex flex-row">
+            <div class="p-0 flex flex-column col-6">
+                <input placeholder="Nombre" pInputText id="nombre" class="col-12 " />
+               
             </div>
-            <div class="row mt-5">
-              <div class="col-sm-12">
-                <div class="p-inputgroup">
-                  <input type="text" pInputText placeholder="email" />
-                  <span class="p-inputgroup-addon">@flp.uy</span>
-              </div>
-              </div>
-            </div>
-            <div class="row mt-5">
-              <div class="col-sm-12">
-                  <span style="width: 100%" class="p-float-label">
-                    <p-dropdown [style]="{'minWidth':'100%'}" [options]="nombreSectores" id="sector" ></p-dropdown>
-                    <label for="float-label">Selecione un sector</label>
-                  </span>
-              </div>
-            </div>
-            <div class="form-group row botones">
-                <div class="flex flex-wrap gap-3 justify-content-right">
-                    <p-button label="Enviar" id="btnEnviar" (click)="enviarNuevaSolicitud();"></p-button>
-                    <p-button label="Cancelar" styleClass="p-button-danger" routerLink="principal" (click)="goBack()"></p-button>
-                </div>
+            <div class="p-0 flex flex-column col-6">
+                <input placeholder="Apellido" pInputText id="apellido" class="col-12" />
+                
             </div>
           </div>
+          
         </div>
-      </div>
+        <div class="flex flex-column align-items-center mt-2">
+            <div class="p-inputgroup">
+                <input type="text" pInputText id="email" placeholder="Email">
+                <span class="p-inputgroup-addon">@flp.uy</span>
+            </div>
+        </div>
+        <div class="flex flex-row align-items-center mt-3">
+            <span style="width: 100%" class="lblInput">
+                <p-dropdown [style]="{'minWidth':'100%'}" [options]="nombreSectores" id="sector" [(ngModel)]="sectorSeleccionado" placeholder="Seleccione un sector"></p-dropdown>
+            </span>
+        </div>
+        <hr class="mt-5">
+        <div class="flex flex-row justify-content-end gap-3 mt-1">
+          <p-button label="Enviar" id="btnEnviar" (onClick)="enviarNuevaSolicitud()"></p-button>
+          <p-button label="Cancelar" styleClass="p-button-danger" routerLink="principal" (click)="goBack()"></p-button>
+        </div>
     </div>
-  </div>
+</div>
 
-<app-modal
-  [visible]="visible"
-  (cambioVisibilidad)="cambiarVisibilidad($event)"
-  [mod]="modal">
+<app-modal [visible]="visible" (cambioVisibilidad)="cambiarVisibilidad($event)" [mod]="modal">
 </app-modal>
+<p-toast></p-toast>

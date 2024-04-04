@@ -1,14 +1,15 @@
+@import "../../../../node_modules/primeflex/primeflex.min.css";
+
 .exportacion {
     background-color: #F0F3F4;
     border-radius: 8%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 16px 8px;
+    padding: 16px 16px;
     position: fixed;
     right: 10px;
     top: 8rem;
-    height: 10rem;
     box-shadow: 3px 3px rgba(0, 0, 0, 0.2);
 }
 
@@ -18,6 +19,10 @@ img {
 
 img:hover {
     cursor: pointer;
+    opacity: 0.8;
 }
 
 
+.pdf:hover {
+    cursor: not-allowed;
+}

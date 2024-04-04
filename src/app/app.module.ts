@@ -30,6 +30,7 @@ import { MantenimientoAppsModule } from './07_SIR.Mantenimiento.Apps/07_SIR.Mant
 import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { RRHHReportesModule } from './08_SIR.RRHH.Reportes/08_SIR.RRHH.Reportes.module';
+import { MessageService } from 'primeng/api';
 
 
 registerLocaleData(localeEs);
@@ -66,6 +67,7 @@ registerLocaleData(localeEs);
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true}
+   
   ],
   bootstrap: [AppComponent]
 })

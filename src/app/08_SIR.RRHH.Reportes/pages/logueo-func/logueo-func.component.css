@@ -33,3 +33,16 @@
     opacity: 0.8;
     border-radius: 5px;
 }
+
+@media print {
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .printable {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  }

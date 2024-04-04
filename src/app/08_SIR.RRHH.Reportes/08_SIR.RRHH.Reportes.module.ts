@@ -7,6 +7,7 @@ import { PrimeNgModule } from '../prime-ng/prime-ng.module';
 import { HorarioFuncionarioComponent } from './components/horario-funcionario/horario-funcionario.component';
 import { PageHorarioFuncionarioComponent } from './components/page-horario-funcionario/page-horario-funcionario.component';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -22,7 +23,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     PrimeNgModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ]
 })
 export class RRHHReportesModule { }

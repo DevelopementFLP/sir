@@ -1,10 +1,11 @@
 import { state, transition, style, animate, trigger } from '@angular/animations';
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PrintContext } from '../printer/print-context';
-import { PrintStrategy } from '../printer/print-strategy';
 import { PrinterPrintStrategy } from '../printer/printer-print-strategy';
 import { ExcelPrintStrategy } from '../printer/excel-print-strategy';
 import { PdfPrintStrategy } from '../printer/pdf-print-strategy';
+import { PrintModel } from '../models/print-model.interface';
+import { PrintService } from '../services/print.service';
 
 @Component({
   selector: 'sir-exportacion',
@@ -22,18 +23,30 @@ import { PdfPrintStrategy } from '../printer/pdf-print-strategy';
     ])
   ],
 })
-export class ExportacionComponent   {
+export class ExportacionComponent implements OnInit   {
 
-  @Input() dataToPrint: any;
+  @Input() pdf:           boolean = false;
+  @Input() excel:         boolean = false;
+  @Input() printer:       boolean = false;
+  @Input() nombreArchivo: string = '';
+
+  dataToPrint!: PrintModel;
 
   private printContext: PrintContext;
 
-  constructor(){
+  constructor(private printService: PrintService){
     this.printContext = new PrintContext(new PrinterPrintStrategy());
   }
 
+  ngOnInit(): void {
+    this.dataToPrint = {
+      nombreArchivo: this.nombreArchivo,
+      data: document.getElementsByClassName('printable')
+    }
+  }
+
   printExcel() {
-    this.printContext.setPrintStrategy(new ExcelPrintStrategy());
+    this.printContext.setPrintStrategy(new ExcelPrintStrategy(this.printService));
     this.printContext.print(this.dataToPrint);
   }
 

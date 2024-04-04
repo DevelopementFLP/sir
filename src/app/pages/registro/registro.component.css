@@ -1,38 +1,43 @@
 @import '~primeicons/primeicons.css';
 @import '~primeng/resources/primeng.min.css';
+@import '../../../../node_modules/primeflex/primeflex.min.css';
 
-.card {
-    background: var(--surface-card);
-    padding: 2rem;
-    border-radius: 10px;
-    margin-bottom: 1rem;
+* {
+    margin: 0;
 }
 
-h2 {
-    color: #6E6E6E;
-}
-
-.gap-3 {
-    gap: 1rem!important;
-}
-.justify-content-right {
-    justify-content: right!important;
-}
-.flex-wrap {
-    flex-wrap: wrap!important;
-}
-.flex {
-    display: flex!important;
-}
-
-.botones {
+.contenedor {
     display: flex;
-    justify-content: flex-end;
-    background: var(--surface-card);
-    margin-top: 1rem;
+    justify-content: center; 
+    align-items: center; 
+    height: 60%;
 }
 
-.no-border {
-    border: 1px;
-    color: crimson !important;
+.content {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); /* Sombra alrededor */
+}
+
+#logo {
+    width: 120px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-family: 'Helvetica', sans-serif;
+    color: #808B96;
+}
+
+.subtitle {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.lblInput {
+    font-size: 1rem;
+    color: #808B96 !important;
 }
