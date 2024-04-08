@@ -1,12 +1,10 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Funcionario } from '../../interfaces/Funcionario.interface';
-import { HorarioEmpleado } from '../../interfaces/HorarioEmpleado.interface';
-import { RRHHService } from '../../services/rrhh.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { HorarioFuncionarioComponent } from '../horario-funcionario/horario-funcionario.component';
 import { formatDate } from '@angular/common';
-import { ExportacionComponent } from 'src/app/shared/exportacion/exportacion.component';
+
 
 @Component({
   selector: 'rrhh-func-viewer',

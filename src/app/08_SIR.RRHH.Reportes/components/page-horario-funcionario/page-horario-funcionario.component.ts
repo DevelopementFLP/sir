@@ -4,7 +4,6 @@ import { Empleado } from '../../interfaces/Empleado.interface';
 import { HorarioEmpleado } from '../../interfaces/HorarioEmpleado.interface';
 import { MessageService } from 'primeng/api';
 import { formatDate } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import { FuncionariosService } from '../../services/funcionarios.service';
 
 @Component({
@@ -23,6 +22,13 @@ export class PageHorarioFuncionarioComponent implements OnInit {
   horarios: HorarioEmpleado[] = [];
   empSelected!: Empleado;
   tiempoTotal: string = '';
+  nombreReporte: string = 'LOGUEADAS';
+
+  /* exportación */
+  excel: boolean = true;
+  pdf: boolean = false;
+  print: boolean = false;
+  idReporte: number = 2;
 
   constructor(
     private rrhhService: RRHHService,
@@ -74,6 +80,7 @@ export class PageHorarioFuncionarioComponent implements OnInit {
       txtCodigo.value = empleadoSeleccionado.code;
       txtNombre.value = empleadoSeleccionado.name;
       this.filteredData = [];
+      this.nombreReporte = 'LOGUEADAS ' + txtCodigo.value + ' ' + txtNombre.value + ' ' + formatDate(this.fecha!, "dd-MM-yyyy", "es-UY"); 
     }
   }
 

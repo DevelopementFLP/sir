@@ -6,6 +6,7 @@ import { ExcelPrintStrategy } from '../printer/excel-print-strategy';
 import { PdfPrintStrategy } from '../printer/pdf-print-strategy';
 import { PrintModel } from '../models/print-model.interface';
 import { PrintService } from '../services/print.service';
+import { ExcelStyleService } from '../services/excel-styles.service';
 
 @Component({
   selector: 'sir-exportacion',
@@ -34,7 +35,11 @@ export class ExportacionComponent implements OnInit   {
 
   private printContext: PrintContext;
 
-  constructor(private printService: PrintService){
+  @Input() idReporte: number = 0;
+
+  constructor(
+    private printService: PrintService,
+    private formatService: ExcelStyleService){
     this.printContext = new PrintContext(new PrinterPrintStrategy());
   }
 
@@ -46,7 +51,7 @@ export class ExportacionComponent implements OnInit   {
   }
 
   printExcel() {
-    this.printContext.setPrintStrategy(new ExcelPrintStrategy(this.printService));
+    this.printContext.setPrintStrategy(new ExcelPrintStrategy(this.idReporte, this.printService, this.formatService));
     this.printContext.print(this.dataToPrint);
   }
 

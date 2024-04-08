@@ -1,3 +1,10 @@
+<sir-exportacion
+    [excel]="true"
+    [idReporte]="idReporte"
+    [nombreArchivo]="nombreReporte"
+    *ngIf="horarios.length > 0"
+/>
+
 <div class="row fs-3 text ml-3 mt-2">Horario de logueo</div>
 <hr>
 
@@ -34,7 +41,7 @@
         </div>
     </div>
     
-    <div class="horario__data col-6" *ngIf="horarios.length > 0">
+    <div class="horario__data col-6 printable" *ngIf="horarios.length > 0">
         <p-card
             [header]="infoEmpleado()"
             [subheader]="formatearFecha(fecha!)"

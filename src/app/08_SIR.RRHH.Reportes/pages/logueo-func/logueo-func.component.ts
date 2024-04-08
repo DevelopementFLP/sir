@@ -11,9 +11,10 @@ import { interval } from 'rxjs';
 })
 export class LogueoFuncComponent implements OnInit {
 
-  funcionarios: Funcionario[] = [];
+  funcionarios        : Funcionario[]   = [];
   funcionariosPorLinea: Funcionario[][] = [];
-  nombreReporte: string = 'FUNCIONARIOS LOGUEADOS POR LINEA - DESOSADO MAREL ' + formatDate(new Date(), "dd-MM-yyyy", "es-UY");
+  nombreReporte       : string          = 'FUNCIONARIOS LOGUEADOS POR LINEA - DESOSADO MAREL ' + formatDate(new Date(), "dd-MM-yyyy", "es-UY");
+  idReporte: number = 1;
  
   constructor(private rrhhService: RRHHService) {}
 
@@ -30,7 +31,6 @@ export class LogueoFuncComponent implements OnInit {
     this.funcionarios = [];
     this.funcionariosPorLinea = [];
     
-
     this.rrhhService.getFuncionariosLogueados()
       .subscribe( funcs => {
         this.funcionarios = funcs;
