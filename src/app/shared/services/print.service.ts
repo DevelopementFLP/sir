@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { PrintModel } from '../models/print-model.interface';
-import { Fill, ImagePosition, Workbook } from 'exceljs';
+import { Fill, Font, ImagePosition, Workbook } from 'exceljs';
 import { formatDate } from '@angular/common';
 import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
 
@@ -15,6 +15,8 @@ export class PrintService {
         return this.printLogueoFuncionarios(dataToPrint, libro);
       case 2:
         return this.printLogueadasPorFuncionario(dataToPrint, libro);
+      case 3:
+        return this.printProductosGraseria(dataToPrint, libro);
       default:
         return [];
     }
@@ -30,12 +32,11 @@ export class PrintService {
 
   private printLogueadasPorFuncionario(dataToPrint: PrintModel, libro: Workbook) {
     const data: string[] = dataToPrint.data['0'].innerText.split('\n');
-    console.log(data);
     const funcionario:string = data[0];
     const fecha: string = data[1];
     const titulares: string[] = [data[2], data[3], data[4], data[5]];
-    const tiempoTotalTitular: string = data[data.length - 2]; console.log(tiempoTotalTitular);
-    const tiempoTotal: string = data[data.length - 1]; console.log(tiempoTotal);
+    const tiempoTotalTitular: string = data[data.length - 2]; 
+    const tiempoTotal: string = data[data.length - 1]; 
     const sheet =  libro.addWorksheet('Logueadas ' + funcionario);
     let fila = 11;
     let columna = 2;
@@ -414,5 +415,226 @@ export class PrintService {
     sheet.pageSetup.fitToPage = true;
   }
   /**/
+
+  /* PRODUCTOS A GRASERÍA MAREL */
+  private printProductosGraseria(dataToPrint: PrintModel, libro: Workbook) {
+    const data = dataToPrint.data['0'].innerText.split('\n');
+    const titulo = data[0];
+    const tituloDesde = data[2];
+    const fechaDesde = data[7].split(' ')[0]; 
+    const tituloHasta = data[4];
+    const fechaHasta = data[7].split(' ')[1]; 
+    const tituloDelanteros = data[8];
+    const tituloTraseros = data[9];
+    const tituloTotalCuartos = data[10];
+    const cuartosDelanteros = data[11];
+    const cuartosTraseros = data[12];
+    const cuartosTotal = data[13];
+    const tituloKilosDelanteros = data[14];
+    const tituloKilosTraseros = data[15];
+    const tituloKilosTotalCuartos = data[16];
+    const kilosCuartosDelanteros = data[17];
+    const kilosCuartosTraseros = data[18];
+    const kilosCuartosTotalCuartos = data[19];
+    const tituloCajas = data[20];
+    const tituloKilosCajas = data[21];
+    const cantidadCajas = data[22];
+    const kilosCajas = data[23];
+    const tituloCajasJumbo = data[24];
+    const tituloKilosCajasJumbo = data[25];
+    const cantidadCajasJumbo = data[26];
+    const kilosCajasJumbo = data[27];
+    const tituloKilosGraseria = data[28];
+    const kilosGraseria = data[29];
+    const sheet = libro.addWorksheet('PRODUCTOS A GRASERIA');
+
+    const fondoNegro: Fill = { 
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF000000' },
+      bgColor: { argb: '00000000'  }
+    };  
+
+    /* logo */
+    const idLogo = libro.addImage({
+      base64: LOGO_RGB_V1_BEIGE,
+      extension: 'png'
+    });
+    
+    const position: ImagePosition = {
+      tl:   { col: 0.9, row: 0.0 },
+      ext:  { width: 200, height: 100 }
+    };
+
+    sheet.addImage(idLogo, position)
+    
+    /* titulo */
+    const mergeCells = [
+      { start: { row: 2, col: 2  }, end: { row: 4, col:  9} },
+    ]
+
+    mergeCells.forEach(range => {
+      sheet.mergeCells(range.start.row, range.start.col, range.end.row, range.end.col);
+    })
+
+    const titular = sheet.getCell("B2");
+    titular.fill = fondoNegro;
+    titular.font = { bold: true, size: 19, color: { argb: 'FFFFFFFF' } };
+    titular.style.alignment = { vertical: 'middle', horizontal: 'center' };
+    titular.value = titulo + '   ';
+
+    /* fechas */
+    const cellTituloDesde = sheet.getCell("B6");
+    const cellTituloHasta = sheet.getCell("B7");
+
+    cellTituloDesde.value = tituloDesde + ' ' + fechaDesde;
+    //cellDesde.value = fechaDesde;
+    cellTituloHasta.value = tituloHasta + ' ' + fechaHasta;
+    //cellHasta.value = fechaHasta
+
+    /* data */
+    /* cuartos*/
+    const cellTituloDelantero = sheet.getCell("B10");
+    const cellTituloTrasero = sheet.getCell("B11");
+    const cellTituloTotalCuartos = sheet.getCell("B12");
+    const cellCuartosDelantero = sheet.getCell("C10");
+    const cellCuartosTrasero = sheet.getCell("C11");
+    const cellCuartosTotalCuartos = sheet.getCell("C12");
+    const cellTituloKilosDelantero = sheet.getCell("E10");
+    const cellTituloKilosTrasero = sheet.getCell("E11");
+    const cellTituloKilosTotalCuartos = sheet.getCell("E12");
+    const cellCuartosKilosDelantero = sheet.getCell("F10");
+    const cellCuartosKilosTrasero = sheet.getCell("F11");
+    const cellCuartosKilosTotalCuartos = sheet.getCell("F12");
+
+    cellTituloDelantero.value = tituloDelanteros;
+    cellTituloTrasero.value = tituloTraseros;
+    cellTituloTotalCuartos.value = tituloTotalCuartos;
+    cellCuartosDelantero.value = cuartosDelanteros;
+    cellCuartosTrasero.value = cuartosTraseros;
+    cellCuartosTotalCuartos.value = cuartosTotal;
+    cellTituloKilosDelantero.value = tituloKilosDelanteros;
+    cellTituloKilosTrasero.value = tituloKilosTraseros;
+    cellTituloKilosTotalCuartos.value = tituloKilosTotalCuartos;
+    cellCuartosKilosDelantero.value = kilosCuartosDelanteros;
+    cellCuartosKilosTrasero.value = kilosCuartosTraseros;
+    cellCuartosKilosTotalCuartos.value = kilosCuartosTotalCuartos;
+    
+    /* cajas */
+    const cellTituloCajas = sheet.getCell("H10");
+    const cellCajas = sheet.getCell("I10");
+    const cellTituloKilosCajas = sheet.getCell("H11");
+    const cellKilosCajas = sheet.getCell("I11");
+
+    cellTituloCajas.value = tituloCajas;
+    cellCajas.value = cantidadCajas;
+    cellTituloKilosCajas.value = tituloKilosCajas;
+    cellKilosCajas.value = kilosCajas;
+
+    /* cajas jumbo */
+    const cellTituloCajasJumbo = sheet.getCell("B15");
+    const cellCajasJumbo = sheet.getCell("C15");
+    const cellTituloKilosJumbo = sheet.getCell("B16");
+    const cellKilosJumbo = sheet.getCell("C16");
+
+    cellTituloCajasJumbo.value = tituloCajasJumbo;
+    cellCajasJumbo.value = cantidadCajasJumbo;
+    cellTituloKilosJumbo.value = tituloKilosCajasJumbo;
+    cellKilosJumbo.value = kilosCajasJumbo;
+
+    /* graseria */
+    const cellTituloKilosGraseria = sheet.getCell("E16");
+    const cellKilosGraseria = sheet.getCell("F16");
+
+    cellTituloKilosGraseria.value = tituloKilosGraseria;
+    cellKilosGraseria.value = kilosGraseria;
+
+    /* ancho columnas */
+    const titleWidth = 25;
+    const valueWidth = 16;
+    sheet.getColumn(2).width = titleWidth;
+    sheet.getColumn(5).width = titleWidth;
+    sheet.getColumn(8).width = titleWidth;
+    sheet.getColumn(3).width = valueWidth;
+    sheet.getColumn(6).width = valueWidth;
+    sheet.getColumn(9).width = valueWidth;
+
+    /* formato celdas */
+    const fuenteFecha = { bold: true, size: 12 }
+
+    cellTituloDesde.font = fuenteFecha;
+    cellTituloHasta.font = fuenteFecha;
+
+    const fuenteTitulo = { bold: true, size: 13};
+
+    cellTituloDelantero.font = fuenteTitulo;
+    cellTituloTrasero.font = fuenteTitulo;
+    cellTituloTotalCuartos.font = fuenteTitulo;
+    cellTituloKilosDelantero.font = fuenteTitulo;
+    cellTituloKilosTrasero.font = fuenteTitulo;
+    cellTituloKilosTotalCuartos.font = fuenteTitulo;
+    cellTituloCajas.font = fuenteTitulo;
+    cellTituloKilosCajas.font = fuenteTitulo;
+    cellTituloCajasJumbo.font = fuenteTitulo;
+    cellTituloKilosJumbo.font = fuenteTitulo;
+
+    const fuenteValores = { size: 14 }
+
+    cellCuartosDelantero.font = fuenteValores;
+    cellCuartosDelantero.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCuartosTrasero.font = fuenteValores;
+    cellCuartosTrasero.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCuartosTotalCuartos.font = fuenteValores;
+    cellCuartosTotalCuartos.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCuartosKilosDelantero .font = fuenteValores;
+    cellCuartosKilosDelantero.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCuartosKilosTrasero.font = fuenteValores;
+    cellCuartosKilosTrasero.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCuartosKilosTotalCuartos.font = fuenteValores;
+    cellCuartosKilosTotalCuartos.alignment =  { vertical: 'middle', horizontal: 'right' };
+    cellCajas.font = fuenteValores;
+    cellCajas.alignment = { vertical: 'middle', horizontal: 'right' };
+    cellKilosCajas.font = fuenteValores;
+    cellKilosCajas.alignment = { vertical: 'middle', horizontal: 'right' };
+    cellCajasJumbo.font = fuenteValores;
+    cellCajasJumbo.alignment = { vertical: 'middle', horizontal: 'right' };
+    cellKilosJumbo.font = fuenteValores;
+    cellKilosJumbo.alignment = { vertical: 'middle', horizontal: 'right' };
+    
+    const fondoTotal: Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFEBEDEF'},
+      bgColor: { argb: '00000000'}
+    }
+
+    cellCuartosTotalCuartos.fill = fondoTotal;
+    cellCuartosKilosTotalCuartos.fill = fondoTotal;
+
+
+    /* graseria */
+    const fondoGraseria: Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF52BE80' },
+      bgColor: { argb: '00000000'  }
+    }
+
+    cellTituloKilosGraseria.font = fuenteTitulo;
+    cellKilosGraseria.font = fuenteValores;
+    cellKilosGraseria.alignment = { vertical: 'middle', horizontal: 'right' };
+    cellTituloKilosGraseria.fill = fondoGraseria;
+    cellKilosGraseria.fill = fondoGraseria;
+
+  }
+
+  private getFechasReporte(tituloLibro: string): string[] {
+    let fechas: string[] = [];
+    const partes = tituloLibro.split(' ');
+    fechas.push(partes[2]);
+    fechas.push(partes[4]);
+
+    return fechas;
+  }
 
 }

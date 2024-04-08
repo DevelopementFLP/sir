@@ -1,4 +1,10 @@
-<div class="container-fluid packing">
+<sir-exportacion 
+    [excel]="true"
+    [nombreArchivo]="nombreArchivo"
+    [idReporte]="idReporte"
+/>
+
+<div class="container-fluid packing printable">
     <div class="row fs-3 text mt-3">
         Productos a grasería desde Marel
         
@@ -49,6 +55,10 @@
             <div class="row mt-4">
                 <div class="col-6">
                     <p-button label="Hacer informe" styleClass="p-button-rounded" (onClick)="getData()"></p-button>
+                </div>
+                <div id="fechas">
+                    {{formatFecha(fechaDesde)}}
+                    {{formatFecha(fechaHasta)}}
                 </div>
             </div>
         </div>

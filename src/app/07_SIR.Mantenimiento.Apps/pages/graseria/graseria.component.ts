@@ -1,15 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GecosService } from 'src/app/shared/services/gecos.service';
 import { MarelService } from 'src/app/shared/services/marel.service';
 import { formatDate } from '@angular/common';
-import { catchError, debounce } from 'rxjs';
+
 
 @Component({
   selector: 'sir-mant-graseria',
   templateUrl: './graseria.component.html',
   styleUrls: ['./graseria.component.css'],
 })
-export class GraseriaComponent {
+export class GraseriaComponent implements OnInit {
   fechaDesde: Date;
   fechaHasta: Date;
   fechaDesdeFormatted: string = '';
@@ -24,6 +24,13 @@ export class GraseriaComponent {
   kilosJumbo: number = 0;
   cajasTotal: number = 0;
   kilosTotal: number = 0;
+
+  /* exportacion */
+  excel: boolean = true;
+  pdf: boolean = false;
+  print: boolean = false;
+  nombreArchivo: string = '';
+  idReporte: number = 3;
   
   constructor(
     private marelService: MarelService,
@@ -35,6 +42,10 @@ export class GraseriaComponent {
       this.fechaHasta = new Date();
     }
     
+  ngOnInit(): void {
+    this.nombreArchivo = 'PRODUCTOS A GRASERÍA';
+  } 
+
   getData(): void {
     this.resetValues();
     this.formatearFechas();
@@ -93,7 +104,7 @@ export class GraseriaComponent {
       if(idCalendar === 1)
         this.fechaDesde = event;
       else if(idCalendar === 2)
-        this.fechaHasta = event;
+        this.fechaHasta = event;     
     }
 
     private formatearFechas(sep: string = '') : void {
@@ -101,4 +112,7 @@ export class GraseriaComponent {
       this.fechaHastaFormatted = formatDate(this.fechaHasta, 'yyyy'+ sep + 'MM' + sep +'dd', 'es-UY', 'es-UY') + ' 23:59:59';
     }
 
+    formatFecha(fecha: Date): string {
+      return formatDate(fecha, "dd-MM-yyyy", "es-UY");
+    }
 }
