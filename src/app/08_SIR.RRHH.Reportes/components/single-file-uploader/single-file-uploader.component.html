@@ -1,0 +1,34 @@
+<div class="">
+    <p-fileUpload 
+        name="data[]"  
+        [multiple]="false"
+        chooseLabel="&nbsp;Seleccionar"
+        uploadLabel="&nbsp;Actualizar"
+        cancelLabel="Cancelar"
+        uploadIcon="pi pi-upload"
+        cancelStyleClass="p-button-danger"
+        (onSelect)="seleccionarArchivo($event)"
+        (onRemove)="eliminarArchivo()"
+        (onClear)="eliminarArchivo()"
+        [showUploadButton]="false"
+        [fileLimit]="1">
+            <ng-template pTemplate="content">
+                <p class="text-sm" *ngIf="files.length === 0">
+                   Busque el archivo haciendo clic en '+ Seleccionar' o arrástrelo hasta aquí
+                </p>
+             </ng-template>
+    </p-fileUpload>
+    <div 
+      class="sm:col-4 ml-0 mt-2"
+      *ngIf="files.length > 0">
+      <button
+            icon="pi pi-upload"
+            type="button" 
+            pButton
+            pRipple
+            class="aceptar text-center"
+            label="Actualizar"
+            (click)="actualizarRegistros()">
+      </button>
+   </div>
+</div>

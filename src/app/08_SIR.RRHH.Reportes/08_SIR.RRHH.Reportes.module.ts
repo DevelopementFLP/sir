@@ -8,6 +8,11 @@ import { HorarioFuncionarioComponent } from './components/horario-funcionario/ho
 import { PageHorarioFuncionarioComponent } from './components/page-horario-funcionario/page-horario-funcionario.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { ControlHorasComponent } from './pages/control-horas/control-horas.component';
+import { SingleFileUploaderComponent } from './components/single-file-uploader/single-file-uploader.component';
+import { IncidenciaTableComponent } from './components/icidencia-table/icidencia-table.component';
+import { CustomFilter } from './pipes/CustomFilterPipe.pipe';
+import { InconsistenciaTableComponent } from './components/inconsistencia-table/inconsistencia-table.component';
 
 
 
@@ -18,7 +23,12 @@ import { SharedModule } from '../shared/shared.module';
     LineaComponent,
     FuncViewerComponent,
     HorarioFuncionarioComponent,
-    PageHorarioFuncionarioComponent
+    PageHorarioFuncionarioComponent,
+    ControlHorasComponent,
+    SingleFileUploaderComponent,
+    IncidenciaTableComponent,
+    CustomFilter,
+    InconsistenciaTableComponent
   ],
   imports: [
     CommonModule,

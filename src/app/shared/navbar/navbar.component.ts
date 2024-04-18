@@ -1,8 +1,6 @@
-import { Component, HostListener, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface';
 import { SessionManagerService } from '../services/session-manager.service';
-import { ControlUsuariosService } from 'src/app/52_SIR.ControlUsuarios/control-usuarios.service';
-import { MainMenuService } from '../services/main-menu.service';
 import { NavBarService } from '../services/nav-bar.service';
 import { NavigationService } from '../services/navigation.service';
 
@@ -30,7 +28,7 @@ export class NavbarComponent {
   }
   
     getNombreUsuario(usuario: Usuario) : string {
-    return usuario.nombre_completo;
+    return usuario.nombre_completo.split(' ')[0];
   }
   
    esAdmin(usuario: Usuario) : boolean {
@@ -39,6 +37,7 @@ export class NavbarComponent {
 
   toogleMenuVisibility(): void {
     this.navbarService.toogleMenuVisibility();
+
   }
 
   goMain(): void {

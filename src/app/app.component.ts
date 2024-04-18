@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PrimeNGConfig } from 'primeng/api';
+import { MenuItem, PrimeNGConfig } from 'primeng/api';
+import { NavBarService } from './shared/services/nav-bar.service';
+import { SessionManagerService } from './shared/services/session-manager.service';
+import { DataService } from './shared/services/data.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +13,9 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'sir';
   es: any;
 
-  constructor(private config: PrimeNGConfig) {}
+  constructor(
+      private config: PrimeNGConfig
+    ) {}
 
   
   ngOnInit(): void {
@@ -22,10 +27,23 @@ export class AppComponent implements OnInit, OnDestroy {
       monthNames: [ "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" ],
       monthNamesShort: [ "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic" ],
       today: 'Hoy',
-      clear: 'Borrar'
-  }
+      clear: 'Borrar',
+      addRule: 'Agregar regla',
+      apply: 'Aplicar',
+      startsWith: 'Empieza con',
+      contains: 'Contiene',
+      notContains: 'No contiene',
+      endsWith: 'Termina con',
+      equals: 'Es igual',
+      notEquals: 'No es igual',
+      removeRule: 'Eliminar regla',
+      matchAll: 'Coincidir todos',
+      matchAny: 'Coincidir alguno'
+  };
+
   this.config.setTranslation(this.es);
-  }
+ 
+} 
 
   ngOnDestroy(): void {
     throw new Error('Method not implemented.');

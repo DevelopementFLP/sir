@@ -11,7 +11,7 @@ export class DashboardComponent implements OnInit {
   public constructor(private router: Router) {}
 
   ngOnInit(): void {
-   window.location.href = "http://192.168.0.107:85"
+   //window.location.href = "http://192.168.0.107:85"
   }
 
 }

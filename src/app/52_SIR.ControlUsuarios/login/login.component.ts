@@ -8,6 +8,9 @@ import { Usuario } from '../models/usuario.interface';
 import { SessionManagerService } from 'src/app/shared/services/session-manager.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
 import { ActualUser } from 'src/app/shared/models/actualuser.interface';
+import { MenuItem } from 'primeng/api';
+import { DataService } from 'src/app/shared/services/data.service';
+import { NavBarService } from 'src/app/shared/services/nav-bar.service';
 
 
 @Component({
@@ -18,15 +21,21 @@ import { ActualUser } from 'src/app/shared/models/actualuser.interface';
 })
 export class LoginComponent implements AfterViewInit {
 
+  menuItems: MenuItem[] = [];
+
   constructor(
     private userService: ControlUsuariosService,
     private sessionManagerService: SessionManagerService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private dataService: DataService,
+    private navBarService: NavBarService,
+    private sessionManager: SessionManagerService
     ) {
 
       this.userStored = this.sessionManagerService.getStorage();
 
       if(this.userStored != null) {
+
         this.navigationService.navegar('principal');
        }
     }
@@ -37,6 +46,7 @@ export class LoginComponent implements AfterViewInit {
   userStored: ActualUser | undefined;
   hide: boolean = true;
   usuarioObtenido: Usuario[] = [];
+  menu: MenuItem[] = [];
 
   userData = new FormGroup({
     userName: new FormControl('', [Validators.required]),
@@ -65,6 +75,16 @@ export class LoginComponent implements AfterViewInit {
           else
           {
             this.sessionManagerService.setStorage('actualUser', this.usuarioObtenido[0]);
+            console.log(this.usuarioObtenido[0])
+      
+  
+            this.dataService.getReportesPorAcceso(this.usuarioObtenido[0].id_perfil).subscribe(
+              (reportes: any[]) => {
+                this.menuItems = this.navBarService.transformarAMenuItems(reportes);
+                this.menuItems = this.navBarService.setExpansionState(this.menuItems);
+                this.sessionManager.setMenu('menuItems', this.menuItems);
+              },
+            );
             this.navigationService.navegar('principal');
             
           }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface';
 import { ActualUser } from '../models/actualuser.interface';
+import { MenuItem } from 'primeng/api';
 
 
 @Injectable({
@@ -26,4 +27,11 @@ export class SessionManagerService {
     this.storage.clear(key);
   }
 
+  public setMenu(key: string, menu: MenuItem[]) {
+    this.storage.store(key, menu);
+  }
+
+  public getMenu(): MenuItem[] {
+    return this.storage.retrieve('menuItems');
+  }
 }

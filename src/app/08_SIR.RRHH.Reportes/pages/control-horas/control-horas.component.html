@@ -1,0 +1,112 @@
+<div 
+   class="sm:col-12 md:col-8 xl:col-4 settings"
+   [ngClass]="{'slide-out-left': !isSettingsVisible, 'slide-in-right': isSettingsVisible}">
+   <p-fileUpload
+      [showUploadButton]="false"
+      (onSelect)="onSelectFile($event)"
+      (onRemove)="onRemove($event)"
+      (onClear)="onClear()"
+      chooseLabel="&nbsp;Seleccionar"
+      uploadLabel="Confirmar"
+      cancelLabel="Cancelar"
+      uploadIcon="pi pi-check"
+      cancelStyleClass="p-button-danger"
+      [multiple]="true"
+      [fileLimit]="maxFiles"
+      invalidFileLimitMessageSummary="Error en cantidad de archivos"
+      invalidFileLimitMessageDetail="Solo deben cargarse {{maxFiles}} archivos"
+      invalidFileTypeMessageSummary="Error en tipo de archivo"
+      invalidFileTypeMessageDetail="Seleccione archivos Excel ({{acceptedFiles}})">
+
+      <ng-template pTemplate="content">
+         <p class="text-sm" *ngIf="filesToProcess.length < maxFiles">
+            Busque los archivos haciendo clic en '+ Seleccionar' o arrástrelos hasta aquí
+         </p>
+      </ng-template>
+   </p-fileUpload>
+   <div 
+      class="row sm:col-12 md:col-4 ml-0"
+      *ngIf="filesToProcess.length === maxFiles">
+      <button
+         type="button" 
+         pButton
+         pRipple
+         class="aceptar text-center"
+         label="Aceptar"
+         (click)="aceptar()">  
+      </button>
+   </div>
+   
+</div>
+
+<div class="flex flex-row">
+   <div 
+      class="options p-button"
+      [ngClass]="{'slide-out-left': !isSeeFilesVisible, 'slide-in-right': isSeeFilesVisible}"
+      (click)="mostrarOpciones()"
+      pTooltip="Ver archivos cargados">
+      <i class="pi pi-file-edit" style="font-size: 1.5rem"></i>
+   </div>
+</div>
+
+
+<div 
+   class="process mt-0 flex flex-column gap-4 justify-content-start"
+   [ngClass]="{'slide-out-left': !isProcessVisible, 'slide-in-right': isProcessVisible}">
+   <div class="flex flex-row justify-content-between align-items-center gap-2">
+      <button
+         type="button" 
+         pButton
+         pRipple
+         class="p-button-secondary"
+         severity="secondary"
+         label="Actualizar padron de funcionarios"
+         (click)="updateFuncionarios()">  
+      </button>
+
+      <p-chip styleClass="chip">
+         <span class="border-circle w-2rem h-2rem flex align-items-center justify-content-center">
+            <i class="circle pi pi-calendar"></i>
+         </span>
+         <span class="last" [ngModel]="lastUpdate">Última actualización {{lastUpdate}}</span>
+      </p-chip>
+   </div>
+   
+   <div class="flex flex-row justify-content-between">
+      <button
+         type="button" 
+         pButton
+         pRipple
+         class=""
+         label="Procesar"
+         (click)="processFiles()">  
+      </button>
+   </div>
+</div>
+
+<div 
+   class="results"
+   [ngClass]="{'slide-out-left': !isResultsVisible, 'slide-in-right': isResultsVisible}">
+
+   <div class="flex flex-column">
+      <!-- INCONSISTENCIAS -->
+      <div 
+         class="inconsistencias"
+         *ngIf="horasAComparar.length > 0">
+         <h4 class="tituloVerificar">Horarios con inconsistencias</h4>
+         <inconsistencia-table
+            [data]="horasAComparar"/>
+      </div>
+
+      <div class="mb-5"></div>
+      
+      <!-- INCIDENCIAS -->
+      <div 
+         class="incidencias"
+         *ngIf="horasIncidencias.incidencias.length > 0">
+         <h4 class="tituloVerificar">Funcionarios para verificar horario</h4>
+         <incidencia-table
+            [data]="horasIncidencias.incidencias"/>
+      </div>
+   </div>
+</div>

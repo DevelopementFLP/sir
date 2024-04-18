@@ -1,0 +1,82 @@
+@import "../../../../../node_modules/primeflex/primeflex.min.css";
+@import "../../../../../node_modules/primeicons/primeicons.css";
+
+.settings,
+.process,
+.results {
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.process,
+.results {
+    position: fixed;
+    left: 100px;
+    top: 5rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+.results {
+    margin-left: -5rem;
+    overflow-y: scroll;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 5rem;
+    width: 50px;
+    height: 68px;
+    border: 1px solid #4868D1;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0; 
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 2px 2px 0 #20245D;
+    z-index: 999;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+.aceptar {
+    background-color: #645A55;
+    border-color: #645A55;
+}
+
+.aceptar:hover {
+    background-color: #645A55;
+    border-color: #645A55;
+    opacity: 0.8;
+}
+
+.circle,
+.last {
+    color: #645A55;
+}
+
+.last {
+    font-size: 0.9rem;
+}
+
+.options:hover {
+    cursor: pointer;
+}
+
+/* animaciones */
+.slide-out-left {
+    transform: translateX(-550%);
+}
+
+.slide-in-right {
+    transform: translateX(0);
+}
+
+.tituloVerificar{
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #85929E;
+}

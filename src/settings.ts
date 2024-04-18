@@ -1,5 +1,5 @@
-export const urlAPI: string = "http://192.168.0.107:82/api/";
-// export const urlAPI: string = "http://localhost:5205/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -21,6 +21,8 @@ export const urlSalidaProduccion: string = urlAPI + "SalidaProduccion/salidasPro
 export const urlRRHH: string = urlAPI + "RRHH/";
 export const urlLogueoLineas: string = urlRRHH + "GetFuncionariosLogueados";
 export const urlHorarioFuncionario: string = urlRRHH + "GetHorarioFuncionario";
+export const urlPadron: string = urlRRHH + "GetPadronFuncionarios";
+export const urlUpdatePadron: string = urlRRHH + "ActualizarPadronFuncionarios";
 export const urlEmpleados: string = urlRRHH + "GetEmpleados";
 
 //Gecos

@@ -7,11 +7,11 @@
 }
 
 :root {
-    --color-primario:#20245D;
+    --color-primario:#5472d4;
 }
 
 #logo {
-    width: 120px;
+    width: 220px;
 }
 
 .contenedor {
@@ -21,14 +21,14 @@
     align-items: center;
     justify-content: center;
 }
-
+  
 .text-primario{
     color: #5882FA;
 }
 
 .btnLogin{
     box-shadow: 5px 5px 10px #ccc;
-    background-color: #20245D;
+    background-color: #5472d4;
     color: #fff;
     font-weight:500;
     height:56px;
@@ -87,5 +87,6 @@ mat-form-fiedld {
   }
 
 h3 {
-    color: #20245D;
+    color: #5472d4;
 }
+

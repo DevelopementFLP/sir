@@ -38,6 +38,7 @@ export class UserMenuService {
       label: 'Cerrar sesión',
       accion:() => {
         this.sessionManager.clearStorage('actualUser');
+        this.sessionManager.clearStorage('menuItems');
         this.navigationService.navegar('');
       },
     }

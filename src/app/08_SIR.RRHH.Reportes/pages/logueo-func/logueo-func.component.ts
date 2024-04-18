@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RRHHService } from '../../services/rrhh.service';
 import { Funcionario } from '../../interfaces/Funcionario.interface';
 import { formatDate } from '@angular/common';

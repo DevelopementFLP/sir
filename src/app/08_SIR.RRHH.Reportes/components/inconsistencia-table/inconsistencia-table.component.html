@@ -1,0 +1,126 @@
+<div class="card tbInconsistencia">
+    <p-table 
+        #dt2
+        id="dt2"
+        [value]="data"
+        [tableStyle]="{'width': '95vw'}"
+        [scrollable]="true"
+        scrollHeight="600px"
+        [globalFilterFields]="['nroFuncionario', 'nombres', 'apellidos', 'sector', 'regimen', 'relojHorasComunes', 'relojHorasDobles', 'relojHorasNocturnas', 'marcasHorasComunes', 'marcasHorasDobles', 'marcasHorasNocturnas']">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-row justify-content-between">
+                <button pButton label="Borrar filtro" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearTable(dt2)"></button>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input id="in" pInputText type="text" (input)="applyFilter($event)"   placeholder="Buscar" value="" [(ngModel)]="filteredValue" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-datos>
+            <tr>
+                <th colspan="3" class="no-border"></th>
+                <th colspan="2" class="comun no-border">Comunes</th>
+                <th colspan="2" class="doble no-border">Extras</th>
+                <th colspan="2" class="nocturna no-border">Nocturnas</th>
+                <th colspan="2" class="no-border"></th>
+            </tr>
+            <tr>
+                <th style="min-width:5rem">
+                    <div class="flex align-items-center">
+                        Nro. Funcionario
+                        <p-columnFilter type="text" field="nroFuncionario" display="menu"></p-columnFilter>  
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Nombres
+                        <p-columnFilter type="text" field="nombres" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Apellidos
+                        <p-columnFilter type="text" field="apellidos" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="comun">
+                    <div class="flex align-items-center">
+                        Por sistema
+                    <p-columnFilter type="text" field="relojHorasComunes" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="comun">
+                    <div class="flex align-items-center">
+                        Por marcas
+                    <p-columnFilter type="text" field="marcasHorasComunes" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="doble">
+                    <div class="flex align-items-center">
+                        Por sistema
+                    <p-columnFilter type="text" field="relojHorasDobles" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="doble">
+                    <div class="flex align-items-center">
+                        Por marcas
+                    <p-columnFilter type="text" field="marcasHorasDobles" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="nocturna">
+                    <div class="flex align-items-center">
+                        Por sistema
+                    <p-columnFilter type="text" field="relojHorasNocturnas" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+
+                <th style="min-width:5rem" class="nocturna">
+                    <div class="flex align-items-center">
+                        Por marcas
+                    <p-columnFilter type="text" field="marcasHorasNocturnas" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Regimen
+                        <p-columnFilter type="text" field="regimen" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Sector
+                        <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.nroFuncionario}}</td>
+                <td>{{data.nombres}}</td>
+                <td>{{data.apellidos}}</td>
+                <td class="comun">{{data.relojHorasComunes}}</td>
+                <td class="comun">{{data.marcasHorasComunes}}</td>
+                <td class="doble">{{data.relojHorasDobles}}</td>
+                <td class="doble">{{data.marcasHorasDobles}}</td>
+                <td class="nocturna">{{data.relojHorasNocturnas}}</td>
+                <td class="nocturna">{{data.marcasHorasNocturnas}}</td>
+                <td>{{data.regimen}}</td>
+                <td>{{data.sector}}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No hay resultados con el criterio de búsqueda especificado</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

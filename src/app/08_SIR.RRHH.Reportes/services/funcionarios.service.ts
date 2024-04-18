@@ -45,5 +45,5 @@ export class FuncionariosService {
 
         let salida = horasFormateo + ":" + minutosFormateo + ":" + segundosFormateo
         return  dias > 0 ? dias.toString() + " día " + salida : salida;
-      }
+    }
  }

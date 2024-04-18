@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, ElementRef, HostListener } from '@angular/core';
 import { MainMenuService } from 'src/app/shared/services/main-menu.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
@@ -17,6 +18,7 @@ export class MainPageComponent {
 
   isSideNavCollapsed = false;
   screenWidth = 0;
+  sidebarVisible: boolean = false;
 
   constructor(
     private sessionManagerService: SessionManagerService,
@@ -34,20 +36,33 @@ export class MainPageComponent {
     this.isSideNavCollapsed = data.collapsed;
   }
 
+  getCurrentYear(): string {
+    return new Date().getFullYear().toString();
+  }
+
+
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
-    const menuContent = this.elementRef.nativeElement.querySelector('#menuContent');
-    const menuButton = this.elementRef.nativeElement.querySelector('#icon');
-    const header = this.elementRef.nativeElement.querySelector('.p-element .p-icon-wrapper .ng-tns-c9-1 .ng-star-inserted');
-    const bodyElement = document.querySelector('body');
+    const menuContent = this.elementRef.nativeElement.querySelector('#menuIcon');
 
-    if (menuContent && !menuContent.contains(event.target) &&
-        menuButton && !menuButton.contains(event.target) &&
-        header && !header.contains(event.target) ||
-        event.target instanceof HTMLDivElement ||
-        event.target === bodyElement)
+    if (menuContent && menuContent.contains(event.target))
     {
-      this.mainMenuService.closeMenu();
+      this.sidebarVisible = true;
     }
   } 
+
+  // @HostListener('document:keydown', ['$event']) // Escucha el evento de tecla presionada en todo el documento
+  // onMenuKeyPress(event: KeyboardEvent) {
+  //   const evnt = new KeyboardEvent('keydown', {
+  //     key: 'ContextMenu', // Puedes cambiar esto por la tecla que desees simular
+  //     code: 'ContextMenu',
+  //     keyCode: 93, // Esto es opcional, pero algunos navegadores aún lo requieren
+  //   });
+
+  //   if (event.key === 'ContextMenu' || event.key === 'Meta') { // Comprueba si la tecla presionada es la tecla de menú (el código de tecla puede variar según el navegador)
+  //     event.preventDefault();
+  //     this.sidebarVisible = true;
+  //     document.dispatchEvent(evnt);
+  //   }
+  // }
 }

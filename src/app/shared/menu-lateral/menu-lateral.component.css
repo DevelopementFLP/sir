@@ -1,9 +1,8 @@
 #mainPanelMenu {
-    display: none;
-    width: 300px;
-    z-index: 999;
+    width: 100%;
     height: auto;
     overflow-y: auto;
+    border: none;
 }
 
 

@@ -35,12 +35,15 @@ import { GraseriaComponent } from './07_SIR.Mantenimiento.Apps/pages/graseria/gr
 import { DashboardEagleComponent } from './shared/dashboard-eagle/dashboard-eagle.component';
 import { LogueoFuncComponent } from './08_SIR.RRHH.Reportes/pages/logueo-func/logueo-func.component';
 import { PageHorarioFuncionarioComponent } from './08_SIR.RRHH.Reportes/components/page-horario-funcionario/page-horario-funcionario.component';
+import { ControlHorasComponent } from './08_SIR.RRHH.Reportes/pages/control-horas/control-horas.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
   { path: 'login', component: LoginComponent},
   { path: 'principal', component: MainPageComponent, children: [
-    { path: '', redirectTo: 'principal', pathMatch: 'full' },
+    { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+    { path: 'welcome', component: WelcomeComponent},
     { path: 'produccion/angusFLP', component: AngusFLPComponent },
     { path: 'produccion/hilton', component: InformeHiltonComponent },
     { path: 'produccion/chile', component: InformeChileComponent },
@@ -70,10 +73,12 @@ const routes: Routes = [
     { path: 'mantenimiento/reporteGraseria', component: GraseriaComponent},
     { path: 'rrhh/funcionariosLogueados', component: LogueoFuncComponent},
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
+    { path: 'rrhh/controlHoras', component: ControlHorasComponent},
     { path: 'usuario/:nombreUsuario', component: UserComponent},
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},
+  { path: '**', redirectTo: 'principal/welcome', pathMatch: 'full' },
 ];
 
 @NgModule({

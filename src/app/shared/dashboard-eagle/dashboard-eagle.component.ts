@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardEagleComponent implements OnInit {
 
+
   ngOnInit(): void {
-    window.location.href = "http://192.168.0.107:88"
+    //window.location.href = "http://192.168.0.107:88"
   }
 }

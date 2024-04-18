@@ -31,6 +31,7 @@ import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { RRHHReportesModule } from './08_SIR.RRHH.Reportes/08_SIR.RRHH.Reportes.module';
 import { MessageService } from 'primeng/api';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
 
 
 registerLocaleData(localeEs);
@@ -42,7 +43,8 @@ registerLocaleData(localeEs);
     ResetPasswordComponent,
     RegistroComponent,
     UserComponent,
-    ReportesComponent
+    ReportesComponent,
+    WelcomeComponent
   ],
   imports: [
     AppRoutingModule,

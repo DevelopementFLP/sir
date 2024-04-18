@@ -1,0 +1,7 @@
+@import "../../../../node_modules/primeflex/primeflex.min.css";
+
+.logo {
+    height: 800px;
+    width: 80%;
+    opacity: 0.2;
+}

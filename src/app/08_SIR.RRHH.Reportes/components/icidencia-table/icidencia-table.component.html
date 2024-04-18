@@ -1,0 +1,86 @@
+<div class="card">
+<p-table
+    #dt1
+    [value]="incidenciasAgrupadas"
+    [rows]="15"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[15, 30, 50]"
+    [paginator]="false"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+    [globalFilterFields]="[]"
+    [scrollable]="true"
+    scrollHeight="600px"
+    [tableStyle]="{'min-width': '100rem'}"
+    rowGroupMode="subheader" 
+    groupRowsBy="motivo"
+    dataKey="motivo"
+    [filterDelay]="0">
+
+    <ng-template pTemplate="caption">
+        <div class="flex flex-row justify-content-between">
+            <button pButton label="Borrar filtro" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearTable(dt1)"></button>
+            <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input id="in" pInputText type="text" (input)="applyGlobalFilter($event)" placeholder="Buscar" value="" />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-incidencias>
+        <tr>
+            <th style="min-width:15rem">
+                <div class="flex align-items-center">
+                    Nro. Funcionario
+                    <p-columnFilter type="text" field="nroFuncionario" display="menu"></p-columnFilter>  
+                </div>
+            </th>
+            <th style="min-width:15rem">
+                <div class="flex align-items-center">
+                    Nombres
+                    <p-columnFilter type="text" field="nombres" display="menu"></p-columnFilter>
+                </div>
+            </th>
+            <th style="min-width:15rem">
+                <div class="flex align-items-center">
+                    Apellidos
+                    <p-columnFilter type="text" field="apellidos" display="menu"></p-columnFilter>
+                </div>
+            </th>
+            <th style="min-width:15rem">
+                <div class="flex align-items-center">
+                    Sector
+                    <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter>
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="groupheader" let-incidencia let-rowIndex="rowIndex" let-expanded="expanded">
+        <tr>
+            <td colspan="5">
+                <button type="button" pButton pRipple [pRowToggler]="incidencia" class="p-button-text p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                <span class="text-lg ml-2" [pRowToggler]="incidencia"> <p-tag class="tag" [value]="incidencia.motivo + ' (' + totalPorMotivo(incidencia.motivo) + ')'" [severity]="getSeverity(incidencia.motivo)"></p-tag></span>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-incidencia>
+            <tr *ngFor="let funcionario of incidencia.funcionarios">
+                <td style="min-width:15rem">
+                    {{funcionario.nroFuncionario}}
+                </td>
+                <td style="min-width:15rem">
+                    {{funcionario.nombres}}
+                </td>
+                <td style="min-width:15rem">
+                    {{funcionario.apellidos}}
+                </td>
+                <td style="min-width:15rem">
+                    {{funcionario.sector}}
+                </td>
+            </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="7">No hay resultados con el criterio de búsqueda especificado</td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>

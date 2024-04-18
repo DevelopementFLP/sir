@@ -4,6 +4,15 @@
   cursor: pointer;
 }
 
+#menuIcon {
+  transition: transform 0.3s ease-in-out;
+}
+
+#fullTitle:hover {
+  opacity: 0.8;
+}
+
+
 #smallTitle {
   display: none;
 }
@@ -11,8 +20,10 @@
 .matToolBar {
     display: flex;
     justify-content: space-between;
-    background-color: #20245D;
-    color: azure;
+    /* background-color: #20245D; */
+    /* background-color: #AF6E23; */
+    background-color: #645A55;
+    color: #F5F0E6;
   }
 
 #profileData {

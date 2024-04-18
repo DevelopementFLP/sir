@@ -7,8 +7,28 @@
 
 <div class="container-fluid">
     <div class="row contenido">
-        <div class="p-0" id="menuContent">
-            <app-menu-lateral class="menu-lateral"></app-menu-lateral>
+        <div class="p-0">
+            <p-sidebar
+                [(visible)]="sidebarVisible"
+                styleClass="w-30rem"
+                class="flex flex-column align-items-center">
+                <ng-template pTemplate="header">
+                    <div class="flex flex-row justify-content-between align-items-center">
+                        <img class="logo" src="../../../assets/images/logos/logo_t2.svg" alt="logo">
+                        <span class="titulo"><span class="text-xl"><b>SIR</b></span>&nbsp;<span class="text-lg">Menú Principal</span></span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="content">
+                    <app-menu-lateral class="menu-lateral"></app-menu-lateral>
+                </ng-template>
+                <ng-template 
+                    pTemplate="footer">
+                    <div
+                    class="footer text-center">
+                        FLP - {{getCurrentYear()}}
+                    </div>
+                </ng-template>
+            </p-sidebar>
         </div>
         <div id="mainContent">
             <router-outlet></router-outlet>

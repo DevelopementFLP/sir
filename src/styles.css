@@ -6,7 +6,11 @@
 
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    overflow-y: scroll;
+}
 
 .p-fieldset .p-fieldset-legend, 
 .p-fieldset.p-fieldset-toggleable .p-fieldset-legend, 
@@ -50,4 +54,44 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .p-button .p-button-label {
     font-weight: 100 !important;
+}
+
+
+.p-fileupload-row > div:first-child,
+.p-fileupload-row > div:nth-child(3) {
+    display: none;
+}
+
+.p-sidebar-content {
+    padding: 0 !important;
+}
+
+.p-chip {
+    background-color: #F5F0E6 !important;
+}
+
+.mat-mdc-form-field-type-mat-input:focus {
+    border-color: #AD6C20;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .p-rowgroup-footer td {
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.p-rowgroup-header span{
+        font-weight: 700;
+}
+
+
+.p-tag-value {
+    font-size: 1rem;
+}
+
+.p-tag-value:hover {
+    cursor: pointer;
 }
