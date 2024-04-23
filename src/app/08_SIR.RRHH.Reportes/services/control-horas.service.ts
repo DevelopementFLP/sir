@@ -3,13 +3,16 @@ import { TipoHora } from '../interfaces/TipoHora.interface';
 import { PadronFuncionario } from '../interfaces/PadronFuncionario.interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { urlPadron, urlUpdatePadron } from 'src/settings';
+import { urlConfHoras, urlPadron, urlRegimen, urlUpdatePadron } from 'src/settings';
 import { Marcas } from '../interfaces/Marcas.interface';
 import { MarcaPorFuncionario } from '../interfaces/MarcaPorFuncionario.interface';
 import { HorasPorFuncionario } from '../interfaces/HorasPorFuncionario.interface';
 import { TiempoTrabajado } from '../interfaces/TiempoTrabajado.interface';
 import { Incidencia } from '../interfaces/Incidencia.interface';
 import { HorasIncidencias } from '../interfaces/HorasIncidencias.interface';
+import { Regimen } from '../interfaces/Regimen.interface';
+import { ConfHora } from '../interfaces/ConfHora.interface';
+import { HorasComparar } from '../interfaces/HorasComparar.interface';
 
 @Injectable({providedIn: 'root'})
 export class ControlHorasService {
@@ -18,6 +21,13 @@ export class ControlHorasService {
         { codigo: 4, tipo: 'Dobles' },
         { codigo: 6, tipo: 'Nocturnas' }
     ];
+
+    horasIncidencias: HorasIncidencias = {
+        horas: [],
+        incidencias: []
+      }
+    
+    horasAComparar: HorasComparar[] = [];
 
     constructor(private http: HttpClient) { }
     
@@ -31,6 +41,33 @@ export class ControlHorasService {
 
     postPadronFuncionarios(funcionarios: PadronFuncionario[]): Observable<string> {
         return this.http.post<string>(urlUpdatePadron, funcionarios);
+    }
+
+    getRegimenes(): Observable<Regimen[]> {
+        return this.http.get<Regimen[]>(urlRegimen);
+    }
+
+    getConfHoras(): Observable<ConfHora[]> {
+        return this.http.get<ConfHora[]>(urlConfHoras);
+    }
+
+    getHorasIncidencias(): HorasIncidencias {
+        return this.horasIncidencias;
+    }
+
+    getHorasAComparar(): HorasComparar[] {
+        return this.horasAComparar;
+    }
+
+    setHorasIncidencias(horasIncidencias: HorasIncidencias) {
+        this.horasIncidencias.horas = [];
+        this.horasIncidencias.incidencias = [];
+        this.horasIncidencias = horasIncidencias;
+    }
+
+    setHorasAComparar(horasAComparar: HorasComparar[]) {
+        this.horasAComparar = [];
+        this.horasAComparar = horasAComparar;
     }
 
     generarMarcasPorFuncionario(marcas: Marcas[]): MarcaPorFuncionario[] {
@@ -56,7 +93,7 @@ export class ControlHorasService {
         marcas.forEach(marca => {
             const regimen = this.getRegimen(marca.nroFuncionario, padron);
             if(!isNaN(marca.tiempoTotalTrabajado) && marca.salida) {
-                const horasTrabajadas = this.contarHorasTrabajadas(regimen, marca.tiempoTotalTrabajado);
+                const horasTrabajadas = this.contarHorasTrabajadas(regimen, marca.marcas[0], marca.marcas[marca.marcas.length -1]);
                 const limiteHorasComunes = regimen === 8 ? 8 : 9.36;
                 const horasNocturnas = this.contarHorasNocturnas(marca.marcas)
                 horasPorFunc.push(
@@ -72,9 +109,9 @@ export class ControlHorasService {
                 )
             } else {
                 if(isNaN(marca.tiempoTotalTrabajado))
-                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', sector: '', motivo: 'Error en formato de marca'})
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Error en formato de marca'})
                 else if (!marca.salida)
-                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', sector: '', motivo: 'Falta alguna marca'})
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Falta alguna marca'})
             }
         });
         return {
@@ -113,13 +150,18 @@ export class ControlHorasService {
         return totalHorasTranscurridas;
     }
 
-    private contarHorasTrabajadas(regimen: number, tiempoTrabajado: number) : TiempoTrabajado {
-        const horasTrabajadas = this.convertirDecimalAHora(tiempoTrabajado);
-        const totalMinutos = (horasTrabajadas.getHours() + 3) * 60 + horasTrabajadas.getMinutes();
+    private contarHorasTrabajadas(regimen: number, horaInicio: number, horaFinal: number) : TiempoTrabajado {
+       // const horasTrabajadas = this.convertirDecimalAHora(tiempoTrabajado);
+        const horasTrabajadas = this.calcularDiferenciaHoras(this.convertirDecimalAHora(horaInicio), this.convertirDecimalAHora(horaFinal));
+
+        let totalMinutos = (horasTrabajadas.horas) * 60 + horasTrabajadas.minutos;
         let horasRegimenHorario = 8;
 
-        if(regimen == 9.36) horasRegimenHorario = 9.6;
-
+        if(regimen == 9.36)
+        {
+            horasRegimenHorario = 9.6;
+        }
+        
         const horasRegimen = Math.floor(regimen);
         const minutosRegimen = Math.ceil((horasRegimenHorario - horasRegimen) * 60);
 
@@ -232,7 +274,7 @@ export class ControlHorasService {
         return { horas: horasDiferencia, minutos: minutosDiferencia };
     }
 
-    private convertirDecimalAHora(decimal: number): Date {
+    convertirDecimalAHora(decimal: number): Date {
         const horas = Math.floor(decimal * 24);
         const minutos = Math.round((decimal * 24 - horas) * 60);
      

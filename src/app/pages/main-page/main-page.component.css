@@ -13,3 +13,7 @@
 .titulo {
     color: #645A55;
 }
+
+.goMain:hover {
+    cursor: pointer;
+}

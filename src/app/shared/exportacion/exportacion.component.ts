@@ -7,6 +7,7 @@ import { PdfPrintStrategy } from '../printer/pdf-print-strategy';
 import { PrintModel } from '../models/print-model.interface';
 import { PrintService } from '../services/print.service';
 import { ExcelStyleService } from '../services/excel-styles.service';
+import { InconsistenciaDataPrint } from 'src/app/08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
 
 @Component({
   selector: 'sir-exportacion',
@@ -30,6 +31,7 @@ export class ExportacionComponent implements OnInit   {
   @Input() excel:         boolean = false;
   @Input() printer:       boolean = false;
   @Input() nombreArchivo: string = '';
+  @Input() data: InconsistenciaDataPrint | undefined = undefined;
 
   dataToPrint!: PrintModel;
 
@@ -46,7 +48,7 @@ export class ExportacionComponent implements OnInit   {
   ngOnInit(): void {
     this.dataToPrint = {
       nombreArchivo: this.nombreArchivo,
-      data: document.getElementsByClassName('printable')
+      data: this.data != undefined ? this.data : document.getElementsByClassName('printable')
     }
   }
 

@@ -15,15 +15,13 @@ export class MenuLateralComponent implements OnInit {
 
   constructor(
     private navBarService: NavBarService
-  ) {
-
-  }
+  ) {}
   
   
   ngOnInit(): void {
     setTimeout(() => {
       this.menuItems = this.navBarService.getSideBarMenu();
-      
+      this.menuItems = this.navBarService.transformarAMenuItems(this.menuItems);
     }, 100);
   }
 

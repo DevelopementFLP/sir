@@ -62,6 +62,17 @@ body {
     display: none;
 }
 
+.p-fileupload-row > div:last-child {
+    padding: 0 !important;
+
+}
+
+.p-fileupload-row > div:last-child > button {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+    border: none;
+}
+
 .p-sidebar-content {
     padding: 0 !important;
 }

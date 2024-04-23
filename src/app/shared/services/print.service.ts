@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { PrintModel } from '../models/print-model.interface';
-import { Fill, Font, ImagePosition, Workbook } from 'exceljs';
+import { Fill, ImagePosition, Workbook, Worksheet } from 'exceljs';
 import { formatDate } from '@angular/common';
 import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
+import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
+import { Incidencia } from 'src/app/08_SIR.RRHH.Reportes/interfaces/Incidencia.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -17,6 +19,8 @@ export class PrintService {
         return this.printLogueadasPorFuncionario(dataToPrint, libro);
       case 3:
         return this.printProductosGraseria(dataToPrint, libro);
+      case 4: 
+        return this.printInconsistencias(dataToPrint, libro);
       default:
         return [];
     }
@@ -637,4 +641,241 @@ export class PrintService {
     return fechas;
   }
 
+  /* INCONSISTENCIAS */
+  private printInconsistencias(dataToPrint: PrintModel, libro: Workbook):void {
+    const data: InconsistenciaDataPrint = dataToPrint.data as InconsistenciaDataPrint;
+    const fuenteTitulo = { bold: true, size: 13};
+
+    if(data.inconsistencias.length > 0) {
+      const sheet = libro.addWorksheet('INCONSISTENCIAS');
+
+      const mergeCells = [
+        { start: { row: 6, col: 5  }, end: { row: 6, col:  6} },
+        { start: { row: 6, col: 7  }, end: { row: 6, col:  8} },
+        { start: { row: 6, col: 9  }, end: { row: 6, col:  10} },
+      ]
+  
+      mergeCells.forEach(range => {
+        sheet.mergeCells(range.start.row, range.start.col, range.end.row, range.end.col);
+      })
+  
+
+      /* colores de fondo */
+      const fondoComunes: Fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFF9E79F' },
+        bgColor: { argb: '00000000'  }
+      }
+
+      const fondoExtras: Fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFAD7A0' },
+        bgColor: { argb: '00000000'  }
+      }
+
+      const fondoNocturnas: Fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFF5CBA7' },
+        bgColor: { argb: '00000000'  }
+      }
+
+      this.setLogo(libro, sheet);
+      this.setTitle(libro, sheet, 'Inconsistencias', 'right', 12);
+
+      sheet.getCell("E6").value = "Comunes";
+      sheet.getCell("G6").value = "Extras";
+      sheet.getCell("I6").value = "Nocturnas";
+      sheet.getCell("B7").value = "Nro. Func.";
+      sheet.getCell("C7").value = "Nombres";
+      sheet.getCell("D7").value = "Apellidos";
+      sheet.getCell("E7").value = "Pos sistema";
+      sheet.getCell("F7").value = "Por marcas";
+      sheet.getCell("G7").value = "Por sistema";
+      sheet.getCell("H7").value = "Por marcas";
+      sheet.getCell("I7").value = "Por sistema";
+      sheet.getCell("J7").value = "Por marcas";
+      sheet.getCell("K7").value = "Régimen";
+      sheet.getCell("L7").value = "Sector";
+
+      sheet.getCell("E6").fill = fondoComunes;
+      sheet.getCell("G6").fill = fondoExtras;
+      sheet.getCell("I6").fill = fondoNocturnas;
+      sheet.getCell("E7").fill = fondoComunes;
+      sheet.getCell("F7").fill = fondoComunes;
+      sheet.getCell("G7").fill = fondoExtras;
+      sheet.getCell("H7").fill = fondoExtras;
+      sheet.getCell("I7").fill = fondoNocturnas;
+      sheet.getCell("J7").fill = fondoNocturnas;
+
+      for(let c = 5; c <= 9; c = c + 2)
+        sheet.getCell(6, c).font = fuenteTitulo;
+      
+      for(let c = 2; c <= 12; c++)
+        sheet.getCell(7, c).font = fuenteTitulo;
+      
+      let fila = 8;
+      data.inconsistencias.forEach(info => {
+        sheet.getCell(fila, 2).value = info.nroFuncionario;
+        sheet.getCell(fila, 3).value = info.nombres;
+        sheet.getCell(fila, 4).value = info.apellidos;
+        sheet.getCell(fila, 5).value = info.relojHorasComunes;
+        sheet.getCell(fila, 6).value = info.marcasHorasComunes;
+        sheet.getCell(fila, 5).fill = fondoComunes;
+        sheet.getCell(fila, 6).fill = fondoComunes;
+        sheet.getCell(fila, 7).value = info.relojHorasDobles;
+        sheet.getCell(fila, 8).value = info.marcasHorasDobles;
+        sheet.getCell(fila, 7).fill = fondoExtras;
+        sheet.getCell(fila, 8).fill = fondoExtras;
+        sheet.getCell(fila, 9).value = info.relojHorasNocturnas;
+        sheet.getCell(fila, 10).value = info.marcasHorasNocturnas;
+        sheet.getCell(fila, 9).fill = fondoNocturnas;
+        sheet.getCell(fila, 10).fill = fondoNocturnas;
+        sheet.getCell(fila, 11).value = info.regimen;
+        sheet.getCell(fila, 12).value = info.sector;
+        fila++;
+      });
+
+      sheet.getColumn(2).width = 11;
+      sheet.getColumn(3).width = 20;
+      sheet.getColumn(4).width = 25;
+      sheet.getColumn(5).width = 13;
+      sheet.getColumn(6).width = 13;
+      sheet.getColumn(7).width = 13;
+      sheet.getColumn(8).width = 13;
+      sheet.getColumn(9).width = 13;
+      sheet.getColumn(10).width = 13;
+      sheet.getColumn(11).width = 11;
+      sheet.getColumn(12).width = 35;
+    
+    if(data.incidencias.length > 0) {
+      let f = 6;
+      const sheet = libro.addWorksheet('ERRORES');
+      this.setLogo(libro, sheet);
+      this.setTitle(libro, sheet, 'Errores en marcas', 'right', 5);
+      const motivos: string[] = Array.from(new Set(data.incidencias.map(m => m.motivo))).sort((a, b) => {
+        if(a < b) return -1;
+        if(a > b) return 1;
+        return 0;
+      });
+
+      motivos.forEach(m => {
+        sheet.mergeCells(f, 2, f, 6);
+        sheet.getCell(f, 2).value = m;
+        sheet.getCell(f, 2).font = fuenteTitulo;
+        sheet.getCell(f, 2).fill = this.getFondo(m);
+        f++;
+        sheet.getCell(f, 2).value = "Nro. Func.";
+        sheet.getCell(f, 3).value = "Nombres";
+        sheet.getCell(f, 4).value = "Apellidos";
+        sheet.getCell(f, 5).value = "Régimen";
+        sheet.getCell(f, 6).value = "Sector";
+        sheet.getCell(f, 2).font = fuenteTitulo;
+        sheet.getCell(f, 3).font = fuenteTitulo;
+        sheet.getCell(f, 4).font = fuenteTitulo;
+        sheet.getCell(f, 5).font = fuenteTitulo;
+        sheet.getCell(f, 6).font = fuenteTitulo;
+
+        f++;
+
+        const motivosInc: Incidencia[] = data.incidencias.filter(i => i.motivo === m);
+        motivosInc.forEach(mI => {
+          sheet.getCell(f, 2).value = mI.nroFuncionario;
+          sheet.getCell(f, 3).value = mI.nombres;
+          sheet.getCell(f, 4).value = mI.apellidos;
+          sheet.getCell(f, 5).value = mI.regimen;
+          sheet.getCell(f, 6).value = mI.sector;
+
+          f++;
+        });
+
+        f ++;
+      });
+
+      sheet.getColumn(2).width = 11;
+      sheet.getColumn(3).width = 20;
+      sheet.getColumn(4).width = 25;
+      sheet.getColumn(5).width = 11;
+      sheet.getColumn(6).width = 35;
+    }
+  }
+}
+
+  /* FUNCIONES COMUNES */
+  /* LOGO */
+  private setLogo(libro: Workbook, sheet: Worksheet): void {
+    /* logo */
+    const idLogo = libro.addImage({
+      base64: LOGO_RGB_V1_BEIGE,
+      extension: 'png'
+    });
+    
+    const position: ImagePosition = {
+      tl:   { col: 0.9, row: 0.0 },
+      ext:  { width: 200, height: 100 }
+    };
+
+    sheet.addImage(idLogo, position)
+  }
+
+  private setTitle(libro: Workbook, sheet: Worksheet, title: string, alignment: any, endCol: number = 9) {
+    const mergeCells = [
+      { start: { row: 2, col: 2  }, end: { row: 4, col:  endCol} },
+    ]
+
+    mergeCells.forEach(range => {
+      sheet.mergeCells(range.start.row, range.start.col, range.end.row, range.end.col);
+    })
+
+    const titular = sheet.getCell("B2");
+    titular.fill = this.getFondoNegro();
+    titular.font = { bold: true, size: 19, color: { argb: 'FFFFFFFF' } };
+    titular.style.alignment = { vertical: 'middle', horizontal: alignment };
+    titular.value = title + '   ';
+  }
+
+  /* FONDO NEGRO */
+  private getFondoNegro(): Fill {
+    return  { 
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF000000' },
+      bgColor: { argb: '00000000'  }
+    };  
+  }
+
+  private getFondoGris(): Fill {
+    const lightGrayColor = { argb: 'FFF4F6F6' }; 
+    return   {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: lightGrayColor 
+    };
+  }
+
+  private getFondo(motivo: string): Fill {
+    let color: string;
+
+    switch (motivo) {
+      case 'Error en formato de marca':
+          color = 'FFD45472';
+          break;
+      case 'Falta alguna marca':
+          color = 'FFFF922A';
+          break;
+      case 'Funcionario no está en padrón':
+          color = 'FF35A4CC';
+          break;
+      default:
+          color = '';
+    }
+
+    return   {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: color} 
+    };
+  }
 }

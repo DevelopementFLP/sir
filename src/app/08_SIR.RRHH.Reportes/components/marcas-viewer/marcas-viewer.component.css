@@ -1,0 +1,6 @@
+@import "../../../../../node_modules/primeflex/primeflex.min.css";
+
+.error--marca {
+    font-weight: 600 !important;
+    color: #D45472 !important;
+}

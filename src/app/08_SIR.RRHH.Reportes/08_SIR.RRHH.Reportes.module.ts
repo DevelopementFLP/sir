@@ -13,6 +13,7 @@ import { SingleFileUploaderComponent } from './components/single-file-uploader/s
 import { IncidenciaTableComponent } from './components/icidencia-table/icidencia-table.component';
 import { CustomFilter } from './pipes/CustomFilterPipe.pipe';
 import { InconsistenciaTableComponent } from './components/inconsistencia-table/inconsistencia-table.component';
+import { MarcasViewerComponent } from './components/marcas-viewer/marcas-viewer.component';
 
 
 
@@ -28,7 +29,8 @@ import { InconsistenciaTableComponent } from './components/inconsistencia-table/
     SingleFileUploaderComponent,
     IncidenciaTableComponent,
     CustomFilter,
-    InconsistenciaTableComponent
+    InconsistenciaTableComponent,
+    MarcasViewerComponent
   ],
   imports: [
     CommonModule,

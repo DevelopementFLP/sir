@@ -5,7 +5,6 @@
 .process,
 .results {
     transition: transform 0.3s ease-in-out;
-    z-index: 999;
 }
 
 .process,
@@ -48,9 +47,9 @@
 }
 
 .aceptar:hover {
-    background-color: #645A55;
-    border-color: #645A55;
-    opacity: 0.8;
+    background-color: #645A55 !important;
+    border-color: #645A55 !important;
+    opacity: 0.8 !important;
 }
 
 .circle,
@@ -75,8 +74,38 @@
     transform: translateX(0);
 }
 
-.tituloVerificar{
-    font-size: 1.5rem;
+.error-badge.p-badge.p-component.ng-star-inserted {
+    background-color:var(--red-600);
+}
+
+.warning-badge.p-badge.p-component.ng-star-inserted {
+    background-color:var(--orange-600);
+}
+
+.p-badge.p-component.ng-star-inserted {
+    font-size: 1rem;
     font-weight: 400;
-    color: #85929E;
+}
+
+.p-datatable-header.ng-star-inserted {
+    padding: 0.5rem;
+}
+
+.p-tag.p-component.p-tag-warning,
+.p-tag.p-component.p-tag-danger {
+    font-size: larger !important;
+    font-weight: 400 !important;
+}
+
+.p-fileupload-filename {
+    font-size: 0.9rem !important;
+    padding: 0 !important;
+}
+
+.back > i {
+    font-size: 1.5rem;
+}
+
+.back:hover {
+    cursor: pointer;
 }

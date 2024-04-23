@@ -1,8 +1,8 @@
-export interface Incidencia {
+export interface DataMarcas {
     nroFuncionario: string;
     nombres:        string;
     apellidos:      string;
-    sector:         string;
+    marcas:         number[];
     regimen:        string;
-    motivo:         string;
+    sector:         string;
 }

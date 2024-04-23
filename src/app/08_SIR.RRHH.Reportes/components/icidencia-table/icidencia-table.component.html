@@ -1,4 +1,4 @@
-<div class="card">
+<div class="">
 <p-table
     #dt1
     [value]="incidenciasAgrupadas"
@@ -10,69 +10,82 @@
     [globalFilterFields]="[]"
     [scrollable]="true"
     scrollHeight="600px"
-    [tableStyle]="{'min-width': '100rem'}"
     rowGroupMode="subheader" 
     groupRowsBy="motivo"
     dataKey="motivo"
     [filterDelay]="0">
 
-    <ng-template pTemplate="caption">
-        <div class="flex flex-row justify-content-between">
-            <button pButton label="Borrar filtro" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearTable(dt1)"></button>
-            <span class="p-input-icon-left ml-auto">
-                <i class="pi pi-search"></i>
-                <input id="in" pInputText type="text" (input)="applyGlobalFilter($event)" placeholder="Buscar" value="" />
-            </span>
+    <!-- <ng-template pTemplate="caption">
+        <div class="flex flex-row justify-content-between align-items-center">
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input id="inIncidencia" pInputText type="text" (input)="applyGlobalFilter($event)" (focus)="seleccionarTexto($event);" placeholder="Buscar" value="" />
+                </span>
+                <button pButton label="Borrar filtro" class="p-button-outlined ml-3" icon="pi pi-filter-slash" (click)="clearTable(dt1)" size="small"></button>
         </div>
-    </ng-template>
+    </ng-template> -->
     <ng-template pTemplate="header" let-incidencias>
         <tr>
-            <th style="min-width:15rem">
+            <th style="min-width:5rem" class="no-border">
                 <div class="flex align-items-center">
                     Nro. Funcionario
-                    <p-columnFilter type="text" field="nroFuncionario" display="menu"></p-columnFilter>  
+                    <!-- <p-columnFilter type="text" field="funcionario.nroFuncionario" display="menu"></p-columnFilter>   -->
                 </div>
             </th>
-            <th style="min-width:15rem">
+            <th style="min-width:15rem" class="no-border">
                 <div class="flex align-items-center">
                     Nombres
-                    <p-columnFilter type="text" field="nombres" display="menu"></p-columnFilter>
+                    <!-- <p-columnFilter type="text" field="nombres" display="menu"></p-columnFilter> -->
                 </div>
             </th>
-            <th style="min-width:15rem">
+            <th style="min-width:15rem" class="no-border">
                 <div class="flex align-items-center">
                     Apellidos
-                    <p-columnFilter type="text" field="apellidos" display="menu"></p-columnFilter>
+                    <!-- <p-columnFilter type="text" field="apellidos" display="menu"></p-columnFilter> -->
                 </div>
             </th>
-            <th style="min-width:15rem">
+            <th style="min-width:15rem" class="no-border">
+                <div class="flex align-items-center">
+                    Régimen
+                    <!-- <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter> -->
+                </div>
+            </th>
+            <th style="min-width:15rem" class="no-border">
                 <div class="flex align-items-center">
                     Sector
-                    <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter>
+                    <!-- <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter> -->
                 </div>
             </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="groupheader" let-incidencia let-rowIndex="rowIndex" let-expanded="expanded">
-        <tr>
+        <tr pRowGroupHeader>
             <td colspan="5">
+                <div  class="title">
                 <button type="button" pButton pRipple [pRowToggler]="incidencia" class="p-button-text p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-                <span class="text-lg ml-2" [pRowToggler]="incidencia"> <p-tag class="tag" [value]="incidencia.motivo + ' (' + totalPorMotivo(incidencia.motivo) + ')'" [severity]="getSeverity(incidencia.motivo)"></p-tag></span>
+                <span class="text-lg ml-2 tag" [pRowToggler]="incidencia"><span>{{incidencia.motivo}}</span>&nbsp;<span>&nbsp;&nbsp;({{totalPorMotivo(incidencia.motivo)}})</span></span>
+            </div>
             </td>
         </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-incidencia>
-            <tr *ngFor="let funcionario of incidencia.funcionarios">
-                <td style="min-width:15rem">
+            <tr 
+                (click)="verMarcas(funcionario.nroFuncionario, $event)"    
+                *ngFor="let funcionario of incidencia.funcionarios" class="errores"
+                pTooltip="Clic para ver marcas">
+                <td style="min-width:15rem" class="dato">
                     {{funcionario.nroFuncionario}}
                 </td>
-                <td style="min-width:15rem">
+                <td style="min-width:15rem" class="dato">
                     {{funcionario.nombres}}
                 </td>
-                <td style="min-width:15rem">
+                <td style="min-width:15rem" class="dato">
                     {{funcionario.apellidos}}
                 </td>
-                <td style="min-width:15rem">
+                <td style="min-width:15rem" class="dato">
+                    {{funcionario.regimen}}
+                </td>
+                <td style="min-width:15rem" class="dato">
                     {{funcionario.sector}}
                 </td>
             </tr>

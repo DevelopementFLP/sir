@@ -1,1 +1,42 @@
 @import "../../../../../node_modules/primeflex/primeflex.min.css";
+
+.tituloVerificar{
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #85929E;
+}
+
+.dato {
+    font-size: 0.9rem !important;
+}
+
+.tag {
+    font-weight: 300 !important;
+}
+
+.p-tag-value {
+    font-weight: 300 !important;
+    font-size: medium;
+}
+
+.no-border {
+    border: 0 !important;
+    padding: 0;
+}
+
+.title {
+    display: flex !important;
+    align-items: center !important;
+    border-bottom: none !important;
+}
+
+.title:hover {
+    cursor: pointer;
+}
+
+
+.errores:hover {
+    background-color: #EBF5FB !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
+}

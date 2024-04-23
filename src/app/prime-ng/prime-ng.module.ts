@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 
 
+import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
@@ -25,6 +27,8 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   exports: [
+    AccordionModule,
+    BadgeModule,
     ButtonModule,
     CalendarModule,
     CardModule,

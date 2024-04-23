@@ -15,4 +15,29 @@
 
 .no-border {
     border: 0 !important;
+    padding: 0;
+}
+
+.tituloVerificar{
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #85929E;
+}
+
+.dato {
+    font-size: 0.9rem !important;
+}
+
+.comun__error,
+.doble__error,
+.nocturna__error {
+    font-weight: bold !important;
+    color: #2E4053 !important;
+    font-size: 1.1rem !important;
+}
+
+.marcas:hover {
+    background-color: #EBF5FB !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
 }

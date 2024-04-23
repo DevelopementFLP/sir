@@ -10,10 +10,10 @@
         <div class="p-0">
             <p-sidebar
                 [(visible)]="sidebarVisible"
-                styleClass="w-30rem"
+                styleClass="w-20rem"
                 class="flex flex-column align-items-center">
                 <ng-template pTemplate="header">
-                    <div class="flex flex-row justify-content-between align-items-center">
+                    <div class="flex flex-row justify-content-between align-items-center goMain" (click)="goMain()">
                         <img class="logo" src="../../../assets/images/logos/logo_t2.svg" alt="logo">
                         <span class="titulo"><span class="text-xl"><b>SIR</b></span>&nbsp;<span class="text-lg">Menú Principal</span></span>
                     </div>

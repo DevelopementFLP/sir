@@ -1,6 +1,4 @@
-import { formatDate } from '@angular/common';
 import { Component, ElementRef, HostListener } from '@angular/core';
-import { MainMenuService } from 'src/app/shared/services/main-menu.service';
 import { NavigationService } from 'src/app/shared/services/navigation.service';
 import { SessionManagerService } from 'src/app/shared/services/session-manager.service';
 
@@ -23,8 +21,7 @@ export class MainPageComponent {
   constructor(
     private sessionManagerService: SessionManagerService,
     private navigationService: NavigationService,
-    private elementRef: ElementRef,
-    private mainMenuService: MainMenuService
+    private elementRef: ElementRef
   ) {
 
     if(this.sessionManagerService.getStorage() == null)
@@ -40,6 +37,10 @@ export class MainPageComponent {
     return new Date().getFullYear().toString();
   }
 
+  goMain(): void {
+    //this.router.navigate(['principal'])
+    window.location.reload();
+  }
 
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {

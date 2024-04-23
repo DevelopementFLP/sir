@@ -24,6 +24,8 @@ export const urlHorarioFuncionario: string = urlRRHH + "GetHorarioFuncionario";
 export const urlPadron: string = urlRRHH + "GetPadronFuncionarios";
 export const urlUpdatePadron: string = urlRRHH + "ActualizarPadronFuncionarios";
 export const urlEmpleados: string = urlRRHH + "GetEmpleados";
+export const urlRegimen: string = urlRRHH + "GetRegimen";
+export const urlConfHoras: string = urlRRHH + "GetConfHoras";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

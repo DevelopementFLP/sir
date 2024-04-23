@@ -1,20 +1,19 @@
-<div class="card tbInconsistencia">
+<div class="tbInconsistencia">
     <p-table 
         #dt2
         id="dt2"
         [value]="data"
-        [tableStyle]="{'width': '95vw'}"
         [scrollable]="true"
         scrollHeight="600px"
         [globalFilterFields]="['nroFuncionario', 'nombres', 'apellidos', 'sector', 'regimen', 'relojHorasComunes', 'relojHorasDobles', 'relojHorasNocturnas', 'marcasHorasComunes', 'marcasHorasDobles', 'marcasHorasNocturnas']">
 
         <ng-template pTemplate="caption">
-            <div class="flex flex-row justify-content-between">
-                <button pButton label="Borrar filtro" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearTable(dt2)"></button>
+            <div class="flex flex-row justify-content-between align-items-center">
                 <span class="p-input-icon-left ml-auto">
                     <i class="pi pi-search"></i>
-                    <input id="in" pInputText type="text" (input)="applyFilter($event)"   placeholder="Buscar" value="" [(ngModel)]="filteredValue" />
+                    <input id="in" pInputText type="text" (input)="applyFilter($event)" (focus)="seleccionarTexto($event)"   placeholder="Buscar" value="" [(ngModel)]="filteredValue" />
                 </span>
+                <button pButton label="Borrar filtro" class="p-button-outlined ml-3" icon="pi pi-filter-slash" (click)="clearTable(dt2)" size="small"></button> 
             </div>
         </ng-template>
 
@@ -27,93 +26,107 @@
                 <th colspan="2" class="no-border"></th>
             </tr>
             <tr>
-                <th style="min-width:5rem">
+                <th pSortableColumn="nroFuncionario" style="min-width:5rem">
                     <div class="flex align-items-center">
                         Nro. Funcionario
                         <p-columnFilter type="text" field="nroFuncionario" display="menu"></p-columnFilter>  
+                        <p-sortIcon field="nroFuncionario"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="nombres" style="min-width:10rem">
                     <div class="flex align-items-center">
                         Nombres
                         <p-columnFilter type="text" field="nombres" display="menu"></p-columnFilter>
+                        <p-sortIcon field="nombres"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="apellidos" style="min-width:10rem">
                     <div class="flex align-items-center">
                         Apellidos
                         <p-columnFilter type="text" field="apellidos" display="menu"></p-columnFilter>
+                        <p-sortIcon field="apellidos"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="comun">
+                <th pSortableColumn="relojHorasComunes" style="min-width:5rem" class="comun">
                     <div class="flex align-items-center">
                         Por sistema
                     <p-columnFilter type="text" field="relojHorasComunes" display="menu"></p-columnFilter>
+                    <p-sortIcon field="relojHorasComunes"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="comun">
+                <th pSortableColumn="marcasHorasComunes" style="min-width:5rem" class="comun">
                     <div class="flex align-items-center">
                         Por marcas
                     <p-columnFilter type="text" field="marcasHorasComunes" display="menu"></p-columnFilter>
+                    <p-sortIcon field="marcasHorasComunes"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="doble">
+                <th pSortableColumn="relojHorasDobles" style="min-width:5rem" class="doble">
                     <div class="flex align-items-center">
                         Por sistema
                     <p-columnFilter type="text" field="relojHorasDobles" display="menu"></p-columnFilter>
+                    <p-sortIcon field="relojHorasDobles"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="doble">
+                <th pSortableColumn="marcasHorasDobles" style="min-width:5rem" class="doble">
                     <div class="flex align-items-center">
                         Por marcas
                     <p-columnFilter type="text" field="marcasHorasDobles" display="menu"></p-columnFilter>
+                    <p-sortIcon field="marcasHorasDobles"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="nocturna">
+                <th pSortableColumn="relojHorasNocturnas" style="min-width:5rem" class="nocturna">
                     <div class="flex align-items-center">
                         Por sistema
-                    <p-columnFilter type="text" field="relojHorasNocturnas" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="relojHorasNocturnas" display="menu"></p-columnFilter>
+                        <p-sortIcon field="relojHorasNocturnas"></p-sortIcon>
                     </div>
                 </th>
 
-                <th style="min-width:5rem" class="nocturna">
+                <th pSortableColumn="marcasHorasNocturnas" style="min-width:5rem" class="nocturna">
                     <div class="flex align-items-center">
                         Por marcas
-                    <p-columnFilter type="text" field="marcasHorasNocturnas" display="menu"></p-columnFilter>
+                        <p-columnFilter type="text" field="marcasHorasNocturnas" display="menu"></p-columnFilter>
+                        <p-sortIcon field="marcasHorasNocturnas"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="regimen" style="min-width:10rem">
                     <div class="flex align-items-center">
-                        Regimen
+                        Régimen
                         <p-columnFilter type="text" field="regimen" display="menu"></p-columnFilter>
+                        <p-sortIcon field="regimen"></p-sortIcon>
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="sector" style="min-width:10rem">
                     <div class="flex align-items-center">
                         Sector
                         <p-columnFilter type="text" field="sector" display="menu"></p-columnFilter>
+                        <p-sortIcon field="sector"></p-sortIcon>
                     </div>
                 </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
-            <tr>
-                <td>{{data.nroFuncionario}}</td>
-                <td>{{data.nombres}}</td>
-                <td>{{data.apellidos}}</td>
-                <td class="comun">{{data.relojHorasComunes}}</td>
-                <td class="comun">{{data.marcasHorasComunes}}</td>
-                <td class="doble">{{data.relojHorasDobles}}</td>
-                <td class="doble">{{data.marcasHorasDobles}}</td>
-                <td class="nocturna">{{data.relojHorasNocturnas}}</td>
-                <td class="nocturna">{{data.marcasHorasNocturnas}}</td>
-                <td>{{data.regimen}}</td>
-                <td>{{data.sector}}</td>
+            <tr 
+                (click)="verMarcas(data.nroFuncionario, $event)" 
+                class="marcas"
+                pTooltip="Clic para ver marcas">
+                <td class="dato">{{data.nroFuncionario}}</td>
+                <td class="dato">{{data.nombres}}</td>
+                <td class="dato">{{data.apellidos}}</td>
+                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}"> {{data.relojHorasComunes}}</td>
+                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}">{{data.marcasHorasComunes}}</td>
+                <td class="dato doble" [ngClass]="{'doble__error': data.relojHorasDobles != data.marcasHorasDobles}">{{data.relojHorasDobles}}</td>
+                <td class="dato doble" [ngClass]="{'doble__error': data.relojHorasDobles != data.marcasHorasDobles}">{{data.marcasHorasDobles}}</td>
+                <td class="dato nocturna" [ngClass]="{'nocturna__error': data.relojHorasNocturnas != data.marcasHorasNocturnas}">{{data.relojHorasNocturnas}}</td>
+                <td class="dato nocturna" [ngClass]="{'nocturna__error': data.relojHorasNocturnas != data.marcasHorasNocturnas}">{{data.marcasHorasNocturnas}}</td>
+                <td class="dato">{{data.regimen}}</td>
+                <td class="dato">{{data.sector}}</td>
             </tr>
         </ng-template>
 
