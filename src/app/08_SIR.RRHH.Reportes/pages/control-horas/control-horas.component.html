@@ -107,7 +107,7 @@
         <ng-template pTemplate="header">
           <div class="flex items-center gap-2">
             <i class="pi pi-fw pi-times-circle text-red-700 text-xl"></i>
-            <span class="text-red-700 text-xl font-light">Funcionarios para verificar horario</span>
+            <span class="text-red-700 text-xl font-light">Funcionarios para corregir errores</span>
             <p-badge [value]="horasIncidencias.incidencias.length.toString()" styleClass="error-badge" />
           </div>
         </ng-template>
@@ -117,11 +117,13 @@
   </div>
 </div>
 
+<p-confirmDialog></p-confirmDialog>
+
 <div *ngIf="isResultsVisible"
-   class="expo">
+class="expo">
    <sir-exportacion 
-      [excel]="true"
-      [idReporte]="idReporte"
-      [nombreArchivo]="nombreArchivo"
-      [data]="dataToPrint"/>
+   [excel]="true"
+   [idReporte]="idReporte"
+   [nombreArchivo]="nombreArchivo"
+   [data]="dataToPrint"/>
 </div>

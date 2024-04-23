@@ -6,7 +6,7 @@ import { PadronFuncionario } from '../../interfaces/PadronFuncionario.interface'
 import { ControlHorasService } from '../../services/control-horas.service';
 import { formatDate } from '@angular/common';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { SingleFileUploaderComponent } from '../../components/single-file-uploader/single-file-uploader.component';
 import { MarcaPorFuncionario } from '../../interfaces/MarcaPorFuncionario.interface';
 import { HorasPorFuncionario } from '../../interfaces/HorasPorFuncionario.interface';
@@ -15,12 +15,15 @@ import { HorasIncidencias } from '../../interfaces/HorasIncidencias.interface';
 import { HorasComparar } from '../../interfaces/HorasComparar.interface';
 import { FileUpload } from 'primeng/fileupload';
 import { InconsistenciaDataPrint } from '../../interfaces/InconsistenciaDataPrint.interface';
+import { CustomMessageService } from 'src/app/shared/services/message-service.service';
+
+
 
 @Component({
   selector: 'app-control-horas',
   templateUrl: './control-horas.component.html',
   styleUrls: ['./control-horas.component.css'],
-  providers: [DialogService, MessageService],
+  providers: [DialogService, MessageService, ConfirmationService],
   encapsulation: ViewEncapsulation.None,
 })
 export class ControlHorasComponent implements OnInit, OnDestroy {
@@ -68,17 +71,19 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
   constructor(
     private controlHorasService: ControlHorasService,
     public dialogService: DialogService,
-    public messageService: MessageService ) {}
+    public messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.reset();
     try{
       await this.getPadronData();
     } catch (error) {
-      console.log('Error al obtener los datos:', error);
+      this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
     }
   }
-
+  
   reset(): void {
     this.isSettingsVisible = true;
     this.isResultsVisible = false;
@@ -96,7 +101,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       if(this.padron != undefined && this.padron.length > 0)
         this.lastUpdate = formatDate(this.padron[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
     } catch (error) {
-      console.log('Error al obtener los datos del servicio:', error);
+      this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
     }   
   }
 
@@ -112,7 +117,8 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         const file: File = fileList[i];
         if(!this.fileSelected(file))
           this.filesToProcess.push(file);
-        else console.log('Archivo ya cargado.')
+        else
+          this.mostrarMensaje('El archivo seleccionado ya fue cargado.', 'Archivo dubplicado', 'pi pi-exclamation-triangle');
       }
     }
   }
@@ -189,7 +195,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       }
     }).catch(() => {
       this.showOptions();
-      console.log('Alguno de los archivos no fue proporcionado. Verificar.')
+      this.mostrarMensaje('Alguno de los archivos no fue proporcionado. Verificar.', 'Error en archivos', 'pi pi-exclamation-triangle');
     });
   }
 
@@ -204,7 +210,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     this.marcasPorFuncionario = this.controlHorasService.generarMarcasPorFuncionario(this.marcasArray);
     this.horasIncidencias = this.controlHorasService.contarHorasPorFuncionarios(this.marcasPorFuncionario, this.padron!);
     const funcionariosUnicos: number[] = Array.from(new Set(this.horasArray.map(func => func.funcionario)));
-    
+
     funcionariosUnicos.forEach(func => {
       const horasSumadas: HorasTrabajadas[] = [];
       [2, 4, 6].forEach(codigo => {
@@ -271,12 +277,12 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
               resolve();
               break;
             default:
-              console.log("Alguno de los archivos no cumple con los requisitos. Verificar.")
+              this.mostrarMensaje('Alguno de los archivos no cumple con la estructura esperada. Verificar.', 'Error en archivos', 'pi pi-exclamation-triangle');
               reject();
               break;
             }
         } else {
-          console.log("Alguno de los archivos no cumple con los requisitos. Verificar.");
+          this.mostrarMensaje('Alguno de los archivos no cumple con la estructura esperada. Verificar.', 'Error en archivos', 'pi pi-exclamation-triangle');
           reject();
         }
       }
@@ -339,4 +345,19 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
 
     return horas;
   }
+
+  private mostrarMensaje(mensaje: string, header: string, icon: string): void {
+    this.confirmationService.confirm({
+      message: mensaje,
+      header: header,
+      icon: icon,
+      acceptIcon:"none",
+      acceptLabel: 'Aceptar',
+      rejectVisible: false,
+      dismissableMask: true,
+      closeOnEscape: true,
+      accept: () => {},
+    })
+  }
+
 }

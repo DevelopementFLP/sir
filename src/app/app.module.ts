@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CONFIRMATION_SERVICE_TOKEN, MESSAGE_SERVICE_TOKEN } from './shared/services/tokens/messages.tokens';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,7 +33,6 @@ import { MantenimientoAppsModule } from './07_SIR.Mantenimiento.Apps/07_SIR.Mant
 import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { RRHHReportesModule } from './08_SIR.RRHH.Reportes/08_SIR.RRHH.Reportes.module';
-import { MessageService } from 'primeng/api';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 
 
@@ -68,7 +70,9 @@ registerLocaleData(localeEs);
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },
-    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true}
+    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true},
+    { provide: CONFIRMATION_SERVICE_TOKEN, useClass: ConfirmationService },
+    { provide: MESSAGE_SERVICE_TOKEN, useClass: MessageService }
    
   ],
   bootstrap: [AppComponent]

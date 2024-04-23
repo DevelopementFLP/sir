@@ -8,6 +8,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
@@ -34,6 +35,7 @@ import { TooltipModule } from 'primeng/tooltip';
     CardModule,
     CheckboxModule,
     ChipModule,
+    ConfirmDialogModule,
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
