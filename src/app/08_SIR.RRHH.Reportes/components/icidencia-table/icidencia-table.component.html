@@ -72,7 +72,8 @@
             <tr 
                 (click)="verMarcas(funcionario.nroFuncionario, $event)"    
                 *ngFor="let funcionario of incidencia.funcionarios" class="errores"
-                pTooltip="Clic para ver marcas">
+                pTooltip="Clic para ver marcas" [tooltipDisabled]="funcionario.regimen === ''" tooltipPosition="left"
+                [ngClass]="{ 'disabled-row': funcionario.regimen === '' }">
                 <td style="min-width:15rem" class="dato">
                     {{funcionario.nroFuncionario}}
                 </td>

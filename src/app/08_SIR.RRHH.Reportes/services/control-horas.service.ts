@@ -92,7 +92,8 @@ export class ControlHorasService {
 
         marcas.forEach(marca => {
             const regimen = this.getRegimen(marca.nroFuncionario, padron);
-            if(!isNaN(marca.tiempoTotalTrabajado) && marca.salida) {
+            const enPadron = padron.find(f => f.nroFuncionario === marca.nroFuncionario);
+            if(!isNaN(marca.tiempoTotalTrabajado) && marca.salida && enPadron) {
                 const horasTrabajadas = this.contarHorasTrabajadas(regimen, marca.marcas[0], marca.marcas[marca.marcas.length -1]);
                 const limiteHorasComunes = regimen === 8 ? 8 : 9.36;
                 const horasNocturnas = this.contarHorasNocturnas(marca.marcas)
@@ -108,7 +109,10 @@ export class ControlHorasService {
                     }
                 )
             } else {
-                if(isNaN(marca.tiempoTotalTrabajado))
+                if(!enPadron)
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: '', sector: '', motivo: 'Funcionario no está en padrón'})
+                else
+                    if(isNaN(marca.tiempoTotalTrabajado))
                     incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Error en formato de marca'})
                 else if (!marca.salida)
                     incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Falta alguna marca'})

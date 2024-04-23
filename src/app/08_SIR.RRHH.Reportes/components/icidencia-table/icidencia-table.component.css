@@ -40,3 +40,9 @@
     cursor: pointer !important;
     opacity: 0.8 !important;
 }
+
+.disabled-row {
+    pointer-events: none; 
+    opacity: 0.5;
+    cursor: not-allowed;
+}
