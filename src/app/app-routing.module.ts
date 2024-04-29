@@ -37,6 +37,7 @@ import { LogueoFuncComponent } from './08_SIR.RRHH.Reportes/pages/logueo-func/lo
 import { PageHorarioFuncionarioComponent } from './08_SIR.RRHH.Reportes/components/page-horario-funcionario/page-horario-funcionario.component';
 import { ControlHorasComponent } from './08_SIR.RRHH.Reportes/pages/control-horas/control-horas.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { DashboardDesosadoComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-desosado/dashboard-desosado.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -71,6 +72,7 @@ const routes: Routes = [
     { path: 'mantenimiento/dashboardScanners', component: DashboardComponent},
     { path: 'mantenimiento/dashboardEagle', component: DashboardEagleComponent},
     { path: 'mantenimiento/reporteGraseria', component: GraseriaComponent},
+    { path: 'mantenimiento/dashboardDesosado', component: DashboardDesosadoComponent},
     { path: 'rrhh/funcionariosLogueados', component: LogueoFuncComponent},
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},

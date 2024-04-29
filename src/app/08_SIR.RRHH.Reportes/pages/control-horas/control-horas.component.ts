@@ -15,8 +15,6 @@ import { HorasIncidencias } from '../../interfaces/HorasIncidencias.interface';
 import { HorasComparar } from '../../interfaces/HorasComparar.interface';
 import { FileUpload } from 'primeng/fileupload';
 import { InconsistenciaDataPrint } from '../../interfaces/InconsistenciaDataPrint.interface';
-import { CustomMessageService } from 'src/app/shared/services/message-service.service';
-
 
 
 @Component({
@@ -78,7 +76,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.reset();
     try{
-      await this.getPadronData();
+      this.getPadronData();
     } catch (error) {
       this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
     }
@@ -92,18 +90,32 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     if(this.fileUpload){
       this.fileUpload.clear();
     }
+    this.horasAComparar = [];
+    this.dataToPrint = {
+      incidencias: [],
+      inconsistencias: []
+    };
+    this.horasIncidencias = {
+      horas: [],
+      incidencias: []
+    };
+    
   }
 
-  private async getPadronData(): Promise<void> {
-    try{
-      const data = await this.controlHorasService.getPadronFuncionarios().toPromise();
-      this.padron = data;
-      if(this.padron != undefined && this.padron.length > 0)
-        this.lastUpdate = formatDate(this.padron[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
-    } catch (error) {
-      this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
-    }   
+  private getPadronData() {
+    try {
+      this.padron = [];
+      this.controlHorasService.getPadronFuncionarios().subscribe(
+        data => {
+          this.padron = data;
+          this.lastUpdate = formatDate(this.padron[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
+        }
+      );
+    } catch(error: any) {
+      this.mostrarMensaje('Hubo un error al intentar obtener los datos del padrón.', 'Hubo un error', 'pi pi-exclamation-triangle');
+    }
   }
+  
 
   ngOnDestroy(): void {
     if(this.ref) this.ref.close();
@@ -118,7 +130,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         if(!this.fileSelected(file))
           this.filesToProcess.push(file);
         else
-          this.mostrarMensaje('El archivo seleccionado ya fue cargado.', 'Archivo dubplicado', 'pi pi-exclamation-triangle');
+          this.mostrarMensaje('El archivo seleccionado ya fue cargado.', 'Archivo duplicado', 'pi pi-exclamation-triangle');
       }
     }
   }
@@ -308,11 +320,14 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       dismissableMask: true
     });
 
-    this.ref.onClose.subscribe( (result: any) => {
+    this.ref.onClose.subscribe((result: any) => {
       if (result !== undefined) {
-        setTimeout(async () => {
-          await this.getPadronData(); 
-        }, 100);
+        setTimeout(() => {
+          this.controlHorasService.getPadronFuncionarios().subscribe(data => {
+           this.padron = data;
+           this.lastUpdate = formatDate(data[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
+          })
+        }, 1000);
       }
     });
   }
@@ -346,16 +361,15 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     return horas;
   }
 
-  private mostrarMensaje(mensaje: string, header: string, icon: string): void {
+   mostrarMensaje(mensaje: string, header: string, icon: string): void {
     this.confirmationService.confirm({
-      message: mensaje,
       header: header,
+      message: mensaje,
       icon: icon,
-      acceptIcon:"none",
-      acceptLabel: 'Aceptar',
       rejectVisible: false,
       dismissableMask: true,
       closeOnEscape: true,
+      acceptLabel: 'Aceptar',
       accept: () => {},
     })
   }

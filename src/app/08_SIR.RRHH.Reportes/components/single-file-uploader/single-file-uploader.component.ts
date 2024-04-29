@@ -29,11 +29,11 @@ export class SingleFileUploaderComponent {
    this.files = [];
   }
 
-  actualizarRegistros(): void {
+  async actualizarRegistros(): Promise<void> {
     const promises: Promise<void>[] = [];
-    promises.push(this.updatePadron());
+    await promises.push(this.updatePadron());
     
-    Promise.all(promises).then(() => {
+    await Promise.all(promises).then(() => {
       let padronArray: PadronJornalero[] = [];
 
       try {
@@ -62,11 +62,11 @@ export class SingleFileUploaderComponent {
           };    
           return nuevoFuncionario;
       });
-        
+    
       if (padronFuncionarios.length > 0) {
         this.controlHorasService.postPadronFuncionarios(padronFuncionarios).subscribe({
           next: (response) => {
-            console.log(response); // Manejar el siguiente valor emitido por el Observable
+             // Manejar el siguiente valor emitido por el Observable
           },
           error: (error) => {
             console.error('Error al enviar la solicitud:', error); // Manejar errores emitidos por el Observable

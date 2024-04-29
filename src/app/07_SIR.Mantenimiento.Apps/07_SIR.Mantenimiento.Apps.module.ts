@@ -13,6 +13,7 @@ import { PrimeNgModule } from '../prime-ng/prime-ng.module';
 import { GraseriaComponent } from './pages/graseria/graseria.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { DashboardDesosadoComponent } from './pages/dashboard-desosado/dashboard-desosado.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SharedModule } from '../shared/shared.module';
     ScannersListComponent,
     NotFoundComponent,
     NoConnectionComponent,
-    GraseriaComponent
+    GraseriaComponent,
+    DashboardDesosadoComponent
   ],
   imports: [
     CommonModule,
