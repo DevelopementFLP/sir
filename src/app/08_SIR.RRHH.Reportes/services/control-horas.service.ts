@@ -3,7 +3,7 @@ import { TipoHora } from '../interfaces/TipoHora.interface';
 import { PadronFuncionario } from '../interfaces/PadronFuncionario.interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { urlConfHoras, urlPadron, urlRegimen, urlUpdatePadron } from 'src/settings';
+import { urlConfHoras, urlHorarioDesfasado, urlPadron, urlRegimen, urlUpdateHorariosDesfasados, urlUpdatePadron } from 'src/settings';
 import { Marcas } from '../interfaces/Marcas.interface';
 import { MarcaPorFuncionario } from '../interfaces/MarcaPorFuncionario.interface';
 import { HorasPorFuncionario } from '../interfaces/HorasPorFuncionario.interface';
@@ -13,6 +13,7 @@ import { HorasIncidencias } from '../interfaces/HorasIncidencias.interface';
 import { Regimen } from '../interfaces/Regimen.interface';
 import { ConfHora } from '../interfaces/ConfHora.interface';
 import { HorasComparar } from '../interfaces/HorasComparar.interface';
+import { FuncionarioHorarioDesfasado } from '../interfaces/FuncionarioHorarioDesfasado.interface';
 
 @Injectable({providedIn: 'root'})
 export class ControlHorasService {
@@ -59,6 +60,14 @@ export class ControlHorasService {
         return this.horasAComparar;
     }
 
+    getFuncionariosHorariosDesfasados(): Observable<FuncionarioHorarioDesfasado[]> {
+        return this.http.get<FuncionarioHorarioDesfasado[]>(urlHorarioDesfasado);
+    }
+
+    postFuncionariosHorariosDesfasados(funcionarios: FuncionarioHorarioDesfasado[]): Observable<void> {
+        return this.http.post<void>(urlUpdateHorariosDesfasados, funcionarios);
+    }
+
     setHorasIncidencias(horasIncidencias: HorasIncidencias) {
         this.horasIncidencias.horas = [];
         this.horasIncidencias.incidencias = [];
@@ -70,7 +79,7 @@ export class ControlHorasService {
         this.horasAComparar = horasAComparar;
     }
 
-    generarMarcasPorFuncionario(marcas: Marcas[]): MarcaPorFuncionario[] {
+    generarMarcasPorFuncionario(marcas: Marcas[], horariosDesfasados: FuncionarioHorarioDesfasado[]): MarcaPorFuncionario[] {
         let marcasPorFunc: MarcaPorFuncionario[] = [];
 
         marcas.forEach(marca => {
@@ -78,15 +87,19 @@ export class ControlHorasService {
                 {
                     nroFuncionario: marca.funcionario.toString(),
                     marcas: marca.marcas,
-                    salida: marca.marcas.length % 2 === 0,
-                    tiempoTotalTrabajado: this.contarTiempoTrabajado(marca.marcas)
+                    salida: marca.marcas.length > 1,
+                    tiempoTotalTrabajado: this.contarTiempoTrabajado(marca.marcas, marca.funcionario.toString(), horariosDesfasados)
                 }
             )
         });
         return marcasPorFunc;
     }
 
-    contarHorasPorFuncionarios(marcas: MarcaPorFuncionario[], padron: PadronFuncionario[]): HorasIncidencias {
+    private esHorarioDesfasado(nroFuncionario: string, horariosDesfasados: FuncionarioHorarioDesfasado[]): boolean {
+        return horariosDesfasados.some(f => f.nroFuncionario === nroFuncionario);
+    }
+
+    contarHorasPorFuncionarios(marcas: MarcaPorFuncionario[], padron: PadronFuncionario[], regimenes: Regimen[], horariosDesfasados: FuncionarioHorarioDesfasado[]): HorasIncidencias {
         let horasPorFunc: HorasPorFuncionario[] = [];
         let incidencias: Incidencia[] = [];
 
@@ -94,9 +107,12 @@ export class ControlHorasService {
             const regimen = this.getRegimen(marca.nroFuncionario, padron);
             const enPadron = padron.find(f => f.nroFuncionario === marca.nroFuncionario);
             if(!isNaN(marca.tiempoTotalTrabajado) && marca.salida && enPadron) {
-                const horasTrabajadas = this.contarHorasTrabajadas(regimen, marca.marcas[0], marca.marcas[marca.marcas.length -1]);
+                const horarioDesfasado: boolean = this.esHorarioDesfasado(marca.nroFuncionario, horariosDesfasados);
+                const inicio: number = horarioDesfasado ? marca.marcas[marca.marcas.length - 1] : marca.marcas[0];
+                const fin: number = horarioDesfasado ? marca.marcas[0] : marca.marcas[marca.marcas.length - 1];
+                const horasTrabajadas = this.contarHorasTrabajadas(regimen, inicio, fin);
                 const limiteHorasComunes = regimen === 8 ? 8 : 9.36;
-                const horasNocturnas = this.contarHorasNocturnas(marca.marcas)
+                const horasNocturnas = this.contarHorasNocturnas(marca.marcas, regimenes, regimen, horarioDesfasado)
                 horasPorFunc.push(
                     {
                         nroFuncionario: marca.nroFuncionario,
@@ -124,10 +140,24 @@ export class ControlHorasService {
         }
     }
 
-    private contarTiempoTrabajado(marcas: number[]): number {
-        const finIndex: number = marcas.length % 2 === 0 ? marcas.length : marcas.length - 1;
-
+    private contarTiempoTrabajado(marcas: number[], nroFuncionario: string, horariosDesfasados: FuncionarioHorarioDesfasado[]): number {
         let totalHorasTranscurridas = 0;
+
+        if(this.esHorarioDesfasado(nroFuncionario, horariosDesfasados)) {
+            const horaEntradaActual = marcas[marcas.length - 1];
+            const horaSalidaActual = marcas[0];
+            totalHorasTranscurridas = horaSalidaActual - horaEntradaActual;
+            return totalHorasTranscurridas;
+        }
+
+        if(marcas.length % 2 !== 0) {
+            const horaEntradaActual = marcas[0];
+            const horaSalidaActual = marcas[marcas.length - 1];
+            totalHorasTranscurridas = horaSalidaActual - horaEntradaActual;
+            return totalHorasTranscurridas;
+        }
+
+        const finIndex: number = marcas.length;
 
         for (let i = 0; i < finIndex; i = i + 2) {
             const horaEntradaActual = marcas[i];
@@ -155,7 +185,6 @@ export class ControlHorasService {
     }
 
     private contarHorasTrabajadas(regimen: number, horaInicio: number, horaFinal: number) : TiempoTrabajado {
-       // const horasTrabajadas = this.convertirDecimalAHora(tiempoTrabajado);
         const horasTrabajadas = this.calcularDiferenciaHoras(this.convertirDecimalAHora(horaInicio), this.convertirDecimalAHora(horaFinal));
 
         let totalMinutos = (horasTrabajadas.horas) * 60 + horasTrabajadas.minutos;
@@ -185,7 +214,7 @@ export class ControlHorasService {
         }
 
         if(horasExtras == 0 && minutosExtras == 0)
-        minutosComunes = totalMinutos % 60;
+            minutosComunes = totalMinutos % 60;
 
         return {
             horasComunes: Math.floor(horasComunes),
@@ -195,11 +224,28 @@ export class ControlHorasService {
         };
     }
      
-    private contarHorasNocturnas(horas: number[]): number {
-        const finIndex: number = horas.length % 2 === 0 ? horas.length : horas.length - 1;
+    private contarHorasNocturnas(horas: number[], regimenes: Regimen[], regimen: number, horarioDesfasado: boolean): number {
+        const reg: Regimen | undefined = regimenes.find(r => r.descripcion === regimen.toString());
+        let horasEnRango = 0;
+        
+        if(!reg) return horasEnRango;
+    
+        const horaInicioRegimen: number = reg.inicioNocturnas - 3;
+        const horaFinRegimen: number = reg.finNocturnas - 3;
+        let hrs: number[] = [];
+
+        if(horas.length % 2 === 0) hrs = horas;
+        else {
+            if(horas.length > 1) {
+                hrs.push(horas[0]);
+                hrs.push(horas[horas.length - 1])
+            }
+        }
+
+        if(horarioDesfasado) hrs.unshift(hrs.pop()!);
 
         const horaInicio1 = new Date();
-        horaInicio1.setHours(18, 0, 0, 0);  // 21:00
+        horaInicio1.setHours(horaInicioRegimen, 0, 0, 0);  
     
         const horaFin1 = new Date();
         horaFin1.setHours(20, 59, 59, 999); // 23:59:59.999 (último milisegundo del día)
@@ -208,25 +254,45 @@ export class ControlHorasService {
         horaInicio2.setHours(-3, 0, 0, 0);  // 00:00 (inicio del día siguiente)
     
         const horaFin2 = new Date();
-        horaFin2.setHours(2, 0, 0, 0);      // 05:00
-    
-        let horasEnRango = 0;
-    
-        for (let i = 0; i < finIndex; i += 2) {
-            const horaEntrada = this.convertirDecimalAHora(horas[i]);
-            const horaSalida  = this.convertirDecimalAHora(horas[i + 1]);
+        horaFin2.setHours(horaFinRegimen, 0, 0, 0);     
     
     
-            // Calcular horas dentro del primer rango (21:00 a 23:59:59.999)
-            if (horaEntrada <= horaFin1 && horaSalida >= horaInicio1) {
+        for (let i = 0; i < hrs.length; i += 2) {
+            const horaEntrada = this.convertirDecimalAHora(hrs[i]);
+            const horaSalida  = this.convertirDecimalAHora(hrs[i + 1]);
+
+            let enRango1: boolean = horaEntrada <= horaFin1 && horaSalida >= horaInicio1;
+            let enRango2: boolean = horaEntrada <= horaFin2 && horaSalida >= horaInicio2;
+
+            if(horarioDesfasado)  {
+                enRango1 = horaEntrada >= horaInicio1 && horaSalida <= horaFin1;
+                enRango2 = horaEntrada >= horaInicio2 && horaSalida <= horaFin2;
+            }
+
+            // Calcular horas dentro del primer rango 
+            if (enRango1) {
                 const inicioRango1 = horaEntrada < horaInicio1 ? horaInicio1 : horaEntrada;
+                
                 const finRango1 = horaSalida > horaFin1 ? horaFin1 : horaSalida;
-                const duracionRango1 = (finRango1.getTime() - inicioRango1.getTime()) / (1000 * 60 * 60);
+                
+                let duracionRango1: number;
+                const refDate: Date = new Date();
+                refDate.setHours(9,0,0);
+        
+                if(horarioDesfasado) {
+                    duracionRango1 = (horaFin1.getTime() - horaEntrada.getTime()) / (1000 * 60 * 60); 
+                    if(horaSalida > horaFin2) 
+                        duracionRango1 += (horaFin2.getTime() - horaInicio2.getTime()) / (1000 * 60 * 60);
+                    
+                }
+                else
+                    duracionRango1 = (finRango1.getTime() - inicioRango1.getTime()) / (1000 * 60 * 60);
+                
                 horasEnRango += duracionRango1;
             }
     
-            // Calcular horas dentro del segundo rango (00:00 a 05:00)
-            if (horaEntrada <= horaFin2 && horaSalida >= horaInicio2) {
+            // Calcular horas dentro del segundo rango 
+            if (enRango2) {
                 const inicioRango2 = horaEntrada < horaInicio2 ? horaInicio2 : horaEntrada;
                 const finRango2 = horaSalida > horaFin2 ? horaFin2 : horaSalida;
                 const duracionRango2 = (finRango2.getTime() - inicioRango2.getTime()) / (1000 * 60 * 60);

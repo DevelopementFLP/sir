@@ -1,0 +1,25 @@
+
+<div class="charqueo" [ngClass]="{'opaco': !dataCharqueo, 'iluminado': dataCharqueo}">
+    <div 
+        [ngClass]="{
+            'arriba__promedio': getRendimiento(dataCharqueo) >= getIndiceRendimiento(),
+            'abajo__promedio': getRendimiento(dataCharqueo) < getIndiceRendimiento(),
+            'porcentaje__inactivo': !dataCharqueo
+        }" 
+        class="dato dato--titulo" *ngIf="lado === 1">{{ dataCharqueo != undefined ? ((dataCharqueo.kilosEnviados / dataCharqueo.kilosRecibidos) | percent:'0.1') : 0 | percent:'2.1'}}</div>
+    <div [ngClass]="{'titulo__inactivo': !dataCharqueo}" class="dato dato--titulo" *ngIf="lado === 2">{{ dataCharqueo != undefined ? getPuesto(dataCharqueo.puesto) : getPuestoVacio(idPuesto) }}</div>
+    <div [ngClass]="{'dato__inactivo': !dataCharqueo}" class="dato dato--kilos">{{ dataCharqueo != undefined ? dataCharqueo.kilosEnviados : 0 }}</div>
+    <div 
+        [ngClass]="{
+            'arriba__promedio': getRendimiento(dataCharqueo) >= getIndiceRendimiento(),
+            'abajo__promedio': getRendimiento(dataCharqueo) < getIndiceRendimiento(),
+            'porcentaje__inactivo': !dataCharqueo
+        }" 
+        class="dato dato--porcentaje" *ngIf="lado === 2">{{ dataCharqueo != undefined ? ((dataCharqueo.kilosEnviados / dataCharqueo.kilosRecibidos) | percent:'0.1') : 0 | percent:'2.1'}}</div>
+    <div 
+        [ngClass]="
+        {
+            'titulo__inactivo': !dataCharqueo
+        }" 
+        class="dato dato--porcentaje" *ngIf="lado === 1">{{ dataCharqueo != undefined ? getPuesto(dataCharqueo.puesto!) : getPuestoVacio(idPuesto) }}</div>
+</div>

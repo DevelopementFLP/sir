@@ -1,0 +1,19 @@
+.table__row {
+    font-size: 0.9rem !important;
+}
+
+.table__row:nth-child(even) {
+    background-color: #ECE6D2 !important;
+}
+
+.lote__texto {
+    min-width: 25rem;
+}
+
+.lote__texto__medium {
+    min-width: 15rem;
+}
+
+.lote__texto__sm {
+    min-width: 10rem;
+}

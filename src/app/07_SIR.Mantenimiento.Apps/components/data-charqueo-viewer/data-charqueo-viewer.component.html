@@ -1,0 +1,21 @@
+<div class="viewer">
+    <div class="viewer__name">{{ charqueador?.charqueador ?? '(Nombre charqueador)' }}</div>
+    <div class="viewer__data">
+        <div class="data--titles">
+            <div class="data">Puesto</div>
+            <div class="data">Cortes recibidos</div>
+            <div class="data">Cortes enviados</div>
+            <div class="data">Kilos recibidos</div>
+            <div class="data">Kilos enviados</div>
+            <div class="data">Rendimiento</div>
+        </div>
+        <div class="data--values">
+            <div class="data">{{ charqueador?.nombreEstacion ?? '' }}</div>
+            <div class="data">{{ charqueador?.cortesRecibidos | number:'0.0' }}</div>
+            <div class="data">{{ charqueador?.cortesEnviados | number:'0.0' }}</div>
+            <div class="data">{{ charqueador?.kgRecibidos | number:'0.2' }}</div>
+            <div class="data">{{ charqueador?.kgEnviados | number:'0.2' }}</div>
+            <div class="data">{{ charqueador?.porcRendimiento ?? 0 }}<span *ngIf="charqueador">%</span> </div>
+        </div>
+    </div>
+</div>

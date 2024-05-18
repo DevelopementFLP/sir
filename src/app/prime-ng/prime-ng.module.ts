@@ -10,6 +10,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -20,6 +21,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
 import { SidebarModule } from 'primeng/sidebar';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
@@ -37,6 +39,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ChipModule,
     ConfirmDialogModule,
     DialogModule,
+    DividerModule,
     DropdownModule,
     DynamicDialogModule,
     FieldsetModule,
@@ -46,6 +49,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ListboxModule,
     PanelMenuModule,
     PasswordModule,
+    SelectButtonModule,
     SidebarModule,
     TableModule,
     TabViewModule,

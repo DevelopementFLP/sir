@@ -1,0 +1,8 @@
+<div class="empaque" [ngClass]="{'opaco': !dataEmpaque, 'iluminado': dataEmpaque}">
+    <div [ngClass]="{'titulo__inactivo': !dataEmpaque}" class="dato dato--titulo" *ngIf="lado === 2">{{ dataEmpaque != undefined ? getPuesto(dataEmpaque.puesto) : getPuestoVacio(idPuesto)}}</div>
+    <div [ngClass]="{'cortes__inactivo': !dataEmpaque}" class="dato dato--cortes" *ngIf="lado === 2">{{ dataEmpaque != undefined ? (dataEmpaque.cortes | number:'0.0') : 0 }}</div>
+    <div [ngClass]="{'kilos__inactivo': !dataEmpaque}" class="dato dato--kilos dato--kilos__down" *ngIf="lado === 2">{{ dataEmpaque != undefined ? (dataEmpaque.kilos | number:'0.1') : 0 }}</div>
+    <div [ngClass]="{'kilos__inactivo': !dataEmpaque}" class="dato dato--kilos dato--kilos__top" *ngIf="lado === 1">{{ dataEmpaque != undefined ?(dataEmpaque.kilos | number:'0.1') : 0 }}</div>
+    <div [ngClass]="{'cortes__inactivo': !dataEmpaque}" class="dato dato--cortes" *ngIf="lado === 1">{{ dataEmpaque != undefined ?(dataEmpaque.cortes | number:'0.0') : 0 }}</div>
+    <div [ngClass]="{'titulo__down__inactivo': !dataEmpaque}" class="dato dato--titulo__down" *ngIf="lado === 1">{{ dataEmpaque != undefined ? getPuesto(dataEmpaque.puesto) : getPuestoVacio(idPuesto)}}</div>
+</div>

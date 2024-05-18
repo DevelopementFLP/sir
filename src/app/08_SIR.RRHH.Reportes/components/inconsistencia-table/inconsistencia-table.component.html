@@ -50,7 +50,7 @@
 
                 <th pSortableColumn="relojHorasComunes" style="min-width:5rem" class="comun">
                     <div class="flex align-items-center">
-                        Por sistema
+                        Por código
                     <p-columnFilter type="text" field="relojHorasComunes" display="menu"></p-columnFilter>
                     <p-sortIcon field="relojHorasComunes"></p-sortIcon>
                     </div>
@@ -66,7 +66,7 @@
 
                 <th pSortableColumn="relojHorasDobles" style="min-width:5rem" class="doble">
                     <div class="flex align-items-center">
-                        Por sistema
+                        Por código
                     <p-columnFilter type="text" field="relojHorasDobles" display="menu"></p-columnFilter>
                     <p-sortIcon field="relojHorasDobles"></p-sortIcon>
                     </div>
@@ -82,7 +82,7 @@
 
                 <th pSortableColumn="relojHorasNocturnas" style="min-width:5rem" class="nocturna">
                     <div class="flex align-items-center">
-                        Por sistema
+                        Por código
                         <p-columnFilter type="text" field="relojHorasNocturnas" display="menu"></p-columnFilter>
                         <p-sortIcon field="relojHorasNocturnas"></p-sortIcon>
                     </div>
@@ -119,8 +119,10 @@
                 <td class="dato">{{data.nroFuncionario}}</td>
                 <td class="dato">{{data.nombres}}</td>
                 <td class="dato">{{data.apellidos}}</td>
-                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}"> {{data.relojHorasComunes}}</td>
-                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}">{{data.marcasHorasComunes}}</td>
+                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}" *ngIf="tipoRemuneracion(data.nroFuncionario) != 'Mensual'">{{data.relojHorasComunes}}</td>
+                <td class="dato comun" *ngIf="tipoRemuneracion(data.nroFuncionario) === 'Mensual'">-</td>
+                <td class="dato comun" [ngClass]="{'comun__error': data.relojHorasComunes != data.marcasHorasComunes}" *ngIf="tipoRemuneracion(data.nroFuncionario) != 'Mensual'">{{data.marcasHorasComunes}}</td>
+                <td class="dato comun" *ngIf="tipoRemuneracion(data.nroFuncionario) === 'Mensual'">-</td>
                 <td class="dato doble" [ngClass]="{'doble__error': data.relojHorasDobles != data.marcasHorasDobles}">{{data.relojHorasDobles}}</td>
                 <td class="dato doble" [ngClass]="{'doble__error': data.relojHorasDobles != data.marcasHorasDobles}">{{data.marcasHorasDobles}}</td>
                 <td class="dato nocturna" [ngClass]="{'nocturna__error': data.relojHorasNocturnas != data.marcasHorasNocturnas}">{{data.relojHorasNocturnas}}</td>

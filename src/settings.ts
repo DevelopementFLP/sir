@@ -26,6 +26,13 @@ export const urlUpdatePadron: string = urlRRHH + "ActualizarPadronFuncionarios";
 export const urlEmpleados: string = urlRRHH + "GetEmpleados";
 export const urlRegimen: string = urlRRHH + "GetRegimen";
 export const urlConfHoras: string = urlRRHH + "GetConfHoras";
+export const urlHorarioDesfasado: string = urlRRHH + "GetFuncionariosHorarioDesfasado";
+export const urlUpdateHorariosDesfasados: string = urlRRHH + "ActualizarHorariosDesfasados";
+export const urlDashboardDesosado: string = urlAPI + "DashboardDesosado/";
+export const urlDashboardDesosadoEntrada: string = urlDashboardDesosado + "GetDetalleEntradaAsync";
+export const urlDashboardDesosadoCharqueo: string = urlDashboardDesosado + "DetalleCharqueadoresAsync";
+export const urlDashboardDesosadoHuesero: string = urlDashboardDesosado + "GetDetalleHueserosAsync";
+export const urlDashboardDesosadoEmpaque: string = urlDashboardDesosado + "GetDetalleEmpaqueAsync";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

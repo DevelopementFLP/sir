@@ -1,0 +1,46 @@
+.viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.viewer__data {
+    border-radius: 3px;
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+.viewer__data--title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #554C37;
+}
+
+td {
+    padding: 0.5rem 0 !important;
+}
+
+ th {
+    padding: 0.5rem 0 !important;
+    border-width: 0 0 2px 0 !important;
+    font-weight: 200 !important;
+    color: #554C37 !important;
+    background: #ffffff !important;
+}
+
+.table__row {
+    font-size: 0.8rem !important;
+}
+
+.table__row:nth-child(even) {
+    background-color: #ECE6D2 !important;
+}
+
+.data__sm {
+    min-width: 5rem;
+}
+
+.data__medium {
+    min-width: 12rem;
+}

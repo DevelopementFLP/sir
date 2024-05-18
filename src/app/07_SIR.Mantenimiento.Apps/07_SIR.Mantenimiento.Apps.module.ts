@@ -14,6 +14,18 @@ import { GraseriaComponent } from './pages/graseria/graseria.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardDesosadoComponent } from './pages/dashboard-desosado/dashboard-desosado.component';
+import { DetalleCharqueadoresComponent } from './components/detalle-charqueadores/detalle-charqueadores.component';
+import { LotesEntradaComponent } from './components/lotes-entrada/lotes-entrada.component';
+import { DataCharqueoComponent } from './components/data-charqueo/data-charqueo.component';
+import { DataHueseroComponent } from './components/data-huesero/data-huesero.component';
+import { DataHueseroViewerComponent } from './components/data-huesero-viewer/data-huesero-viewer.component';
+import { TotalHueseroComponent } from './components/total-huesero/total-huesero.component';
+import { TotalCharqueoComponent } from './components/total-charqueo/total-charqueo.component';
+import { TotalEmpaqueComponent } from './components/total-empaque/total-empaque.component';
+import { DataEmpaqueComponent } from './components/data-empaque/data-empaque.component';
+import { DataCharqueoViewerComponent } from './components/data-charqueo-viewer/data-charqueo-viewer.component';
+import { DataLineViewerComponent } from './components/data-line-viewer/data-line-viewer.component';
+import { DetalleHueserosComponent } from './components/detalle-hueseros/detalle-hueseros.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +38,19 @@ import { DashboardDesosadoComponent } from './pages/dashboard-desosado/dashboard
     NotFoundComponent,
     NoConnectionComponent,
     GraseriaComponent,
-    DashboardDesosadoComponent
+    DashboardDesosadoComponent,
+    DetalleCharqueadoresComponent,
+    LotesEntradaComponent,
+    DataCharqueoComponent,
+    DataHueseroComponent,
+    DataHueseroViewerComponent,
+    TotalHueseroComponent,
+    TotalCharqueoComponent,
+    TotalEmpaqueComponent,
+    DataEmpaqueComponent,
+    DataCharqueoViewerComponent,
+    DataLineViewerComponent,
+    DetalleHueserosComponent
   ],
   imports: [
     CommonModule,

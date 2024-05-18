@@ -15,6 +15,8 @@ import { HorasIncidencias } from '../../interfaces/HorasIncidencias.interface';
 import { HorasComparar } from '../../interfaces/HorasComparar.interface';
 import { FileUpload } from 'primeng/fileupload';
 import { InconsistenciaDataPrint } from '../../interfaces/InconsistenciaDataPrint.interface';
+import { FuncionarioHorarioDesfasado } from '../../interfaces/FuncionarioHorarioDesfasado.interface';
+import { Regimen } from '../../interfaces/Regimen.interface';
 
 
 @Component({
@@ -63,8 +65,13 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     incidencias: []
   }
   horasAComparar: HorasComparar[] = [];
-
   dataToPrint!: InconsistenciaDataPrint;
+
+  horariosDesfasados: FuncionarioHorarioDesfasado[] | undefined = [];
+  padronHorariosDesfasados: PadronFuncionario[] | undefined = [];
+
+  regimenes: Regimen[] | undefined = [];
+  hayCambios: boolean = false;
 
   constructor(
     private controlHorasService: ControlHorasService,
@@ -76,9 +83,37 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.reset();
     try{
-      this.getPadronData();
+     await this.getPadronData();
+
     } catch (error) {
       this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
+    }
+
+    try {
+      await this.getHorariosDesfasados();
+      this.horariosDesfasados?.sort((a, b) => {
+        if(a.nroFuncionario < b.nroFuncionario) return -1;
+        if(a.nroFuncionario > b.nroFuncionario) return 1;
+        return 0;
+      });
+
+
+      this.padronHorariosDesfasados?.sort((a, b) => {
+        if(a.nroFuncionario < b.nroFuncionario) return -1;
+        if(a.nroFuncionario > b.nroFuncionario) return 1;
+        return 0;
+      });
+    
+
+
+    } catch {
+      console.log('Error al obtener horarios desfasados.')
+    }
+
+    try {
+      await this.getRegimenes();
+    } catch(error: any) {
+      console.log(error);
     }
   }
   
@@ -102,20 +137,48 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     
   }
 
-  private getPadronData() {
+  private async getPadronData(): Promise<void> {
     try {
       this.padron = [];
-      this.controlHorasService.getPadronFuncionarios().subscribe(
-        data => {
-          this.padron = data;
-          this.lastUpdate = formatDate(this.padron[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
-        }
-      );
-    } catch(error: any) {
+      const data = await this.controlHorasService.getPadronFuncionarios().toPromise();
+      this.padron = data;
+      this.lastUpdate = formatDate(this.padron![0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
+    } catch (error) {
+      console.log('Hubo un error al intentar obtener los datos del padrón.', error);
       this.mostrarMensaje('Hubo un error al intentar obtener los datos del padrón.', 'Hubo un error', 'pi pi-exclamation-triangle');
+      // Puedes lanzar una nueva excepción si lo consideras necesario
+      throw new Error('Error al obtener los datos del padrón de funcionarios.');
     }
   }
   
+  
+  private async getHorariosDesfasados(): Promise<void> {
+    try {
+      this.horariosDesfasados = [];
+      const data = await this.controlHorasService.getFuncionariosHorariosDesfasados().toPromise();
+      this.horariosDesfasados = data;
+      this.padronHorariosDesfasados = this.padron?.filter(func =>
+        this.horariosDesfasados!.some(h => h.nroFuncionario === func.nroFuncionario.toString())
+      );
+    } catch (error) {
+      console.log('Hubo un error al intentar obtener el listado de funcionarios con horarios desfasados.', error);
+      throw new Error('Error al obtener horarios desfasados.');
+    }
+  }
+  
+
+  private async getRegimenes(): Promise<void> {
+    try {
+      this.regimenes = await this.controlHorasService.getRegimenes().toPromise();
+    } catch {
+      throw new Error('Error al obtener regímenes');
+    }
+
+    this.controlHorasService.getRegimenes().subscribe(
+      reg =>  { 
+        this.regimenes = reg;
+      })
+  }
 
   ngOnDestroy(): void {
     if(this.ref) this.ref.close();
@@ -157,6 +220,8 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
   }
 
   processFiles(): void {
+    if(this.hayCambios) this.saveFuncionarios();
+
     const promises: Promise<void>[] = [];
 
     this.filesToProcess.forEach(file => {
@@ -173,12 +238,12 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       /* horas */
       try {
         this.horasArray = this.horasData.map((item: { [x: string]: any; }) => ({
-          funcionario: item['FS.'],
-          codigoHoras: item['CODIGO HRS.'],
-          horasGeneradas: item['HRS.GENERADAS'],
+          funcionario: item['Func'],
+          codigoHoras: item['Código'],
+          horasGeneradas: item['Horas'],
           rowNumber: item['__rowNum__'] 
         }));
-
+        
       } catch (error) {
         console.log(error);
       }
@@ -219,8 +284,8 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
   }
 
   private calcularInconsistencias(): void {
-    this.marcasPorFuncionario = this.controlHorasService.generarMarcasPorFuncionario(this.marcasArray);
-    this.horasIncidencias = this.controlHorasService.contarHorasPorFuncionarios(this.marcasPorFuncionario, this.padron!);
+    this.marcasPorFuncionario = this.controlHorasService.generarMarcasPorFuncionario(this.marcasArray, this.horariosDesfasados!);
+    this.horasIncidencias = this.controlHorasService.contarHorasPorFuncionarios(this.marcasPorFuncionario, this.padron!, this.regimenes!, this.horariosDesfasados!);
     const funcionariosUnicos: number[] = Array.from(new Set(this.horasArray.map(func => func.funcionario)));
 
     funcionariosUnicos.forEach(func => {
@@ -250,18 +315,24 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     this.horasAComparar = this.mergeHoras(this.resumenHorasFuncionarioEnSistema, this.horasIncidencias.horas, funcionariosUnicos);
     this.horasAComparar = this.horasAComparar.filter(h => this.esInconsistencia(h));
 
+
+
     this.dataToPrint = {
       incidencias: this.horasIncidencias.incidencias,
       inconsistencias: this.horasAComparar
-    }
-    
+    } 
   }
-
  
   private esInconsistencia(horas: HorasComparar): boolean {
-    return Math.abs(horas.marcasHorasComunes - horas.relojHorasComunes) > 1 ||
+    const remuneracion: string = this.padron?.find(p => p.nroFuncionario === horas.nroFuncionario)?.tipoRemuneracion!;
+    if(remuneracion === 'Jornalero')
+      return Math.abs(horas.marcasHorasComunes - horas.relojHorasComunes) > 1 ||
             horas.marcasHorasDobles != horas.relojHorasDobles ||
             horas.marcasHorasNocturnas != horas.relojHorasNocturnas;
+    else if (remuneracion === 'Mensual') 
+      return   horas.marcasHorasDobles != horas.relojHorasDobles ||
+                horas.marcasHorasNocturnas != horas.relojHorasNocturnas; 
+    return true;
   }
 
   private processFile(file: File): Promise<void> {
@@ -280,7 +351,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         {
           switch (_first[0])
           {
-            case 'FS.':
+            case 'Func':
               this.horasData = this.excelData;
               resolve();
               break;
@@ -320,14 +391,14 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       dismissableMask: true
     });
 
-    this.ref.onClose.subscribe((result: any) => {
+    this.ref.onClose.subscribe(async (result: any) => {
       if (result !== undefined) {
-        setTimeout(() => {
-          this.controlHorasService.getPadronFuncionarios().subscribe(data => {
-           this.padron = data;
-           this.lastUpdate = formatDate(data[0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
-          })
-        }, 1000);
+        try{
+          await this.getPadronData();
+     
+         } catch (error) {
+           this.mostrarMensaje('Hubo un rror al intentar obterner los datos.', 'Hubo un error', 'pi pi-exclamation-triangle');
+         }
       }
     });
   }
@@ -372,6 +443,71 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       acceptLabel: 'Aceptar',
       accept: () => {},
     })
+  }
+
+  addFuncionarioToDesfase(): void {
+    const inputNro: HTMLInputElement = document.getElementById('txtNroFunc') as HTMLInputElement;
+    const nroFunc: string = inputNro.value;
+    if(inputNro && nroFunc != '') {
+    
+      const numeros: string[] = nroFunc.split(',');
+  
+      numeros.forEach(n => {
+        n = n.trim();
+        if(n != '') {
+        const newFunc: FuncionarioHorarioDesfasado = {nroFuncionario: n}
+        if(!this.horariosDesfasados!.some( h => h.nroFuncionario === n)) {
+          const newFuncPadron: PadronFuncionario | undefined = this.padron?.find(f => f.nroFuncionario === n);
+          if(newFuncPadron) {
+            if(!this.padronHorariosDesfasados?.some(f => f.nroFuncionario === newFuncPadron.nroFuncionario)) {
+              this.horariosDesfasados!.push(newFunc);
+              this.padronHorariosDesfasados!.push(newFuncPadron);
+              this.hayCambios = true;
+              }
+            } 
+          }
+        }
+      });
+      this.horariosDesfasados?.sort((a, b) => {
+        if(a.nroFuncionario < b.nroFuncionario) return -1;
+        if(a.nroFuncionario > b.nroFuncionario) return 1;
+        return 0;
+      });
+
+      this.padronHorariosDesfasados?.sort((a, b) => {
+        if(a.nroFuncionario < b.nroFuncionario) return -1;
+        if(a.nroFuncionario > b.nroFuncionario) return 1;
+        return 0;
+      });
+      inputNro.select();
+    }
+  }
+
+  selectText(event: Event):void {
+    (event.target as HTMLInputElement).select();
+  }
+
+  deleteFuncionarioDesfase(index: number): void {
+    if(index != undefined && index >= 0) {
+      const func: string = this.padronHorariosDesfasados![index].nroFuncionario;
+ 
+      const ind: number = this.horariosDesfasados!.findIndex(h => h.nroFuncionario.toString() === func);
+
+      if(ind >= 0){
+        this.horariosDesfasados!.splice(ind, 1);
+        this.padronHorariosDesfasados?.splice(index, 1);
+        this.hayCambios = true;
+      }
+    }
+  }
+
+  async saveFuncionarios(): Promise<void> {
+    try {
+      await this.controlHorasService.postFuncionariosHorariosDesfasados(this.horariosDesfasados!).toPromise();
+      this.hayCambios = false;
+    } catch {
+      throw new Error('Hubo un error al intentar guardar los datos.');
+    }
   }
 
 }

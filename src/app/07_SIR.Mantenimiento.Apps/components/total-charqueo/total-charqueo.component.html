@@ -1,0 +1,13 @@
+<div class="total">
+    <div class="dato dato--titulo">{{titulo}}</div>
+    <div class="dato dato--cortes-rec">{{ cortesRec | number:'0.0' }}</div>
+    <div class="dato dato--cortes-env">{{ cortesEnv | number:'0.0' }}</div>
+    <div class="dato dato--kilos-rec">{{ kilosRec | number:'0.1' }}</div>
+    <div class="dato dato--kilos-env">{{ kilosEnv | number:'0.1' }}</div>
+    <div
+        [ngClass]="{
+            'arriba__promedio': getRendimiento(kilosRec, kilosEnv) >= getIndiceRendimiento(),
+            'abajo__promedio': getRendimiento(kilosRec, kilosEnv) < getIndiceRendimiento() 
+        }" 
+        class="dato dato--rend">{{ rend | percent:'0.2' }}</div>
+</div>

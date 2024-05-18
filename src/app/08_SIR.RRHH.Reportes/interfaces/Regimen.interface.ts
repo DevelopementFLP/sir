@@ -3,5 +3,7 @@ export interface Regimen {
     nombre:             string;
     descripcion:        string;
     horasTrabajadas:    number;
+    inicioNocturnas:    number;
+    finNocturnas:       number;
     activo:             boolean;
 }

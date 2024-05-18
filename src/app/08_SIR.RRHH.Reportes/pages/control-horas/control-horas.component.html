@@ -1,20 +1,11 @@
-<div 
-   class="sm:col-12 md:col-8 xl:col-4 settings"
+<div class="m-3 control__titulo fs-3 text">Control de horas</div>
+<hr class="separador">
+<div class="sm:col-12 md:col-8 xl:col-4 settings"
    [ngClass]="{'slide-out-left': !isSettingsVisible, 'slide-in-right': isSettingsVisible}">
-   <p-fileUpload
-      id="fileUpload"
-      [showUploadButton]="false"
-      (onSelect)="onSelectFile($event)"
-      (onRemove)="onRemove($event)"
-      (onClear)="onClear()"
-      chooseLabel="&nbsp;Seleccionar"
-      uploadLabel="Confirmar"
-      cancelLabel="Cancelar"
-      uploadIcon="pi pi-check"
-      cancelStyleClass="p-button-danger"
-      [multiple]="true"
-      [fileLimit]="maxFiles"
-      invalidFileLimitMessageSummary="Error en cantidad de archivos"
+   <p-fileUpload id="fileUpload" [showUploadButton]="false" (onSelect)="onSelectFile($event)"
+      (onRemove)="onRemove($event)" (onClear)="onClear()" chooseLabel="&nbsp;Seleccionar" uploadLabel="Confirmar"
+      cancelLabel="Cancelar" uploadIcon="pi pi-check" cancelStyleClass="p-button-danger" [multiple]="true"
+      [fileLimit]="maxFiles" invalidFileLimitMessageSummary="Error en cantidad de archivos"
       invalidFileLimitMessageDetail="Solo deben cargarse {{maxFiles}} archivos"
       invalidFileTypeMessageSummary="Error en tipo de archivo"
       invalidFileTypeMessageDetail="Seleccione archivos Excel ({{acceptedFiles}})">
@@ -26,44 +17,26 @@
          </p>
       </ng-template>
    </p-fileUpload>
-   <div 
-      class="row sm:col-12 md:col-4 ml-0"
+   <div class="row sm:col-12 md:col-4 ml-0"
       *ngIf="filesToProcess.length === maxFiles">
-      <button
-         type="button" 
-         pButton
-         pRipple
-         class="aceptar text-center"
-         label="Aceptar"
-         (click)="aceptar()">  
+      <button type="button" pButton pRipple class="aceptar text-center" label="Aceptar" (click)="aceptar()">
       </button>
    </div>
-   
 </div>
 
 <div class="flex flex-row">
-   <div 
-      class="options p-button"
-      [ngClass]="{'slide-out-left': !isSeeFilesVisible, 'slide-in-right': isSeeFilesVisible}"
-      (click)="mostrarOpciones()"
-      pTooltip="Ver archivos cargados">
+   <div class="options p-button" [ngClass]="{'slide-out-left': !isSeeFilesVisible, 'slide-in-right': isSeeFilesVisible}"
+      (click)="mostrarOpciones()" pTooltip="Ver archivos cargados">
       <i class="pi pi-file-edit" style="font-size: 1.5rem"></i>
    </div>
 </div>
 
 
-<div 
-   class="process mt-0 flex flex-column gap-4 justify-content-start"
+<div class="process mt-7 flex flex-column gap-4 justify-content-start"
    [ngClass]="{'slide-out-left': !isProcessVisible, 'slide-in-right': isProcessVisible}">
-   <div class="flex flex-row justify-content-between align-items-center gap-2">
-      <button
-         type="button" 
-         pButton
-         pRipple
-         class="p-button-secondary"
-         severity="secondary"
-         label="Actualizar padron de funcionarios"
-         (click)="updateFuncionarios()">  
+   <div class="flex flex-row justify-content-start align-items-center gap-2 actualizar-padron">
+      <button type="button" pButton pRipple class="p-button-secondary" severity="secondary"
+         label="Actualizar padron de funcionarios" (click)="updateFuncionarios()">
       </button>
 
       <p-chip styleClass="chip">
@@ -73,70 +46,135 @@
          <span class="last" [(ngModel)]="lastUpdate">Última actualización {{lastUpdate}}</span>
       </p-chip>
    </div>
-   
+
    <div class="flex flex-row justify-content-between">
-      <button
-         type="button" 
-         pButton
-         pRipple
-         class=""
-         label="Procesar"
-         (click)="processFiles()">  
+      <button type="button" pButton pRipple class="" label="Procesar" (click)="processFiles()">
       </button>
+   </div>
+
+   <p-divider align="left" type="solid" style="width: 110%;">
+      <b>Funcionarios con horarios corridos</b>
+      <span class="icon__info ml-1" pTooltip="Funcionarios que entran antes de las 00:00 y salen al día siguiente">
+         <i class="pi pi-info-circle text-sm"></i>
+      </span>
+   </p-divider>
+  
+
+   <div class="desfasado flex flex-column gap-4 mt-1">
+      <!-- <div class="desfasado__title font-light text-xl">Funcionarios con horarios corridos</div> -->
+      <div class="desfasado__layout flex flex-row gap-6 justify-content-between align-items-start">
+         <div class="layout__new flex flex-column gap-4 p-0">
+            <div class="col-10 ml-0 p-0">
+               <p class="font-light text-sm agregar__title">
+                  Agregar funcionarios
+                  <span class="icon__info" pTooltip="Ingrese los números de funcionario separados por coma">
+                     <i class="pi pi-info-circle text-sm"></i>
+                  </span>
+               </p>
+
+               <div class="p-inputgroup font-light">
+                  <input class="font-light" (focus)="selectText($event)" type="text" pInputText id="txtNroFunc"
+                     placeholder="Nro. Funcionario" (keydown.enter)="addFuncionarioToDesfase()">
+                  <button type="button" pButton pRipple icon="pi pi-check" (click)="addFuncionarioToDesfase()"></button>
+               </div>
+            </div>
+         </div>
+         <div class="layout__data">
+            <p-table class="tabla__func mt-0" [value]="padronHorariosDesfasados!">
+               <ng-template pTemplate="header">
+                  <tr>
+                     <th>&nbsp;</th>
+                     <th>#</th>
+                     <th class="table__title">Nro. Func.</th>
+                     <th class="table__title">Nombres</th>
+                     <th class="table__title">Apellidos</th>
+                     <th class="table__title">Sector</th>
+                     <th class="table__title">Remuneración</th>
+                     <th class="table__title">Horas</th>
+                     <th class="table__title">Días</th>
+                  </tr>
+               </ng-template>
+               <ng-template pTemplate="body" let-func let-i="rowIndex" class="tabla__line">
+
+                  <tr class="table__row">
+                     <td class="table__td" pTooltip="Eliminar funcionario del control">
+                     <button (click)="deleteFuncionarioDesfase(i)" pbutton="" pripple="" type="button"
+                        icon="pi pi-trash"
+                        class="p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only"><span
+                           class="p-button-icon pi pi-trash" aria-hidden="true"></span><span class="p-ink"
+                           style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;"></span></button></td>
+                     <th class="table__td">{{i+1}}</th>
+                     <td class="table__td">{{func.nroFuncionario}}</td>
+                     <td class="table__td">{{func.nombres}}</td>
+                     <td class="table__td">{{func.apellidos}}</td>
+                     <td class="table__td">{{func.sector}}</td>
+                     <td class="table__td">{{func.tipoRemuneracion}}</td>
+                     <td class="table__td">{{func.horasTrabajadas}}</td>
+                     <td class="table__td">{{func.diasTrabajados}}</td>
+                  </tr>
+               </ng-template>
+            </p-table>
+            <div class="no__data" *ngIf="padronHorariosDesfasados!.length == 0">
+               No hay funcionarios seleccionados
+            </div>
+         </div>
+      </div>
    </div>
 </div>
 
-<div class="results"
-     [ngClass]="{'slide-out-left': !isResultsVisible, 'slide-in-right': isResultsVisible}">
-  <div class="flex flex-col lg:flex-row justify-between gap-2">
-    <div class="back lg:mt-1 lg:p-1">
-      <i class="pi pi-chevron-left" pTooltip="Volver a la selección de archivos" (click)="reset()"></i>
-    </div>
-    <p-accordion class="lg:col-11 flex-grow">
-      <p-accordionTab *ngIf="horasAComparar.length > 0">
-        <ng-template pTemplate="header">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-fw pi-exclamation-circle text-orange-700 text-xl"></i>
-            <span class="text-orange-700 text-xl font-light">Horarios con inconsistencias</span>
-            <p-badge [value]="horasAComparar.length.toString()" styleClass="warning-badge"/>
-          </div>
-        </ng-template>
-        <inconsistencia-table [data]="horasAComparar" [marcas]="marcasArray"/>
-      </p-accordionTab>
-      <p-accordionTab *ngIf="horasIncidencias.incidencias.length > 0">
-        <ng-template pTemplate="header">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-fw pi-times-circle text-red-700 text-xl"></i>
-            <span class="text-red-700 text-xl font-light">Funcionarios para corregir errores</span>
-            <p-badge [value]="horasIncidencias.incidencias.length.toString()" styleClass="error-badge" />
-          </div>
-        </ng-template>
-        <incidencia-table [data]="horasIncidencias.incidencias" [marcas]="marcasArray" />
-      </p-accordionTab>
-    </p-accordion>
-  </div>
+<div class="results mt-6" [ngClass]="{'slide-out-left': !isResultsVisible, 'slide-in-right': isResultsVisible}">
+
+   <p-tag class="ml-2 back" (click)="reset()">
+      <div class="flex gap-2 back__content">
+         <i class="pi pi-home text-lg font-light"></i>
+         <span class="text-lg font-light">Volver al inicio</span>
+      </div>
+   </p-tag>
+
+   <div class="flex flex-col lg:flex-row justify-between gap-2">
+      <p-accordion class="lg:col-11 flex-grow">
+         <p-accordionTab *ngIf="horasAComparar.length > 0">
+            <ng-template pTemplate="header">
+               <div class="flex items-center gap-2">
+                  <i class="pi pi-fw pi-exclamation-circle text-orange-700 text-xl"></i>
+                  <span class="text-orange-700 text-xl font-light">Horarios con inconsistencias</span>
+                  <p-badge [value]="horasAComparar.length.toString()" styleClass="warning-badge" />
+               </div>
+            </ng-template>
+            <inconsistencia-table [data]="horasAComparar" [horasPorCodigo]="resumenHorasFuncionarioEnSistema"
+               [marcas]="marcasArray" [padron]="padron!" />
+         </p-accordionTab>
+         <p-accordionTab *ngIf="horasIncidencias.incidencias.length > 0">
+            <ng-template pTemplate="header">
+               <div class="flex items-center gap-2">
+                  <i class="pi pi-fw pi-times-circle text-red-700 text-xl"></i>
+                  <span class="text-red-700 text-xl font-light">Funcionarios para corregir errores</span>
+                  <p-badge [value]="horasIncidencias.incidencias.length.toString()" styleClass="error-badge" />
+               </div>
+            </ng-template>
+            <incidencia-table [data]="horasIncidencias.incidencias" [horasPorCodigo]="resumenHorasFuncionarioEnSistema"
+               [marcas]="marcasArray" />
+         </p-accordionTab>
+      </p-accordion>
+   </div>
 </div>
 
 <p-confirmDialog #cd>
    <ng-template pTemplate="headless" let-message>
-       <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
-           <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
-               <i class="pi pi-question text-5xl"></i>
-           </div>
-           <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
-           <p class="mb-0">{{ message.message }}</p>
-           <div class="flex align-items-center gap-2 mt-4">
-               <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
-           </div>
-       </div>
+      <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+         <div
+            class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+            <i class="pi pi-question text-5xl"></i>
+         </div>
+         <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+         <p class="mb-0">{{ message.message }}</p>
+         <div class="flex align-items-center gap-2 mt-4">
+            <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+         </div>
+      </div>
    </ng-template>
 </p-confirmDialog>
 
-<div *ngIf="isResultsVisible"
-   class="expo">
-   <sir-exportacion 
-      [excel]="true"
-      [idReporte]="idReporte"
-      [nombreArchivo]="nombreArchivo"
-      [data]="dataToPrint"/>
+<div *ngIf="isResultsVisible" class="expo">
+   <sir-exportacion [excel]="true" [idReporte]="idReporte" [nombreArchivo]="nombreArchivo" [data]="dataToPrint" />
 </div>

@@ -24,6 +24,18 @@ export class FuncViewerComponent implements OnDestroy {
     this.openDialog(numeroFunc, nombre);
   }
 
+  acortarNombre(nombre: string) : string {
+    let n: string = '';
+    const parts: string[] = nombre.split(" ");
+    const name: string = parts[parts.length - 1].substring(0,1) + ".";
+
+    for(let i = 0; i < parts.length - 1; i++) {
+      n = n + parts[i] + " ";
+    }
+
+    return n + name;
+  }
+
   private openDialog(numeroFunc: string, nombreEmpleado: string): void {
     this.ref = this.dialogService.open(HorarioFuncionarioComponent, {
       data: {

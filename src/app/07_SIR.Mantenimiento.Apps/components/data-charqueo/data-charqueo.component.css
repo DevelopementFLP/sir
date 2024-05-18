@@ -1,0 +1,86 @@
+.charqueo {
+    transition: all 0.2s ease-in-out;
+    background-color: #F0F3F4;
+    display: flex;
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 3.8rem;
+    margin: 0.1rem 0.1rem;
+}
+
+.charqueo:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 0 #34495E;
+    transform: scale(1.1);
+    background-color: #FDFEFE;
+}
+
+.opaco  {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+  
+.iluminado {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.opaco:hover {
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    
+}
+
+.dato {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+}
+
+.dato--titulo,
+.dato--porcentaje {
+    padding: 0.1rem 0;
+    color: white;
+    background-color: #566573;
+}
+
+.dato--titulo {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: 500;
+}
+
+.dato--porcentaje {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-weight: 300;
+}
+
+.dato--kilos {
+    background-color: rgba(136, 78, 160, 0.8);
+    color: white;
+}
+
+.arriba__promedio,
+.abajo__promedio {
+    font-weight: 500;
+}
+
+.arriba__promedio {
+    color: lime;
+}
+
+.abajo__promedio {
+    color: palevioletred;
+}
+
+.porcentaje__inactivo,
+.dato__inactivo {
+    color: #566573;
+    background-color: #566573;
+}

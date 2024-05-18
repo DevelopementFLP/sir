@@ -1,0 +1,123 @@
+.actualizar {
+    position: fixed;
+    top: 70px;
+    left: -6.1rem;
+    background-color: #FBFCFC;
+    padding: 0.7rem 1rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 2px 2px 0 #665D53;
+    font-size: 1.1rem;
+    transition: all 0.2s ease-in-out;
+ }
+ 
+ .actualizar:hover {
+    cursor: pointer;
+    background-color: white;
+    color: #17202A;
+    left: 0;
+ }
+ 
+ .actualizar ul {
+    list-style: none;
+ }
+ 
+ .list__item i {
+    font-size: 1.2rem;
+    font-weight: 400;
+ }
+ 
+ .actualizar__text {
+    margin-right: 1rem;
+    transition: all .3s ease-in-out;
+ }
+ 
+ li.list__item {
+    display: flex;
+    align-items: center;
+ }
+ 
+ /* visualizer */
+.visualizer {
+    width: 20rem;
+    box-sizing: border-box;
+    position: fixed;
+    right: -17rem;
+    bottom: 10px;
+    color: #665D53;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+ }
+ 
+ .visualizer:hover {
+    cursor: pointer;
+    right: -1.5rem;
+ }
+ 
+ .visualizer:hover > .info {
+    display: none;
+ }
+ 
+ .nav .nav__item {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.2rem;
+ }
+ 
+ .borde {
+    align-self: stretch;
+    border-right: 0.3px solid gray;
+    margin-right: 1rem;
+    opacity: 0.5;
+ }
+ 
+ .info {
+    width: 3rem;
+    height: 3rem;
+    background-color: #FBFCFC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: -1px 1px 0 #665D53;
+ }
+ 
+ .info i {
+    min-width: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    color: #17202A;
+ }
+ 
+ .nav .nav__item:hover {
+    color: #17202A;
+ }
+ .nav .nav__item {
+    padding: 0.3rem 0;
+ }
+ 
+ ul {
+    padding: 0;
+    margin: 0;
+ }
+ 
+ .nav {
+    display: flex;
+    flex-direction: column;
+    background-color: #FBFCFC;
+    padding: 1rem;
+    padding-right: 2rem;
+    border-radius: 0;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: -3px 3px 0 #665D53;
+ }
+ 

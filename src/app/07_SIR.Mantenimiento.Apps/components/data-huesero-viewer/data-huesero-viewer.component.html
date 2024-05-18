@@ -1,0 +1,19 @@
+<div class="viewer">
+    <div class="viewer__name">{{ huesero?.huesero ?? '(Nombre huesero)' }}</div>
+    <div class="viewer__data">
+        <div class="data--titles">
+            <div class="data">Puesto</div>
+            <div class="data">Cuartos recibidos</div>
+            <div class="data">Kilos recibidos</div>
+            <div class="data">Kilos enviados</div>
+            <div class="data">Rendimiento</div>
+        </div>
+        <div class="data--values">
+            <div class="data">{{ huesero!['nombreEstación']}}</div>
+            <div class="data">{{ huesero?.cuartos ?? 0 }}</div>
+            <div class="data">{{ (huesero?.kgRecibidos | number:'0.2') ?? 0 }}</div>
+            <div class="data">{{ (huesero?.kgEnviados | number:'0.2') ?? 0 }}</div>
+            <div class="data">{{ (huesero?.rend ?? 0) | number:'0.1' }} <span *ngIf="huesero">%</span></div>
+        </div>
+    </div>
+</div>

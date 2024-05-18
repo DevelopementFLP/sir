@@ -1,0 +1,29 @@
+.viewer,
+.data--titles,
+.data--values {
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer,
+.data--titles {
+    justify-content: start;
+    align-items: flex-start;
+}
+
+.data--values {
+    justify-content: end;
+    align-items: flex-end;
+    margin-left: 5rem;
+}
+
+.viewer__data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.data {
+    margin-bottom: 0.5rem;
+}

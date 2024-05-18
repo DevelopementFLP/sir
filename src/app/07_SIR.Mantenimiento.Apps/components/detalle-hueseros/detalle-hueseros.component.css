@@ -1,0 +1,25 @@
+
+.table__row {
+    padding: 0 !important;
+    font-size: 0.9rem !important;
+}
+
+.table__row:nth-child(even) {
+    background-color: #ECE6D2 !important;
+}
+
+.no__loged {
+    justify-self: center !important;
+}
+
+.row__name {
+    min-width: 15rem !important;
+}
+
+.row__texto__medium {
+    min-width: 12rem;
+}
+
+.row__texto__sm {
+    min-width: 9rem;
+}

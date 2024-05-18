@@ -1,0 +1,68 @@
+.empaque {
+    transition: all 0.2s ease-in-out;
+    background-color: #F0F3F4;
+    display: flex;
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 3.8rem;
+    margin: 0.1rem 0.1rem;
+}
+
+.opaco  {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+  
+.iluminado {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.dato {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+}
+
+.dato--titulo,
+.dato--titulo__down {
+    padding: 0.1rem 0;
+    color: white;
+    background-color: #5D6D7E;
+    font-weight: 500;
+}
+
+.dato--titulo,
+.dato--kilos__top {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.dato--titulo__down,
+.dato--kilos__down {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.dato--kilos,
+.dato--cortes {
+    color: white;
+}
+
+.dato--kilos {   
+    background-color: rgba(136, 78, 160, 0.8);
+}
+
+.dato--cortes {
+    background-color: rgba(19, 141, 117, 0.8);
+}
+
+.cortes__inactivo,
+.kilos__inactivo {
+    background-color: #566573;
+    color: #566573;
+}

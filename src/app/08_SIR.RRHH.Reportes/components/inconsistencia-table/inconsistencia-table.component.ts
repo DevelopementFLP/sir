@@ -6,6 +6,10 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { MarcasViewerComponent } from '../marcas-viewer/marcas-viewer.component';
 import { DataMarcas } from '../../interfaces/DataMarcas.interface';
+import { HorasPorFuncionario } from '../../interfaces/HorasPorFuncionario.interface';
+import { HorasTrabajadas } from '../../interfaces/HorasTrabajadas.interface';
+import { MarcasViewerData } from '../../interfaces/MarcasViewerData.interface';
+import { PadronFuncionario } from '../../interfaces/PadronFuncionario.interface';
 
 
 @Component({
@@ -18,6 +22,8 @@ export class InconsistenciaTableComponent implements OnDestroy {
   @Input() data: HorasComparar[] = [];
   @ViewChild('dt2') dt2!: Table;
   @Input() marcas: Marcas[] = [];
+  @Input() horasPorCodigo: HorasPorFuncionario[] = [];
+  @Input() padron: PadronFuncionario[] = [];
 
   filteredValue: string = '';
   ref: DynamicDialogRef | undefined;
@@ -48,6 +54,15 @@ export class InconsistenciaTableComponent implements OnDestroy {
     inputElement.select();
   }
 
+  tipoRemuneracion(nroFunc: string): string {
+
+    if(this.padron.length > 0) {
+      return this.padron.find(p => p.nroFuncionario === nroFunc)?.tipoRemuneracion || '';
+    }
+
+    return '';
+  }
+
   verMarcas(nroFuncionario: string, event: MouseEvent) {
     const fila = (event.currentTarget as HTMLTableRowElement);
     const nombres = fila.cells[1].innerText;
@@ -56,8 +71,10 @@ export class InconsistenciaTableComponent implements OnDestroy {
     const sector = fila.cells[10].innerText;
     
     const marcas: number[] | undefined = this.marcas.find(m => m.funcionario.toString() === nroFuncionario)?.marcas;
+    const horasCodigo: HorasTrabajadas[] | undefined = this.horasPorCodigo.find(h => h.nroFuncionario.toString() === nroFuncionario)?.horas;
 
-    if(marcas) {
+
+    if(marcas && horasCodigo) {
       let m: DataMarcas = {
         nroFuncionario: nroFuncionario,
         nombres: nombres,
@@ -67,14 +84,19 @@ export class InconsistenciaTableComponent implements OnDestroy {
         marcas: marcas
       };
 
-      this.openDialog(m);
+      const data: MarcasViewerData = {
+        dataMarcas: m,
+        horasTrabajadas: horasCodigo
+      }
+
+      this.openDialog(data);
     }
   }
 
-  private openDialog(data: DataMarcas): void {
+  private openDialog(data: MarcasViewerData): void {
     this.ref = this.dialogService.open(MarcasViewerComponent, {
       data: data,
-      header: `Marcas de ${data.nroFuncionario} ${data.nombres} ${data.apellidos}`,
+      header: `Marcas de ${data.dataMarcas.nroFuncionario} ${data.dataMarcas.nombres} ${data.dataMarcas.apellidos}`,
       width: '40vw',
       contentStyle: { overflow: 'auto' },
       closeOnEscape: true,

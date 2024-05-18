@@ -1,0 +1,13 @@
+<div class="huesero" [ngClass]="{'opaco': !dataHuesero, 'iluminado': dataHuesero}">
+    <div [ngClass]="{'titulo__inactivo': !dataHuesero}" class="dato dato--titulo">{{ dataHuesero != undefined ? getPuesto(dataHuesero.puesto!) : getPuestoVacio(idPuesto)}}</div>
+    <div [ngClass]="{'dato__inactivo': !dataHuesero}" class="dato dato--cuartos">{{ dataHuesero != undefined ? dataHuesero.cuartos : 0 }}</div>
+    <div [ngClass]="{'dato__inactivo': !dataHuesero}" class="dato dato--kilos">{{ dataHuesero != undefined ? (dataHuesero.kilosEnviados | number:'0.0')  : 0 }}</div>
+    <div 
+        [ngClass]="{
+            'arriba__promedio': getRendimiento(dataHuesero) >= getIndiceRendimiento(),
+            'abajo__promedio': getRendimiento(dataHuesero) < getIndiceRendimiento(),
+            'porcentaje__inactivo': !dataHuesero}" 
+        class="dato dato--porcentaje">
+        {{ dataHuesero != undefined ? (getRendimiento(dataHuesero) | percent:'0.1') : 0 }}
+    </div>
+</div>

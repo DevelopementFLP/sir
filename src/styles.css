@@ -107,3 +107,17 @@ body {
 .p-tag-value:hover {
     cursor: pointer;
 }
+
+
+ 
+.arriba__promedio .p-badge {
+    background-color: lightgreen !important;
+    color: green;
+   
+}
+
+.abajo__promedio .p-badge {
+    background-color: pink !important;
+    color: red;
+   
+}

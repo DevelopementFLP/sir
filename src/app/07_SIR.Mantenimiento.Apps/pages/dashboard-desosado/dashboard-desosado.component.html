@@ -1,98 +1,142 @@
 <div class="dashboard">
-    <div class="container">
+  <div class="container">
+    <div class="total__medium total__visible">
+      <ng-container *ngTemplateOutlet="totales" />
+    </div>
+        <div class="inReg" (click)="showLotesEntrada()">
+          <div class="inReg__title">
+            InReg
+          </div>
+          <ng-container *ngTemplateOutlet="inReg" />
+        </div>
+        <div class="referencias">
+          <div class="referencias__titulo">Referencias</div>
+          <div class="referencias__info">
+            <div class="info--ref ref--cuartos">Cuartos</div>
+            <div class="info--ref ref--kilos-rec">Kilos recibidos</div>
+            <div class="info--ref ref--kilos-env">Kilos enviados</div>
+            <div class="info--ref ref--cortes-rec">Cortes recibidos</div>
+            <div class="info--ref ref--cortes-env">Cortes enviados</div>
+          </div>
+        </div>
         <div class="flowline-1"></div>
         <div class="flowline-2"></div>
         <div class="flowline-3"></div>
         <div class="flowline-4"></div>
         <div class="flowline-5"></div>
-        <div class="linea-1">
-          <div class="linea-1__hueseros">Hueseros</div>
-          <div class="linea-1__charqueo">Charqueadores</div>
-          <div class="linea-1__empaque">Empaque</div>
+        <div class="l-1 linea-1 linea__small" (click)="showDataLine($event)">
+            <div class="nombre-L1">
+              <div class="nombre__linea">&nbsp;</div>
+              <div class="nombre__linea">&nbsp;</div>
+              <div class="nombre__linea nombre__linea--L"></div>
+              <div class="nombre__linea nombre__linea--1"></div>
+              <div class="nombre__linea">&nbsp;</div>
+              <div class="nombre__linea">&nbsp;</div>
+            </div>
+          <div class="linea-1 linea">
+          <div class="linea-1__hueseros linea__titulo">
+            <div class="l-1 hueseros__title">Hueseros L1 
+              <p-badge 
+              [ngClass]="{
+                'arriba__promedio': esMayorPromedioHueseros_1,
+                'abajo__promedio': !esMayorPromedioHueseros_1
+              
+                }" 
+              [value]="(getRendimientoHueseros(hueserosL1) | percent:'0.1') +''"></p-badge></div>
+            <div class="l-1 hueseros__data">
+              <div class="l-1 hueseros__data--title">
+                <div class="l-1 hueseros__data--title--display"><span class="l-1 text__nowrap">Cuartos</span><span class="l-1">{{ getTotalCuartosLinea(hueserosL1) | number:'0.0' }}</span></div>
+                <div class="l-1 hueseros__data--title--display"><span class="l-1 text__nowrap">Kilos recibidos</span><span  class="l-1 data__title__value">{{ getTotalKilosRecibidosLinea(hueserosL1) | number:'0.2' }}</span></div>
+                <div class="l-1 hueseros__data--title--display"><span class="l-1 text__nowrap">Kilos enviados</span><span class="l-1 data__title__value">{{ getTotalKilosEnviadosLinea(hueserosL1) | number:'0.2'}}</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="linea-1__charqueo linea__titulo">
+            <div class="l-1 charqueo__title">Charqueadores L1 <p-badge 
+              [ngClass]="{
+                'arriba__promedio': esMayorPromedioCharqueadores_1,
+                'abajo__promedio': !esMayorPromedioCharqueadores_1
+              
+                }"
+              [value]="(getRendimientoCharqueador(charqueadoresL1) | percent:'0.1') +''"></p-badge></div>
+            <div class="l-1 charqueo__data">
+              <div class="l-1 charqueo__data--title">
+                <div class="l-1 charqueo__data--title--display"><span class="l-1 text__nowrap">Cortes recibidos</span><span class="l-1 data__title__value">{{ getTotalCharqueoCortesRecibidos(charqueadoresL1) | number:'0.0' }}</span></div>
+                <div class="l-1 charqueo__data--title--display"><span class="l-1 text__nowrap">Cortes enviados</span><span  class="l-1 data__title__value">{{ getTotalCharqueoCortesEnviados(charqueadoresL1) | number:'0.0' }}</span></div>
+                <div class="l-1 charqueo__data--title--display"><span class="l-1 text__nowrap">Kilos recibidos</span><span class="l-1 data__title__value">{{ getTotalCharqueoKilosRecibidos(charqueadoresL1) | number:'0.2'}}</span></div>
+                <div class="l-1 charqueo__data--title--display"><span class="l-1 text__nowrap">Kilos enviados</span><span class="l-1 data__title__value">{{ getTotalCharqueoKilosEnviados(charqueadoresL1) | number:'0.2'}}</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="linea-1__empaque linea__titulo">
+            <div class="l-1 empaque__title">Empaque L1</div>
+            <div class="l-1 charqueo__data">
+              <div class="l-1 empaque__data--title">
+                <div class="l-1 empaque__data--title--display"><span class="l-1 text__nowrap">Cortes enviados</span><span class="l-1 data__title__value">{{ getTotalEmpaqueCortes(empaqueL1) | number:'0.0'}}</span></div>
+                <div class="l-1 empaque__data--title--display empaque__data__kilos"><span class="l-1 text__nowrap">Kilos enviados</span><span class="l-1 data__title__value">{{ getTotalEmpaqueKilos(empaqueL1) | number:'0.2'}}</span></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="linea-2">
-          <div class="linea-2__hueseros">Hueseros</div>
-          <div class="linea-2__charqueo">Charqueadores</div>
-          <div class="linea-2__empaque">Empaque</div>
         </div>
-        <div class="linea-3">
-          <div class="linea-3__hueseros">Hueseros</div>
-          <div class="linea-3__charqueo">Charqueadores</div>
-          <div class="linea-3__empaque">Empaque</div>
+        <div class="l-2 linea-2 linea__small" (click)="showDataLine($event)">
+          <div class="nombre-L2">
+            <div class="nombre__linea">&nbsp;</div>
+            <div class="nombre__linea">&nbsp;</div>
+            <div class="nombre__linea nombre__linea--L"></div>
+            <div class="nombre__linea nombre__linea--2"></div>
+            <div class="nombre__linea">&nbsp;</div>
+            <div class="nombre__linea">&nbsp;</div>
+          </div>
+        <div class="linea-2 linea">
+        <div class="linea-2__hueseros linea__titulo">
+          <div class="l-2 hueseros__title">Hueseros L2 
+            <p-badge 
+            [ngClass]="{
+              'arriba__promedio': esMayorPromedioHueseros_2,
+              'abajo__promedio': !esMayorPromedioHueseros_2
+            
+              }" 
+            [value]="(getRendimientoHueseros(hueserosL2) | percent:'0.1') +''"></p-badge></div>
+          <div class="l-2 hueseros__data">
+            <div class="l-2 hueseros__data--title">
+              <div class="l-2 hueseros__data--title--display"><span class="l-2 text__nowrap">Cuartos</span><span class="l-2 data__title__value">{{ getTotalCuartosLinea(hueserosL2) | number:'0.0' }}</span></div>
+              <div class="l-2 hueseros__data--title--display"><span class="l-2 text__nowrap">Kilos recibidos</span><span  class="l-2 data__title__value">{{ getTotalKilosRecibidosLinea(hueserosL2) | number:'0.2' }}</span></div>
+              <div class="l-2 hueseros__data--title--display"><span class="l-2 text__nowrap">Kilos enviados</span><span class="l-2 data__title__value">{{ getTotalKilosEnviadosLinea(hueserosL2) | number:'0.2' }}</span></div>
+            </div>
+          </div>
         </div>
-        <div class="linea-4">
-          <div class="linea-4__hueseros">Hueseros</div>
-          <div class="linea-4__charqueo">Charqueadores</div>
-          <div class="linea-4__empaque">Empaque</div>
+        <div class="linea-2__charqueo linea__titulo">
+          <div class="l-2 charqueo__title">Charqueadores L2 
+            <p-badge 
+            [ngClass]="{
+              'arriba__promedio': esMayorPromedioCharqueadores_2,
+              'abajo__promedio': !esMayorPromedioCharqueadores_2
+            
+              }"
+            [value]="(getRendimientoCharqueador(charqueadoresL2) | percent:'0.1') +''"></p-badge></div>
+          <div class="l-2 charqueo__data">
+            <div class="l-2 charqueo__data--title">
+              <div class="l-2 charqueo__data--title--display"><span class="l-2 text__nowrap">Cortes recibidos</span><span class="l-2 data__title__value">{{ getTotalCharqueoCortesRecibidos(charqueadoresL2) | number:'0.0' }}</span></div>
+              <div class="l-2 charqueo__data--title--display"><span class="l-2 text__nowrap">Cortes enviados</span><span  class="l-2 data__title__value">{{ getTotalCharqueoCortesEnviados(charqueadoresL2) | number:'0.0' }}</span></div>
+              <div class="l-2 charqueo__data--title--display"><span class="l-2 text__nowrap">Kilos recibidos</span><span class="l-2 data__title__value">{{ getTotalCharqueoKilosRecibidos(charqueadoresL2) | number:'0.2'}}</span></div>
+              <div class="l-2 charqueo__data--title--display"><span class="l-2 text__nowrap">Kilos enviados</span><span class="l-2 data__title__value">{{ getTotalCharqueoKilosEnviados(charqueadoresL2) | number:'0.2'}}</span></div>
+            </div>
+          </div>
         </div>
-        <div class="linea-5">
-          <div class="linea-5__hueseros">Hueseros</div>
-          <div class="linea-5__charqueo">Charqueadores</div>
-          <div class="linea-5__empaque">Empaque</div>
+        <div class="linea-2__empaque linea__titulo">
+          <div class="l-2 empaque__title">Empaque L2</div>
+          <div class="l-2 charqueo__data">
+            <div class="l-2 empaque__data--title">
+              <div class="l-2 empaque__data--title--display"><span class="l-2 text__nowrap">Cortes enviados</span><span class="l-2 data__title__value">{{ getTotalEmpaqueCortes(empaqueL2) | number:'0.0'}}</span></div>
+              <div class="l-2 empaque__data--title--display empaque__data__kilos"><span class="l-2 text__nowrap">Kilos enviados</span><span class="l-2 data__title__value">{{ getTotalEmpaqueKilos(empaqueL2) | number:'0.2'}}</span></div>
+            </div>
+          </div>
         </div>
-        <div class="hueseros-1"></div>
-        <div class="hueseros-2"></div>
-        <div class="hueseros-3"></div>
-        <div class="hueseros-4"></div>
-        <div class="hueseros-5"></div>
-        <div class="charqueo-1"></div>
-        <div class="charqueo-2"></div>
-        <div class="charqueo-3"></div>
-        <div class="charqueo-4"></div>
-        <div class="charqueo-5"></div>
-        <div class="empaque-1"></div>
-        <div class="empaque-2"></div>
-        <div class="empaque-3"></div>
-        <div class="empaque-4"></div>
-        <div class="empaque-5"></div>
-        <div class="total-hueseros-5"></div>
-        <div class="total-hueseros-4"></div>
-        <div class="total-hueseros-3"></div>
-        <div class="total-hueseros-2"></div>
-        <div class="total-hueseros-1"></div>
-        <div class="total-hueseros"></div>
-        <div class="total-charqueo-1"></div>
-        <div class="total-charqueo-2"></div>
-        <div class="total-charqueo-3"></div>
-        <div class="total-charqueo-4"></div>
-        <div class="total-charqueo-5"></div>
-        <div class="total-charqueo"></div>
-        <div class="total-empaque"></div>
-        <div class="total-empaque-1"></div>
-        <div class="total-empaque-2"></div>
-        <div class="total-empaque-3"></div>
-        <div class="total-empaque-4"></div>
-        <div class="total-empaque-5"></div>
-        <div class="empaque-left-1"></div>
-        <div class="empaque-left-2"></div>
-        <div class="empaque-left-3"></div>
-        <div class="empaque-left-4"></div>
-        <div class="empaque-left-5"></div>
-        <div class="empaque-right-1"></div>
-        <div class="empaque-right-2"></div>
-        <div class="empaque-right-3"></div>
-        <div class="empaque-right-4"></div>
-        <div class="empaque-right-5"></div>
-        <div class="ini-entrada"></div>
-        <div class="fin-entrada"></div>
-        <div class="entrada"></div>
-        <div class="linea-empaque"></div>
-        <div class="nombre-L1">
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea nombre__linea--L"></div>
-          <div class="nombre__linea nombre__linea--1"></div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-        </div>
-        <div class="nombre-L2">
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea nombre__linea--L"></div>
-          <div class="nombre__linea nombre__linea--2"></div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-        </div>
+      </div>
+      </div>
+
+      <div class="l-3 linea-3 linea__small" (click)="showDataLine($event)">
         <div class="nombre-L3">
           <div class="nombre__linea">&nbsp;</div>
           <div class="nombre__linea">&nbsp;</div>
@@ -101,38 +145,657 @@
           <div class="nombre__linea">&nbsp;</div>
           <div class="nombre__linea">&nbsp;</div>
         </div>
-        <div class="nombre-L4">
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea nombre__linea--L"></div>
-          <div class="nombre__linea nombre__linea--4"></div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-        </div>
-        <div class="nombre-L5">
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea nombre__linea--L"></div>
-          <div class="nombre__linea nombre__linea--5"></div>
-          <div class="nombre__linea">&nbsp;</div>
-          <div class="nombre__linea">&nbsp;</div>
+      <div class="linea-3 linea">
+      <div class="linea-3__hueseros linea__titulo">
+        <div class="l-3 hueseros__title">Hueseros L3 <p-badge
+          [ngClass]="{
+            'arriba__promedio': esMayorPromedioHueseros_3,
+            'abajo__promedio': !esMayorPromedioHueseros_3
+          
+            }" 
+          [value]="(getRendimientoHueseros(hueserosL3) | percent:'0.1') +''"></p-badge></div>
+        <div class="l-3 hueseros__data">
+          <div class="l-3 hueseros__data--title">
+            <div class="l-3 hueseros__data--title--display"><span class="l-3 text__nowrap">Cuartos</span><span class="l-3 data__title__value">{{ getTotalCuartosLinea(hueserosL3) | number:'0.0' }}</span></div>
+            <div class="l-3 hueseros__data--title--display"><span class="l-3 text__nowrap">Kilos recibidos</span><span  class="l-3 data__title__value">{{ getTotalKilosRecibidosLinea(hueserosL3) | number:'0.2' }}</span></div>
+            <div class="l-3 hueseros__data--title--display"><span class="l-3 text__nowrap">Kilos enviados</span><span class="l-3 data__title__value">{{ getTotalKilosEnviadosLinea(hueserosL3) | number:'0.2' }}</span></div>
+          </div>
         </div>
       </div>
+      <div class="linea-3__charqueo linea__titulo">
+        <div class="l-3 charqueo__title">Charqueadores L3 
+          <p-badge 
+          [ngClass]="{
+            'arriba__promedio': esMayorPromedioCharqueadores_3,
+            'abajo__promedio': !esMayorPromedioCharqueadores_3
+          
+            }"
+          [value]="(getRendimientoCharqueador(charqueadoresL3) | percent:'0.1') +''"></p-badge></div>
+        <div class="l-3 charqueo__data">
+          <div class="l-3 charqueo__data--title">
+            <div class="l-3 charqueo__data--title--display"><span class="l-3 text__nowrap">Cortes recibidos</span><span class="l-3 data__title__value">{{ getTotalCharqueoCortesRecibidos(charqueadoresL3) | number:'0.0' }}</span></div>
+            <div class="l-3 charqueo__data--title--display"><span class="l-3 text__nowrap">Cortes enviados</span><span  class="l-3 data__title__value">{{ getTotalCharqueoCortesEnviados(charqueadoresL3) | number:'0.0' }}</span></div>
+            <div class="l-3 charqueo__data--title--display"><span class="l-3 text__nowrap">Kilos recibidos</span><span class="l-3 data__title__value">{{ getTotalCharqueoKilosRecibidos(charqueadoresL3) | number:'0.2'}}</span></div>
+            <div class="l-3 charqueo__data--title--display"><span class="l-3 text__nowrap">Kilos enviados</span><span class="l-3 data__title__value">{{ getTotalCharqueoKilosEnviados(charqueadoresL3) | number:'0.2'}}</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="linea-3__empaque linea__titulo">
+        <div class="l-3 empaque__title">Empaque L3</div>
+        <div class="l-3 charqueo__data">
+          <div class="l-3 empaque__data--title">
+            <div class="l-3 empaque__data--title--display"><span class="l-3 text__nowrap">Cortes enviados</span><span class="l-3 data__title__value">{{ getTotalEmpaqueCortes(empaqueL3) | number:'0.0'}}</span></div>
+            <div class="l-3 empaque__data--title--display empaque__data__kilos"><span class="l-3 text__nowrap">Kilos enviados</span><span class="l-3 data__title__value">{{ getTotalEmpaqueKilos(empaqueL3) | number:'0.2'}}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    <div class="l-4 linea-4 linea__small" (click)="showDataLine($event)">
+      <div class="nombre-L4">
+        <div class="nombre__linea">&nbsp;</div>
+        <div class="nombre__linea">&nbsp;</div>
+        <div class="nombre__linea nombre__linea--L"></div>
+        <div class="nombre__linea nombre__linea--4"></div>
+        <div class="nombre__linea">&nbsp;</div>
+        <div class="nombre__linea">&nbsp;</div>
+      </div>
+    <div class="linea-4 linea">
+    <div class="linea-4__hueseros linea__titulo">
+      <div class="l-4 hueseros__title">Hueseros L4 
+        <p-badge 
+          [ngClass]="{
+            'arriba__promedio': esMayorPromedioHueseros_4,
+            'abajo__promedio': !esMayorPromedioHueseros_4
+          
+            }" 
+          [value]="(getRendimientoHueseros(hueserosL4) | percent:'0.1') +''"></p-badge>
+        </div>
+      <div class="l-4 hueseros__data">
+        <div class="l-4 hueseros__data--title">
+          <div class="l-4 hueseros__data--title--display"><span class="l-4 text__nowrap">Cuartos</span><span class="l-4 data__title__value">{{ getTotalCuartosLinea(hueserosL4) | number:'0.0' }}</span></div>
+          <div class="l-4 hueseros__data--title--display"><span class="l-4 text__nowrap">Kilos recibidos</span><span  class="l-4 data__title__value">{{ getTotalKilosRecibidosLinea(hueserosL4) | number:'0.2' }}</span></div>
+          <div class="l-4 hueseros__data--title--display"><span class="l-4 text__nowrap">Kilos enviados</span><span class="l-4 data__title__value">{{ getTotalKilosEnviadosLinea(hueserosL4) | number:'0.2' }}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="linea-4__charqueo linea__titulo">
+      <div class="l-4 charqueo__title">Charqueadores L4 
+        <p-badge 
+        [ngClass]="{
+          'arriba__promedio': esMayorPromedioCharqueadores_4,
+          'abajo__promedio': !esMayorPromedioCharqueadores_4
+        
+          }"
+        [value]="(getRendimientoCharqueador(charqueadoresL4) | percent:'0.1') +''"></p-badge></div>
+      <div class="l-4 charqueo__data">
+        <div class="l-4 charqueo__data--title">
+          <div class="l-4 charqueo__data--title--display"><span class="l-4 text__nowrap">Cortes recibidos</span><span class="l-4 data__title__value">{{ getTotalCharqueoCortesRecibidos(charqueadoresL4) | number:'0.0' }}</span></div>
+          <div class="l-4 charqueo__data--title--display"><span class="l-4 text__nowrap">Cortes enviados</span><span  class="l-4 data__title__value">{{ getTotalCharqueoCortesEnviados(charqueadoresL4) | number:'0.0' }}</span></div>
+          <div class="l-4 charqueo__data--title--display"><span class="l-4 text__nowrap">Kilos recibidos</span><span class="l-4 data__title__value">{{ getTotalCharqueoKilosRecibidos(charqueadoresL4) | number:'0.2'}}</span></div>
+          <div class="l-4 charqueo__data--title--display"><span class="l-4 text__nowrap">Kilos enviados</span><span class="l-4 data__title__value">{{ getTotalCharqueoKilosEnviados(charqueadoresL4) | number:'0.2'}}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="linea-4__empaque linea__titulo">
+      <div class="l-4 empaque__title">Empaque L4</div>
+      <div class="l-4 charqueo__data">
+        <div class="l-4 empaque__data--title">
+          <div class="l-4 empaque__data--title--display"><span class="l-4 text__nowrap">Cortes enviados</span><span class="l-4 data__title__value">{{ getTotalEmpaqueCortes(empaqueL4) | number:'0.0'}}</span></div>
+          <div class="l-4 empaque__data--title--display empaque__data__kilos"><span class="l-4 text__nowrap">Kilos enviados</span><span class="l-4 data__title__value">{{ getTotalEmpaqueKilos(empaqueL4) | number:'0.2'}}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="l-5 linea-5 linea__small" (click)="showDataLine($event)">
+    <div class="nombre-L5">
+      <div class="nombre__linea">&nbsp;</div>
+      <div class="nombre__linea">&nbsp;</div>
+      <div class="nombre__linea nombre__linea--L"></div>
+      <div class="nombre__linea nombre__linea--5"></div>
+      <div class="nombre__linea">&nbsp;</div>
+      <div class="nombre__linea">&nbsp;</div>
+    </div>
+  <div class="linea-5 linea">
+  <div class="linea-5__hueseros linea__titulo">
+    <div class="l-5 hueseros__title">Hueseros L5 
+      <p-badge 
+        [ngClass]="{
+          'arriba__promedio': esMayorPromedioHueseros_5,
+          'abajo__promedio': !esMayorPromedioHueseros_5 
+          
+          }" 
+          [value]="(getRendimientoHueseros(hueserosL5) | percent:'0.1') +''"></p-badge>
+    </div>
+    <div class="l-5 hueseros__data">
+      <div class="l-5 hueseros__data--title">
+        <div class="l-5 hueseros__data--title--display"><span class="l-5 text__nowrap">Cuartos</span><span class="l-5 data__title__value">{{ getTotalCuartosLinea(hueserosL5) | number:'0.0' }}</span></div>
+        <div class="l-5 hueseros__data--title--display"><span class="l-5 text__nowrap">Kilos recibidos</span><span  class="l-5 data__title__value">{{ getTotalKilosRecibidosLinea(hueserosL5) | number:'0.2' }}</span></div>
+        <div class="l-5 hueseros__data--title--display"><span class="l-5 text__nowrap">Kilos enviados</span><span class="l-5 data__title__value">{{ getTotalKilosEnviadosLinea(hueserosL5) | number:'0.2' }}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="linea-5__charqueo linea__titulo">
+    <div class="l-5 charqueo__title">Charqueadores L5 <p-badge 
+      [ngClass]="{
+        'arriba__promedio': esMayorPromedioCharqueadores_5,
+        'abajo__promedio': !esMayorPromedioCharqueadores_5
+      
+        }"
+      [value]="(getRendimientoCharqueador(charqueadoresL5) | percent:'0.1') +''"></p-badge></div>
+    <div class="l-5 charqueo__data">
+      <div class="l-5 charqueo__data--title">
+        <div class="l-5 charqueo__data--title--display"><span class="l-5 text__nowrap">Cortes recibidos</span><span class="l-5 data__title__value">{{ getTotalCharqueoCortesRecibidos(charqueadoresL5) | number:'0.0' }}</span></div>
+        <div class="l-5 charqueo__data--title--display"><span class="l-5 text__nowrap">Cortes enviados</span><span  class="l-5 data__title__value">{{ getTotalCharqueoCortesEnviados(charqueadoresL5) | number:'0.0' }}</span></div>
+        <div class="l-5 charqueo__data--title--display"><span class="l-5 text__nowrap">Kilos recibidos</span><span class="l-5 data__title__value">{{ getTotalCharqueoKilosRecibidos(charqueadoresL5) | number:'0.2'}}</span></div>
+        <div class="l-5 charqueo__data--title--display"><span class="l-5 text__nowrap">Kilos enviados</span><span class="l-5 data__title__value">{{ getTotalCharqueoKilosEnviados(charqueadoresL5) | number:'0.2'}}</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="linea-5__empaque linea__titulo">
+    <div class="l-5 empaque__title">Empaque L5</div>
+    <div class="l-5 charqueo__data">
+      <div class="l-5 empaque__data--title">
+        <div class="l-5 empaque__data--title--display"><span class="l-5 text__nowrap">Cortes enviados</span><span class="l-5 data__title__value">{{ getTotalEmpaqueCortes(empaqueL5) | number:'0.0'}}</span></div>
+        <div class="l-5 empaque__data--title--display empaque__data__kilos"><span class="l-5 text__nowrap">Kilos enviados</span><span class="l-5 data__title__value">{{ getTotalEmpaqueKilos(empaqueL5) | number:'0.2'}}</span></div>
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+
+        <div class="hueseros-1">
+          <div *ngFor="let huesero of hueserosL1; let i = index">
+            <data-huesero [ngClass]="{'opaco': !huesero, 'iluminado': huesero}"  [idPuesto]="i" [dataHuesero]="getDataHuesero(huesero)" (click)="showDataHuesero(huesero, $event)" pTooltip="{{huesero?.huesero}}"/>
+          </div>
+        </div>
+        <div class="hueseros-2">
+          <div *ngFor="let huesero of hueserosL2; let i = index">
+            <data-huesero [ngClass]="{'opaco': !huesero, 'iluminado': huesero}" [idPuesto]="i" [dataHuesero]="getDataHuesero(huesero)" (click)="showDataHuesero(huesero, $event)" pTooltip="{{huesero?.huesero}}"/>
+          </div>
+        </div>
+        <div class="hueseros-3">
+          <div *ngFor="let huesero of hueserosL3; let i = index">
+            <data-huesero [ngClass]="{'opaco': !huesero, 'iluminado': huesero}" [idPuesto]="i" [dataHuesero]="getDataHuesero(huesero)" (click)="showDataHuesero(huesero, $event)" pTooltip="{{huesero?.huesero}}"/>
+          </div>
+        </div>
+        <div class="hueseros-4">
+          <div *ngFor="let huesero of hueserosL4; let i = index">
+            <data-huesero [ngClass]="{'opaco': !huesero, 'iluminado': huesero}" [idPuesto]="i" [dataHuesero]="getDataHuesero(huesero)" (click)="showDataHuesero(huesero, $event)" pTooltip="{{huesero?.huesero}}"/>
+          </div>
+        </div>
+        <div class="hueseros-5">
+          <div *ngFor="let huesero of hueserosL5; let i = index">
+            <data-huesero [ngClass]="{'opaco': !huesero, 'iluminado': huesero}" [idPuesto]="i" [dataHuesero]="getDataHuesero(huesero)" (click)="showDataHuesero(huesero, $event)" pTooltip="{{huesero?.huesero}}"/>
+          </div>
+        </div>
+        <div class="charqueo-1">
+          <div class="impar">
+            <div *ngFor="let charqueador of charqueadoresL1; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}"  [idPuesto]="i" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 == 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+          <div class="par">
+            <div *ngFor="let charqueador of charqueadoresL1; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [lado]="2" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 != 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="charqueo-2">
+          <div class="impar">
+            <div *ngFor="let charqueador of charqueadoresL2; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 == 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+          <div class="par">
+            <div *ngFor="let charqueador of charqueadoresL2; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [lado]="2" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 != 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="charqueo-3">
+          <div class="impar">
+            <div *ngFor="let charqueador of charqueadoresL3; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 == 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+          <div class="par">
+            <div *ngFor="let charqueador of charqueadoresL3; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [lado]="2" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 != 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="charqueo-4">
+          <div class="impar">
+            <div *ngFor="let charqueador of charqueadoresL4; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 == 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+          <div class="par">
+            <div *ngFor="let charqueador of charqueadoresL4; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [lado]="2" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 != 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="charqueo-5">
+          <div class="impar">
+            <div *ngFor="let charqueador of charqueadoresL5; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 == 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+          <div class="par">
+            <div *ngFor="let charqueador of charqueadoresL5; let i = index">
+              <data-charqueo [ngClass]="{'opaco': !charqueador, 'iluminado': charqueador}" [idPuesto]="i" [lado]="2" [dataCharqueo]="getDataCharqueador(charqueador)" (click)="showDataCharqueo(charqueador, $event)" *ngIf="i % 2 != 0" pTooltip="{{charqueador?.charqueador}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-1"></div>
+        <div class="empaque-2"></div>
+        <div class="empaque-3"></div>
+        <div class="empaque-4"></div>
+        <div class="empaque-5"></div>
+        <div class="total-hueseros">
+          <total-huesero 
+            [cuartos]="getTotalCuartosHueseros()"
+            [kilosRec]="getTotalKilosRecibidosHueseros()"
+            [kilosEnv]="getTotalKilosEnviadosHueseros()"
+            [rend]="getRendimientoTotalHueseros()"
+          />
+        </div>
+        <div class="total-hueseros-1">
+         <total-huesero 
+          titulo="Hueseros L1"
+          [cuartos]="getTotalCuartosLinea(hueserosL1)"
+          [kilosRec]="getTotalKilosRecibidosLinea(hueserosL1)"
+          [kilosEnv]="getTotalKilosEnviadosLinea(hueserosL1)"
+          [rend]="getRendimientoHueseros(hueserosL1)"
+          />
+        </div>
+        <div class="total-hueseros-2">
+          <total-huesero 
+          titulo="Hueseros L2"
+          [cuartos]="getTotalCuartosLinea(hueserosL2)"
+          [kilosRec]="getTotalKilosRecibidosLinea(hueserosL2)"
+          [kilosEnv]="getTotalKilosEnviadosLinea(hueserosL2)"
+          [rend]="getRendimientoHueseros(hueserosL2)"
+          />
+        </div>
+        <div class="total-hueseros-3">
+          <total-huesero 
+          titulo="Hueseros L3"
+          [cuartos]="getTotalCuartosLinea(hueserosL3)"
+          [kilosRec]="getTotalKilosRecibidosLinea(hueserosL3)"
+          [kilosEnv]="getTotalKilosEnviadosLinea(hueserosL3)"
+          [rend]="getRendimientoHueseros(hueserosL3)"
+          />
+        </div>
+        <div class="total-hueseros-4">
+          <total-huesero 
+          titulo="Hueseros L4"
+          [cuartos]="getTotalCuartosLinea(hueserosL4)"
+          [kilosRec]="getTotalKilosRecibidosLinea(hueserosL4)"
+          [kilosEnv]="getTotalKilosEnviadosLinea(hueserosL4)"
+          [rend]="getRendimientoHueseros(hueserosL4)"
+          />
+        </div>
+        <div class="total-hueseros-5">
+          <total-huesero 
+          titulo="Hueseros L5"
+          [cuartos]="getTotalCuartosLinea(hueserosL5)"
+          [kilosRec]="getTotalKilosRecibidosLinea(hueserosL5)"
+          [kilosEnv]="getTotalKilosEnviadosLinea(hueserosL5)"
+          [rend]="getRendimientoHueseros(hueserosL5)"
+          />
+        </div>
+        <div class="total-charqueo last--charqueo">
+          <total-charqueo 
+            [cortesRec]="getTotalCharqueadorCortesRecibidos()"
+            [cortesEnv]="getTotalCharqueadorCortesEnviados()"
+            [kilosRec]="getTotalCharqueadorKilosRecibidos()"
+            [kilosEnv]="getTotalCharqueadorKilosEnviados()"
+            [rend]="getRendimientoTotalCharqueadores()"
+          />
+        </div>
+        <div class="total-charqueo-1">
+          <total-charqueo 
+            titulo="Charqueo L1" 
+            [cortesRec]="getTotalCharqueoCortesRecibidos(charqueadoresL1)"
+            [cortesEnv]="getTotalCharqueoCortesEnviados(charqueadoresL1)"
+            [kilosRec]="getTotalCharqueoKilosRecibidos(charqueadoresL1)"
+            [kilosEnv]="getTotalCharqueoKilosEnviados(charqueadoresL1)"
+            [rend]="getRendimientoCharqueador(charqueadoresL1)"
+            />
+        </div>
+        <div class="total-charqueo-2">
+          <total-charqueo 
+          titulo="Charqueo L2" 
+          [cortesRec]="getTotalCharqueoCortesRecibidos(charqueadoresL2)"
+          [cortesEnv]="getTotalCharqueoCortesEnviados(charqueadoresL2)"
+          [kilosRec]="getTotalCharqueoKilosRecibidos(charqueadoresL2)"
+          [kilosEnv]="getTotalCharqueoKilosEnviados(charqueadoresL2)"
+          [rend]="getRendimientoCharqueador(charqueadoresL2)"
+          />
+        </div>
+        <div class="total-charqueo-3">
+          <total-charqueo 
+          titulo="Charqueo L3" 
+          [cortesRec]="getTotalCharqueoCortesRecibidos(charqueadoresL3)"
+          [cortesEnv]="getTotalCharqueoCortesEnviados(charqueadoresL3)"
+          [kilosRec]="getTotalCharqueoKilosRecibidos(charqueadoresL3)"
+          [kilosEnv]="getTotalCharqueoKilosEnviados(charqueadoresL3)"
+          [rend]="getRendimientoCharqueador(charqueadoresL3)"
+          />
+        </div>
+        <div class="total-charqueo-4">
+          <total-charqueo 
+          titulo="Charqueo L4" 
+          [cortesRec]="getTotalCharqueoCortesRecibidos(charqueadoresL4)"
+          [cortesEnv]="getTotalCharqueoCortesEnviados(charqueadoresL4)"
+          [kilosRec]="getTotalCharqueoKilosRecibidos(charqueadoresL4)"
+          [kilosEnv]="getTotalCharqueoKilosEnviados(charqueadoresL4)"
+          [rend]="getRendimientoCharqueador(charqueadoresL4)"
+          />
+        </div>
+        <div class="total-charqueo-5">
+          <total-charqueo 
+          titulo="Charqueo L5" 
+          [cortesRec]="getTotalCharqueoCortesRecibidos(charqueadoresL5)"
+          [cortesEnv]="getTotalCharqueoCortesEnviados(charqueadoresL5)"
+          [kilosRec]="getTotalCharqueoKilosRecibidos(charqueadoresL5)"
+          [kilosEnv]="getTotalCharqueoKilosEnviados(charqueadoresL5)"
+          [rend]="getRendimientoCharqueador(charqueadoresL5)"
+          />
+        </div>
+        <div class="total-empaque">
+          <total-empaque 
+            [cortes]="getTotalLineasEmpaqueCortes()"
+            [kilos]="getTototalLineasEmpaqueKilos()"
+          />
+        </div>
+        <div class="total-empaque-1">
+          <total-empaque
+           titulo="Empaque L1"
+           [cortes]="getTotalEmpaqueCortes(empaqueL1)"
+           [kilos]="getTotalEmpaqueKilos(empaqueL1)"
+           />
+        </div>
+        <div class="total-empaque-2">
+          <total-empaque
+           titulo="Empaque L2"
+           [cortes]="getTotalEmpaqueCortes(empaqueL2)"
+           [kilos]="getTotalEmpaqueKilos(empaqueL2)"
+           />
+        </div>
+        <div class="total-empaque-3">
+          <total-empaque
+           titulo="Empaque L3"
+           [cortes]="getTotalEmpaqueCortes(empaqueL3)"
+           [kilos]="getTotalEmpaqueKilos(empaqueL3)"
+           />
+        </div>
+        <div class="total-empaque-4">
+          <total-empaque
+           titulo="Empaque L4"
+           [cortes]="getTotalEmpaqueCortes(empaqueL4)"
+           [kilos]="getTotalEmpaqueKilos(empaqueL4)"
+           />
+        </div>
+        <div class="total-empaque-5">
+          <total-empaque
+           titulo="Empaque L5"
+           [cortes]="getTotalEmpaqueCortes(empaqueL5)"
+           [kilos]="getTotalEmpaqueKilos(empaqueL5)"
+           />
+        </div>
+        <div class="empaque-left-1">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL1; let i = index">
+              <data-empaque [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i < 9"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL1; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i <= 9"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-left-2">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL2; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i < 9"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL2; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i <= 9"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-left-3">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL3; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i < 9"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL3; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i <= 9"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-left-4">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL4; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i < 9"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL4; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i <= 9"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-left-5">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL5; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i < 9"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL5; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i <= 9"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-right-1">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL1; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i >= 10"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL1; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i >= 10"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-right-2">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL2; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i >= 10"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL2; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i >= 10"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-right-3">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL3; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i >= 10"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL3; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i >= 10"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-right-4">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL4; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i >= 10"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL4; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i >= 10"/>
+            </div>
+          </div>
+        </div>
+        <div class="empaque-right-5">
+          <div class="pack__impar">
+            <div *ngFor="let pack of empaqueL5; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 == 0 && i >= 10"/>
+            </div>
+          </div>
+          <div class="pack__par">
+            <div *ngFor="let pack of empaqueL5; let i = index">
+              <data-empaque  [ngClass]="{'opaco': !pack, 'iluminado': pack}" [idPuesto]="i" [lado]="2" [dataEmpaque]="getDataPacking(pack)" *ngIf="i % 2 != 0 && i >= 10"/>
+            </div>
+          </div>
+        </div>
+        <div class="ini-entrada"></div>
+        <div class="fin-entrada"></div>
+        <div class="entrada"></div>
+        <div class="linea-empaque"></div>
+        <div class="nombrelg-1">
+          <div class="nombrelg--title">LINEA&nbsp;1</div>
+        </div>
+        <div class="nombrelg-2">
+          <div class="nombrelg--title">LINEA&nbsp;2</div>
+        </div>
+        <div class="nombrelg-3">
+          <div class="nombrelg--title">LINEA&nbsp;3</div>
+        </div>
+        <div class="nombrelg-4">
+          <div class="nombrelg--title">LINEA&nbsp;4</div>
+        </div>
+        <div class="nombrelg-5">
+          <div class="nombrelg--title">LINEA&nbsp;5</div>
+        </div>
+  </div>
+</div>
+
+<div class="total__medium total__small__visible">
+  <ng-container *ngTemplateOutlet="totales" />
+</div>
+    
+<div class="options">
+  <div class="selectButton">
+    <p-selectButton
+      [options]="lineOptions" 
+      [(ngModel)]="orden" 
+      optionLabel="label" 
+      optionValue="value"
+      (onChange)="onLineOrderSelected($event)"/>
+  </div>
+  <div class="selectButton">
+    <p-selectButton
+      [options]="seeOptions" 
+      [(ngModel)]="see" 
+      optionLabel="label" 
+      optionValue="value"
+      (onChange)="toggleLineVisibility($event)"/>
+  </div>
+</div>
+
 
 <div class="visualizer">
   <div class="info">
     <i class="pi pi-info-circle"></i>
   </div>
-  <div class="borde"></div>
     <ul class="nav">
-      <li class="nav__item">
-        <!-- <i class="pi pi-hashtag"></i> -->
+      <li class="nav__item" (click)="showLotesEntrada()">
         <span>Lotes de entrada</span>
       </li>
-      <li class="nav__item">
+      <li class="nav__item" (click)="showDetalleHuesero()">
+        <span>Detalle de hueseros</span>
+      </li>
+      <li class="nav__item" (click)="showDetalleCharqueo()">
         <span>Detalle de charqueadores</span>
       </li>
+      <!-- <li class="nav__item">
+        <span>Empaque secundario</span>&nbsp;
+        <span><i class="pi pi-external-link"></i></span>
+      </li> -->
     </ul>
-
 </div>
+
+<div class="actualizar">
+  <ul class="actualizar__list">
+    <li class="list__item" (click)="getData()">
+      <span class="actualizar__text">Actualizar</span>
+      <span class="actualizar__icon"><i class="pi pi-refresh"></i></span>
+    </li>
+  </ul>
+</div>
+
+
+<ng-template #inReg>
+  <div class="inReg__data">
+    <div class="data--cuartos">
+      <div class="data--cuartos__title">Cuartos</div>
+      <div class="data--cuartos__cuartos">{{ totalCuartosEntrada | number:'0.0' }}</div>
+    </div>
+    <div class="data--kilos">
+      <div class="data--kilos__title">Kilos</div>
+      <div class="data--kilos__kilos">{{ totalKilosEntrada | number:'0.2' }}</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #totales>
+  <div class="total__medium--title"><div class="medium--title--value">TOTAL</div></div>  
+  <div class="total__medium__data--display">
+      <div class="total__medium--inReg total__data" (click)="showLotesEntrada()">
+        <div class="medium--inReg__title medium--title">InReg</div>
+        <div class="medium--inReg__data">
+          <div class="inReg__data--title--display"><span class="text__nowrap medium__data__title">Cuartos</span><span class="medium__data__value">{{totalCuartosEntrada | number:'0.0'}}</span></div>
+          <div class="inReg__data--title--display"><span class="text__nowrap medium__data__title">Kilos</span><span  class="medium__data__value">{{totalKilosEntrada | number:'0.1'}}</span></div>
+        </div>
+      </div>
+      <div class="divider divider__first"></div>
+      <div class="total__medium--huesero total__data" (click)="showDetalleHuesero()">
+        <div class="medium--hueseros__title medium--title">Hueseros</div>
+        <div class="medium--hueseros__data">
+          <div class="hueseros__data--title--display"><span class="text__nowrap medium__data__title">Cuartos</span><span class="medium__data__value">{{getTotalCuartosHueseros() | number:'0.0'}}</span></div>
+          <div class="hueseros__data--title--display"><span class="text__nowrap medium__data__title">Kilos recibidos</span><span  class="medium__data__value">{{getTotalKilosRecibidosHueseros() | number:'0.1'}}</span></div>
+          <div class="hueseros__data--title--display"><span class="text__nowrap medium__data__title">Kilos enviados</span><span class="medium__data__value">{{getTotalKilosEnviadosHueseros() | number:'0.1'}}</span></div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="total__medium--charqueo total__data" (click)="showDetalleCharqueo()">
+        <div class="medium--charqueo__title medium--title">Charqueadores</div>
+        <div class="medium--charqueo__data">
+          <div class="charqueo__data--title--display"><span class="text__nowrap medium__data__title">Cortes recibidos</span><span class="medium__data__value">{{getTotalCharqueadorCortesRecibidos() | number:'0.0'}}</span></div>
+          <div class="charqueo__data--title--display"><span class="text__nowrap medium__data__title">Cortes enviados</span><span  class="medium__data__value">{{getTotalCharqueadorCortesEnviados() | number:'0.0'}}</span></div>
+          <div class="charqueo__data--title--display"><span class="text__nowrap medium__data__title">Kilos recibidos</span><span class="medium__data__value">{{getTotalCharqueadorKilosRecibidos() | number:'0.1'}}</span></div>
+          <div class="charqueo__data--title--display"><span class="text__nowrap medium__data__title">Kilos enviados</span><span class="medium__data__value">{{getTotalCharqueadorCortesEnviados() | number:'0.2'}}</span></div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="total__medium--empaque total__data">
+        <div class="medium--empaque__title medium--title">Empaque</div>
+        <div class="medium--empaque__data">
+          <div class="empaque__data--title--display"><span class="text__nowrap medium__data__title">Cortes</span><span class="medium__data__value">{{getTotalLineasEmpaqueCortes() | number:'0.0'}}</span></div>
+          <div class="empaque__data--title--display empaque__data__kilos--m"><span class="text__nowrap medium__data__title">Kilos enviados</span><span class="medium__data__value">{{getTototalLineasEmpaqueKilos() | number:'0.1'}}</span></div>
+        </div>
+      </div>
+    </div>
+</ng-template>
