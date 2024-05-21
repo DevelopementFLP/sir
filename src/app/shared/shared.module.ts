@@ -14,6 +14,7 @@ import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { EncabezadoReporteComponent } from './encabezado-reporte/encabezado-reporte.component';
 import { DashboardEagleComponent } from './dashboard-eagle/dashboard-eagle.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -43,6 +44,7 @@ import { DashboardEagleComponent } from './dashboard-eagle/dashboard-eagle.compo
     CommonModule,
     MaterialThemeModule,
     PrimeNgModule,
+    FormsModule
   ]
 })
 export class SharedModule { }

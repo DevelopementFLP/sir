@@ -1783,7 +1783,8 @@ export class TestService {
         cuartos: 148,
         pesoCuartos: 8854,
         promedio: 59.82,
-        horaPrimerCuarto: '10:44:57'
+        horaPrimerCuarto: '10:44:57',
+        horaUltimoCuarto: ''
       },
       {
         tipoEntrada: 'TRASERO PREMIUM DESCOMPENSADO',
@@ -1792,7 +1793,8 @@ export class TestService {
         cuartos: 267,
         pesoCuartos: 16778.6,
         promedio: 62.84,
-        horaPrimerCuarto: '10:43:34'
+        horaPrimerCuarto: '10:43:34',
+        horaUltimoCuarto: ''
       },
       {
         tipoEntrada: 'CUOTA ITALIA  ANGUS',
@@ -1801,7 +1803,8 @@ export class TestService {
         cuartos: 500,
         pesoCuartos: 28621.8,
         promedio: 57.24,
-        horaPrimerCuarto: '09:31:36'
+        horaPrimerCuarto: '09:31:36',
+        horaUltimoCuarto: ''
       },
       {
         tipoEntrada: 'CUOTA ITALIA  ANGUS',
@@ -1810,7 +1813,8 @@ export class TestService {
         cuartos: 500,
         pesoCuartos: 32037.6,
         promedio: 64.08,
-        horaPrimerCuarto: '08:00:45'
+        horaPrimerCuarto: '08:00:45',
+        horaUltimoCuarto: ''
       },
       {
         tipoEntrada: 'CUOTA DELANTERO THE BLACK',
@@ -1819,7 +1823,8 @@ export class TestService {
         cuartos: 534,
         pesoCuartos: 31319.2,
         promedio: 58.65,
-        horaPrimerCuarto: '07:00:46'
+        horaPrimerCuarto: '07:00:46',
+        horaUltimoCuarto: ''
       },
       {
         tipoEntrada: 'CUOTA TRASERO THE BLACK',
@@ -1828,7 +1833,8 @@ export class TestService {
         cuartos: 534,
         pesoCuartos: 35270.8,
         promedio: 66.05,
-        horaPrimerCuarto: '05:27:23'
+        horaPrimerCuarto: '05:27:23',
+        horaUltimoCuarto: ''
       }
     ]
   }

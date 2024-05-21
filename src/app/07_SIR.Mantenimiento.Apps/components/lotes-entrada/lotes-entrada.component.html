@@ -10,6 +10,7 @@
                 <th pSortableColumn="pesoCuartos">Kilos<p-sortIcon field="pesoCuartos" /></th>
                 <th pSortableColumn="promedio">Promedio<p-sortIcon field="promedio" /></th>
                 <th pSortableColumn="horaPrimerCuarto">Hora primer cuarto<p-sortIcon field="horaPrimerCuarto" /></th>
+                <th pSortableColumn="horaUltimoCuarto">Hora último cuarto<p-sortIcon field="horaCuartoCuarto" /></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-lote>
@@ -21,6 +22,7 @@
                 <td class="lote__texto__sm">{{lote.pesoCuartos | number:'0.1'}}</td>
                 <td class="lote__texto__sm">{{lote.promedio}}</td>
                 <td class="lote__texto__medium">{{lote.horaPrimerCuarto}}</td>
+                <td class="lote__texto__medium">{{lote.horaUltimoCuarto}}</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="footer">
@@ -29,6 +31,7 @@
                 <td>{{cantCuartos | number:'0.0'}}</td>
                 <td>{{cantKilos | number: '0.1'}}</td>
                 <td>{{promedioKilos | number: '0.1'}}</td>
+                <td></td>
                 <td></td>
             </tr>
         </ng-template>

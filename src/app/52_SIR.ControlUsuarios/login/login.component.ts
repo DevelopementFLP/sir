@@ -17,7 +17,7 @@ import { NavBarService } from 'src/app/shared/services/nav-bar.service';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./media_queries.css', './login.component.css']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements AfterViewInit {
 

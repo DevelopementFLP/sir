@@ -6,4 +6,5 @@ export interface LoteEntrada {
     pesoCuartos:        number;
     promedio:           number;
     horaPrimerCuarto:   string;
+    horaUltimoCuarto:   string;
 }

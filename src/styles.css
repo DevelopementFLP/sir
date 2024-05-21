@@ -7,7 +7,8 @@
 
 html, body { height: 100%; }
 
-body { 
+body {
+    width: 100vw;
     margin: 0; 
     font-family: Roboto, "Helvetica Neue", sans-serif; 
     overflow-y: scroll;
@@ -121,3 +122,23 @@ body {
     color: red;
    
 }
+
+.p-divider.p-component.p-divider-horizontal.p-divider-solid.p-divider-left {
+    margin: 0 !important; 
+}
+
+/* .mat-mdc-text-field-wrapper.mdc-text-field {
+    width: 100%;
+    height: 2.5rem;
+    font-size: 1rem;
+}
+
+.mdc-floating-label.mat-mdc-floating-label {
+    top: 0;
+    padding: 0;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 7px;
+    padding-bottom: 16px;
+} */

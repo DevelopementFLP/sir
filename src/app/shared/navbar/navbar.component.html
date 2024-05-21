@@ -1,4 +1,4 @@
-<mat-toolbar class="matToolBar">
+<!-- <mat-toolbar class="matToolBar">
     <div class="flex flex-row mainTitle">
         <span>
             <mat-icon id="menuIcon" (click)="toogleMenuVisibility()"><span id="icon" class="material-symbols-outlined">menu</span></mat-icon>
@@ -19,9 +19,71 @@
             </button>
         </div>
     </div>
+</mat-toolbar> -->
+
+<mat-toolbar class="matToolBar">
+    <div class="flex flex-row mainTitle">
+        <span>
+            <mat-icon id="menuIcon" (click)="toogleMenuVisibility()"><span id="icon"
+                    class="material-symbols-outlined">menu</span></mat-icon>
+            <span id="fullTitle" pTooltip="Ir a la pantalla principal" (click)="goMain()">Sistema Integral de
+                Reportes</span>
+        </span>
+        <span id="smallTitle" (click)="goMain()">SIR</span>
+        <span class="spacer"></span>
+    </div>
+    <div id="profileData">
+
+        <div class="searchMainContainer">
+            <div id="searchContainer" [ngClass]="{'expanded': isSearchExpanded}">
+                <button mat-icon-button (click)="toggleSearch()">
+                    <mat-icon id="search-icon"><span [pTooltip]="toolTipText"
+                            class="material-symbols-outlined">{{icono}}</span></mat-icon>
+                </button>
+                <div id="searchInputContainer">
+                    <input id="searchInput" (focus)="selectText($event)" type="text" placeholder="Buscar reporte o app"
+                        [(ngModel)]="searchQuery" (keyup)="performSearch()">
+
+                </div>
+            </div>
+            <div>
+                <div *ngIf="isResVisible && searchQuery != ''" class="search__result">
+                    <div *ngIf="resultadoBusqueda.length > 0">
+                        <ul class="search__list" *ngFor="let seccion of secciones">
+                            <li>
+                                <p-divider align="left">{{seccion}}</p-divider>
+                                <ul class="search__list" *ngFor="let resultado of resultadoBusqueda">
+                                    <li *ngIf="resultado.parentLabel.trim() === seccion" class="search__item"
+                                        [routerLink]="resultado.menuItem.routerLink" (click)="resetSearch()">
+                                        {{ resultado.menuItem.label }}
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="res__footer">
+                        {{resultadoBusqueda.length | i18nPlural: resultadosMapping}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div pTooltip="Mi perfil" tooltipPosition="left" id="greetings" [matMenuTriggerFor]="menu">
+            <span id="hola">Hola,&nbsp;</span><span id="nombre">{{getNombreUsuario(actualUser)}}!</span>&nbsp;<span
+                id="admin" *ngIf="esAdmin(actualUser)">(Admin)</span>
+        </div>
+
+        <div pTooltip="Mi perfil" id="matButton">
+            <button mat-icon-button [matMenuTriggerFor]="menu" >
+                <mat-icon id="user-icon"><span class="material-symbols-outlined">account_circle</span></mat-icon>
+            </button>
+        </div>
+    </div>
 </mat-toolbar>
 
+
+
 <mat-menu #menu="matMenu">
-   <app-profile-menu></app-profile-menu>
+    <app-profile-menu></app-profile-menu>
 </mat-menu>
-  

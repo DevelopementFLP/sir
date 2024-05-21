@@ -1,29 +1,90 @@
-<div class="contenedor">
-    <div class="box-login border p-5 rounded shadow-lg">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <!-- <img id="logo" class="mt-5" src="../../../assets/images/logo relleno azul.png" alt="Logo FLP"> -->
-                <img id="logo" class="mt-5" src="../../../assets/images/logos/logo_t4.svg" alt="Logo FLP">
-            </div>
+<!-- 
+<div class="login__container">
+    <div class="logo__display">            
+        <div class="logo__display--image">
+            <img id="" class="" src="../../../assets/images/logos/logo_t4.svg" alt="Logo FLP">
         </div>
-
-        <div class="row mt-3">
-            <div class="col-lg-12">
-                <h2 class="text-center">Sistema Integral de Reportes</h2>
-            </div>
+        <div class="logo__display--text">
+            <div class="logo__text--style">Sistema Integral de Reportes</div>
         </div>
+    </div>
 
-        <div class="row mt-3">
-            <div class="col-lg-12">
-                <h3 class="text-center">Ingresar</h3>
-            </div>
+    <div class="form__display">
+        <div class="form__display--text"><p>Ingresar</p></div>
+        <div class="form__display--form">
+            <form (ngSubmit)="IniciarSesion()">
+                <div class="">
+                    <div class="">
+                        <div class="">
+                            <mat-form-field class="" appearance="outline">
+                                <mat-label>Nombre de usuario</mat-label>
+                                <input matInput [formControl]="userData.controls.userName" required #txtUserName>
+                                <mat-icon matSuffix>person</mat-icon>
+                                <mat-error
+                                    *ngIf="userData.controls.userName.invalid && (userData.controls.userName.dirty || userData.controls.userName.touched)">{{checkUserName()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="">
+                    <div class="">
+                        <div class="">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Contraseña</mat-label>
+                                <input matInput [type]="hide ? 'password' : 'text'" [formControl]="userData.controls.password"
+                                    required #txtPassword (keydown.enter)="IniciarSesion()">
+                                <mat-error
+                                    *ngIf="userData.controls.password.invalid && (userData.controls.password.dirty || userData.controls.password.touched)">{{checkPassword()}}</mat-error>
+                                <button class="icon-visibility" mat-icon-button matSuffix (click)="hide = !hide" type="button"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+        
+                     <div class="">
+                        <p class="">
+                            <a routerLink="/resetearContraseña" class="text-secundario">¿Olvidaste tu contraseña?</a>
+                        </p>
+                    </div> 
+                </div>
+        
+                <div class="form__button">
+                        <p-button type="submit" class=""
+                            [disabled]="(userData.controls.userName.value == '') || (userData.controls.password.value == '') ">Iniciar
+                            Sesión
+                        </p-button>
+                        <p class="">¿No tienes una cuenta? <a routerLink="/registro" class="">Solicitar una cuenta</a>
+                        </p> 
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+ -->
 
-        <form (ngSubmit)="IniciarSesion()">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <mat-form-field class="w-100" appearance="outline">
+<div class="outside">
+    <div class="login__maincontainer">
+        <section class="side">
+            <div class="logo__big__container">
+                <img class="logo__big" src="../../../assets/images/logos/logo_t4.svg" alt="logo" />
+            </div>
+        </section>
+        <section class="main">
+            <div class="login__container">
+                <div class="logo__small__container">
+                    <img class="logo__small" src="../../../assets/images/logos/logo_t4.svg" alt="logo" />
+                </div>
+                <p class="title">Sistema Integral de Reportes</p>
+                <div class="separator"></div>
+                <p class="welcome__message">Ingresar</p>
+                <form (ngSubmit)="IniciarSesion()" class="login__form">
+
+
+                    <div class="form__field">
+                        <mat-form-field class="custom-height" appearance="outline">
                             <mat-label>Nombre de usuario</mat-label>
                             <input matInput [formControl]="userData.controls.userName" required #txtUserName>
                             <mat-icon matSuffix>person</mat-icon>
@@ -31,46 +92,30 @@
                                 *ngIf="userData.controls.userName.invalid && (userData.controls.userName.dirty || userData.controls.userName.touched)">{{checkUserName()}}</mat-error>
                         </mat-form-field>
                     </div>
-                </div>
-            </div>
 
-            <div class="row mt-3">
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <mat-form-field [color]="'primary'" class="w-100" appearance="outline">
+                    <div class="form__field field__password">
+                        <mat-form-field class="custom-height" appearance="outline">
                             <mat-label>Contraseña</mat-label>
                             <input matInput [type]="hide ? 'password' : 'text'"
-                                [formControl]="userData.controls.password" required #txtPassword (keydown.enter)="IniciarSesion()">
+                                [formControl]="userData.controls.password" required #txtPassword
+                                (keydown.enter)="IniciarSesion()">
                             <mat-error
                                 *ngIf="userData.controls.password.invalid && (userData.controls.password.dirty || userData.controls.password.touched)">{{checkPassword()}}</mat-error>
-                            <button class="icon-visibility" mat-icon-button matSuffix (click)="hide = !hide" type="button"
-                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                            <button class="icon-visibility" mat-icon-button matSuffix (click)="hide = !hide"
+                                type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
                         </mat-form-field>
                     </div>
-                </div>
 
-                <div class="col-lg-12">
-                    <p class="text-end link-custom">
-                        <a routerLink="/resetearContraseña" class="text-secundario">¿Olvidaste tu contraseña?</a>
-                    </p>
-                </div>
+                    <div class="form__button">
+                        <p-button type="submit" class=""
+                            [disabled]="(userData.controls.userName.value == '') || (userData.controls.password.value == '') ">Iniciar
+                            Sesión
+                        </p-button>
+                    </div>
+                </form>
             </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <p-button type="submit" class="col-12 text-center mt-3 mb-3"
-                        [disabled]="(userData.controls.userName.value == '') || (userData.controls.password.value == '') ">Iniciar
-                        Sesión
-                    </p-button>
-                    <p class="mt-2 text-center link-custom">¿No tienes una cuenta? <a routerLink="/registro"
-                            class="text-primario">Solicitar una cuenta</a>
-                    </p>
-                </div>
-            </div>
-        </form>
+        </section>
     </div>
 </div>
-
-
