@@ -1,5 +1,5 @@
 import { state, transition, style, animate, trigger } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { PrintContext } from '../printer/print-context';
 import { PrinterPrintStrategy } from '../printer/printer-print-strategy';
 import { ExcelPrintStrategy } from '../printer/excel-print-strategy';
@@ -25,7 +25,7 @@ import { InconsistenciaDataPrint } from 'src/app/08_SIR.RRHH.Reportes/interfaces
     ])
   ],
 })
-export class ExportacionComponent implements OnInit   {
+export class ExportacionComponent implements OnInit, OnChanges  {
 
   @Input() pdf:           boolean = false;
   @Input() excel:         boolean = false;
@@ -52,8 +52,18 @@ export class ExportacionComponent implements OnInit   {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['nombreArchivo']) {
+      this.dataToPrint = {
+        nombreArchivo: this.nombreArchivo,
+        data: this.data != undefined ? this.data : document.getElementsByClassName('printable')
+      }
+    }
+  }
+
   printExcel() {
     this.printContext.setPrintStrategy(new ExcelPrintStrategy(this.idReporte, this.printService, this.formatService));
+  
     this.printContext.print(this.dataToPrint);
   }
 

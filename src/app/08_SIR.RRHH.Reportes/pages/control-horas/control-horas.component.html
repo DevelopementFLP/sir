@@ -123,7 +123,6 @@
 </div>
 
 <div class="results mt-6" [ngClass]="{'slide-out-left': !isResultsVisible, 'slide-in-right': isResultsVisible}">
-
    <p-tag class="ml-2 back" (click)="reset()">
       <div class="flex gap-2 back__content">
          <i class="pi pi-home text-lg font-light"></i>
@@ -157,6 +156,20 @@
          </p-accordionTab>
       </p-accordion>
    </div>
+
+   <div class="message" *ngIf="horasAComparar.length === 0">
+      <p-messages 
+         [(value)]="mensajeNoInconsistencia" 
+         [enableService]="false" 
+         [closable]="false" />
+   </div>
+
+   <div class="message" *ngIf="horasIncidencias.incidencias.length === 0">
+      <p-messages 
+         [(value)]="mensajeNoErrorFuncionarios" 
+         [enableService]="false" 
+         [closable]="false" />
+   </div>
 </div>
 
 <p-confirmDialog #cd>
@@ -175,6 +188,6 @@
    </ng-template>
 </p-confirmDialog>
 
-<div *ngIf="isResultsVisible" class="expo">
+<div *ngIf="isResultsVisible && (horasAComparar.length > 0 || horasIncidencias.incidencias.length > 0) " class="expo">
    <sir-exportacion [excel]="true" [idReporte]="idReporte" [nombreArchivo]="nombreArchivo" [data]="dataToPrint" />
 </div>

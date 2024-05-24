@@ -3,6 +3,6 @@ export interface Marcas {
     nombre:         string;
     apellido:       string;
     marcas:         number[];
-    fecha:          Date;
+    fecha:          number;
     rowNumber:      number;
 }

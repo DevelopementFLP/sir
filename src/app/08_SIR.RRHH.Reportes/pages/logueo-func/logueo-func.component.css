@@ -1,5 +1,13 @@
 @import "../../../../../node_modules/primeflex/primeflex.min.css";
 
+.lineas {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
 .lineas__linea[hidden] {
     display: none; /* o visibility: hidden; */
 }
@@ -33,6 +41,47 @@
     opacity: 0.8;
     border-radius: 5px;
 }
+
+.timeSelection {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-self: flex-start;
+    align-items: center;
+    flex: 1;
+    padding-left: 2rem;
+}
+
+.history {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 2px rgba(99, 90, 84, 0.5);
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -0.5rem;
+}
+
+.title {
+    flex: 2;
+}
+
+.selection__title {
+    color: rgb(100, 90, 85);
+    letter-spacing: 1px;
+    font-size: 1rem;
+}
+
+.p-selectbutton.p-button.p-highlight {
+    background: #4868D1 !important;
+    border-color: #4868D1 !important;
+    color: white !important;
+}
+
 
 @media print {
     body {

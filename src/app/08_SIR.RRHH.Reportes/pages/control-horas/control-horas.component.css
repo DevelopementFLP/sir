@@ -112,6 +112,18 @@
     padding: 0 !important;
 }
 
+.p-message.p-message-success {
+    background: #D4EFDF !important;
+    border-left: 6px solid #1E8449 !important;
+}
+
+.p-message-wrapper,
+.p-element.p-icon-wrapper.ng-tns-c105-3.ng-star-inserted,
+.p-element.p-icon-wrapper.ng-tns-c105-4.ng-star-inserted {
+    color: #229954;
+}
+
+
 .back:hover {
     cursor: pointer;
 }

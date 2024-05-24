@@ -6,7 +6,7 @@ import { PadronFuncionario } from '../../interfaces/PadronFuncionario.interface'
 import { ControlHorasService } from '../../services/control-horas.service';
 import { formatDate } from '@angular/common';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, Message } from 'primeng/api';
 import { SingleFileUploaderComponent } from '../../components/single-file-uploader/single-file-uploader.component';
 import { MarcaPorFuncionario } from '../../interfaces/MarcaPorFuncionario.interface';
 import { HorasPorFuncionario } from '../../interfaces/HorasPorFuncionario.interface';
@@ -17,6 +17,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { InconsistenciaDataPrint } from '../../interfaces/InconsistenciaDataPrint.interface';
 import { FuncionarioHorarioDesfasado } from '../../interfaces/FuncionarioHorarioDesfasado.interface';
 import { Regimen } from '../../interfaces/Regimen.interface';
+import { ConfHora } from '../../interfaces/ConfHora.interface';
 
 
 @Component({
@@ -72,6 +73,11 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
 
   regimenes: Regimen[] | undefined = [];
   hayCambios: boolean = false;
+  confHoras: ConfHora[] | undefined = [];
+  fecha: Date | null = null;
+
+  mensajeNoInconsistencia: Message[] =  [{ severity: 'success', summary: 'Inconsistencias', detail: 'No hay inconsistencias para controlar' }];
+  mensajeNoErrorFuncionarios: Message[] = [{ severity: 'success', summary: 'Otros errores', detail: 'No hay funcionarios para corregir errores' }];
 
   constructor(
     private controlHorasService: ControlHorasService,
@@ -104,16 +110,20 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         return 0;
       });
     
-
-
     } catch {
-      console.log('Error al obtener horarios desfasados.')
+      throw new Error('Error al obtener horarios desfasados.')
     }
 
     try {
       await this.getRegimenes();
     } catch(error: any) {
       console.log(error);
+    }
+
+    try {
+      await this.getConfHoras();
+    } catch {
+      throw new Error('Error al obtener los parámetros de las horas.')
     }
   }
   
@@ -144,9 +154,7 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
       this.padron = data;
       this.lastUpdate = formatDate(this.padron![0].ultimaModificacion, "dd-MM-yyyy", "es-UY");
     } catch (error) {
-      console.log('Hubo un error al intentar obtener los datos del padrón.', error);
       this.mostrarMensaje('Hubo un error al intentar obtener los datos del padrón.', 'Hubo un error', 'pi pi-exclamation-triangle');
-      // Puedes lanzar una nueva excepción si lo consideras necesario
       throw new Error('Error al obtener los datos del padrón de funcionarios.');
     }
   }
@@ -161,7 +169,6 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         this.horariosDesfasados!.some(h => h.nroFuncionario === func.nroFuncionario.toString())
       );
     } catch (error) {
-      console.log('Hubo un error al intentar obtener el listado de funcionarios con horarios desfasados.', error);
       throw new Error('Error al obtener horarios desfasados.');
     }
   }
@@ -266,9 +273,9 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
         });
     
         this.calcularInconsistencias();
-      } catch (error) {
+      } catch (error: any) {
         this.showOptions();
-        console.log(error);
+        throw new Error(error);
       }
     }).catch(() => {
       this.showOptions();
@@ -285,7 +292,8 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
 
   private calcularInconsistencias(): void {
     this.marcasPorFuncionario = this.controlHorasService.generarMarcasPorFuncionario(this.marcasArray, this.horariosDesfasados!);
-    this.horasIncidencias = this.controlHorasService.contarHorasPorFuncionarios(this.marcasPorFuncionario, this.padron!, this.regimenes!, this.horariosDesfasados!);
+    this.fecha = this.getFechaControl();
+    this.horasIncidencias = this.controlHorasService.contarHorasPorFuncionarios(this.fecha, this.marcasPorFuncionario, this.padron!, this.regimenes!, this.horariosDesfasados!, this.confHoras!);
     const funcionariosUnicos: number[] = Array.from(new Set(this.horasArray.map(func => func.funcionario)));
 
     funcionariosUnicos.forEach(func => {
@@ -510,4 +518,34 @@ export class ControlHorasComponent implements OnInit, OnDestroy {
     }
   }
 
+  async getConfHoras(): Promise<void> {
+    try{  
+      this.confHoras = await this.controlHorasService.getConfHoras().toPromise();
+    } catch {
+      throw new Error('No se pudo obtener ConfHoras.')
+    }
+  }
+
+  private getFechaControl(): Date | null {
+    for(let i = 0; i <= this.marcasArray.length; i++) {
+      if (this.marcasArray[i]) {
+        if(this.marcasArray[i].fecha) {
+          return this.convertirSerialAFecha(this.marcasArray[i].fecha);
+      }
+    }
+   }
+    return null;
+  }
+
+  private convertirSerialAFecha(serial:number): Date {
+    const excelEpoch = new Date(1900, 0, 1); 
+    const daysOffset = serial - 1;
+    const actualDate = new Date(excelEpoch.getTime() + daysOffset * 24 * 60 * 60 * 1000);
+    
+    if (serial >= 60) {
+        actualDate.setDate(actualDate.getDate() - 1);
+    }
+
+    return actualDate;
+  } 
 }

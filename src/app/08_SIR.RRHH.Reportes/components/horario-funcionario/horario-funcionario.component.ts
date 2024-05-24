@@ -16,6 +16,7 @@ export class HorarioFuncionarioComponent implements OnInit {
   @Input() numeroFunc:  string = '';
   @Input() nombreFunc:  string = '';
   @Input() esVisor:     boolean = false;
+  @Input() fecha!: Date;
 
   logueadas:        HorarioEmpleado[] = [];
   tiempoLogueado!:  TiempoLogueado;
@@ -33,9 +34,10 @@ export class HorarioFuncionarioComponent implements OnInit {
       this.numeroFunc = this.config.data.numeroFunc;
       this.nombreFunc = this.config.data.nombreFunc;
       this.esVisor    = this.config.data.visor;
+      this.fecha = this.config.data.fecha;
     }
 
-    this.rrhhService.getHorarioFuncionario(this.numeroFunc)
+    this.rrhhService.getHorarioFuncionarioPorFecha(this.fecha, this.numeroFunc)
       .subscribe(logs => {
         this.logueadas = logs;
         this.tiempoTotal = this.funcService.getTiempoTotal(this.logueadas);

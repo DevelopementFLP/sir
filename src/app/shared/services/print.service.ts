@@ -197,8 +197,9 @@ export class PrintService {
 
   private nuevaHojaFuncionarios(dataToPrint: PrintModel, libro: Workbook) {
     const lineas = this.parseDataFuncionarios(dataToPrint);
-    const fecha: Date = new Date();
-    const sheet =  libro.addWorksheet('Logueos ' + formatDate(fecha, "dd-MM-yyyy", "es-UY"));
+
+    const parts: string[] = dataToPrint.nombreArchivo.split(' ');
+    const sheet =  libro.addWorksheet('Logueos ' + parts[parts.length - 1]);
     const lineWidth = 16;
     const nameWidth = 25;
     const numberWidth = 10;
@@ -749,57 +750,58 @@ export class PrintService {
       sheet.getColumn(10).width = 13;
       sheet.getColumn(11).width = 11;
       sheet.getColumn(12).width = 35;
-    
-    if(data.incidencias.length > 0) {
-      let f = 6;
-      const sheet = libro.addWorksheet('ERRORES');
-      this.setLogo(libro, sheet);
-      this.setTitle(libro, sheet, 'Errores en marcas', 'right', 5);
-      const motivos: string[] = Array.from(new Set(data.incidencias.map(m => m.motivo))).sort((a, b) => {
-        if(a < b) return -1;
-        if(a > b) return 1;
-        return 0;
+  
+  }
+
+  if(data.incidencias.length > 0) {
+    let f = 6;
+    const sheet = libro.addWorksheet('ERRORES');
+    this.setLogo(libro, sheet);
+    this.setTitle(libro, sheet, 'Errores en marcas', 'right', 5);
+    const motivos: string[] = Array.from(new Set(data.incidencias.map(m => m.motivo))).sort((a, b) => {
+      if(a < b) return -1;
+      if(a > b) return 1;
+      return 0;
+    });
+
+    motivos.forEach(m => {
+      sheet.mergeCells(f, 2, f, 6);
+      sheet.getCell(f, 2).value = m;
+      sheet.getCell(f, 2).font = fuenteTitulo;
+      sheet.getCell(f, 2).fill = this.getFondo(m);
+      f++;
+      sheet.getCell(f, 2).value = "Nro. Func.";
+      sheet.getCell(f, 3).value = "Nombres";
+      sheet.getCell(f, 4).value = "Apellidos";
+      sheet.getCell(f, 5).value = "Régimen";
+      sheet.getCell(f, 6).value = "Sector";
+      sheet.getCell(f, 2).font = fuenteTitulo;
+      sheet.getCell(f, 3).font = fuenteTitulo;
+      sheet.getCell(f, 4).font = fuenteTitulo;
+      sheet.getCell(f, 5).font = fuenteTitulo;
+      sheet.getCell(f, 6).font = fuenteTitulo;
+
+      f++;
+
+      const motivosInc: Incidencia[] = data.incidencias.filter(i => i.motivo === m);
+      motivosInc.forEach(mI => {
+        sheet.getCell(f, 2).value = mI.nroFuncionario;
+        sheet.getCell(f, 3).value = mI.nombres;
+        sheet.getCell(f, 4).value = mI.apellidos;
+        sheet.getCell(f, 5).value = mI.regimen;
+        sheet.getCell(f, 6).value = mI.sector;
+
+        f++;
       });
 
-      motivos.forEach(m => {
-        sheet.mergeCells(f, 2, f, 6);
-        sheet.getCell(f, 2).value = m;
-        sheet.getCell(f, 2).font = fuenteTitulo;
-        sheet.getCell(f, 2).fill = this.getFondo(m);
-        f++;
-        sheet.getCell(f, 2).value = "Nro. Func.";
-        sheet.getCell(f, 3).value = "Nombres";
-        sheet.getCell(f, 4).value = "Apellidos";
-        sheet.getCell(f, 5).value = "Régimen";
-        sheet.getCell(f, 6).value = "Sector";
-        sheet.getCell(f, 2).font = fuenteTitulo;
-        sheet.getCell(f, 3).font = fuenteTitulo;
-        sheet.getCell(f, 4).font = fuenteTitulo;
-        sheet.getCell(f, 5).font = fuenteTitulo;
-        sheet.getCell(f, 6).font = fuenteTitulo;
+      f ++;
+    });
 
-        f++;
-
-        const motivosInc: Incidencia[] = data.incidencias.filter(i => i.motivo === m);
-        motivosInc.forEach(mI => {
-          sheet.getCell(f, 2).value = mI.nroFuncionario;
-          sheet.getCell(f, 3).value = mI.nombres;
-          sheet.getCell(f, 4).value = mI.apellidos;
-          sheet.getCell(f, 5).value = mI.regimen;
-          sheet.getCell(f, 6).value = mI.sector;
-
-          f++;
-        });
-
-        f ++;
-      });
-
-      sheet.getColumn(2).width = 11;
-      sheet.getColumn(3).width = 20;
-      sheet.getColumn(4).width = 25;
-      sheet.getColumn(5).width = 11;
-      sheet.getColumn(6).width = 35;
-    }
+    sheet.getColumn(2).width = 11;
+    sheet.getColumn(3).width = 20;
+    sheet.getColumn(4).width = 25;
+    sheet.getColumn(5).width = 11;
+    sheet.getColumn(6).width = 35;
   }
 }
 

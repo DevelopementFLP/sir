@@ -4,6 +4,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { HorarioFuncionarioComponent } from '../horario-funcionario/horario-funcionario.component';
 import { formatDate } from '@angular/common';
+import { LoginHistorico } from '../../interfaces/LoginHistorico.interface';
 
 
 @Component({
@@ -14,6 +15,10 @@ import { formatDate } from '@angular/common';
 })
 export class FuncViewerComponent implements OnDestroy {
   @Input() funcionarios: Funcionario[] = []
+  @Input() funcionariosHistorico: LoginHistorico[] = [];
+  @Input() timeType: string = '';
+  @Input() fecha!: Date;
+
   ref: DynamicDialogRef | undefined;
 
   constructor(
@@ -41,9 +46,10 @@ export class FuncViewerComponent implements OnDestroy {
       data: {
         numeroFunc: numeroFunc,
         nombreFunc: nombreEmpleado,
+        fecha: this.fecha,
         visor: true
       },
-      header: `Logueos de ${numeroFunc} - ${nombreEmpleado} del día ${formatDate(new Date(), "dd/MM/yyyy", "es-UY)")}`,
+      header: `Logueos de ${numeroFunc} - ${nombreEmpleado} del día ${formatDate(this.fecha, "dd/MM/yyyy", "es-UY)")}`,
       width: '50vw',
       contentStyle: { overflow: 'auto' },
       closeOnEscape: true,

@@ -23,6 +23,8 @@ export class ControlHorasService {
         { codigo: 6, tipo: 'Nocturnas' }
     ];
 
+    motivosIncidencia: string[] = [];
+
     horasIncidencias: HorasIncidencias = {
         horas: [],
         incidencias: []
@@ -30,8 +32,12 @@ export class ControlHorasService {
     
     horasAComparar: HorasComparar[] = [];
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+
+        this.setMotivoIncidencia();
+     }
     
+
     getCodigosHoras(): TipoHora[] {
         return this.codigos;
     }
@@ -81,7 +87,6 @@ export class ControlHorasService {
 
     generarMarcasPorFuncionario(marcas: Marcas[], horariosDesfasados: FuncionarioHorarioDesfasado[]): MarcaPorFuncionario[] {
         let marcasPorFunc: MarcaPorFuncionario[] = [];
-
         marcas.forEach(marca => {
             marcasPorFunc.push(
                 {
@@ -99,18 +104,20 @@ export class ControlHorasService {
         return horariosDesfasados.some(f => f.nroFuncionario === nroFuncionario);
     }
 
-    contarHorasPorFuncionarios(marcas: MarcaPorFuncionario[], padron: PadronFuncionario[], regimenes: Regimen[], horariosDesfasados: FuncionarioHorarioDesfasado[]): HorasIncidencias {
+    contarHorasPorFuncionarios(fechaControl: Date | null, marcas: MarcaPorFuncionario[], padron: PadronFuncionario[], regimenes: Regimen[], horariosDesfasados: FuncionarioHorarioDesfasado[], confHoras: ConfHora[]): HorasIncidencias {
         let horasPorFunc: HorasPorFuncionario[] = [];
         let incidencias: Incidencia[] = [];
-
+    
         marcas.forEach(marca => {
+            
             const regimen = this.getRegimen(marca.nroFuncionario, padron);
+            const tipoRemuneracion: string = this.getTipoRemuneracion(marca.nroFuncionario, padron);
             const enPadron = padron.find(f => f.nroFuncionario === marca.nroFuncionario);
             if(!isNaN(marca.tiempoTotalTrabajado) && marca.salida && enPadron) {
                 const horarioDesfasado: boolean = this.esHorarioDesfasado(marca.nroFuncionario, horariosDesfasados);
                 const inicio: number = horarioDesfasado ? marca.marcas[marca.marcas.length - 1] : marca.marcas[0];
                 const fin: number = horarioDesfasado ? marca.marcas[0] : marca.marcas[marca.marcas.length - 1];
-                const horasTrabajadas = this.contarHorasTrabajadas(regimen, inicio, fin);
+                const horasTrabajadas = this.contarHorasTrabajadas(fechaControl, regimen, inicio, fin, tipoRemuneracion);
                 const limiteHorasComunes = regimen === 8 ? 8 : 9.36;
                 const horasNocturnas = this.contarHorasNocturnas(marca.marcas, regimenes, regimen, horarioDesfasado)
                 horasPorFunc.push(
@@ -118,20 +125,20 @@ export class ControlHorasService {
                         nroFuncionario: marca.nroFuncionario,
                         regimen: limiteHorasComunes,
                         horas: [
-                            {codigo: 2, horas: this.sumarHorasMinutos(horasTrabajadas.horasComunes, horasTrabajadas.minutosComunes)},
-                            {codigo: 4, horas: this.sumarHorasMinutosExtras(horasTrabajadas.horasExtras, horasTrabajadas.minutosExtras)},
+                            {codigo: 2, horas: this.sumarHorasMinutos(horasTrabajadas.horasComunes, horasTrabajadas.minutosComunes, confHoras)},
+                            {codigo: 4, horas: this.sumarHorasMinutosExtras(horasTrabajadas.horasExtras, horasTrabajadas.minutosExtras, confHoras)},
                             {codigo: 6, horas: this.redondearHoras(horasNocturnas)}
                         ]
                     }
                 )
             } else {
                 if(!enPadron)
-                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: '', sector: '', motivo: 'Funcionario no está en padrón'})
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: '', sector: '', motivo: this.motivosIncidencia[0]})
                 else
                     if(isNaN(marca.tiempoTotalTrabajado))
-                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Error en formato de marca'})
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: this.motivosIncidencia[1]})
                 else if (!marca.salida)
-                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: 'Falta alguna marca'})
+                    incidencias.push({nroFuncionario: marca.nroFuncionario, nombres: '', apellidos: '', regimen: regimen.toString(), sector: '', motivo: this.motivosIncidencia[2]})
             }
         });
         return {
@@ -164,7 +171,6 @@ export class ControlHorasService {
             const horaSalidaActual = marcas[i + 1];
 
             if (horaEntradaActual >= horaSalidaActual) {
-                console.log(horaEntradaActual, horaSalidaActual)
                 throw new Error("La hora de entrada debe ser menor que la hora de salida");
             }
 
@@ -184,21 +190,26 @@ export class ControlHorasService {
         return totalHorasTranscurridas;
     }
 
-    private contarHorasTrabajadas(regimen: number, horaInicio: number, horaFinal: number) : TiempoTrabajado {
+    private contarHorasTrabajadas(fecha: Date | null, regimen: number, horaInicio: number, horaFinal: number, tipoRemuneracion: string) : TiempoTrabajado {
         const horasTrabajadas = this.calcularDiferenciaHoras(this.convertirDecimalAHora(horaInicio), this.convertirDecimalAHora(horaFinal));
 
         let totalMinutos = (horasTrabajadas.horas) * 60 + horasTrabajadas.minutos;
         let horasRegimenHorario = 8;
 
-        if(regimen == 9.36)
-        {
-            horasRegimenHorario = 9.6;
-        }
+        if(regimen == 9.36) horasRegimenHorario = 9.6;
         
         const horasRegimen = Math.floor(regimen);
         const minutosRegimen = Math.ceil((horasRegimenHorario - horasRegimen) * 60);
 
-        let horasComunes = Math.min(horasRegimen, totalMinutos / 60);
+        let horasComunes;
+        const esSabado: boolean = (fecha && (fecha.getDay() === 6))!;
+
+        if(tipoRemuneracion === 'Mensual' && esSabado)
+            horasComunes = Math.min(4, totalMinutos / 60);
+        else
+            horasComunes = Math.min(horasRegimen, totalMinutos / 60);
+
+
         let minutosComunes = Math.min(minutosRegimen, totalMinutos - (horasComunes * 60));
         let minutosExtras = totalMinutos - (horasComunes * 60 + minutosComunes);
         let horasExtras = 0;
@@ -308,25 +319,26 @@ export class ControlHorasService {
         const mins: number = (horas - hrs) * 60;
         let hrsT: number = 0;
 
-        if(mins >= 45) hrsT += 0.5;
-        if(mins >= 15) hrsT += 0.5;
+        if(mins >= 45) hrsT += 1;
+        else if(mins >= 15) hrsT += 0.5;
         hrsT += hrs;
+        if(hrsT >= 5 ) hrsT = 8;
         return hrsT;
     }
 
-    private sumarHorasMinutos(horas: number, minutos: number): number {
+    private sumarHorasMinutos(horas: number, minutos: number, confHoras: ConfHora[]): number {
         let hrsT: number = horas;
 
-        if(minutos >= 52) hrsT += 0.5;
-        if(minutos >= 22) hrsT += 0.5;
+        if(minutos >= confHoras[1].minMinutos) hrsT += 0.5;
+        if(minutos >= confHoras[0].minMinutos) hrsT += 0.5;
         return hrsT;
     }
 
-    private sumarHorasMinutosExtras(horas: number, minutos: number): number {
+    private sumarHorasMinutosExtras(horas: number, minutos: number, confHoras: ConfHora[]): number {
         let hrsT: number = horas;
 
-        if(minutos >= 42) hrsT += 0.5;
-        if(minutos >= 12) hrsT += 0.5;
+        if(minutos >= confHoras[3].minMinutos) hrsT += 0.5;
+        if(minutos >= confHoras[2].minMinutos) hrsT += 0.5;
         return hrsT;
     }
 
@@ -361,8 +373,24 @@ export class ControlHorasService {
     }
 
     private getRegimen(funcionario: string, padron: PadronFuncionario[]): number {
-        const empleado = padron.find(emp => emp.nroFuncionario === funcionario);
+        const empleado: PadronFuncionario | undefined = padron.find(emp => emp.nroFuncionario === funcionario);
         if(empleado) return empleado.horasTrabajadas;
         return 0;
+    }
+
+    private getTipoRemuneracion(funcionario: string, padron: PadronFuncionario[]): string {
+        const empleado: PadronFuncionario | undefined = padron.find(emp => emp.nroFuncionario === funcionario);
+        if(empleado) return empleado.tipoRemuneracion;
+        return '';
+    }
+
+    getMotivosIncidencia(): string[] {
+        return this.motivosIncidencia;
+    }
+
+    setMotivoIncidencia(): void {
+        this.motivosIncidencia.push('Funcionario no está en padrón');
+        this.motivosIncidencia.push('Error en formato de marca');
+        this.motivosIncidencia.push('Falta alguna marca');
     }
 }

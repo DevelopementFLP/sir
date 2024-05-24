@@ -1,5 +1,47 @@
-<div class="data flex flex-row viewer" *ngFor="let funcionario of funcionarios" pTooltip="Clic para ver horarios de logueo de {{funcionario.nombreEmpleado}}" (click)="mostrarHorarioLogueo(funcionario.codigoEmpleado, funcionario.nombreEmpleado)">
-    <div class="data--nroFunc p-2 text-center" style="flex: 1">{{funcionario?.codigoEmpleado}}</div>
-    <div class="data--nombre p-2" style="flex: 3">{{acortarNombre(funcionario.nombreEmpleado)}}</div>
-    <div class="data--linea p-2 text-center" style="flex: 3">{{funcionario.nombreEstacion}}</div>
+<div *ngIf="timeType ==='ahora'">
+    <div 
+        class="data flex flex-row viewer" 
+        *ngFor="let funcionario of funcionarios" 
+        pTooltip="Clic para ver horarios de logueo de {{funcionario.nombreEmpleado}}" 
+        (click)="mostrarHorarioLogueo(funcionario.codigoEmpleado, funcionario.nombreEmpleado)">
+        
+        <div 
+            class="data--nroFunc p-2 text-center" style="flex: 1">
+            {{funcionario?.codigoEmpleado}}
+        </div>
+        <div 
+            class="data--nombre p-2" 
+            style="flex: 3">
+            {{acortarNombre(funcionario.nombreEmpleado)}}
+        </div>
+        <div 
+            class="data--linea p-2 text-center" 
+            style="flex: 3">
+            {{funcionario.nombreEstacion}}
+        </div>
+    </div>
+</div>
+
+<div *ngIf="timeType ==='history'">
+    <div 
+        class="data flex flex-row viewer" 
+        *ngFor="let funcionario of funcionariosHistorico" 
+        pTooltip="Clic para ver horarios de logueo de {{funcionario.nombre}}" 
+        (click)="mostrarHorarioLogueo(funcionario.nroFunc, funcionario.nombre)">
+        
+        <div 
+            class="data--nroFunc p-2 text-center" style="flex: 1">
+            {{funcionario?.nroFunc}}
+        </div>
+        <div 
+            class="data--nombre p-2" 
+            style="flex: 3">
+            {{acortarNombre(funcionario.nombre)}}
+        </div>
+        <div 
+            class="data--linea p-2 text-center" 
+            style="flex: 3">
+            {{funcionario.nombreEstacion}}
+        </div>
+    </div>
 </div>

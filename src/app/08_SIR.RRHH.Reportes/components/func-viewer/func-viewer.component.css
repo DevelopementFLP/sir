@@ -23,6 +23,10 @@
 .data--nombre,
 .data--nroFunc {
     border: 1px solid #3498DB;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .data {
@@ -41,6 +45,7 @@
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
     border-right: none;
+    
 }
 
 .data--linea {

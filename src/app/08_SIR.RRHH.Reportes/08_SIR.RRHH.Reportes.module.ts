@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { LogueoFuncComponent } from './pages/logueo-func/logueo-func.component';
 import { LineaComponent } from './components/linea/linea.component';
 import { FuncViewerComponent } from './components/func-viewer/func-viewer.component';
@@ -30,9 +32,10 @@ import { MarcasViewerComponent } from './components/marcas-viewer/marcas-viewer.
     IncidenciaTableComponent,
     CustomFilter,
     InconsistenciaTableComponent,
-    MarcasViewerComponent
+    MarcasViewerComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     CommonModule,
     PrimeNgModule,
     FormsModule,
