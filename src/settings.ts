@@ -1,5 +1,5 @@
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
-export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -34,6 +34,14 @@ export const urlDashboardDesosadoEntrada: string = urlDashboardDesosado + "GetDe
 export const urlDashboardDesosadoCharqueo: string = urlDashboardDesosado + "DetalleCharqueadoresAsync";
 export const urlDashboardDesosadoHuesero: string = urlDashboardDesosado + "GetDetalleHueserosAsync";
 export const urlDashboardDesosadoEmpaque: string = urlDashboardDesosado + "GetDetalleEmpaqueAsync";
+export const urlDWDashboardDesosadoEntrada: string = urlDashboardDesosado + "SIRGetDetalleEntradaAsync";
+export const urlDWDashboardDesosadoCharqueo: string = urlDashboardDesosado + "SIRDetalleCharqueadoresAsync";
+export const urlDWDashboardDesosadoHuesero: string = urlDashboardDesosado + "SIRGetDetalleHueserosAsync";
+export const urlDWDashboardDesosadoEmpaque: string = urlDashboardDesosado + "SIRGetDetalleEmpaqueAsync";
+export const urlDWUpdateDashboardDesosadoEntrada: string = urlDashboardDesosado + "ActualizarDetalleEntradaAsync";
+export const urlDWUpdateDashboardDesosadoCharqueo: string = urlDashboardDesosado + "ActualizarDetalleCharqueadoresAsync";
+export const urlDWUpdateDashboardDesosadoHuesero: string = urlDashboardDesosado + "ActualizarDetalleHueserosAsync";
+export const urlDWUpdateDashboardDesosadoEmpaque: string = urlDashboardDesosado + "ActualizarDetalleEmpaqueAsync";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

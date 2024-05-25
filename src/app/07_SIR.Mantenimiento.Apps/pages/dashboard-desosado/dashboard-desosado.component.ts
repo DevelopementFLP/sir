@@ -24,10 +24,6 @@ import { TestService } from 'src/app/shared/services/test.service';
   providers: [DialogService]
 })
 export class DashboardDesosadoComponent implements OnInit, OnDestroy {
-
-  private lines: string[] = ['1 / 2 / 4 / 10', '4 / 2 / 7 / 10', '7 / 2 / 10 / 10', '10 / 2 / 13 / 10', '13 / 2 / 16 / 10'];
-  private lineNames: string[] = ['1 / 1 / 4 / 2', '4 / 1 / 7 / 2', '7 / 1 / 10 / 2', '10 / 1 / 13 / 2', '13 / 1 / 16 / 2'];
-
   lineOptions: any[] = [{label: "L5 a L1", value: 'L5 a L1'}, {label: "L1 a L5", value: 'L1 a L5'}]; 
   orden: string = 'L1 a L5';
 
@@ -106,93 +102,179 @@ export class DashboardDesosadoComponent implements OnInit, OnDestroy {
   ) {}
 
  async ngOnInit(): Promise<void> {
+  
+  await this.updateData();
+    
+  setInterval(async () => {
     await this.getData();
-    setTimeout(async () => {
-      await this.getData()
-    }, 300000);
+    await this.setDWData();
+  }, 300000);
+}
+
+  async updateData(): Promise<void> {
+    await this.getDWData();
+
+    if(this.lotesEntrada && this.lotesEntrada.length > 0 ||
+       this.detalleHueseros && this.detalleHueseros.length > 0 || 
+       this.detalleCharqueadores && this.detalleCharqueadores.length > 0 ||
+       this.datosEmpaque && this.datosEmpaque.length > 0
+     ) {
+       //await this.getData();
+     } else {
+       await this.getData();
+       await this.setDWData();
+     }
   }
-
-
 
   async getData(): Promise<void> {
      // Lotes entrada
     try {
       await this.getLotesEntrada();
-
-      /* test */
-     //this.lotesEntrada = this.testService.testGetLotesEntrada();
-      
-      this.totalCuartosEntrada = this.getTotalCuartosEntrada();
-      this.totalKilosEntrada = this.getTotalKilosEntrada();
+      this.setDataEntrada();
     } catch (error: any) {
       throw new Error("Error al obtener lotes de entrada", error);
-    }
-
-    // Charqueadores
-    try {
-      await this.getDetalleCharqueo();
-     
-      /* test */
-      //this.detalleCharqueadores = this.testService.testGetCharqueadores();
-
-      this.charqueadoresL1 = [];
-      this.charqueadoresL2 = [];
-      this.charqueadoresL3 = [];
-      this.charqueadoresL4 = [];
-      this.charqueadoresL5 = [];
-      this.getCharqueadores(0, this.charqueadoresL1);
-      this.getCharqueadores(1, this.charqueadoresL2);
-      this.getCharqueadores(2, this.charqueadoresL3);
-      this.getCharqueadores(3, this.charqueadoresL4);
-      this.getCharqueadores(4, this.charqueadoresL5);
-    } catch (error: any) {
-     throw new Error("Error al obtener los datos de charqueo", error);
     }
 
     // Hueseros
     try {
       await this.getDetalleHuesero();
-     
-      /* test */
-      //this.detalleHueseros = this.testService.testGetHueseros();
-
-      this.hueserosL1 = [];
-      this.hueserosL2 = [];
-      this.hueserosL3 = [];
-      this.hueserosL4 = [];
-      this.hueserosL5 = [];
-      this.getHueseros(0, this.hueserosL1); 
-      this.getHueseros(1, this.hueserosL2); 
-      this.getHueseros(2, this.hueserosL3); 
-      this.getHueseros(3, this.hueserosL4); 
-      this.getHueseros(4, this.hueserosL5); 
+      this.setDataHuesero()
     } catch (error: any) {
       throw new Error("Error al obtener los datos de hueseros", error);
     }
 
+     // Charqueadores
+     try {
+      await this.getDetalleCharqueo();
+      this.setDataCharqueo();
+    } catch (error: any) {
+     throw new Error("Error al obtener los datos de charqueo", error);
+    }
+
+
     // Empaque
     try {
       await this.getDataEmpaque();
-     
-      /* test */
-      //this.datosEmpaque = this.testService.testGetEmpaque();
-
-      this.empaqueL1 = [];
-      this.empaqueL2 = [];
-      this.empaqueL3 = [];
-      this.empaqueL4 = [];
-      this.empaqueL5 = [];
-      this.getEmpaques(0, this.empaqueL1);
-      this.getEmpaques(1, this.empaqueL2);
-      this.getEmpaques(2, this.empaqueL3);
-      this.getEmpaques(3, this.empaqueL4);
-      this.getEmpaques(4, this.empaqueL5);
-    } catch (error: any) {
+      this.setDataEmpaque();
+    }
+    catch(error: any) {
       throw new Error("Error al obterer los datos del empaque", error);
     }
 
     this.setRendimientos();
     this.setEsMayorPromedio();
+  }
+
+  async setDWData(): Promise<void> {
+    // Entrada
+    try {
+      await this.dashBoardService.postDWLotesEntrada(this.lotesEntrada!).toPromise();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar actualizar los datos de lotes de entrada en DW");
+    }
+
+    // Hueseros
+    try {
+      await this.dashBoardService.postDWDetalleHuesero(this.detalleHueseros!).toPromise();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar actualizar los datos de hueseros en DW");
+    }
+    
+    // Charqueo
+    try {
+      await this.dashBoardService.postDWDetalleCharqueo(this.detalleCharqueadores!).toPromise();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar actualizar los datos de charqueo en DW");
+    }
+
+    // Empaque
+    try {
+      await this.dashBoardService.postDWDatosEmpaque(this.datosEmpaque!).toPromise();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar actualizar los datos de empaque primario en DW");
+    }
+  }
+
+  async getDWData(): Promise<void> {
+    // Lotes entrada
+    try {
+      this.lotesEntrada = [];
+      this.lotesEntrada = await this.dashBoardService.getDWLotesEntrada().toPromise();
+      this.setDataEntrada();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar obtener los datos de lotes de entrada en DW");
+    }
+
+    // Empaque
+    try {
+      this.detalleHueseros = [];
+      this.detalleHueseros = await this.dashBoardService.getDWDetalleHueseros().toPromise();
+      this.setDataHuesero();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar obtener los datos de hueseros en DW");
+    }
+
+    // Charqueo
+    try {
+      this.detalleCharqueadores = [];
+      this.detalleCharqueadores = await this.dashBoardService.getDWDetalleCharqueo().toPromise();
+      this.setDataCharqueo();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar obtener los datos de charqueo en DW");
+    }
+
+    // Empaque
+    try {
+      this.datosEmpaque = [];
+      this.datosEmpaque = await this.dashBoardService.getDWDatosEmpaque().toPromise();
+      this.setDataEmpaque();
+    } catch (error: any) {
+      throw new Error("Hubo un error al intentar obtener los datos de empaque primario en DW");
+    }
+  }
+
+  private setDataEntrada(): void {
+    this.totalCuartosEntrada = this.getTotalCuartosEntrada();
+    this.totalKilosEntrada = this.getTotalKilosEntrada();
+  }
+
+  private setDataCharqueo(): void {
+    this.charqueadoresL1 = [];
+    this.charqueadoresL2 = [];
+    this.charqueadoresL3 = [];
+    this.charqueadoresL4 = [];
+    this.charqueadoresL5 = [];
+    this.getCharqueadores(0, this.charqueadoresL1);
+    this.getCharqueadores(1, this.charqueadoresL2);
+    this.getCharqueadores(2, this.charqueadoresL3);
+    this.getCharqueadores(3, this.charqueadoresL4);
+    this.getCharqueadores(4, this.charqueadoresL5);
+  }
+
+  private setDataHuesero(): void {
+    this.hueserosL1 = [];
+    this.hueserosL2 = [];
+    this.hueserosL3 = [];
+    this.hueserosL4 = [];
+    this.hueserosL5 = [];
+    this.getHueseros(0, this.hueserosL1); 
+    this.getHueseros(1, this.hueserosL2); 
+    this.getHueseros(2, this.hueserosL3); 
+    this.getHueseros(3, this.hueserosL4); 
+    this.getHueseros(4, this.hueserosL5); 
+  }
+
+  private setDataEmpaque(): void {
+    this.empaqueL1 = [];
+    this.empaqueL2 = [];
+    this.empaqueL3 = [];
+    this.empaqueL4 = [];
+    this.empaqueL5 = [];
+    this.getEmpaques(0, this.empaqueL1);
+    this.getEmpaques(1, this.empaqueL2);
+    this.getEmpaques(2, this.empaqueL3);
+    this.getEmpaques(3, this.empaqueL4);
+    this.getEmpaques(4, this.empaqueL5);
   }
 
   private getHueseros(lineId: number, line: (IndicadorHuesero | undefined)[]): void {
@@ -240,8 +322,6 @@ export class DashboardDesosadoComponent implements OnInit, OnDestroy {
     if(this.see === 'Todas') {
       this.showAll();
     } else {
-      //TODO: Obtener las lineas activas
-      //this.lineasActivas = [false, false, false, false, false];
       this.setLineasActivas();
       this.showLines(this.lineasActivas);
     }
@@ -821,4 +901,5 @@ export class DashboardDesosadoComponent implements OnInit, OnDestroy {
   private hayDatosEmpaque(linea: (IndicadorEmpaque | undefined)[]): boolean {
     return this.getTotalEmpaqueKilos(linea) > 0;
   }
+
 }
