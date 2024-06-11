@@ -1,0 +1,14 @@
+<div class="config__content px-4 py-5 md:px-4 block h-100">
+    <p-divider align="left" type="solid" class="config__title">
+        <b class="text-xl">Configuración</b>
+    </p-divider>
+    <div class="surface-card border-round-md w-100 h-100 flex flex-row flex-wrap">
+        <div class="content--menu col-12 md:col-2">    
+        </div>
+        <div class="content--params col-12 md:col-10">
+            <div *ngFor="let config of cardConfigList">
+                <card-configuration [cardData]="config" />
+            </div>
+        </div>
+    </div>
+</div>

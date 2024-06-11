@@ -26,6 +26,13 @@ import { DataEmpaqueComponent } from './components/data-empaque/data-empaque.com
 import { DataCharqueoViewerComponent } from './components/data-charqueo-viewer/data-charqueo-viewer.component';
 import { DataLineViewerComponent } from './components/data-line-viewer/data-line-viewer.component';
 import { DetalleHueserosComponent } from './components/detalle-hueseros/detalle-hueseros.component';
+import { DashboardEmpaqueSecundarioComponent } from './pages/dashboard-empaque-secundario/dashboard-empaque-secundario.component';
+import { TMSViewrComponent } from './components/tms-viewer/tmsviewr.component';
+import { VelocidadCerradoComponent } from './components/velocidad-cerrado/velocidad-cerrado.component';
+import { KilosMinutoComponent } from './components/kilos-minuto/kilos-minuto.component';
+import { LineaEmpaqueComponent } from './components/linea-empaque/linea-empaque.component';
+import { PuestoEstacionComponent } from './components/puesto-estacion/puesto-estacion.component';
+import { CortesPorEstacionComponent } from './components/cortes-por-estacion/cortes-por-estacion.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +57,14 @@ import { DetalleHueserosComponent } from './components/detalle-hueseros/detalle-
     DataEmpaqueComponent,
     DataCharqueoViewerComponent,
     DataLineViewerComponent,
-    DetalleHueserosComponent
+    DetalleHueserosComponent,
+    DashboardEmpaqueSecundarioComponent,
+    TMSViewrComponent,
+    VelocidadCerradoComponent,
+    KilosMinutoComponent,
+    LineaEmpaqueComponent,
+    PuestoEstacionComponent,
+    CortesPorEstacionComponent
   ],
   imports: [
     CommonModule,

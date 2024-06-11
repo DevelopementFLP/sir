@@ -11,7 +11,7 @@
                             <p>Fecha de faena:</p>
                         </div>
                         <div>
-                            <p-calendar [(ngModel)]="fechaFaena" [touchUI]="true" [readonlyInput]="true"
+                            <p-calendar [(ngModel)]="fechaFaena" [touchUI]="true" [readonlyInput]="true" [showIcon]="true"
                                 (ngModelChange)="onFechaSelected($event)" dateFormat="dd/mm/yy" class="text-center">
                             </p-calendar>
                         </div>
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="fechasControl">
-                            <p-calendar id="fechaControl" [(ngModel)]="fechaControl" [touchUI]="true"
+                            <p-calendar id="fechaControl" [(ngModel)]="fechaControl" [touchUI]="true" [showIcon]="true"
                                 [readonlyInput]="true" (ngModelChange)="onFechaControlSelected($event)"
                                 dateFormat="dd/mm/yy" class="text-center">
                             </p-calendar>
@@ -55,7 +55,7 @@
             </div>
             <div class="row mt-5">
                 <div class="col-12">
-                    <p-button label="Hacer informe" styleClass="p-button-rounded" (onClick)="getData()">
+                    <p-button label="Hacer informe" styleClass="" (onClick)="getData()">
                     </p-button>
                 </div>
             </div>

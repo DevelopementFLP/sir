@@ -1,0 +1,5 @@
+@import '../../../../../node_modules/primeflex/primeflex.min.css';
+
+.config__card:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,42 @@
+<div class="container-fluid">
+    <div class="row fs-3 text m-3">Rechazos de PH</div>
+    <hr>
+    <div class="container">
+        <form [formGroup]="rechazosForm" (ngSubmit)="onSubmit()">
+            <div class="field">
+                <p-calendar
+                    placeholder="Fecha de faena" 
+                    formControlName="fecha" 
+                    id="fecha" 
+                    [showIcon]="true" 
+                    dateFormat="dd/mm/yy"
+                    [style]="{'max-width': '300px'}"/>
+            </div>
+            <div class="field">
+                <input placeholder="Ordinales con PH" #rechazosInput pInputText formControlName="rechazos" type="text" id="rechazos" (keydown.enter)="addOrdinalChip()" (input)="validateInput($event)" 
+                (keypress)="handleKeyDown($event)" >
+
+
+                <div class="chips-area-container">
+                    <p-divider>Ordinales con PH <span class="ordinales__agregados" *ngIf="chips.length > 0">({{chips.length}})</span></p-divider>
+                    <div class="chipsArea" *ngIf="chips.length > 0">
+                        <div *ngFor="let chip of chips" class="chip">
+                            <p-chip class="ordChip" [removable]="true" label="{{chip.label}}" (onRemove)="removeOrdinal(chip)"/>
+                        </div>
+                    </div>
+                    <div class="noPH" *ngIf="chips.length == 0">
+                        No se agregaron ordinales con PH
+                    </div>
+                </div>
+            </div>
+            <hr class="divider">
+            <div class="field botonera">
+                <button pButton type="submit" label="Confirmar" [disabled]="rechazosForm.invalid || chips.length == 0">
+                </button>
+
+                <button class="cancelar p-button-danger" pButton label="Cancelar" (click)="resetData()">
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

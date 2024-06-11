@@ -34,6 +34,7 @@ import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { RRHHReportesModule } from './08_SIR.RRHH.Reportes/08_SIR.RRHH.Reportes.module';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { SIRConfiguracionParametrosModule } from './50_SIR.Configuracion.Parametros/sir.configuracion.parametros.module';
 
 
 registerLocaleData(localeEs);
@@ -66,7 +67,8 @@ registerLocaleData(localeEs);
     TrazabilidadModule,
     MantenimientoAppsModule,
     NgxUiLoaderModule,
-    RRHHReportesModule
+    RRHHReportesModule,
+    SIRConfiguracionParametrosModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },

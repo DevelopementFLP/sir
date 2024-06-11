@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MainMenuService } from './main-menu.service';
 import { MenuItem } from 'primeng/api';
-import { DataService } from './data.service';
 import { SessionManagerService } from './session-manager.service';
+
 
 @Injectable({providedIn: 'root'})
 export class NavBarService {
@@ -19,17 +19,21 @@ export class NavBarService {
     }
 
     transformarAMenuItems(data: any[]): MenuItem[] {
-      return data.map((item) => {
+      return data.map((item: MenuItem) => {
         const menuItem: MenuItem = {
           label: item.label,
           icon: item.icon,
           routerLink: item.routerLink,
+          title: item.title,
           items: item.items ? this.transformarAMenuItems(item.items) : undefined,
         };
-  
+        
         if (menuItem.items) {
           menuItem.items.forEach((subItem) => {
-            subItem.command = () => this.handleSubMenuItemClick(subItem);
+            if(subItem.items)
+              subItem.items.forEach(sI => {
+                sI.command = () => this.handleSubMenuItemClick(subItem);
+              });
           });
         }
   
@@ -37,6 +41,7 @@ export class NavBarService {
       });
     }
 
+  
     setExpansionState(items: MenuItem[]): MenuItem[] {
       return items.map(item => {
         if (item.items && item.items.length > 0) {

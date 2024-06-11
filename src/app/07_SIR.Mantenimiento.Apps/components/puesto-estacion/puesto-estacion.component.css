@@ -1,0 +1,76 @@
+.puesto__container {
+    position: relative;
+    border-radius: 5px;
+    /* display: inline-block; */
+    /* display: flex; */
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 2px 2px 0 #5D6D7E;
+    /* height: 100%; */
+    width: 100%;
+    min-width: 70px;
+}
+
+.puesto__container:hover {
+    cursor: pointer;
+}
+
+.container--individual {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.puesto {
+    width: 100%;
+    padding: 0.2rem 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    color: white;
+}
+
+.puesto--estacion {
+    background-color: #566573;
+    font-weight: 500;
+}
+
+.puesto--kilos {
+    background-color: #A569BD;
+}
+
+.puesto--cajas {
+    background-color: #DC7633;
+}
+
+.puesto--cajas,
+.puesto--kilos {
+    font-weight: 100;
+}
+
+.puesto--arriba {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.puesto--abajo {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.inactivo {
+    opacity: 0.5;
+    filter: grayscale(100);
+}
+
+.inactivo > .puesto.puesto--cajas, 
+.inactivo > .puesto.puesto--kilos {
+    background-color: gray;
+    color: gray;
+}
+
+.inactivo:hover {
+    cursor: not-allowed;
+}
+

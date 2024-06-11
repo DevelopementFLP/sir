@@ -1,0 +1,218 @@
+<div class="dashboard">
+    <div class="container">
+        
+      <div class="cinta-1"></div>
+      <div class="cinta-2"></div>
+      <div class="cinta-3"></div>
+      <div class="cinta-4"></div>
+
+      <!-- Lineas -->
+      <div *ngFor="let linea of lineas; let i=index"  class="container-linea-{{i + 1}}">  
+          <linea-empaque 
+            [cantidadPuestos]="lineas[i]"
+            [estaciones]="getLineaEmpaque(i+1)"
+          />
+      </div>
+
+      <div class="columna-1"></div>
+      <div class="esquina"></div>
+      <!-- <div class="nombre-L-1"><div class="nombre__linea--valor">LINEA 1</div></div>
+      <div class="nombre-L-2"><div class="nombre__linea--valor">LINEA 2</div></div>
+      <div class="nombre-L-3"><div class="nombre__linea--valor">LINEA 3</div></div>
+      <div class="nombre-L-4"><div class="nombre__linea--valor">LINEA 4</div></div> -->
+
+      <div
+        *ngFor="let linea of lineas; let i = index"
+        class="linea__total-{{i + 1}}">
+          <puesto-estacion 
+            titulo="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LINEA {{i + 1}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+            [data]="getTotalLinea('SP L' + (i+1))"
+          />
+      </div>
+
+      <div class="total__general">
+        <puesto-estacion 
+          titulo="&nbsp;&nbsp;TOTAL GENERAL&nbsp;&nbsp;"
+          [data]="getTotales()"
+          />
+      </div>
+
+      <div class="no-asignados">
+        <div class="no-asignados--cortes">
+          <div class="titulo cortes--titulo"><span>Cortes no asignados a cajas</span></div>
+          <div class="valor cortes--valor">{{(cortesSinEmpacar!.length > 0 ? cortesSinEmpacar![0].cortesSinEmpacar : 0) | number:'0.0'}}</div>
+        </div>
+        <div class="no-asignados--cajas-abiertas">
+          <div class="titulo cajas--titulo"><span>Cajas abiertas</span></div>
+          <div class="valor cajas--valor">{{(cajasAbiertas!.length > 0 ? cajasAbiertas![0].cantidad : 0) | number:'0.0'}}</div>
+        </div>
+      </div>
+      <div class="asignados">
+        <div class="asignados--cortes">
+          <div class="titulo cortes--titulo"><span>Cortes asignados a cajas</span></div>
+          <div class="valor cortes--valor">{{(cajasCerradas!.length > 0 ? cajasCerradas![0].piezas : 0) | number:'0.0'}}</div>
+        </div>
+        <div class="asignados--cajas-cerradas">
+          <div class="titulo cajas--titulo"><span>Cajas cerradas</span></div>
+          <div class="valor cajas--valor">{{(cajasCerradas!.length > 0 ? cajasCerradas![0].cantidad : 0) | number:'0.0'}}</div>
+        </div>
+      </div>
+      <div class="tms">
+        <div class="tms--cajas">
+          <div class="titulo cajas--titulo"><span>Cajas cerradas TMS</span></div>
+          <div class="valor cajas--valor">{{(cajasTMSCerradas!.length > 0 ? cajasTMSCerradas![0].cajas : 0) | number:'0.0'}}
+          </div>
+        </div>
+        <div class="tms--kilos">
+          <div class="titulo kilos--titulo"><span>Kilos TMS</span></div>
+          <div class="valor kilos--valor">{{(cajasTMSCerradas!.length > 0 ? cajasTMSCerradas![0].peso : 0) | number:'0.0'}}</div>
+        </div>
+      </div>
+      <!-- <div class="estadisticas"></div> -->
+      <div class="esquina__inferior"></div>
+      <div class="linea__rayos_x"></div>
+      <div class="columna-2"></div>
+      <div class="columna-3"></div> 
+      <div class="esquina__wpl"></div>
+      <div class="cinta__wpl-1"></div>
+      <div class="cinta__wpl-2"></div>
+      <div class="cinta__wpl-3"></div>
+      <div class="esquina__superior_derecha_wpl"></div>
+      <div class="esquina__inferior_derecha_wpl"></div>
+      <div class="reproceso"></div>
+      <div class="reproceso--datos">
+        <div class="titulo reproceso--titulo"><span class="reproceso--texto">Reproceso</span></div>
+        <div class="valor reproceso--valor">{{cajasReproceso | number:'0.0'}}&nbsp;<span class="reproceso--cajas-text">cajas</span></div>
+      </div>
+      
+      <div class="rayos_x--datos">
+        <div class="titulo rayos_x--titulo"><span>Rayos X</span><span class="rayos-x--image"><img src="../../../../assets/images/mantenimiento/dashboardSecundario/rayos-x.svg" alt=""></span></div>
+        <div class="rayos_x--data">
+          <div class="data--titulos">
+            <div class="titulos--text"><div class="text--span">Cajas leídas</div><div class="valores--text">{{cajasLeidasEagle | number:'0.0'}}</div></div>
+            <div class="titulos--text"><div class="text--span">Cajas rechazadas</div><div class="valores--text">{{cajasRechazadasEagle | number:'0.0'}}</div></div>
+            <div class="titulos--text"><div class="text--span">Cajas no leídas</div><div class="valores--text">{{cajasNoLeidasEagle | number:'0.0'}}</div></div>
+            <div class="titulos--text"><div class="text--span">% Rechazos</div><div class="valores--text">{{porcRechazoEagle | percent:'0.1'}}</div></div>
+            <div class="titulos--text"><div class="text--span">% No leídas</div><div class="valores--text">{{porcNoLeidasEagle | percent:'0.1'}}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="referencias">
+        <div class="referencias--title">Referencias</div>
+        <div class="referencias--valor">
+          <div class="referencias--valor-cajas">Cajas</div>
+          <div class="referencias--valor-kilos">Kilos</div>
+        </div>
+      </div>
+
+      <div class="wpl-1">
+        <div class="titulo-wpl">WPL 1</div>
+        <div class="data-wpl">
+          <div class="data-wpl--cajas">
+            <span class="wpl_data_titulo">Cajas</span>
+            <span class="wpl_data">{{cajasWPL[0] | number:'0.0'}}</span>
+          </div>
+          <div class="data-wpl--velocidad">
+              <span class="wpl_data_titulo">Vel. cerrado</span>
+              <div>
+                <span class="wpl_data">{{wpls[4296] | number:'0.0'}}</span>
+                <span class="c-min">c/min</span>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="wpl-2">
+        <div class="titulo-wpl">WPL 2</div>
+        <div class="data-wpl">
+          <div class="data-wpl--cajas">
+            <span class="wpl_data_titulo">Cajas</span>
+            <span class="wpl_data">{{cajasWPL[1] | number:'0.0'}}</span>
+          </div>
+          <div class="data-wpl--velocidad">
+              <span class="wpl_data_titulo">Vel. cerrado</span>
+              <div>
+                <span class="wpl_data">{{wpls[4299] | number:'0.0'}}</span>
+                <span class="c-min">c/min</span>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="wpl-3">
+        <div class="titulo-wpl">WPL 3</div>
+        <div class="data-wpl">
+          <div class="data-wpl--cajas">
+            <span class="wpl_data_titulo">Cajas</span>
+            <span class="wpl_data">{{cajasWPL[2] | number:'0.0'}}</span>
+          </div>
+          <div class="data-wpl--velocidad">
+              <span class="wpl_data_titulo">Vel. cerrado</span>
+              <div>
+                <span class="wpl_data">{{wpls[4293] | number:'0.0'}}</span>
+                <span class="c-min">c/min</span>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="velocidad__cerrado">
+        <span class="wpl_data_titulo">Velocidad de cerrado</span>
+        <div class="cerrado__display">
+          <div class="cerrado__container">
+            <p-knob class="knob" [ngModel]="velocidadCerradoActual" [min]="0" [max]="25" [strokeWidth]="6" [readonly]="true"/>          
+            <div class="data--text">Actual</div>
+          </div>
+          <div class="cerrado__container">
+            <p-knob [ngModel]="velocidadCerradoDia" [min]="0" [max]="25" [strokeWidth]="6" valueColor="blueviolet" [readonly]="true"/>
+            <div class="data--text">Promedio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="visualizer">
+    <div class="info">
+      <i class="pi pi-info-circle"></i>
+    </div> 
+      <ul class="nav">
+        <li class="nav__item"
+          *ngFor="let rep of reportList">
+          <span *ngIf="rep.showIcon"><span [routerLink]="rep.routerLink">{{rep.nombre}}</span></span>
+          <span *ngIf="!rep.showIcon" (click)="mostrarReporte(rep)">{{rep.nombre}}</span>
+          <span *ngIf="rep.showIcon">&nbsp;<i class="{{rep.icono}}"></i></span>
+        </li>
+      </ul>
+  </div>
+  
+  <div class="actualizar">
+    <ul class="actualizar__list">
+      <li class="list__item" (click)="updateData()">
+        <span class="actualizar__text">Actualizar</span>
+        <span class="actualizar__icon"><i class="pi pi-refresh"></i></span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tiempos">
+    <div class="tiempos__info">
+      <i class="">
+        <img src="../../../../assets/images/mantenimiento/dashboardSecundario/time_setting.svg" alt="">
+      </i>
+    </div>
+    <ul class="tiempos__nav">
+      <li class="tiempos__nav__item" *ngFor="let time of tiemposActualizacion" (click)="selectTime(time)">
+        <div class="check__container"><span class="check"><i [ngClass]="{'hidden': time.valor != minsDesde}" class="check__i pi pi-check"></i></span></div><div class="description"><span>{{time.descripcion}}</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="lastUpdate">
+    <ul class="lastUpdate__list">
+      <li class="list__item">
+        <span class="lastUpdate__icon"><i class="pi pi-clock"></i></span>
+        <span class="lastUpdate__text">Última actualización:</span>
+        <span>{{ lastUpdate | date:'dd-MM-yyyy HH:mm:ss'}}</span>
+      </li>
+    </ul>
+  </div>

@@ -39,6 +39,8 @@ export class DashboardDesosadoComponent implements OnInit, OnDestroy {
   refCharqueo: DynamicDialogRef | undefined;
   refLine: DynamicDialogRef  | undefined;
 
+  refreshTime: number = 300000;
+
   hueseroLine: string = 'Huesero';
   charqueoLine: string = 'Charqueo';
   empaqueLine: string = 'Primary Packing';
@@ -97,18 +99,24 @@ export class DashboardDesosadoComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialogService: DialogService,
-    private dashBoardService: DashboardDesosadoService,
-    private testService: TestService
+    private dashBoardService: DashboardDesosadoService
   ) {}
 
  async ngOnInit(): Promise<void> {
   
   await this.updateData();
-    
+  try {
+    let rT: string | undefined = await this.dashBoardService.getRefreshTime().toPromise()
+    if(rT) 
+      this.refreshTime = parseInt(rT);
+  } catch {
+    this.refreshTime = 300000;
+  }
+
   setInterval(async () => {
     await this.getData();
     await this.setDWData();
-  }, 300000);
+  }, this.refreshTime);
 }
 
   async updateData(): Promise<void> {

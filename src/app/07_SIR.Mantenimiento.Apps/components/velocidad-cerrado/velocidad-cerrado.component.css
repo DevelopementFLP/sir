@@ -1,0 +1,12 @@
+.velocidad__fecha {
+    position: fixed;
+    background-color: white;
+    z-index: 999;
+    width: calc(100% - 3rem);
+    margin: 0 auto;
+    padding-bottom: 1rem;
+}
+
+.velocidad__grafico {
+    margin-top: 2rem;
+}

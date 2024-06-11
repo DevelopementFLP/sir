@@ -1,12 +1,10 @@
-import { AfterContentInit, Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface';
 import { SessionManagerService } from '../services/session-manager.service';
 import { NavBarService } from '../services/nav-bar.service';
 import { NavigationService } from '../services/navigation.service';
 import { MenuItem } from 'primeng/api';
 import { MenuItemModel } from '../interfaces/MenuItemModel.interface';
-import { strings } from '@material/textfield';
-import { map } from 'rxjs';
 
 
 @Component({
@@ -98,50 +96,56 @@ export class NavbarComponent implements OnInit {
       this.resultadoBusqueda = [];
       return;
     }
-    
-    
-    
+  
     this.resultadoBusqueda = this.buscarElemento(this.menuUsuario, this.searchQuery);
     this.secciones = this.getSecciones(this.resultadoBusqueda);
+  
   }
 
-   buscarElemento(objeto: MenuItem[], textoBusqueda: string): MenuItemModel[] {
+  buscarElemento(objeto: MenuItem[], textoBusqueda: string): MenuItemModel[] {
     let resultados: MenuItemModel[] = [];
-
-    function buscarRecursivo(item: MenuItem, label: string) {
-        if (item.label && item.label.toLowerCase().includes(textoBusqueda.toLowerCase()) && !existeEtiqueta(item.label) ) {
-          resultados.push({
-            parentLabel: label,
-            menuItem: item
-          });
-        }
-        
-        if (item.items && item.items.length > 0) {
-            item.items.forEach((subItem: MenuItem) => {
-                buscarRecursivo(subItem, item.label!);
-            });
-        }
+  
+    function buscarRecursivo(item: MenuItem, label: string, parentLabel: string) {
+      if (
+        item.label &&
+        item.label.toLowerCase().includes(textoBusqueda.toLowerCase()) && esCategoria(label) && item.label != 'Dashboards') {
+        resultados.push({
+          type: label,
+          parentLabel: parentLabel,
+          menuItem: item,
+        });
+      }
+  
+      if (item.items && item.items.length > 0) {
+        item.items.forEach((subItem: MenuItem) => {
+          buscarRecursivo(subItem, item.label!, parentLabel);
+        });
+      }
     }
-
-    function existeEtiqueta(etiqueta: string): boolean {
-      return objeto.some(item => item.label?.trim() === etiqueta.trim());
-    }
-
+  
     objeto.forEach((item: MenuItem) => {
-        buscarRecursivo(item, item.label!);
+      if (item.items && item.items.length > 0) {
+        item.items.forEach((subItem: MenuItem) => {
+          buscarRecursivo(subItem, subItem.label!, item.label!);
+        });
+      }
     });
 
+    function esCategoria(texto: string): boolean {
+      var categorias: string[] = ['Aplicaciones', 'Formularios', 'Reportes', 'Dashboards'];
+      return categorias.indexOf(texto) >= 0;
+    }
+  
     return resultados;
-}
+  }
+
 
   selectText(event: Event): void {
     (event.target as HTMLInputElement).select();
   }
 
- 
-
   getSecciones(resultados: MenuItemModel[]): string[] {
-    let secciones: string[] = Array.from(new Set(resultados.map(s => s.parentLabel.trim())));
+    let secciones: string[] = Array.from(new Set(resultados.map(s => s.type.trim())));
     return secciones;
   }
 
@@ -157,4 +161,10 @@ export class NavbarComponent implements OnInit {
     this.resultadoBusqueda = [];
     // this.isResVisible = false;
   }
+
+  esCategoria(texto: string): boolean {
+    var categorias: string[] = ['Aplicaciones', 'Formularios', 'Reportes', 'Dashboards'];
+    return categorias.indexOf(texto) >= 0;
+  }
+
 }

@@ -6,5 +6,6 @@ export interface Reporte {
     label: string,
     activo: boolean,
     icon: string,
-    routerLink?: string
+    routerLink?: string,
+    target: string
 }

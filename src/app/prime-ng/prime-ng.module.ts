@@ -6,6 +6,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -17,6 +18,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
+import { KnobModule } from 'primeng/knob';
 import { ListboxModule } from 'primeng/listbox';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
@@ -35,6 +37,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ButtonModule,
     CalendarModule,
     CardModule,
+    ChartModule,
     CheckboxModule,
     ChipModule,
     ConfirmDialogModule,
@@ -46,6 +49,7 @@ import { TooltipModule } from 'primeng/tooltip';
     FileUploadModule,
     InputTextareaModule,
     InputTextModule,
+    KnobModule,
     ListboxModule,
     PanelMenuModule,
     PasswordModule,

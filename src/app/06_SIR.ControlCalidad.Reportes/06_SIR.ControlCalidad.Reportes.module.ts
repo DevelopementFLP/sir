@@ -2,9 +2,12 @@ import { NgModule } from "@angular/core";
 import { PccComponent } from './pages/pcc/pcc.component';
 import { PccAuditableComponent } from './pages/pcc-auditable/pcc-auditable.component';
 import { NoqueoComponent } from './pages/noqueo/noqueo.component';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PrimeNgModule } from "../prime-ng/prime-ng.module";
 import { MachuconesComponent } from './pages/machucones/machucones.component';
+import { RechazoCCPHComponent } from './formularios/rechazo-ph/rechazo-ph.component';
+import { CommonModule } from "@angular/common";
+import { PHConfirmDialogComponent } from './components/phconfirm-dialog/phconfirm-dialog.component';
 
 
 @NgModule({
@@ -12,11 +15,15 @@ import { MachuconesComponent } from './pages/machucones/machucones.component';
     PccComponent,
     PccAuditableComponent,
     NoqueoComponent,
-    MachuconesComponent
+    MachuconesComponent,
+    RechazoCCPHComponent,
+    PHConfirmDialogComponent
   ],
   imports: [
     FormsModule,
-    PrimeNgModule
+    PrimeNgModule,
+    ReactiveFormsModule,
+    CommonModule
   ]
 })
 export class ControlCalidadReportesModule{}

@@ -1,0 +1,22 @@
+@import '../../../../../node_modules/primeflex/primeflex.min.css';
+
+.config__content {
+    background-color: #F0F3F4;
+    border-radius: 5px;
+}
+
+.content--menu {
+    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.content--params {
+    border-radius: 8px;
+}
+
+@layer primeng {
+    .p-divider.p-divider-horizontal .p-divider-content {
+        background-color: transparent !important;
+    }
+}

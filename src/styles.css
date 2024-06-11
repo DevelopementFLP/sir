@@ -142,6 +142,10 @@ input.ng-tns-c59-4.p-inputtext.p-component.ng-star-inserted {
     background-color: yellow;
   }
 
+  .p-knob.p-component > svg {
+    height: 4rem !important;
+}
+
 /* .mat-mdc-text-field-wrapper.mdc-text-field {
     width: 100%;
     height: 2.5rem;
@@ -157,3 +161,4 @@ input.ng-tns-c59-4.p-inputtext.p-component.ng-star-inserted {
     padding-top: 7px;
     padding-bottom: 16px;
 } */
+

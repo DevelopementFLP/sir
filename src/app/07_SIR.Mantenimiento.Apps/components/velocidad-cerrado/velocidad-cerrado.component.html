@@ -1,0 +1,36 @@
+<div class="container__velocidad">
+    <div class="velocidad__fecha">
+        <div class="fecha--data">
+            <span>Fecha:&nbsp;</span>
+            <span>
+                <p-calendar 
+                    dateFormat="dd/mm/yy"
+                    [showIcon]="true"
+                    [(ngModel)]="fecha"
+                    [style]="{'max-width': '300px'}"
+                    (ngModelChange)="getData()"
+                />
+            </span>
+        </div>
+    </div>
+    <br><br>
+    <div class="velocidad__grafico">
+        <p-divider align="left"><b>Cajas por minuto</b></p-divider>
+        <p-chart
+            type="line"
+            [data]="data" 
+            [options]="options"
+            strokeWidth="1"/>
+    </div>
+
+    <br><br>
+
+    <div class="progreso-velocidad__gafico">
+        <p-divider align="left"><b>Cajas totales</b></p-divider>
+        <p-chart
+            type="line"
+            [data]="totalData" 
+            [options]="options"
+            strokeWidth="1"/>
+    </div>
+</div>

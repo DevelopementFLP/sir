@@ -1,0 +1,9 @@
+<div class="linea__container">       
+    <puesto-estacion
+        (click)="getProductosPorEstacion(i + 1)"
+        [ngClass]="{'puesto--abajo': i % 2 == 0}"
+        *ngFor="let p of [].constructor(cantidadPuestos); let i = index"
+        [nroPuesto]="i + 1"
+        [data]="getEstacion(i + 1)"
+   />
+</div>

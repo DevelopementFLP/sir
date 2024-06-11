@@ -1,0 +1,77 @@
+@import '../../../../../node_modules/primeflex/primeflex.min.css';
+
+@layer primeng {
+    .p-chip {
+        background-color: chocolate !important;
+    }
+
+ 
+}
+
+
+::ng-deep #fecha > span > div > div > div > div.p-datepicker-calendar-container.ng-tns-c59-2.ng-star-inserted > table {
+    width: inherit;
+}
+
+::ng-deep .p-datepicker table th > span {
+    margin-left: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    box-shadow: 3px 3px 0 gray;
+    border: 1px solid lightslategrey;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+
+.field {
+    margin-bottom: 1em;
+}
+
+.botonera {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5%
+}
+
+.chipsArea {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1%;
+    margin-top: 1rem;
+}
+
+.chip {
+    margin-bottom: 0.5rem;
+}
+
+.chips-area-container {
+    margin-top: 2rem;
+}
+
+.noPH {
+    margin: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.divider {
+    margin: 1rem auto;
+    width: 100%;
+}
+
+@media(max-width:600px) {
+    .container {
+        padding: 0.5em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+}

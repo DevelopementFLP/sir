@@ -38,6 +38,9 @@ import { PageHorarioFuncionarioComponent } from './08_SIR.RRHH.Reportes/componen
 import { ControlHorasComponent } from './08_SIR.RRHH.Reportes/pages/control-horas/control-horas.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { DashboardDesosadoComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-desosado/dashboard-desosado.component';
+import { ConfiguracionMainPageComponent } from './50_SIR.Configuracion.Parametros/pages/configuracion-main-page/configuracion-main-page.component';
+import { RechazoCCPHComponent } from './06_SIR.ControlCalidad.Reportes/formularios/rechazo-ph/rechazo-ph.component';
+import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-empaque-secundario/dashboard-empaque-secundario.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -67,16 +70,19 @@ const routes: Routes = [
     { path: 'controlCalidad/pcc', component: PccComponent},
     { path: 'controlCalidad/pccAuditable', component: PccAuditableComponent},
     { path: 'controlCalidad/machucones', component: MachuconesComponent},
+    { path: 'controlCalidad/rechazoPH', component: RechazoCCPHComponent},
     { path: 'herramientas/trazabilidad', component: TrazabilidadComponent},
     { path: 'herramientas/compresorImagenes', component: CompresorImagenesComponent},
     { path: 'mantenimiento/dashboardScanners', component: DashboardComponent},
     { path: 'mantenimiento/dashboardEagle', component: DashboardEagleComponent},
     { path: 'mantenimiento/reporteGraseria', component: GraseriaComponent},
     { path: 'mantenimiento/dashboardDesosado', component: DashboardDesosadoComponent},
+    { path: 'mantenimiento/dashboardEmpaqueSecundario', component: DashboardEmpaqueSecundarioComponent},
     { path: 'rrhh/funcionariosLogueados', component: LogueoFuncComponent},
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},
     { path: 'usuario/:nombreUsuario', component: UserComponent},
+    { path: 'configuracion', component:ConfiguracionMainPageComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

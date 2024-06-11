@@ -1,0 +1,10 @@
+<div class="puesto__container" [ngClass]="{'inactivo': data == undefined }">
+    <!-- <div class="container--individual"> -->
+        <div class="puesto puesto--estacion puesto--arriba" *ngIf="nroPuesto % 2 == 0">{{titulo}}<span *ngIf="nroPuesto != 0">{{nroPuesto | number:'2.0'}}</span></div>
+        <div class="puesto puesto--cajas" *ngIf="nroPuesto % 2 == 0">{{ data != undefined ? data.cajas : 0 | number:'0.0'}}</div>
+        <div class="puesto puesto--kilos puesto--abajo" *ngIf="nroPuesto % 2 == 0">{{(data != undefined ? data.peso : 0) | number:'0.1'}}</div>
+        <div class="puesto puesto--kilos puesto--arriba" *ngIf="nroPuesto % 2 != 0">{{(data != undefined ? data.peso : 0) | number:'0.1'}}</div>
+        <div class="puesto puesto--cajas" *ngIf="nroPuesto % 2 != 0">{{data != undefined ? data.cajas : 0 | number:'0.0'}}</div>
+        <div class="puesto puesto--estacion puesto--abajo" *ngIf="nroPuesto % 2 != 0">{{titulo}}<span *ngIf="nroPuesto != 0">{{nroPuesto | number:'2.0'}}</span></div>
+    <!-- </div> -->
+</div>

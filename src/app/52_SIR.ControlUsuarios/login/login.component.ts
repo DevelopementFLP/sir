@@ -11,6 +11,7 @@ import { ActualUser } from 'src/app/shared/models/actualuser.interface';
 import { MenuItem } from 'primeng/api';
 import { DataService } from 'src/app/shared/services/data.service';
 import { NavBarService } from 'src/app/shared/services/nav-bar.service';
+import { Reporte } from 'src/app/shared/models/reporte.interface';
 
 
 @Component({
@@ -34,10 +35,8 @@ export class LoginComponent implements AfterViewInit {
 
       this.userStored = this.sessionManagerService.getStorage();
 
-      if(this.userStored != null) {
-
+      if(this.userStored != null)
         this.navigationService.navegar('principal');
-       }
     }
 
   @ViewChild('txtUserName') txtUserName!: ElementRef<HTMLInputElement>;
@@ -75,11 +74,9 @@ export class LoginComponent implements AfterViewInit {
           else
           {
             this.sessionManagerService.setStorage('actualUser', this.usuarioObtenido[0]);
-            console.log(this.usuarioObtenido[0])
-      
-  
+           
             this.dataService.getReportesPorAcceso(this.usuarioObtenido[0].id_perfil).subscribe(
-              (reportes: any[]) => {
+              (reportes: Reporte[]) => {
                 this.menuItems = this.navBarService.transformarAMenuItems(reportes);
                 this.menuItems = this.navBarService.setExpansionState(this.menuItems);
                 this.sessionManager.setMenu('menuItems', this.menuItems);

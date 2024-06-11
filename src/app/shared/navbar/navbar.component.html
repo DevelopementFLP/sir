@@ -50,12 +50,13 @@
                 <div *ngIf="isResVisible && searchQuery != ''" class="search__result">
                     <div *ngIf="resultadoBusqueda.length > 0">
                         <ul class="search__list" *ngFor="let seccion of secciones">
-                            <li>
+
+                            <li *ngIf="esCategoria(seccion.trim())">
                                 <p-divider align="left">{{seccion}}</p-divider>
                                 <ul class="search__list" *ngFor="let resultado of resultadoBusqueda">
-                                    <li *ngIf="resultado.parentLabel.trim() === seccion" class="search__item"
+                                    <li *ngIf="resultado.type.trim() === seccion" class="search__item"
                                         [routerLink]="resultado.menuItem.routerLink" (click)="resetSearch()">
-                                        {{ resultado.menuItem.label }}
+                                       <span class="text-xs"><b>{{resultado.parentLabel}}</b> - </span>{{ resultado.menuItem.label }}
                                     </li>
                                 </ul>
                             </li>
@@ -81,8 +82,6 @@
         </div>
     </div>
 </mat-toolbar>
-
-
 
 <mat-menu #menu="matMenu">
     <app-profile-menu></app-profile-menu>

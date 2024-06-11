@@ -1,0 +1,1 @@
+export type WPLDict = Record<number, number>;

@@ -39,10 +39,10 @@
  
  /* visualizer */
 .visualizer {
-    width: 20rem;
+    width: 23rem;
     box-sizing: border-box;
     position: fixed;
-    right: -17rem;
+    right: -20.5rem;
     bottom: 10px;
     color: #665D53;
     transition: all 0.3s ease-in-out;

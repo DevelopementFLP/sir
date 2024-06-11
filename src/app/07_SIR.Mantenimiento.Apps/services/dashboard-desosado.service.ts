@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoteEntrada } from '../interfaces/LoteEntrada.interface';
 import { HttpClient } from '@angular/common/http';
-import { urlDashboardDesosadoCharqueo, urlDashboardDesosadoEmpaque, urlDashboardDesosadoEntrada, urlDashboardDesosadoHuesero, urlDWDashboardDesosadoCharqueo, urlDWDashboardDesosadoEmpaque, urlDWDashboardDesosadoEntrada, urlDWDashboardDesosadoHuesero, urlDWUpdateDashboardDesosadoCharqueo, urlDWUpdateDashboardDesosadoEmpaque, urlDWUpdateDashboardDesosadoEntrada, urlDWUpdateDashboardDesosadoHuesero } from 'src/settings';
+import { urlDashboardDesosadoCharqueo, urlDashboardDesosadoEmpaque, urlDashboardDesosadoEntrada, urlDashboardDesosadoHuesero, urlDashboardDesosadoRefreshTime, urlDWDashboardDesosadoCharqueo, urlDWDashboardDesosadoEmpaque, urlDWDashboardDesosadoEntrada, urlDWDashboardDesosadoHuesero, urlDWUpdateDashboardDesosadoCharqueo, urlDWUpdateDashboardDesosadoEmpaque, urlDWUpdateDashboardDesosadoEntrada, urlDWUpdateDashboardDesosadoHuesero } from 'src/settings';
 import { IndicadorCharqueador } from '../interfaces/IndicadorCharqueador.interface';
 import { IndicadorHuesero } from '../interfaces/IndicadorHuesero.interface';
 import { IndicadorEmpaque } from '../interfaces/IndicadorEmpaque.interface';
@@ -62,6 +62,10 @@ export class DashboardDesosadoService {
       return this.http.post<void>(urlDWUpdateDashboardDesosadoEmpaque, empaque);
    }
 
+   getRefreshTime(): Observable<string> {
+      return this.http.get<string>(urlDashboardDesosadoRefreshTime);
+   }
+   
    getIndiceRendimientoHueseros(): number {
       return environments.indHuesero;
    }
@@ -69,4 +73,5 @@ export class DashboardDesosadoService {
    getIndiceRendimientoCharqueadores(): number {
       return environments.indCharqueador;
    }
+
 }

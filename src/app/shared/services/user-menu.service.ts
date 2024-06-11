@@ -29,7 +29,7 @@ export class UserMenuService {
       icon: 'settings',
       label: 'Configuración',
       accion:() => {
-        
+        this.goToConfiguration();
       },
     },
     {
@@ -53,6 +53,10 @@ export class UserMenuService {
 
     if(dataUsuarioActual == null || dataUsuarioActual == undefined) return;
     this.navigationService.navegar('principal/usuario/' + dataUsuarioActual.nombre_usuario);
+  }
+
+  private goToConfiguration(): void {
+    this.navigationService.navegar('principal/configuracion');
   }
 }
 

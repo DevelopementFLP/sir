@@ -1,0 +1,35 @@
+<div class="container__cortes">
+    <p-table 
+        [value]="cortesPuesto"
+        [scrollable]="true"
+        scrollHeight="600px" 
+        [tableStyle]="{'min-width': '50rem'}">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="codProd">Código<p-sortIcon field="codProd" /></th>
+                <th pSortableColumn="producto">Producto<p-sortIcon field="producto" /></th>
+                <th pSortableColumn="cajas">Cajas<p-sortIcon field="cajas" /></th>
+                <th pSortableColumn="cortes">Cortes<p-sortIcon field="cortes" /></th>
+                <th pSortableColumn="peso">Kilos<p-sortIcon field="peso" /></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cortes>
+            <tr class="table__row">
+                <td class="">{{cortes.codProd}}</td>
+                <td class="">{{cortes.producto}}</td>
+                <td class="">{{cortes.cajas | number:'0.0'}}</td>
+                <td class="">{{cortes.cortes | number:'0.0'}}</td>
+                <td class="">{{cortes.peso | number:'0.1'}}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="2" class="text-right">Totales</td>
+                <td>{{getTotalByProperty('cajas') | number:'0.0'}}</td>
+                <td>{{getTotalByProperty('cortes') | number: '0.0'}}</td>
+                <td>{{getTotalByProperty('peso') | number: '0.1'}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

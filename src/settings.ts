@@ -1,5 +1,5 @@
-export const urlAPI: string = "http://192.168.0.107:82/api/";
-// export const urlAPI: string = "http://localhost:5205/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -18,6 +18,7 @@ export const urlMarelDatosCaja: string = urlAPI + "MarelDatosCaja/getDatosCaja";
 export const urlEntradaMarel: string = urlAPI + "MarelDatosCaja/GetEntradaMarel";
 export const urlSalidasMarel: string = urlAPI + "MarelDatosCaja/GetSalidaMarel";
 export const urlSalidaProduccion: string = urlAPI + "SalidaProduccion/salidasProduccionConFiltro";
+
 export const urlRRHH: string = urlAPI + "RRHH/";
 export const urlLogueoLineas: string = urlRRHH + "GetFuncionariosLogueados";
 export const urlLoginHistorico: string = urlRRHH + "LoginHistoricoFuncionariosMarel";
@@ -29,6 +30,7 @@ export const urlRegimen: string = urlRRHH + "GetRegimen";
 export const urlConfHoras: string = urlRRHH + "GetConfHoras";
 export const urlHorarioDesfasado: string = urlRRHH + "GetFuncionariosHorarioDesfasado";
 export const urlUpdateHorariosDesfasados: string = urlRRHH + "ActualizarHorariosDesfasados";
+
 export const urlDashboardDesosado: string = urlAPI + "DashboardDesosado/";
 export const urlDashboardDesosadoEntrada: string = urlDashboardDesosado + "GetDetalleEntradaAsync";
 export const urlDashboardDesosadoCharqueo: string = urlDashboardDesosado + "DetalleCharqueadoresAsync";
@@ -42,6 +44,17 @@ export const urlDWUpdateDashboardDesosadoEntrada: string = urlDashboardDesosado 
 export const urlDWUpdateDashboardDesosadoCharqueo: string = urlDashboardDesosado + "ActualizarDetalleCharqueadoresAsync";
 export const urlDWUpdateDashboardDesosadoHuesero: string = urlDashboardDesosado + "ActualizarDetalleHueserosAsync";
 export const urlDWUpdateDashboardDesosadoEmpaque: string = urlDashboardDesosado + "ActualizarDetalleEmpaqueAsync";
+export const urlDashboardDesosadoRefreshTime: string = urlDashboardDesosado + "GetRefreshTime";
+
+export const urlConfigurationParameters: string = urlAPI + "Configuration/";
+export const urlConfiguracionPorModulo: string = urlConfigurationParameters + "GetConfiguracionPorModuloAsync";
+export const urlInactivarReporteConfiguracionParametro: string = urlConfigurationParameters + "InactivarReporteConfiguracionParametroAsync";
+export const urlDeleteReporteConfiguracionParametro: string = urlConfigurationParameters + "DeleteReporteConfiguracionParametroAsync";
+export const urlInsertReporteConfiguracionParametro: string = urlConfigurationParameters + "InsertReporteConfigurationParameterAsync";
+export const urlActivarReporteConfiguracionParametro: string = urlConfigurationParameters + "ActivarReporteConfiguracionParametroAsync";
+
+export const urlControlCalidad: string = urlAPI + "ControlCalidad/";
+export const urlCCRechazoPH: string = urlControlCalidad + "InsertOrdinalesPhAsync";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";
