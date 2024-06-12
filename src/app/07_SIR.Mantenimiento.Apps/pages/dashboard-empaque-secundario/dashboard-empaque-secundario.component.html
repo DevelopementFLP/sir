@@ -116,7 +116,7 @@
           <div class="data-wpl--velocidad">
               <span class="wpl_data_titulo">Vel. cerrado</span>
               <div>
-                <span class="wpl_data">{{wpls[4296] | number:'0.0'}}</span>
+                <span class="wpl_data">{{ wpls[4296] | number:'0.0'}}</span>
                 <span class="c-min">c/min</span>
               </div>
           </div>
@@ -158,13 +158,13 @@
       <div class="velocidad__cerrado">
         <span class="wpl_data_titulo">Velocidad de cerrado</span>
         <div class="cerrado__display">
-          <div class="cerrado__container">
+          <div class="cerrado__container" *ngIf="minsDesde > 0">
             <p-knob class="knob" [ngModel]="velocidadCerradoActual" [min]="0" [max]="25" [strokeWidth]="6" [readonly]="true"/>          
-            <div class="data--text">Actual</div>
+            <div class="data--text">{{minsDesdeText}}</div>
           </div>
           <div class="cerrado__container">
             <p-knob [ngModel]="velocidadCerradoDia" [min]="0" [max]="25" [strokeWidth]="6" valueColor="blueviolet" [readonly]="true"/>
-            <div class="data--text">Promedio</div>
+            <div class="data--text">Todo el día</div>
           </div>
         </div>
       </div>

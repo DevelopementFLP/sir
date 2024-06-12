@@ -88,9 +88,21 @@ export class DashSecundarioService implements OnInit{
     return this.http.get<string>(`${environments.sirBaseUrl}GetUltimaCajaWPLAsync?prday=${fecha}&idStation=${idStation}`)
   }
 
-  async getTiempoTotalWPL(idWPL: number, timeLapse?: number): Promise<Date> {
-    const fecha: string = formatDate(new Date(), "yyyy-MM-dd", "es-UY");
-    const horaPrimeraCaja: string = await this.getHoraPrimeraCajaWPL(fecha, idWPL).toPromise() ?? fecha;
+  async getTiempoTotalWPL(idWPL: number, timeLapse: number): Promise<Date> {
+    const horaActual: Date = new Date();
+    const fecha: string = formatDate(horaActual, "yyyy-MM-dd", "es-UY");
+    
+    var horaPrimeraCaja: string = fecha; 
+    
+    if(timeLapse > 0) {
+      horaActual.setHours(horaActual.getHours());
+      horaActual.setMinutes(horaActual.getMinutes() - timeLapse);
+      horaPrimeraCaja = formatDate(horaActual, "yyyy-MM-dd HH:mm:ss", "es-UY");
+    }  
+    else
+      horaPrimeraCaja = await this.getHoraPrimeraCajaWPL(fecha, idWPL).toPromise() ?? fecha;
+
+
     const horaUltimaCaja: string = await this.getHoraUltimaCajaWPL(fecha, idWPL).toPromise() ?? fecha;
     
     const hrP: Date = new Date(horaPrimeraCaja)

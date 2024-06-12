@@ -46,16 +46,10 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   linea_2: EstacionesCortesCajas[] = [];  
   linea_3: EstacionesCortesCajas[] = [];  
   linea_4: EstacionesCortesCajas[] = [];  
-  cajasTotal: number = 0;
-  cajasLeidasEagle: number = 0;
-  cajasRechazadasEagle: number = 0;
-  cajasNoLeidasEagle: number = 0;
-  porcRechazoEagle: number = 0;
-  porcNoLeidasEagle: number = 0;
-  wpls: WPLDict = { }
-
+  
   /* local params */
   minsDesde: number = 0;
+  minsDesdeText: string = '';
   prday: string = formatDate(new Date(), "yyyy-MM-dd", "es-UY");
   refreshTime?: number = 300000;
   reportList: ReporteMenuItem[] = [];
@@ -63,7 +57,15 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   velocidadCerradoActual: number = 0;
   velocidadCerradoDia: number = 0;
   lineas: number[] = [10, 10, 10, 12];
-
+  cajasTotal: number = 0;
+  cajasLeidasEagle: number = 0;
+  cajasRechazadasEagle: number = 0;
+  cajasNoLeidasEagle: number = 0;
+  porcRechazoEagle: number = 0;
+  porcNoLeidasEagle: number = 0;
+  wpls: WPLDict = { }
+  wplsAllDay: WPLDict = { }
+  
   /* dialog */
   dialog?: DynamicDialogRef;
 
@@ -74,26 +76,12 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.wpls[4296] = 0;
-    this.wpls[4299] = 0;
-    this.wpls[4293] = 0;
-
-    this.reportList = this.empaqueSecundarioService.getReportesMenuItem();
-    await this.GetTiemposActualizacion();
-    //await this.GetEstacionesProceso();
-    //await this.setCajasPromedioWLP();
-    await this.GetEagleData();
+  
+    await this.GetData();
     
-    if(this.minsDesde > 0) this.filterRayosXData();
-    
-    // await this.GetEstacionesCortesCajas();
-    
-    //await this.GetEstacionesProceso();
-    
-    // await this.GetData();
-    // setInterval(async () => {
-    //   await this.GetData();
-    // }, this.refreshTime);
+    setInterval(async () => {
+      await this.GetData();
+    }, this.refreshTime);
   }
 
   ngOnDestroy(): void {
@@ -109,10 +97,21 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   }
   
   updateData(): void {
-  
+    this.GetData();
   }
 
   private async GetData(): Promise<void> {
+    this.wpls[4296] = 0;
+    this.wpls[4299] = 0;
+    this.wpls[4293] = 0;
+    this.wplsAllDay[4296] = 0;
+    this.wplsAllDay[4299] = 0;
+    this.wplsAllDay[4293] = 0;
+    this.cajasWPL = [];
+    this.reportList = this.empaqueSecundarioService.getReportesMenuItem();
+    this.lastUpdate = new Date();
+
+    await this.GetTiemposActualizacion();
     await this.GetRefreshTime();
     await this.GetInnovaData();
     await this.GetEagleData();
@@ -128,6 +127,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
       await this.GetCajasHora();
       await this.GetEstacionesCortesCajas();
       await this.GetEstacionesProceso();
+      await this.setCajasPromedioWLP(this.cajasWPL, this.wpls)
       await this.GetCortesSinEmpacar();
       await this.GetCajasAbiertas();
       await this.GetCajasCerradas();
@@ -202,6 +202,8 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   selectTime(time: TiempoActualizacion): void {
     this.minsDesde = time.valor;
     this.empaqueSecundarioService.setTimeLapse(this.minsDesde);
+    this.minsDesdeText = time.descripcion;
+    this.GetData();
   }
 
   private showDialog(component: Type<any>, data: DialogData, dialog: DynamicDialogRef): void {
@@ -230,7 +232,10 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   }
 
   private getCajasWPL(station: number): number {
-    return this.estacionesProceso?.filter(e => e.idStation == station)[0].cajas?? 0;
+    var cajas: number = 0;
+    if(this.estacionesProceso?.filter(e => e.idStation == station)[0])
+      cajas = this.estacionesProceso?.filter(e => e.idStation == station)[0].cajas;
+    return cajas;
   }
 
   getTotalLinea(linea: string): EstacionesCortesCajas | undefined {
@@ -265,13 +270,19 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     return this.estacionesCortesCajas?.filter(e => e.station.startsWith('SP L' + nroLinea))?? [];
   }
   
-  private async setCajasPromedioWLP(): Promise<void> {
-    for(let wplKey in this.wpls) {
+  private async setCajasPromedioWLP(wpls: number[], wplDict: WPLDict): Promise<void> {
+    this.velocidadCerradoActual = 0;
+   
+    for(let wplKey in wplDict) {
       const wpl: number = parseInt(wplKey);
       
       //if(Object.prototype.hasOwnProperty.call(this.wpls, wpl)) {
-        const tiempoTotalWPL: Date = await this.empaqueSecundarioService.getTiempoTotalWPL(wpl);
-        this.wpls[wpl] = Math.ceil(this.cajasWPL[this.idsWPL.indexOf(wpl)] / this.totalMinutes(tiempoTotalWPL));
+        const tiempoTotalWPL: Date = await this.empaqueSecundarioService.getTiempoTotalWPL(wpl, this.minsDesde);
+        wplDict[wpl] = Math.ceil(wpls[this.idsWPL.indexOf(wpl)] / this.totalMinutes(tiempoTotalWPL));
+        this.velocidadCerradoActual += wplDict[wpl];
+        if(this.minsDesde == 0) this.velocidadCerradoDia = this.velocidadCerradoActual;
+        //else this.getVelocidadWPLDia();
+       
       //}
     }
   }
@@ -297,4 +308,18 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async getVelocidadWPLDia(): Promise<void> {
+    var eP: EstacionProceso[] | undefined = await this.empaqueSecundarioService.getEstacionesProceso(0).toPromise();
+    const wpl1 = eP?.filter(e => e.idStation == 4296)[0].cajas?? 0;
+    const wpl2 = eP?.filter(e => e.idStation == 4299)[0].cajas?? 0;
+    const wpl3 = eP?.filter(e => e.idStation == 4293)[0].cajas?? 0;
+
+    var wpls: number[] = [];
+    wpls.push(wpl1);
+    wpls.push(wpl2);
+    wpls.push(wpl3);
+
+    await this.setCajasPromedioWLP(wpls, this.wplsAllDay);
+    this.velocidadCerradoDia = this.wplsAllDay[4296] + this.wplsAllDay[4299] + this.wplsAllDay[4293]
+  }
 }
