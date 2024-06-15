@@ -32,6 +32,7 @@ export class ExportacionComponent implements OnInit, OnChanges  {
   @Input() printer:       boolean = false;
   @Input() nombreArchivo: string = '';
   @Input() data: InconsistenciaDataPrint | undefined = undefined;
+  @Input() dataPrint: any = undefined;
 
   dataToPrint!: PrintModel;
 
@@ -48,7 +49,7 @@ export class ExportacionComponent implements OnInit, OnChanges  {
   ngOnInit(): void {
     this.dataToPrint = {
       nombreArchivo: this.nombreArchivo,
-      data: this.data != undefined ? this.data : document.getElementsByClassName('printable')
+      data: this.data != undefined ? this.data : (this.dataPrint != undefined ? this.dataPrint : document.getElementsByClassName('printable'))
     }
   }
 
@@ -56,7 +57,7 @@ export class ExportacionComponent implements OnInit, OnChanges  {
     if(changes['nombreArchivo']) {
       this.dataToPrint = {
         nombreArchivo: this.nombreArchivo,
-        data: this.data != undefined ? this.data : document.getElementsByClassName('printable')
+        data: this.data != undefined ? this.data : (this.dataPrint != undefined ? this.dataPrint : document.getElementsByClassName('printable'))
       }
     }
   }

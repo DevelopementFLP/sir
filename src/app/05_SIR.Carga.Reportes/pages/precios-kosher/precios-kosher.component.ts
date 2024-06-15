@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { GecosService } from 'src/app/shared/services/gecos.service';
+import { Cliente } from '../../interfaces/Cliente.interface';
+import { Contenedor } from '../../interfaces/Contenedor.interface';
+import { Carga } from '../../interfaces/Carga.interface';
+import { formatDate } from '@angular/common';
+import { DwCaja } from 'src/app/shared/interfaces/DwCaja.interface';
+import { DwcajasService } from 'src/app/shared/services/dwcajas.service';
 
-interface Cliente {
-  name: string
-}
-
-interface Contenedor {
-  name: string
-}
 
 @Component({
   selector: 'app-precios-kosher',
@@ -16,6 +15,7 @@ interface Contenedor {
 })
 export class PreciosKosherComponent implements OnInit {
 
+  datosCarga: Carga[] | undefined = [];
   fechaDesde: Date | undefined;
   fechaHasta: Date | undefined;
   clientes!: Cliente[];
@@ -27,25 +27,31 @@ export class PreciosKosherComponent implements OnInit {
     private gecosService: GecosService
   ) {}
 
-  ngOnInit(): void {
-    this.clientes = [
-      {
-        name: 'Seleccione clientes'
-      }
-    ];
+  async ngOnInit(): Promise<void> {
+    //this.clientes = [{ nombre: 'Seleccione clientes'}];
+    //this.contenedores = [{ idContenedor: 'Seleccione contenedores' }];
 
-    this.contenedores = [
-      {
-        name: 'Seleccione contenedores'
-      }
-    ];
-
-    this.gecosService.getDatosCarga("2023-08-21 00:00:00", "2023-08-21 00:00:00").subscribe(
-      data => console.log(data)
-    )
-  }
-
-  private cargarContenedores() {
+    this.setFechas();
+    //await this.getDatosCarga();
     
+    await this.testDwCajas();
   }
+
+  private async getDatosCarga(): Promise<void> {
+    this.datosCarga = await this.gecosService.getDatosCarga(this.fD(this.fechaDesde!), this.fD(this.fechaHasta!)).toPromise();
+  }
+
+  private fD(f: Date): string {
+    return formatDate(f, "yyyy-MM-dd HH:mm:ss", "es-UY");
+  }
+
+  private setFechas(): void {
+    this.fechaDesde = new Date();
+    this.fechaHasta = new Date();
+  }
+
+  private async testDwCajas(): Promise<void> {
+    console.log(await this.gecosService.getCajasGecos(this.fechaDesde!, this.fechaHasta!).toPromise());
+  }
+
 }

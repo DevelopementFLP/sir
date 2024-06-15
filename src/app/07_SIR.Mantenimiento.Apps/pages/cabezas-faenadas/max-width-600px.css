@@ -1,0 +1,58 @@
+
+@media (max-width:600px) {
+    @layer primeng {
+        p-calendar {
+            width: 45%;
+        }
+
+        p-calendar > span > input {
+            font-size: 0.8rem !important;
+        }
+
+        p-calendar > span > div {
+           left: -106% !important;
+           padding: 0 !important;
+
+        }
+    }
+
+    
+    .fecha--display-titulo {
+        font-size: 0.9rem;
+        width: 40%;
+    }
+
+    .fecha--data {
+        width: 100%;
+    }
+
+    .data__display {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .data {
+        height: 6rem;
+        margin: 0.2rem 1rem;
+        width: 40%;
+    }
+
+    .data--title {
+        align-self: flex-start;
+    }
+
+    .data--value {
+        align-self: center;
+    }
+
+    .data--group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .data--group:first-of-type {
+        margin-bottom: 1.5rem;
+    }
+}

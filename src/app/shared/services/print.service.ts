@@ -6,6 +6,7 @@ import { formatDate } from '@angular/common';
 import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
 import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
 import { Incidencia } from 'src/app/08_SIR.RRHH.Reportes/interfaces/Incidencia.interface';
+import { CabezaFaenada } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/CabezaFaenada.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -21,12 +22,12 @@ export class PrintService {
         return this.printProductosGraseria(dataToPrint, libro);
       case 4: 
         return this.printInconsistencias(dataToPrint, libro);
+      case 5:
+        return this.printCabezasFaenadas(dataToPrint, libro);
       default:
         return [];
     }
   }
-
-
 
   /*LOGUEO FUNCIONARIOS*/
   private printLogueoFuncionarios(dataToPrint: PrintModel, libro: Workbook) {
@@ -879,5 +880,57 @@ export class PrintService {
       pattern: 'solid',
       fgColor: { argb: color} 
     };
+  }
+
+  private printCabezasFaenadas(dataToPrint: PrintModel, libro: Workbook): void {
+    const data: CabezaFaenada[] = dataToPrint.data as CabezaFaenada[];
+    const nombre: string = "Cabezas faenadas";
+    const sheet = libro.addWorksheet(nombre);
+
+    this.setLogo(libro, sheet);
+    this.setTitle(libro, sheet, nombre, 'right', 12);
+
+    sheet.getCell("B6").value = `Fecha de faena: ${dataToPrint.nombreArchivo.substring(nombre.length + 1)}`;
+  
+    const fechasFaena: string[] = this.getFechaFaenaUnica(data);
+
+    var filaFechaFaena: number = 8;
+    
+    sheet.getCell("B" + (filaFechaFaena)).value = "Faena"
+    sheet.getCell("C" + (filaFechaFaena)).value = "IdInnova"
+    sheet.getCell("D" + (filaFechaFaena)).value = "IdGecos"
+    sheet.getCell("E" + (filaFechaFaena)).value = "Proveedor"
+    sheet.getCell("F" + (filaFechaFaena)).value = "Secuencial"
+    sheet.getCell("G" + (filaFechaFaena)).value = "Caravana"
+    sheet.getCell("H" + (filaFechaFaena)).value = "DotNumber"
+    sheet.getCell("I" + (filaFechaFaena)).value = "Peso en pie"
+    sheet.getCell("J" + (filaFechaFaena)).value = "Peso segunda"
+    sheet.getCell("K" + (filaFechaFaena)).value = "Hora etiquetado"
+
+    filaFechaFaena++;
+
+    fechasFaena.forEach(fecha => {
+      sheet.getCell("B" + filaFechaFaena).value = fecha;
+      const datosFaena: CabezaFaenada[] = data.filter(d => formatDate(d.fechaFaena, "dd-MM-yyyy", "es-UY") == fecha);
+      
+      datosFaena.forEach((cf, i) => {
+        sheet.getCell("C" + (filaFechaFaena)).value = datosFaena[i].idInnova;
+        sheet.getCell("D" + (filaFechaFaena)).value = datosFaena[i].idGecos;
+        sheet.getCell("E" + (filaFechaFaena)).value = datosFaena[i].proveedor;
+        sheet.getCell("F" + (filaFechaFaena)).value = datosFaena[i].secuencial;
+        sheet.getCell("G" + (filaFechaFaena)).value = datosFaena[i].caravana;
+        sheet.getCell("H" + (filaFechaFaena)).value = datosFaena[i].dotNumber;
+        sheet.getCell("I" + (filaFechaFaena)).value = datosFaena[i].pesoEnPie;
+        sheet.getCell("J" + (filaFechaFaena)).value = datosFaena[i].pesoMedia;
+        sheet.getCell("K" + (filaFechaFaena)).value = datosFaena[i].fechaHoraEtiquetado;
+        filaFechaFaena++;
+      });
+      filaFechaFaena += 2 ;
+    });
+  }
+
+
+  private getFechaFaenaUnica(datos: CabezaFaenada[]): string[] {
+    return Array.from(new Set(datos.map(c => formatDate(c.fechaFaena, "dd-MM-yyyy",  "es-UY"))));
   }
 }

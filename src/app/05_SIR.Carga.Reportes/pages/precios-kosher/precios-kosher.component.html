@@ -9,7 +9,11 @@
                 <div class="row opciones">
                     <div class="lead"><p>Fecha desde:</p></div>
                     <div>
-                            <p-calendar [(ngModel)]="fechaDesde" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                            <p-calendar 
+                                [(ngModel)]="fechaDesde" 
+                                dateFormat="dd/mm/yy"
+                                [showIcon]="true"
+                            />
                     </div>
                 </div>
             </div>
@@ -20,7 +24,11 @@
                 <div class="row opciones">
                     <div class="lead"><p>Fecha hasta:</p></div>
                     <div>
-                            <p-calendar [(ngModel)]="fechaHasta" [touchUI]="true" [readonlyInput]="true"></p-calendar>
+                        <p-calendar 
+                        [(ngModel)]="fechaHasta" 
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                    />
                     </div>
                 </div>
             </div>

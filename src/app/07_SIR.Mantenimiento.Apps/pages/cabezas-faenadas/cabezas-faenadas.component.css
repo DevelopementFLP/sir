@@ -1,0 +1,89 @@
+.cabezas__container {
+    display: flex;
+    flex-direction: column;
+}
+
+.fecha__display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.fecha--data {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    width: 50%;
+}
+
+.fecha--display-titulo {
+    color: #665D53;
+    margin-right: 0.5rem;
+    font-weight: 500;
+}
+
+.data__display {
+    display: flex;
+}
+
+.data--group {
+    position: relative;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+    /* border-radius: 5px;
+    background-color: #ECF0F1;
+    box-shadow: 2px 2px 0 #5D6D7E; */
+    width: 50%;
+}
+
+
+.data--title {
+    width: 100%;
+    font-weight: 300;
+    font-size: 1.1rem;
+}
+
+.data--value {
+    font-size: 1.6rem;
+    font-weight: 500; 
+}
+
+.text-overflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* .data--animales {
+    background-color: #C39BD3;
+    box-shadow: 2px 2px 0 #9B59B6;
+}
+
+.data--medias {
+    background-color: #7FB3D5;
+    box-shadow: 2px 2px 0 #2980B9;
+}
+
+.data--kilos-pie {
+    background-color: #7DCEA0;
+    box-shadow: 2px 2px 0 #27AE60;
+}
+
+.data--kilos-segunda {
+    background-color: #F0B27A;
+    box-shadow: 2px 2px 0 #E67E22;
+} */
+
+.grafico__display {
+    margin-top: 2.5rem;
+}

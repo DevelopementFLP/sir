@@ -41,6 +41,7 @@ import { DashboardDesosadoComponent } from './07_SIR.Mantenimiento.Apps/pages/da
 import { ConfiguracionMainPageComponent } from './50_SIR.Configuracion.Parametros/pages/configuracion-main-page/configuracion-main-page.component';
 import { RechazoCCPHComponent } from './06_SIR.ControlCalidad.Reportes/formularios/rechazo-ph/rechazo-ph.component';
 import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-empaque-secundario/dashboard-empaque-secundario.component';
+import { CabezasFaenadasComponent } from './07_SIR.Mantenimiento.Apps/pages/cabezas-faenadas/cabezas-faenadas.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -78,6 +79,7 @@ const routes: Routes = [
     { path: 'mantenimiento/reporteGraseria', component: GraseriaComponent},
     { path: 'mantenimiento/dashboardDesosado', component: DashboardDesosadoComponent},
     { path: 'mantenimiento/dashboardEmpaqueSecundario', component: DashboardEmpaqueSecundarioComponent},
+    { path: 'mantenimiento/cabezasFaenadas', component: CabezasFaenadasComponent},
     { path: 'rrhh/funcionariosLogueados', component: LogueoFuncComponent},
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},

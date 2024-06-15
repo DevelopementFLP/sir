@@ -1,0 +1,65 @@
+<div class="cabezas__container">
+  <div class="cabezas__fecha">
+    <p-divider align="left"><b>Fechas de faena</b></p-divider>
+    <div class="fecha__display">
+        <div class="fecha--data">
+            <div class="fecha--display-titulo">Faena desde</div>
+            <p-calendar
+            [(ngModel)]="fechaFaenaDesde"
+            (ngModelChange)="searchData()"
+                dateFormat="dd/mm/yy" 
+                [showIcon]="true"/>
+        </div>
+        <div class="fecha--data">
+            <div class="fecha--display-titulo">Faena hasta</div>
+            <p-calendar
+            [(ngModel)]="fechaFaenaHasta"
+            (ngModelChange)="searchData()"
+                dateFormat="dd/mm/yy" 
+                [showIcon]="true"/>
+        </div>
+    </div>
+  </div>
+  <div class="cabezas__data">
+    <p-divider align="left"><b>Cabezas faenadas</b></p-divider>
+    <div class="data__display">
+      <div class="data--group">
+        <div class="data data--animales">
+            <div class="data--title">Animales</div>
+            <div class="data--value">{{dataCabezas.animales | number:'0.0'}}</div>
+        </div>
+        <div class="data data--medias">
+            <div class="data--title">Medias</div>
+            <div class="data--value">{{dataCabezas.medias | number:'0.0'}}</div>
+        </div>
+      </div>
+      <div class="data--group">
+        <div class="data data--kilos-pie">
+            <div class="data--title">Kilos en pie</div>
+            <div class="data--value">{{dataCabezas.kilosPie | number:'0.2'}}</div>
+        </div>
+        <div class="data data--kilos-segunda">
+            <div class="data--title text-overflow"><span>Kilos en segunda balanza</span></div>
+            <div class="data--value">{{dataCabezas.kilosSegunda | number:'0.2'}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cabezas__grafico">
+    <p-divider align="left"><b>Gráfico </b></p-divider>
+    <div class="grafico__display">
+      <p-chart 
+        type="line"
+        [data]="chartData"
+        [options]="chartOptions"
+      />
+    </div>
+  </div>
+</div>
+
+<sir-exportacion
+  *ngIf="(cabezasFaenadas != undefined) ? cabezasFaenadas.length > 0 : false"
+  [excel]="true"
+  [idReporte]="idReporte"
+  [nombreArchivo]="nombreReporte"
+  [dataPrint]="cabezasFaenadas"/>

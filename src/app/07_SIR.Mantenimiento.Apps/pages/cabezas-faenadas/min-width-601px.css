@@ -1,0 +1,55 @@
+@media (min-width:601px) {
+    @layer primeng {
+        p-calendar {
+            width: 60%;
+        }
+
+        p-calendar > span > input {
+            font-size: 1rem !important;
+        }
+
+        p-calendar > span > div {
+           left: 0 !important;
+           padding: 0 !important;
+
+        }
+    }
+
+
+    .cabezas__data,
+    .fecha__display {
+        margin-top: 1rem;
+    }
+
+    .fecha--data {
+        width: auto;
+    }
+
+    .fecha__display {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .data {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .data--group {
+        display: flex;
+        width: 50%;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .data--title {
+        align-self: center;
+        text-align: center;
+    }
+
+    .data--value {
+        margin-top: 1rem;
+        font-size: 1.8rem;
+    }
+}

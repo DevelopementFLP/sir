@@ -19,6 +19,7 @@ export const urlEntradaMarel: string = urlAPI + "MarelDatosCaja/GetEntradaMarel"
 export const urlSalidasMarel: string = urlAPI + "MarelDatosCaja/GetSalidaMarel";
 export const urlSalidaProduccion: string = urlAPI + "SalidaProduccion/salidasProduccionConFiltro";
 
+// RRHH
 export const urlRRHH: string = urlAPI + "RRHH/";
 export const urlLogueoLineas: string = urlRRHH + "GetFuncionariosLogueados";
 export const urlLoginHistorico: string = urlRRHH + "LoginHistoricoFuncionariosMarel";
@@ -31,6 +32,7 @@ export const urlConfHoras: string = urlRRHH + "GetConfHoras";
 export const urlHorarioDesfasado: string = urlRRHH + "GetFuncionariosHorarioDesfasado";
 export const urlUpdateHorariosDesfasados: string = urlRRHH + "ActualizarHorariosDesfasados";
 
+// Dashboard Desosado Marel
 export const urlDashboardDesosado: string = urlAPI + "DashboardDesosado/";
 export const urlDashboardDesosadoEntrada: string = urlDashboardDesosado + "GetDetalleEntradaAsync";
 export const urlDashboardDesosadoCharqueo: string = urlDashboardDesosado + "DetalleCharqueadoresAsync";
@@ -46,6 +48,7 @@ export const urlDWUpdateDashboardDesosadoHuesero: string = urlDashboardDesosado 
 export const urlDWUpdateDashboardDesosadoEmpaque: string = urlDashboardDesosado + "ActualizarDetalleEmpaqueAsync";
 export const urlDashboardDesosadoRefreshTime: string = urlDashboardDesosado + "GetRefreshTime";
 
+// Configuración
 export const urlConfigurationParameters: string = urlAPI + "Configuration/";
 export const urlConfiguracionPorModulo: string = urlConfigurationParameters + "GetConfiguracionPorModuloAsync";
 export const urlInactivarReporteConfiguracionParametro: string = urlConfigurationParameters + "InactivarReporteConfiguracionParametroAsync";
@@ -53,8 +56,21 @@ export const urlDeleteReporteConfiguracionParametro: string = urlConfigurationPa
 export const urlInsertReporteConfiguracionParametro: string = urlConfigurationParameters + "InsertReporteConfigurationParameterAsync";
 export const urlActivarReporteConfiguracionParametro: string = urlConfigurationParameters + "ActivarReporteConfiguracionParametroAsync";
 
+// Control de Calidad
 export const urlControlCalidad: string = urlAPI + "ControlCalidad/";
 export const urlCCRechazoPH: string = urlControlCalidad + "InsertOrdinalesPhAsync";
+
+// Dashboard Empaque Secundario
+export const sirBaseUrl: string = urlAPI + 'DashboardEmpaqueSecundario/';
+export const eagleBaseUrl: string = 'http://192.168.0.107:86/api';
+
+// DWCajas
+export const urlDwCajas: string = urlAPI + 'DwCajas/';
+export const urlGetDwCajas: string = urlDwCajas + "GetCajasDW";
+
+// Mantenimiento
+export const urlMantenimiento: string = urlAPI + 'Mantenimiento/';
+export const urlCabezasFaenadas: string = urlMantenimiento + "GetCabezasFaenadas";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

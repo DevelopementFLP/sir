@@ -1,0 +1,33 @@
+export interface SalidaProduccion {
+    fechaProd:        Date;
+    fechaFaena:       Date;
+    idCajaGecos:      number;
+    codProducto:      string;
+    nomProducto:      string;
+    peso:             number;
+    sala:             string;
+    puesto:           string;
+    codProceso:       string;
+    codPrograma:      string;
+    ph:               boolean;
+    cantidad:         number;
+    pesoBruto:        number;
+    tara:             number;
+    idCorrelPadre:    number;
+    turno:            number;
+    fechaModif:       Date;
+    dotNumberINAC:    string;
+    fechaCongelado:   Date;
+    fechaProducido:   Date;
+    fechaVencimiento: Date;
+    categoria:        number;
+    codCliente:       string;
+    nomCliente:       string;
+    codCamion:        string;
+    nomCamion:        string;
+    desvio:           string;
+    codigoKosher:     string;
+    especie:          string;
+    destino:          string;
+    origenCaja:       string;
+}

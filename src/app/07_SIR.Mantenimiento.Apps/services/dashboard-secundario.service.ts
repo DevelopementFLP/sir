@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Observable, timestamp } from 'rxjs';
 
-import { environments } from '../../environments/environments';
+
 import { EstacionesCortesCajas } from '../interfaces/EstacionesCortesCajas.interface';
 import { CajasHora } from '../interfaces/CajasHora.interface';
 import { EstacionProceso } from '../interfaces/EstacionProceso.interface';
@@ -13,11 +13,12 @@ import { CajasTMS } from '../interfaces/CajasTMS.interface';
 import { ProductosPorEstacion } from '../interfaces/ProductosPorEstacion.interface';
 import { TiempoActualizacion } from '../interfaces/TiempoActualizacion.interface';
 import { ReporteMenuItem } from '../interfaces/ReporteMenuItem.interface';
-import { TMSViewrComponent } from '../components/tms-viewer/tmsviewr.component';
 import { VelocidadCerradoComponent } from '../components/velocidad-cerrado/velocidad-cerrado.component';
 import { KilosMinutoComponent } from '../components/kilos-minuto/kilos-minuto.component';
 import { EagleResponse } from '../interfaces/EagleResponse.interface';
-import { formatDate } from '@angular/common';
+import { formatDate} from '@angular/common';
+
+import { sirBaseUrl, eagleBaseUrl } from 'src/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -33,59 +34,59 @@ export class DashSecundarioService implements OnInit{
   }
  
   getTotalKilos(): Observable<number> {
-    return this.http.get<number>(`${environments.sirBaseUrl}GetKilosTotalesAsync`);
+    return this.http.get<number>(`${sirBaseUrl}GetKilosTotalesAsync`);
   }
 
   getLineasCajas(minsDesde: number): Observable<EstacionesCortesCajas[]> {
-    return this.http.get<EstacionesCortesCajas[]>(`${environments.sirBaseUrl}GetLineasCajasAsync?minutosDesde=${minsDesde}`);
+    return this.http.get<EstacionesCortesCajas[]>(`${sirBaseUrl}GetLineasCajasAsync?minutosDesde=${minsDesde}`);
   }
 
   getCajasHora(prday: string): Observable<CajasHora[]> {
-    return this.http.get<CajasHora[]>(`${environments.sirBaseUrl}GetCajasHoraAsync?prday=${prday}`);
+    return this.http.get<CajasHora[]>(`${sirBaseUrl}GetCajasHoraAsync?prday=${prday}`);
   }
 
   getEstacionesCortesCajas(minsDesde: number): Observable<EstacionesCortesCajas[]> {
-    return this.http.get<EstacionesCortesCajas[]>(`${environments.sirBaseUrl}GetEstacionesCortesCajasAsync?minutosDesde=${minsDesde}`)
+    return this.http.get<EstacionesCortesCajas[]>(`${sirBaseUrl}GetEstacionesCortesCajasAsync?minutosDesde=${minsDesde}`)
   }
 
   getEstacionesProceso(minsDesde: number): Observable<EstacionProceso[]> {
-    return this.http.get<EstacionProceso[]>(`${environments.sirBaseUrl}GetEstacionesProcesoAsync?minutosDesde=${minsDesde}`);
+    return this.http.get<EstacionProceso[]>(`${sirBaseUrl}GetEstacionesProcesoAsync?minutosDesde=${minsDesde}`);
   }
 
   getCortesSinEmpacar(): Observable<CortesSinEmpacar[]> {
-    return this.http.get<CortesSinEmpacar[]>(`${environments.sirBaseUrl}GetCortesSinEmpacarAsync`);
+    return this.http.get<CortesSinEmpacar[]>(`${sirBaseUrl}GetCortesSinEmpacarAsync`);
   }
 
   getCajasAbiertas(): Observable<CajasAbiertas[]> {
-    return this.http.get<CajasAbiertas[]>(`${environments.sirBaseUrl}GetCajasAbiertasAsync`)
+    return this.http.get<CajasAbiertas[]>(`${sirBaseUrl}GetCajasAbiertasAsync`)
   }
 
   getCajasCerradas(): Observable<CajasCerradas[]> {
-    return this.http.get<CajasCerradas[]>(`${environments.sirBaseUrl}GetCajasCerradasAsync`);
+    return this.http.get<CajasCerradas[]>(`${sirBaseUrl}GetCajasCerradasAsync`);
   }
 
   getCajasTMSCerradas(): Observable<CajasTMS[]> {
-    return this.http.get<CajasTMS[]>(`${environments.sirBaseUrl}GetCajasTMSCerradasAsync`)
+    return this.http.get<CajasTMS[]>(`${sirBaseUrl}GetCajasTMSCerradasAsync`)
   }
 
   getProductosPorEstacion(station: string, minsDesde: number): Observable<ProductosPorEstacion> {
-    return this.http.get<ProductosPorEstacion>(`${environments.sirBaseUrl}GetProductosPorEstacionAsync?station=${station}&minutosDesde=${minsDesde}`);
+    return this.http.get<ProductosPorEstacion>(`${sirBaseUrl}GetProductosPorEstacionAsync?station=${station}&minutosDesde=${minsDesde}`);
   }
 
   getRefreshTime(): Observable<number> {
-    return this.http.get<number>(`${environments.sirBaseUrl}GetRefreshTime`);
+    return this.http.get<number>(`${sirBaseUrl}GetRefreshTime`);
   }
 
   getTiemposActualizacion(): Observable<TiempoActualizacion[]> {
-    return this.http.get<TiempoActualizacion[]>(`${environments.sirBaseUrl}GetTiemposActualizacionAsync`);
+    return this.http.get<TiempoActualizacion[]>(`${sirBaseUrl}GetTiemposActualizacionAsync`);
   }
 
   private getHoraPrimeraCajaWPL(fecha: string, idStation: number): Observable<string> {
-    return this.http.get<string>(`${environments.sirBaseUrl}GetPrimeraCajaWPLAsync?prday=${fecha}&idStation=${idStation}`)
+    return this.http.get<string>(`${sirBaseUrl}GetPrimeraCajaWPLAsync?prday=${fecha}&idStation=${idStation}`)
   }
 
   private getHoraUltimaCajaWPL(fecha: string, idStation: number): Observable<string> {
-    return this.http.get<string>(`${environments.sirBaseUrl}GetUltimaCajaWPLAsync?prday=${fecha}&idStation=${idStation}`)
+    return this.http.get<string>(`${sirBaseUrl}GetUltimaCajaWPLAsync?prday=${fecha}&idStation=${idStation}`)
   }
 
   async getTiempoTotalWPL(idWPL: number, timeLapse: number): Promise<Date> {
@@ -168,6 +169,6 @@ export class DashSecundarioService implements OnInit{
       'Connection-String-Name': 'EagleNuevaConnectionString'
     });
 
-    return this.http.get<EagleResponse>(`${environments.eagleBaseUrl}/EagleResponse/GetAll?date=${date}`, {headers});
+    return this.http.get<EagleResponse>(`${eagleBaseUrl}/EagleResponse/GetAll?date=${date}`, {headers});
   }
 }

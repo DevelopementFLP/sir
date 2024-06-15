@@ -33,6 +33,7 @@ import { KilosMinutoComponent } from './components/kilos-minuto/kilos-minuto.com
 import { LineaEmpaqueComponent } from './components/linea-empaque/linea-empaque.component';
 import { PuestoEstacionComponent } from './components/puesto-estacion/puesto-estacion.component';
 import { CortesPorEstacionComponent } from './components/cortes-por-estacion/cortes-por-estacion.component';
+import { CabezasFaenadasComponent } from './pages/cabezas-faenadas/cabezas-faenadas.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { CortesPorEstacionComponent } from './components/cortes-por-estacion/cor
     KilosMinutoComponent,
     LineaEmpaqueComponent,
     PuestoEstacionComponent,
-    CortesPorEstacionComponent
+    CortesPorEstacionComponent,
+    CabezasFaenadasComponent
   ],
   imports: [
     CommonModule,
