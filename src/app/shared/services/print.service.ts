@@ -886,50 +886,48 @@ export class PrintService {
     const data: CabezaFaenada[] = dataToPrint.data as CabezaFaenada[];
     const nombre: string = "Cabezas faenadas";
     const sheet = libro.addWorksheet(nombre);
+    const fuenteTitulo = { bold: true, size: 12};
 
     this.setLogo(libro, sheet);
-    this.setTitle(libro, sheet, nombre, 'right', 12);
+    this.setTitle(libro, sheet, nombre, 'right', 10);
 
     sheet.getCell("B6").value = `Fecha de faena: ${dataToPrint.nombreArchivo.substring(nombre.length + 1)}`;
+    sheet.getCell("B6").font = fuenteTitulo;
   
     const fechasFaena: string[] = this.getFechaFaenaUnica(data);
-
     var filaFechaFaena: number = 8;
-    
-    sheet.getCell("B" + (filaFechaFaena)).value = "Faena"
-    sheet.getCell("C" + (filaFechaFaena)).value = "IdInnova"
-    sheet.getCell("D" + (filaFechaFaena)).value = "IdGecos"
-    sheet.getCell("E" + (filaFechaFaena)).value = "Proveedor"
-    sheet.getCell("F" + (filaFechaFaena)).value = "Secuencial"
-    sheet.getCell("G" + (filaFechaFaena)).value = "Caravana"
-    sheet.getCell("H" + (filaFechaFaena)).value = "DotNumber"
-    sheet.getCell("I" + (filaFechaFaena)).value = "Peso en pie"
-    sheet.getCell("J" + (filaFechaFaena)).value = "Peso segunda"
-    sheet.getCell("K" + (filaFechaFaena)).value = "Hora etiquetado"
+    const columnas: string[] = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    const sizes: number[] = [12, 10, 12, 30, 10, 16, 13, 15, 18]
+    const titulos: string[] = ["Faena","IdInnova","IdGecos","Proveedor","Secuencial","Caravana","DotNumber","Peso segunda","Hora etiquetado"]
+
+    columnas.forEach((col, i) => {
+      sheet.getCell(col + filaFechaFaena).value = titulos[i];
+      sheet.getCell(col + filaFechaFaena).font = fuenteTitulo;
+      sheet.getColumn(i + 2).width = sizes[i];
+    });
 
     filaFechaFaena++;
 
     fechasFaena.forEach(fecha => {
       sheet.getCell("B" + filaFechaFaena).value = fecha;
+      sheet.getCell("B" + filaFechaFaena).font = fuenteTitulo;
       const datosFaena: CabezaFaenada[] = data.filter(d => formatDate(d.fechaFaena, "dd-MM-yyyy", "es-UY") == fecha);
       
-      datosFaena.forEach((cf, i) => {
-        sheet.getCell("C" + (filaFechaFaena)).value = datosFaena[i].idInnova;
-        sheet.getCell("D" + (filaFechaFaena)).value = datosFaena[i].idGecos;
-        sheet.getCell("E" + (filaFechaFaena)).value = datosFaena[i].proveedor;
-        sheet.getCell("F" + (filaFechaFaena)).value = datosFaena[i].secuencial;
-        sheet.getCell("G" + (filaFechaFaena)).value = datosFaena[i].caravana;
-        sheet.getCell("H" + (filaFechaFaena)).value = datosFaena[i].dotNumber;
-        sheet.getCell("I" + (filaFechaFaena)).value = datosFaena[i].pesoEnPie;
-        sheet.getCell("J" + (filaFechaFaena)).value = datosFaena[i].pesoMedia;
-        sheet.getCell("K" + (filaFechaFaena)).value = datosFaena[i].fechaHoraEtiquetado;
+      datosFaena.forEach(cf => {
+        sheet.getCell("C" + (filaFechaFaena)).value = cf.idInnova;
+        sheet.getCell("D" + (filaFechaFaena)).value = cf.idGecos;
+        sheet.getCell("E" + (filaFechaFaena)).value = cf.proveedor;
+        sheet.getCell("F" + (filaFechaFaena)).value = cf.secuencial;
+        sheet.getCell("G" + (filaFechaFaena)).value = cf.caravana;
+        sheet.getCell("H" + (filaFechaFaena)).value = cf.dotNumber;
+        sheet.getCell("I" + (filaFechaFaena)).value = cf.pesoMedia.toFixed(2) ;
+        sheet.getCell("J" + (filaFechaFaena)).value = cf.fechaHoraEtiquetado;
         filaFechaFaena++;
       });
       filaFechaFaena += 2 ;
     });
   }
-
-
+  
   private getFechaFaenaUnica(datos: CabezaFaenada[]): string[] {
     return Array.from(new Set(datos.map(c => formatDate(c.fechaFaena, "dd-MM-yyyy",  "es-UY"))));
   }

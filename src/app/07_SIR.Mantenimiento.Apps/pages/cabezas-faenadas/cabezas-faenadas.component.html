@@ -1,4 +1,11 @@
 <div class="cabezas__container">
+  <div class="cabezas__title">
+    <div>Cabezas faenadas</div>
+    <div class="cabezas__actualizar">
+      <p-button class="btn-large" label="Actualizar" icon="pi pi-refresh" size="small" (onClick)="setAll()"/>
+      <p-button class="btn-small" icon="pi pi-refresh" (onClick)="setAll()"/>
+    </div>
+  </div>
   <div class="cabezas__fecha">
     <p-divider align="left"><b>Fechas de faena</b></p-divider>
     <div class="fecha__display">
@@ -36,11 +43,11 @@
       <div class="data--group">
         <div class="data data--kilos-pie">
             <div class="data--title">Kilos en pie</div>
-            <div class="data--value">{{dataCabezas.kilosPie | number:'0.2'}}</div>
+            <div class="data--value">{{dataCabezas.kilosPie | number:'0.1'}}</div>
         </div>
         <div class="data data--kilos-segunda">
             <div class="data--title text-overflow"><span>Kilos en segunda balanza</span></div>
-            <div class="data--value">{{dataCabezas.kilosSegunda | number:'0.2'}}</div>
+            <div class="data--value"><span>{{dataCabezas.kilosSegunda | number:'0.1'}}</span></div>
         </div>
       </div>
     </div>
@@ -50,6 +57,7 @@
     <div class="grafico__display">
       <p-chart 
         type="line"
+        [responsive]="true"
         [data]="chartData"
         [options]="chartOptions"
       />

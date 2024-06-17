@@ -1,6 +1,7 @@
 .cabezas__container {
     display: flex;
     flex-direction: column;
+    padding: 0.5rem;
 }
 
 .fecha__display {
@@ -63,7 +64,15 @@
     text-overflow: ellipsis;
 }
 
+.cabezas__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.btn-small {
+    display: none;
+}
 /* .data--animales {
     background-color: #C39BD3;
     box-shadow: 2px 2px 0 #9B59B6;
@@ -84,6 +93,14 @@
     box-shadow: 2px 2px 0 #E67E22;
 } */
 
-.grafico__display {
+.cabezas__grafico {
     margin-top: 2.5rem;
+}
+
+.cabezas__title {
+    font-size: 1.8rem;
+    margin: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    /* margin-left: 1rem; */
 }

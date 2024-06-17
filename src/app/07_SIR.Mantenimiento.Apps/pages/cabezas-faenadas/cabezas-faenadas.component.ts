@@ -48,7 +48,7 @@ export class CabezasFaenadasComponent implements OnInit {
     return formatDate(fecha, "dd-MM-yyyy", "es-UY");
   }
 
-  private async setAll(): Promise<void> {
+  async setAll(): Promise<void> {
     await this.getCabezasFaenadas();
     await this.setData()
     await this.setChartData();
@@ -143,30 +143,54 @@ export class CabezasFaenadasComponent implements OnInit {
   private setChartValues(): void {
     this.chartData = {
       labels: this.getChartHoras(),
-      datasets: [{
+      datasets: [
+        // {
+        //   label: 'Medias',
+        //   data: this.getAnimalesSuma(),
+        //   fill: true,
+        //   tension: 0.1
+        // },
+        // {
+        //   label: 'Peso En Pie',
+        //   data: this.getChartKilosPie(),
+        //   fill: true,
+        //   tension: 0.1
+        // },
+        {
         label: 'Peso Medias',
         data: this.getChartKilos(),
         fill: true,
         tension: 0.1
       }
+      
     ]
     }
   }
 
-  private getChartHoras(): Date[] {
-    return this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado');
+  private getChartHoras(): string[] {
+    return this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h));
   }
 
   private getChartKilos(): number[] {
-    return this.getSumaKilos(this.extractProperty(this.cabezasFaenadas!, 'pesoMedia'));
+    return this.getSuma(this.extractProperty(this.cabezasFaenadas!, 'pesoMedia'));
+  }
+
+  private getChartKilosPie(): number[] {
+    return this.getSuma(this.extractProperty(this.cabezasFaenadas!, 'pesoEnPie').map(p => p / 2));
+  }
+
+  private getAnimalesSuma(): number[] {
+    return this.getSuma(this.cabezasFaenadas!.map(c => 1));
   }
 
   private extractProperty<T>(array: T[], property: keyof T): any[] {
     return array.map(item => item[property]);
   }
 
-  private getSumaKilos(kilos: number[]): number[] {
-    const sumaKilos = kilos.reduce((acumulador: number[], elemento, indice) => {
+
+
+  private getSuma(data: number[]): number[] {
+    const sumaKilos = data.reduce((acumulador: number[], elemento, indice) => {
      if(indice === 0) return [elemento];
      else {
        const sumaAnterior = acumulador[indice - 1];
@@ -175,6 +199,10 @@ export class CabezasFaenadasComponent implements OnInit {
      }
    }, [] as number[]) 
    return sumaKilos;  
+ }
+
+ private showHourOnly(d: Date): string {
+  return d.toString().split('T')[1];
  }
 
 }

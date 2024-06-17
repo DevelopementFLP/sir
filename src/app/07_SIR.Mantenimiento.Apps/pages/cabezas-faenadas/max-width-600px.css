@@ -55,4 +55,16 @@
     .data--group:first-of-type {
         margin-bottom: 1.5rem;
     }
+    
+    .cabezas__actualizar {
+        margin-top: 1rem;
+    }
+
+    .btn-small {
+        display: block;
+    }
+
+    .btn-large {
+        display: none;
+    }
 }
