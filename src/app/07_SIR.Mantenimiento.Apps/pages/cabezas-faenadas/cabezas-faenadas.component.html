@@ -1,30 +1,30 @@
 <div class="cabezas__container">
   <div class="cabezas__title">
-    <div>Cabezas faenadas</div>
+    <div>Cabezas vacunas faenadas</div>
     <div class="cabezas__actualizar">
       <p-button class="btn-large" label="Actualizar" icon="pi pi-refresh" size="small" (onClick)="setAll()"/>
       <p-button class="btn-small" icon="pi pi-refresh" (onClick)="setAll()"/>
     </div>
   </div>
   <div class="cabezas__fecha">
-    <p-divider align="left"><b>Fechas de faena</b></p-divider>
+    <p-divider align="left"><b>Fecha de faena</b></p-divider>
     <div class="fecha__display">
         <div class="fecha--data">
-            <div class="fecha--display-titulo">Faena desde</div>
+            <!-- <div class="fecha--display-titulo">Faena desde</div> -->
             <p-calendar
             [(ngModel)]="fechaFaenaDesde"
             (ngModelChange)="searchData()"
                 dateFormat="dd/mm/yy" 
                 [showIcon]="true"/>
         </div>
-        <div class="fecha--data">
+        <!-- <div class="fecha--data">
             <div class="fecha--display-titulo">Faena hasta</div>
             <p-calendar
             [(ngModel)]="fechaFaenaHasta"
             (ngModelChange)="searchData()"
                 dateFormat="dd/mm/yy" 
                 [showIcon]="true"/>
-        </div>
+        </div> -->
     </div>
   </div>
   <div class="cabezas__data">
@@ -53,7 +53,7 @@
     </div>
   </div>
   <div class="cabezas__grafico">
-    <p-divider align="left"><b>Gráfico </b></p-divider>
+    <p-divider align="left"><b>Gráfico peso medias</b></p-divider>
     <div class="grafico__display">
       <p-chart 
         type="line"
@@ -61,6 +61,15 @@
         [data]="chartData"
         [options]="chartOptions"
       />
+      <div class="separador" *ngIf="cabezasFaenadas!.length > 0">
+      <p-divider align="left"><b>Gráfico temperatura Cámara 9 y 10</b></p-divider>
+        <p-chart 
+          type="line"
+          [responsive]="true"
+          [data]="tempChartData"
+          [options]="chartOptions"
+        />
+      </div>
     </div>
   </div>
 </div>
@@ -70,4 +79,4 @@
   [excel]="true"
   [idReporte]="idReporte"
   [nombreArchivo]="nombreReporte"
-  [dataPrint]="cabezasFaenadas"/>
+  [dataPrint]="{cabezas: cabezasFaenadas, temps: temperaturas}"/>

@@ -7,6 +7,7 @@ import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
 import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
 import { Incidencia } from 'src/app/08_SIR.RRHH.Reportes/interfaces/Incidencia.interface';
 import { CabezaFaenada } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/CabezaFaenada.interface';
+import { DataTemperatura } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/DataTemperatura.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -883,8 +884,8 @@ export class PrintService {
   }
 
   private printCabezasFaenadas(dataToPrint: PrintModel, libro: Workbook): void {
-    const data: CabezaFaenada[] = dataToPrint.data as CabezaFaenada[];
-    const nombre: string = "Cabezas faenadas";
+    const data: CabezaFaenada[] = dataToPrint.data.cabezas as CabezaFaenada[];
+    const nombre: string = "Cabezas vacunas faenadas";
     const sheet = libro.addWorksheet(nombre);
     const fuenteTitulo = { bold: true, size: 12};
 
@@ -926,9 +927,61 @@ export class PrintService {
       });
       filaFechaFaena += 2 ;
     });
+
+    // Hoja Temperatuas
+    const tituloHoja: string = 'Temp. C9 C10';
+    var hojaTemp = libro.addWorksheet(tituloHoja);
+    this.setLogo(libro, hojaTemp);
+    this.setTitle(libro, hojaTemp, 'Temperatura Cámaras 9 y 10', 'right', 6);
+    hojaTemp.getCell("B6").value = `Fecha de faena: ${dataToPrint.nombreArchivo.substring(nombre.length + 1)}`;
+    hojaTemp.getCell("B6").font = fuenteTitulo;
+
+    var filaCamara: number = 8;
+    const temps: DataTemperatura[] = dataToPrint.data.temps as DataTemperatura[];
+    const ids: number[] = this.getIdsCamara(temps);
+    const tempsTitulos: string[] = ['Id dispositivo', 'Código dispositivo', 'Unidad de medida', 'Temperatura', 'Fecha y hora'];
+    const colsTemps: string[] = columnas.slice(0, 5);
+    const tempsSizes: number[] = [15, 25, 20, 15, 25];
+
+    colsTemps.forEach((col, i) => {
+      hojaTemp.getCell(col + filaCamara).value = tempsTitulos[i];
+      hojaTemp.getCell(col + filaCamara).font = fuenteTitulo;
+      hojaTemp.getColumn(i + 2).width = tempsSizes[i];
+    });
+
+    filaCamara++;
+    
+    ids.forEach(id => {
+      const datosTemp: DataTemperatura[] = temps.filter(t => t.idDispositivo == id);
+      hojaTemp.getCell("B" + filaCamara).value = id;
+      hojaTemp.getCell("B" + filaCamara).font = fuenteTitulo;
+      hojaTemp.getCell("B" + filaCamara).style.alignment = { vertical: 'middle', horizontal: 'center' }; 
+      hojaTemp.getCell("C" + filaCamara).value = datosTemp[0].codigoDispositivo;
+      hojaTemp.getCell("C" + filaCamara).font = fuenteTitulo;
+      hojaTemp.getCell("C" + filaCamara).style.alignment = { vertical: 'middle', horizontal: 'center' };
+      hojaTemp.getCell("D" + filaCamara).value = datosTemp[0].unidadMedida;
+      hojaTemp.getCell("D" + filaCamara).font = fuenteTitulo;
+      hojaTemp.getCell("D" + filaCamara).style.alignment = { vertical: 'middle', horizontal: 'center' };
+
+      datosTemp.forEach(dT => {
+        hojaTemp.getCell("E" + (filaCamara)).value = dT.valor;
+        hojaTemp.getCell("F" + (filaCamara)).value = dT.fechaRegistro;
+        filaCamara++
+      });
+
+      filaCamara += 2;
+    });
   }
   
   private getFechaFaenaUnica(datos: CabezaFaenada[]): string[] {
     return Array.from(new Set(datos.map(c => formatDate(c.fechaFaena, "dd-MM-yyyy",  "es-UY"))));
+  }
+
+  private getIdsCamara(temps: DataTemperatura[]): number[] {
+    return Array.from(new Set(temps.map(t => t.idDispositivo))).sort((a, b) =>{ 
+      if(a <= b) return -1
+      else return 1;
+    }
+    );
   }
 }

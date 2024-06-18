@@ -71,6 +71,7 @@ export const urlGetDwCajas: string = urlDwCajas + "GetCajasDW";
 // Mantenimiento
 export const urlMantenimiento: string = urlAPI + 'Mantenimiento/';
 export const urlCabezasFaenadas: string = urlMantenimiento + "GetCabezasFaenadas";
+export const urlTemperaturasC9C10: string = urlMantenimiento + 'GetTemperaturasCamaras910';
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

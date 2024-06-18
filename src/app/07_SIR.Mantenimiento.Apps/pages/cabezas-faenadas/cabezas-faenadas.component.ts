@@ -3,6 +3,7 @@ import { CabezaFaenada } from '../../interfaces/CabezaFaenada.interface';
 import { MantenimientoService } from '../../services/mantenimiento.service';
 import { formatDate } from '@angular/common';
 import { DataCabezaFaenada } from '../../interfaces/DataCabezaFaenada.interface';
+import { DataTemperatura } from '../../interfaces/DataTemperatura.interface';
 
 @Component({
   selector: 'app-cabezas-faenadas',
@@ -15,9 +16,12 @@ export class CabezasFaenadasComponent implements OnInit {
   chartData: any;
   chartOptions: any;
 
+  tempChartData: any;
+  tempChartOption: any;
+
   fechaFaenaDesde: Date = new Date();
-  fechaFaenaHasta: Date = new Date();
   cabezasFaenadas: CabezaFaenada[] | undefined = [];
+  temperaturas: DataTemperatura[] | undefined = [];
 
   idReporte: number = 5;
   nombreReporte: string = '';
@@ -30,6 +34,8 @@ export class CabezasFaenadasComponent implements OnInit {
     kilosSegunda: 0
   }
 
+  
+
   constructor( private mantenimientoSrvc: MantenimientoService) {}
 
   async ngOnInit(): Promise<void> {
@@ -37,7 +43,7 @@ export class CabezasFaenadasComponent implements OnInit {
   }
 
   private async getCabezasFaenadas() {
-    this.cabezasFaenadas = await this.mantenimientoSrvc.getCabezasFaenadas(this.formatFecha(this.fechaFaenaDesde), this.formatFecha(this.fechaFaenaHasta)).toPromise();
+    this.cabezasFaenadas = await this.mantenimientoSrvc.getCabezasFaenadas(this.formatFecha(this.fechaFaenaDesde), this.formatFecha(this.fechaFaenaDesde)).toPromise();
   }
 
   private formatFecha(fecha: Date): string {
@@ -50,13 +56,18 @@ export class CabezasFaenadasComponent implements OnInit {
 
   async setAll(): Promise<void> {
     await this.getCabezasFaenadas();
+    await this.getTemperaturas();
     await this.setData()
     await this.setChartData();
   } 
 
   private async setData(): Promise<void> {
       await this.loadDataFromResponse();
-      this.nombreReporte = `Cabezas faenadas ${this.fechaReporte(this.fechaFaenaDesde)} al ${this.fechaReporte(this.fechaFaenaHasta)}`;
+      this.nombreReporte = `Cabezas vacunas faenadas ${this.fechaReporte(this.fechaFaenaDesde)}`;
+  }
+
+  private async getTemperaturas(): Promise<void> {
+    this.temperaturas = await this.mantenimientoSrvc.getDataTemperaturasC9C10(this.formatFecha(this.fechaFaenaDesde), this.formatFecha(this.fechaFaenaDesde)).toPromise();
   }
 
   async searchData(): Promise<void> {
@@ -100,6 +111,7 @@ export class CabezasFaenadasComponent implements OnInit {
   private setChartData(): void {
     this.setChartOptions();
     this.setChartValues();
+    this.setChartTempValues();
   }
 
 
@@ -162,16 +174,38 @@ export class CabezasFaenadasComponent implements OnInit {
         fill: true,
         tension: 0.1
       }
-      
     ]
     }
   }
 
+  private setChartTempValues(): void {
+    this.tempChartData = {
+      labels: this.getTemperaturasHoras(),
+      datasets: [
+      {
+        label: 'Camara 9',
+        data: this.getTemperaturasValores(428),
+        fill: false,
+        tension: 0.1
+      },
+      {
+        label: 'Camara 10',
+        data: this.getTemperaturasValores(671),
+        fill: false,
+        tension: 0.1
+      }
+    ]
+    }
+  }
+
+
   private getChartHoras(): string[] {
-    return this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h));
+  //return Array.from(new Set(this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h))));
+  return this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h));
   }
 
   private getChartKilos(): number[] {
+    //return this.getSuma(Array.from( new Set(this.extractProperty(this.cabezasFaenadas!, 'pesoMedia'))));
     return this.getSuma(this.extractProperty(this.cabezasFaenadas!, 'pesoMedia'));
   }
 
@@ -187,8 +221,6 @@ export class CabezasFaenadasComponent implements OnInit {
     return array.map(item => item[property]);
   }
 
-
-
   private getSuma(data: number[]): number[] {
     const sumaKilos = data.reduce((acumulador: number[], elemento, indice) => {
      if(indice === 0) return [elemento];
@@ -203,6 +235,22 @@ export class CabezasFaenadasComponent implements OnInit {
 
  private showHourOnly(d: Date): string {
   return d.toString().split('T')[1];
+ }
+
+ private getTemperaturasValores(id: number): number[] {
+  return this.extractProperty(this.temperaturas?.filter(t => t.idDispositivo == id && t.fechaRegistro >= this.getFirstHourFaena() && t.fechaRegistro <= this.getLastHourFaena())!, 'valor');
+ }
+
+ private getTemperaturasHoras(): string[] {
+  return Array.from(new Set(this.extractProperty(this.temperaturas?.filter(t => t.fechaRegistro >= this.getFirstHourFaena() && t.fechaRegistro <= this.getLastHourFaena())!, 'fechaRegistro').map(t => this.showHourOnly(t))));
+ }
+
+ private getFirstHourFaena(): Date {
+  return this.cabezasFaenadas![0].fechaHoraEtiquetado;
+ }
+
+ private getLastHourFaena(): Date {
+  return this.cabezasFaenadas![this.cabezasFaenadas!.length - 1].fechaHoraEtiquetado;
  }
 
 }
