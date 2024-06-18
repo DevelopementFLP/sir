@@ -34,6 +34,7 @@ import { LineaEmpaqueComponent } from './components/linea-empaque/linea-empaque.
 import { PuestoEstacionComponent } from './components/puesto-estacion/puesto-estacion.component';
 import { CortesPorEstacionComponent } from './components/cortes-por-estacion/cortes-por-estacion.component';
 import { CabezasFaenadasComponent } from './pages/cabezas-faenadas/cabezas-faenadas.component';
+import { DispositivosScadaComponent } from './formularios/dispositivos-scada/dispositivos-scada.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { CabezasFaenadasComponent } from './pages/cabezas-faenadas/cabezas-faena
     LineaEmpaqueComponent,
     PuestoEstacionComponent,
     CortesPorEstacionComponent,
-    CabezasFaenadasComponent
+    CabezasFaenadasComponent,
+    DispositivosScadaComponent
   ],
   imports: [
     CommonModule,

@@ -42,6 +42,7 @@ import { ConfiguracionMainPageComponent } from './50_SIR.Configuracion.Parametro
 import { RechazoCCPHComponent } from './06_SIR.ControlCalidad.Reportes/formularios/rechazo-ph/rechazo-ph.component';
 import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-empaque-secundario/dashboard-empaque-secundario.component';
 import { CabezasFaenadasComponent } from './07_SIR.Mantenimiento.Apps/pages/cabezas-faenadas/cabezas-faenadas.component';
+import { DispositivosScadaComponent } from './07_SIR.Mantenimiento.Apps/formularios/dispositivos-scada/dispositivos-scada.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -80,6 +81,7 @@ const routes: Routes = [
     { path: 'mantenimiento/dashboardDesosado', component: DashboardDesosadoComponent},
     { path: 'mantenimiento/dashboardEmpaqueSecundario', component: DashboardEmpaqueSecundarioComponent},
     { path: 'mantenimiento/cabezasFaenadas', component: CabezasFaenadasComponent},
+    { path: 'mantenimiento/dispositivosScada', component: DispositivosScadaComponent},
     { path: 'rrhh/funcionariosLogueados', component: LogueoFuncComponent},
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},

@@ -19,6 +19,10 @@ export const urlEntradaMarel: string = urlAPI + "MarelDatosCaja/GetEntradaMarel"
 export const urlSalidasMarel: string = urlAPI + "MarelDatosCaja/GetSalidaMarel";
 export const urlSalidaProduccion: string = urlAPI + "SalidaProduccion/salidasProduccionConFiltro";
 
+// Accesos
+export const urlAccesosReportes: string = urlAPI + "AccesosReportes/";
+export const urlAccesosReportesPorUsuario: string = urlAccesosReportes + "GetAccesosReportesAsync";
+
 // RRHH
 export const urlRRHH: string = urlAPI + "RRHH/";
 export const urlLogueoLineas: string = urlRRHH + "GetFuncionariosLogueados";

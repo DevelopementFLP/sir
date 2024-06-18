@@ -12,6 +12,9 @@ import { MenuItem } from 'primeng/api';
 import { DataService } from 'src/app/shared/services/data.service';
 import { NavBarService } from 'src/app/shared/services/nav-bar.service';
 import { Reporte } from 'src/app/shared/models/reporte.interface';
+import { AccesoReporte } from '../interfaces/AccesoReporte.interface';
+import { ReportesService } from 'src/app/shared/services/reportes.service';
+import { map } from 'rxjs';
 
 
 @Component({
@@ -23,6 +26,7 @@ import { Reporte } from 'src/app/shared/models/reporte.interface';
 export class LoginComponent implements AfterViewInit {
 
   menuItems: MenuItem[] = [];
+  reportes: AccesoReporte[] | undefined = [];
 
   constructor(
     private userService: ControlUsuariosService,
@@ -30,7 +34,8 @@ export class LoginComponent implements AfterViewInit {
     private navigationService: NavigationService,
     private dataService: DataService,
     private navBarService: NavBarService,
-    private sessionManager: SessionManagerService
+    private sessionManager: SessionManagerService,
+    private reportesService: ReportesService
     ) {
 
       this.userStored = this.sessionManagerService.getStorage();
@@ -76,14 +81,15 @@ export class LoginComponent implements AfterViewInit {
             this.sessionManagerService.setStorage('actualUser', this.usuarioObtenido[0]);
            
             this.dataService.getReportesPorAcceso(this.usuarioObtenido[0].id_perfil).subscribe(
-              (reportes: Reporte[]) => {
+              async (reportes: Reporte[]) => {
+                await this.getReportes();
+                this.menuItems = this.filtrarReportes(reportes);
                 this.menuItems = this.navBarService.transformarAMenuItems(reportes);
                 this.menuItems = this.navBarService.setExpansionState(this.menuItems);
                 this.sessionManager.setMenu('menuItems', this.menuItems);
               },
             );
             this.navigationService.navegar('principal');
-            
           }
         }
       });
@@ -101,4 +107,36 @@ export class LoginComponent implements AfterViewInit {
     this.userData.controls.password.hasError('invalid') ? 'La contraseña no es válida' :
     '';
   }
-};
+
+  private async getReportes(): Promise<void> {
+    this.reportes =  await this.reportesService.getAccesoReportes(this.usuarioObtenido[0].id_usuario).toPromise()
+  }
+
+  private filtrarReportes(rep: MenuItem[]): MenuItem[] {
+    const reportes: string[] = Array.from(new Set(this.reportes?.map(r => r.nombre_Reporte.trim())));
+    rep[0].items?.forEach(element => {
+      element.items!.forEach(r => {
+        if(reportes.indexOf(r.label!.trim()) < 0) {
+            var i = element.items?.indexOf(element.items?.find(x => x.label == r.label)!);
+            if(i! >= 0) {
+              element.items?.splice(i!, 1);
+            }
+          }
+
+          if(element.items?.length == 0) {
+            const k = rep[0].items?.indexOf(rep[0].items.find(x => x.label == element.label)!);
+            if(k! >= 0) {
+              console.log(k)
+              rep[0].items?.splice(k!, 1);
+            }
+          }
+        });
+    });
+
+    return rep;
+  }
+
+  private t(rep: MenuItem[]) {
+   this.filtrarReportes(rep);
+  }
+}
