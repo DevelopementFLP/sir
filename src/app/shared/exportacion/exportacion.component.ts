@@ -32,7 +32,7 @@ export class ExportacionComponent implements OnInit, OnChanges  {
   @Input() printer:       boolean = false;
   @Input() nombreArchivo: string = '';
   @Input() data: InconsistenciaDataPrint | undefined = undefined;
-  @Input() dataPrint: any = undefined;
+  @Input() dataPrint: any;
 
   dataToPrint!: PrintModel;
 

@@ -33,7 +33,7 @@
       <div class="total__general">
         <puesto-estacion 
           titulo="&nbsp;&nbsp;TOTAL GENERAL&nbsp;&nbsp;"
-          [data]="getTotales()"
+          [data]="total"
           />
       </div>
 
@@ -80,6 +80,10 @@
       <div class="esquina__superior_derecha_wpl"></div>
       <div class="esquina__inferior_derecha_wpl"></div>
       <div class="reproceso"></div>
+      <div class="reproceso2--datos">
+        <div class="titulo reproceso--titulo"><span class="reproceso--texto">Reproceso 2</span></div>
+        <div class="valor reproceso--valor">{{cajasReproceso2 | number:'0.0'}}&nbsp;<span class="reproceso--cajas-text">cajas</span></div>
+      </div>
       <div class="reproceso--datos">
         <div class="titulo reproceso--titulo"><span class="reproceso--texto">Reproceso</span></div>
         <div class="valor reproceso--valor">{{cajasReproceso | number:'0.0'}}&nbsp;<span class="reproceso--cajas-text">cajas</span></div>
@@ -156,14 +160,14 @@
       </div>
 
       <div class="velocidad__cerrado">
-        <span class="wpl_data_titulo">Velocidad de cerrado</span>
+        <span class="wpl_data_titulo">Velocidad de cerrado (c/min)</span>
         <div class="cerrado__display">
           <div class="cerrado__container" *ngIf="minsDesde > 0">
-            <p-knob class="knob" [ngModel]="velocidadCerradoActual" [min]="0" [max]="25" [strokeWidth]="6" [readonly]="true"/>          
+            <p-knob [ngModel]="velocidadCerradoActual" valueTemplate="{{velocidadCerradoActual}} c/m" [min]="0" [max]="25" [strokeWidth]="6" [readonly]="true"/>          
             <div class="data--text">{{minsDesdeText}}</div>
           </div>
           <div class="cerrado__container">
-            <p-knob [ngModel]="velocidadCerradoDia" [min]="0" [max]="25" [strokeWidth]="6" valueColor="coral" [readonly]="true"/>
+            <p-knob [ngModel]="velocidadCerradoDia" valueTemplate="{{velocidadCerradoDia}} c/m" [min]="0" [max]="25" [strokeWidth]="6" valueColor="coral" [readonly]="true"/>
             <div class="data--text">Todo el día</div>
           </div>
         </div>

@@ -1,0 +1,169 @@
+<div class="cambios__container">
+    <p-tabView class="tabview">
+        <p-tabPanel header="Datos de dispositivos" *ngIf="hayCambiosDatosScada()">
+            <div class="datos__container">
+                <div class="datos__title titulo">Datos a actualizar</div>
+
+                <div class="datos__data data">
+                    
+                    <p-table
+                        [value]="actualizarDatosScada">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Id SCADA</th>
+                                <th>Tipo dispositivo</th>
+                                <th>Ubicación</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-cambios>
+                            <tr>
+                                <td>{{cambios.deviceId}}</td>
+                                <td>{{getNombreDispositivo(cambios.idTipoDispositivo)}}</td>
+                                <td>{{getNombreUbicacion(cambios.idUbicacion)}}</td>
+                                <td>{{cambios.nombre}}</td>
+                                <td style=>{{cambios.descripcion}}</td>
+                            </tr>
+                        </ng-template>
+                        </p-table>  
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Tipos de dispositivo" *ngIf="hayCambiosTiposDispositivos()">
+            <div class="tipos__container">
+                <div class="tipos__container--agregar" *ngIf="agregarDispositivos.length > 0">
+                    <div class="tipos__agregar--title titulo">Tipos de dispositivo a agregar</div>
+                    <div class="tipos__agregar--data data">
+                        <p-table
+                            [value]="agregarDispositivos">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.idTipo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="tipos__container--actualizar" *ngIf="actualizarDispositivos.length > 0">
+                    <div class="tipos__actualizar--title titulo">Tipos de dispositivo a actualizar</div>
+                    <div class="tipos__actualizar--data data">
+                        <p-table
+                            [value]="actualizarDispositivos">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.idTipo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="tipos__container--eliminar" *ngIf="eliminarDispositivos.length > 0">
+                    <div class="tipos__eliminar--title titulo">Tipos de dispositivo a eliminar</div>
+                    <div class="tipos__eliminar--data data">
+                        <p-table
+                            [value]="eliminarDispositivos">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.idTipo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Ubicación de dispositivos" *ngIf="hayCambiosUbicaciones()">
+            <div class="ubicaciones__container">
+                <div class="ubicaciones__container--agregar" *ngIf="agregarUbicaciones.length > 0">
+                    <div class="ubicaciones__agregar--title titulo">Tipos de ubicaciones a agregar</div>
+                    <div class="ubicaciones__agregar--data data">
+                        <p-table
+                            [value]="agregarUbicaciones">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Ubicación padre</th>
+                                    <th>Nombre ubicación</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{nombreUbicacionPorId(cambios.idUbicacionPadre)}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                    <td>{{cambios.descripcion}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="ubicaciones__container--actualizar" *ngIf="actualizarUbicaciones.length > 0">
+                    <div class="ubicaciones__actualizar--title titulo">Tipos de ubicaciones a actializar</div>
+                    <div class="ubicaciones__actualizar--data data">
+                        <p-table
+                            [value]="actualizarUbicaciones">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Ubicación padre</th>
+                                    <th>Nombre ubicación</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{nombreUbicacionPorId(cambios.idUbicacionPadre)}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                    <td>{{cambios.descripcion}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="ubicaciones__container--eliminar" *ngIf="eliminarUbicaciones.length > 0">
+                    <div class="ubicaciones__eliminar--title titulo">Tipos de ubicaciones a eliminar</div>
+                    <div class="ubicaciones__eliminar--data data">
+                        <p-table
+                            [value]="eliminarUbicaciones">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Ubicación padre</th>
+                                    <th>Nombre ubicación</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{nombreUbicacionPorId(cambios.idUbicacionPadre)}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                    <td>{{cambios.descripcion}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>

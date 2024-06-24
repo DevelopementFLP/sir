@@ -77,6 +77,19 @@ export const urlMantenimiento: string = urlAPI + 'Mantenimiento/';
 export const urlCabezasFaenadas: string = urlMantenimiento + "GetCabezasFaenadas";
 export const urlTemperaturasC9C10: string = urlMantenimiento + 'GetTemperaturasCamaras910';
 
+// Ingenieria
+export const urlIngenieria: string = urlAPI + "Ingenieria/";
+export const urlGetDatosScada: string = urlIngenieria + "GetDatosScadaAsync";
+export const urlGetTiposDispositivo: string = urlIngenieria + "GetTiposDispositivosAsync";
+export const urlGetUbicacionDispositivo: string = urlIngenieria + "GetUbicacionesAsync";
+export const urlInsertTipoDispositivo: string = urlIngenieria + "InsertTipoDispositivoAsync";
+export const urlInsertUbicaciones: string = urlIngenieria + "InsertUbicacionAsync";
+export const urlUpdateTipoDispositivo: string = urlIngenieria + "UpdateTipoDispositivoAsync";
+export const urlUpdateUbicacion: string = urlIngenieria + "UpdateUbicacionAsync";
+export const urlUpdateDatosScada: string = urlIngenieria + "UpdateDatosScadaAsync";
+export const urlDeleteTipoDispositivo: string = urlIngenieria + "DeleteTipoDispositivoAsync";
+export const urlDeleteUbicacion: string = urlIngenieria + "DeleteUbicacionAsync";
+
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";
 var fechas = "?fechadesde=fd&fechahasta=fh"

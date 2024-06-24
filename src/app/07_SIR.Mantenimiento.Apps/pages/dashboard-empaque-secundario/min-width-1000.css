@@ -166,7 +166,8 @@
     .no-asignados,
     .asignados,
     .tms,
-    .reproceso--datos {
+    .reproceso--datos,
+    .reproceso2--datos  {
         margin-right: 0.5rem;
         margin-left: 2.5rem;
         border-radius: 5px;
@@ -261,6 +262,10 @@
 
     .reproceso--datos {
         grid-area: 21 / 17 / 24 / 20;
+    }
+
+    .reproceso2--datos {
+        grid-area: 24 / 20 / 27 / 24;
     }
 
     .rayos_x--datos {

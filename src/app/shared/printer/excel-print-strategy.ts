@@ -28,7 +28,6 @@ export class ExcelPrintStrategy implements PrintStrategy {
     this._workbook.creator = 'SIR - FLP - ' + fecha.getFullYear().toString();
    
     this.printService.printExcel(this.idReporte, dataToPrint, this._workbook)
-
     this._workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data])
       fs.saveAs(blob, this.nombreArchivo + ".xlsx");

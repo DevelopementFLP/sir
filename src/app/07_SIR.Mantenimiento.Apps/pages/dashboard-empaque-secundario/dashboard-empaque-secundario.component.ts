@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, OnInit, Type, ViewEncapsulation } from '@angular/core';
 import { DashSecundarioService } from '../../services/dashboard-secundario.service';
 import { EstacionesCortesCajas } from '../../interfaces/EstacionesCortesCajas.interface';
 import { CajasHora } from '../../interfaces/CajasHora.interface';
@@ -22,7 +22,8 @@ import { WPLDict } from '../../types/WplDict.type';
   selector: 'dashboard-empaque-secundario',
   templateUrl: './dashboard-empaque-secundario.component.html',
   styleUrls: ['./dashboard-empaque-secundario.component.css', 'max-width-999.css', 'min-width-1000.css'],
-  providers: [DialogService]
+  providers: [DialogService],
+  encapsulation: ViewEncapsulation.None
 })
 export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
 
@@ -40,6 +41,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   tiemposActualizacion?: TiempoActualizacion[] = [];
   eagleData: EagleResponse | undefined;
   cajasReproceso: number = 0;
+  cajasReproceso2: number = 0;
   cajasWPL: number[] = [];
   idsWPL: number[] = [4296, 4299, 4293];
   linea_1: EstacionesCortesCajas[] = [];  
@@ -65,7 +67,9 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   porcNoLeidasEagle: number = 0;
   wpls: WPLDict = { }
   wplsAllDay: WPLDict = { }
-  
+
+  total!: EstacionesCortesCajas;
+
   /* dialog */
   dialog?: DynamicDialogRef;
 
@@ -111,10 +115,12 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     this.reportList = this.empaqueSecundarioService.getReportesMenuItem();
     this.lastUpdate = new Date();
 
+    
     await this.GetTiemposActualizacion();
     await this.GetRefreshTime();
     await this.GetInnovaData();
     await this.GetEagleData();
+
     if(this.minsDesde > 0) {
       this.filterRayosXData();
     }
@@ -132,6 +138,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
       await this.GetCajasAbiertas();
       await this.GetCajasCerradas();
       await this.GetCajasTMSCerradas();
+      await this.getTotales();
     } catch (error: any) {
       throw new Error(error);
     }
@@ -157,6 +164,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   private async GetEstacionesProceso(): Promise<void> {
     this.estacionesProceso = await this.empaqueSecundarioService.getEstacionesProceso(this.minsDesde).toPromise();
     this.cajasReproceso = this.getCajasReproceso();
+    this.cajasReproceso2 = this.getCajasReproceso2();
     this.cajasWPL.push(this.getCajasWPL(4296));
     this.cajasWPL.push(this.getCajasWPL(4299));
     this.cajasWPL.push(this.getCajasWPL(4293));
@@ -231,6 +239,16 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     return this.estacionesProceso?.filter(e => e.idStation == 298)[0].cajas?? 0;
   }
 
+  private getCajasReproceso2(): number {
+    const station: EstacionProceso | undefined = this.estacionesProceso?.find(e => e.idStation == 4256);
+    var cajas: number = 0;
+
+    if(station)
+      cajas = station.cajas;
+
+    return cajas;
+  }
+
   private getCajasWPL(station: number): number {
     var cajas: number = 0;
     if(this.estacionesProceso?.filter(e => e.idStation == station)[0])
@@ -242,12 +260,20 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     return this.lineasCajas?.find(l => l.station == linea)?? undefined;
   }
 
-  getTotales(): EstacionesCortesCajas {
+  async getTotales(): Promise<void> {
     var cajas: number = 0;
-
-    cajas = this.lineasCajas?.reduce((total, linea) => {
-      return total + linea.cajas
-    }, 0)!;
+    var lineaCajasTotal: EstacionesCortesCajas[] | undefined;
+    
+    if(this.minsDesde != 0) {
+      lineaCajasTotal = await this.empaqueSecundarioService.getLineasCajas(this.minsDesde).toPromise(); 
+      cajas =lineaCajasTotal?.reduce((total, linea) => {
+        return total + linea.cajas
+      }, 0)!;
+    } else {
+      cajas = this.lineasCajas?.reduce((total, linea) => {
+        return total + linea.cajas
+      }, 0)!;
+    }
 
     var total: EstacionesCortesCajas = {
       cajas: cajas,
@@ -256,7 +282,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
       station: ''
     };
 
-    return total;
+   this.total = total;
   }
 
   private setLineasEmpaque(): void {
@@ -272,7 +298,7 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
   
   private async setCajasPromedioWLP(wpls: number[], wplDict: WPLDict): Promise<void> {
     this.velocidadCerradoActual = 0;
-   
+    
     for(let wplKey in wplDict) {
       const wpl: number = parseInt(wplKey);
       
@@ -294,12 +320,16 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
 
   private filterRayosXData(): void {
     let horaLapso: Date = new Date();
-    horaLapso.setUTCHours(horaLapso.getUTCHours() - 3);
-    horaLapso.setUTCHours(horaLapso.getUTCHours() - Math.trunc(this.minsDesde / 60));
-    horaLapso.setUTCMinutes(horaLapso.getUTCMinutes() - this.minsDesde % 60);
-    
-    if(this.eagleData){
-      this.eagleData.data = this.eagleData.data.filter(d => new Date(d.time) >= horaLapso);
+    horaLapso.setHours(horaLapso.getHours() - 3);
+    horaLapso.setHours(horaLapso.getHours() - Math.trunc(this.minsDesde / 60));
+    horaLapso.setMinutes(horaLapso.getMinutes() - this.minsDesde % 60);
+    if(this.eagleData) {
+      this.eagleData.data = this.eagleData.data.filter(d => {
+        let dateTime = new Date(d.time);
+        dateTime.setHours(dateTime.getHours() - 3);
+        return dateTime.getTime() >= horaLapso.getTime();
+    });
+
       this.cajasRechazadasEagle = this.dashService.getRechazos(this.eagleData?.data!);
       this.cajasNoLeidasEagle = this.dashService.getNoLeidos(this.eagleData?.data!);
       this.cajasLeidasEagle = this.eagleData?.data.length! - this.cajasNoLeidasEagle;
@@ -322,4 +352,5 @@ export class DashboardEmpaqueSecundarioComponent implements OnInit, OnDestroy {
     await this.setCajasPromedioWLP(wpls, this.wplsAllDay);
     this.velocidadCerradoDia = this.wplsAllDay[4296] + this.wplsAllDay[4299] + this.wplsAllDay[4293]
   }
+
 }

@@ -94,7 +94,7 @@ export class DashSecundarioService implements OnInit{
     const fecha: string = formatDate(horaActual, "yyyy-MM-dd", "es-UY");
     
     var horaPrimeraCaja: string = fecha; 
-    
+    console.log(timeLapse)
     if(timeLapse > 0) {
       horaActual.setHours(horaActual.getHours());
       horaActual.setMinutes(horaActual.getMinutes() - timeLapse);

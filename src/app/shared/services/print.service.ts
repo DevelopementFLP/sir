@@ -8,6 +8,9 @@ import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/I
 import { Incidencia } from 'src/app/08_SIR.RRHH.Reportes/interfaces/Incidencia.interface';
 import { CabezaFaenada } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/CabezaFaenada.interface';
 import { DataTemperatura } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/DataTemperatura.interface';
+import { Ubicacion } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/Ubicacion.interface';
+import { Scada } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/Scada.interface';
+import { TipoDispositivo } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/TipoDispositivo.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -25,6 +28,8 @@ export class PrintService {
         return this.printInconsistencias(dataToPrint, libro);
       case 5:
         return this.printCabezasFaenadas(dataToPrint, libro);
+      case 6:
+        return this.printDispositivosScada(dataToPrint, libro);
       default:
         return [];
     }
@@ -984,4 +989,98 @@ export class PrintService {
     }
     );
   }
+
+  private printDispositivosScada(dataToPrint: PrintModel, libro: Workbook) {
+    const nombre: string = dataToPrint.nombreArchivo;
+    const dataScada: Scada[] = dataToPrint.data.datosScada as Scada[];
+    const dispositivos: TipoDispositivo[] = dataToPrint.data.dispositivos as TipoDispositivo[];
+    const ubicaciones: Ubicacion[] = dataToPrint.data.ubicaciones as Ubicacion[];
+    const fuenteTitulo = { bold: true, size: 12};
+
+    if(dataScada) {
+      const titulo: string = "Datos de dispositivos";
+      const hojaDatos = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaDatos);
+      this.setTitle(libro, hojaDatos, titulo, 'right', 6);
+
+      hojaDatos.getCell("B7").value = "Id SCADA";
+      hojaDatos.getCell("B7").font = fuenteTitulo;
+      hojaDatos.getCell("C7").value = "Tipo dispositivo";
+      hojaDatos.getCell("C7").font = fuenteTitulo;
+      hojaDatos.getCell("D7").value = "Ubicación";
+      hojaDatos.getCell("D7").font = fuenteTitulo;
+      hojaDatos.getCell("E7").value = "Nombre";
+      hojaDatos.getCell("E7").font = fuenteTitulo;
+      hojaDatos.getCell("F7").value = "Descrpción";
+      hojaDatos.getCell("F7").font = fuenteTitulo;   
+    
+      var filaDatos: number = 8;
+      dataScada.forEach(dato => {
+        hojaDatos.getCell("B" + filaDatos).value = dato.deviceId;
+        hojaDatos.getCell("C" + filaDatos).value = dispositivos ? dispositivos.find(d => d.idTipo == dato.idTipoDispositivo)?.nombre : dato.idTipoDispositivo;
+        hojaDatos.getCell("D" + filaDatos).value = ubicaciones ? ubicaciones.find(u => u.idUbicacion == dato.idUbicacion)?.nombre : dato.idUbicacion;
+        hojaDatos.getCell("E" + filaDatos).value = dato.nombre;
+        hojaDatos.getCell("F" + filaDatos).value = dato.descripcion;
+        
+        filaDatos++;
+      });
+
+      hojaDatos.getColumn("B").width = 44;
+      hojaDatos.getColumn("C").width = 16;
+      hojaDatos.getColumn("D").width = 34;
+      hojaDatos.getColumn("E").width = 15;
+      hojaDatos.getColumn("F").width = 15;
+    }
+
+    if(dispositivos) {
+      const titulo: string = "Tipos de dispositivos";
+      const hojaTipos = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaTipos);
+      this.setTitle(libro, hojaTipos, titulo, 'right', 10);
+
+      hojaTipos.getCell("B7").value = "Id";
+      hojaTipos.getCell("B7").font = fuenteTitulo;
+      hojaTipos.getCell("C7").value = "Nombre";
+      hojaTipos.getCell("C7").font = fuenteTitulo;
+
+      var filaDatos: number = 8;
+      dispositivos.forEach(disp => {
+        hojaTipos.getCell("B" + filaDatos).value = disp.idTipo;
+        hojaTipos.getCell("C" + filaDatos).value = disp.nombre;
+
+        filaDatos++;
+      });
+
+      hojaTipos.getColumn("C").width = 16;
+    }
+
+    if(ubicaciones) {
+      const titulo: string = "Ubicaciones";
+      const hojaUbicaciones = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaUbicaciones);
+      this.setTitle(libro, hojaUbicaciones, titulo, 'right', 4);
+
+      hojaUbicaciones.getCell("B7").value = "Ubicación padre";
+      hojaUbicaciones.getCell("B7").font = fuenteTitulo;
+      hojaUbicaciones.getCell("C7").value = "Nombre ubicación";
+      hojaUbicaciones.getCell("C7").font = fuenteTitulo;
+      hojaUbicaciones.getCell("D7").value = "Descripción";
+      hojaUbicaciones.getCell("D7").font = fuenteTitulo;
+
+      var filaDatos: number = 8;
+      ubicaciones.forEach( ub => {
+        hojaUbicaciones.getCell("B" + filaDatos).value = ub.idUbicacionPadre == 0 ? '' : ubicaciones.find(u => u.idUbicacion == ub.idUbicacionPadre)?.nombre;
+        hojaUbicaciones.getCell("C" + filaDatos).value = ub.nombre;
+        hojaUbicaciones.getCell("D" + filaDatos).value = ub.descripcion;
+
+        filaDatos++;
+      });
+
+      hojaUbicaciones.getColumn("B").width = 34;
+      hojaUbicaciones.getColumn("C").width = 34;
+      hojaUbicaciones.getColumn("D").width = 34;
+    }
+  }
+
 }
+

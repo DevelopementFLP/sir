@@ -35,6 +35,7 @@ import { PuestoEstacionComponent } from './components/puesto-estacion/puesto-est
 import { CortesPorEstacionComponent } from './components/cortes-por-estacion/cortes-por-estacion.component';
 import { CabezasFaenadasComponent } from './pages/cabezas-faenadas/cabezas-faenadas.component';
 import { DispositivosScadaComponent } from './formularios/dispositivos-scada/dispositivos-scada.component';
+import { CambiosSinGuardarComponent } from './components/cambios-sin-guardar/cambios-sin-guardar.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { DispositivosScadaComponent } from './formularios/dispositivos-scada/dis
     PuestoEstacionComponent,
     CortesPorEstacionComponent,
     CabezasFaenadasComponent,
-    DispositivosScadaComponent
+    DispositivosScadaComponent,
+    CambiosSinGuardarComponent
   ],
   imports: [
     CommonModule,

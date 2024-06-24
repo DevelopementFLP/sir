@@ -1,3 +1,13 @@
+@layer primeng {
+   .p-knob-text {
+      font-size: 1.2rem  !important;
+      white-space: wrap;
+   }
+}
+
+
+
+
 .actualizar {
     position: fixed;
     top: 70px;

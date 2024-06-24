@@ -122,7 +122,7 @@ export class LoginComponent implements AfterViewInit {
               element.items?.splice(i!, 1);
             }
           }
-
+          
           if(element.items?.length == 0) {
             const k = rep[0].items?.indexOf(rep[0].items.find(x => x.label == element.label)!);
             if(k! >= 0) {
@@ -134,9 +134,5 @@ export class LoginComponent implements AfterViewInit {
     });
 
     return rep;
-  }
-
-  private t(rep: MenuItem[]) {
-   this.filtrarReportes(rep);
   }
 }

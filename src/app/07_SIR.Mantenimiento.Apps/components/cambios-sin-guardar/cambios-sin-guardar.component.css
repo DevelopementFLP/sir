@@ -1,0 +1,32 @@
+.cambios__container {
+    width: 100%;
+}
+
+.titulo {
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.data {
+    margin-bottom: 2rem;
+}
+
+.datos__title,
+.tipos__actualizar--title,
+.ubicaciones__actualizar--title {
+    color: #E67E22;
+}
+
+.tipos__agregar--title,
+.ubicaciones__agregar--title {
+    color: #27AE60;
+}
+
+.tipos__eliminar--title,
+.ubicaciones__eliminar--title {
+    color: #E74C3C;
+}
+
+.tabview {
+    width: 100%;
+}
