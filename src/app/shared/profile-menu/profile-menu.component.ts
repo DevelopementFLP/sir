@@ -15,7 +15,7 @@ import { SessionManagerService } from '../services/session-manager.service';
 export class ProfileMenuComponent {
 
   dataMenu: IMenuItem[] = this.userMenuService.getDataMenu();
-  usuarioActual: Usuario = this.sessionService.getStorage();
+  usuarioActual: Usuario = this.sessionService.parseUsuario(this.sessionService.getCurrentUser()!);
 
   constructor(
     private userMenuService: UserMenuService,

@@ -38,15 +38,22 @@ export class LoginComponent implements AfterViewInit {
     private reportesService: ReportesService
     ) {
 
-      this.userStored = this.sessionManagerService.getStorage();
+      //this.userStored = this.sessionManagerService.getStorage();
+      this.currentUser = this.sessionManagerService.getCurrentUser()!
+      console.log(this.currentUser);
 
-      if(this.userStored != null)
-        this.navigationService.navegar('principal');
+      if(this.currentUser != null) {
+        this.userStored = this.parseActualUser(this.currentUser);
+        if(this.userStored != null)
+          this.navigationService.navegar('principal');
+      }
+
     }
 
   @ViewChild('txtUserName') txtUserName!: ElementRef<HTMLInputElement>;
   @ViewChild('txtPassword') txtPassword!: ElementRef<HTMLInputElement>;
 
+  currentUser: string | null = null;
   userStored: ActualUser | undefined;
   hide: boolean = true;
   usuarioObtenido: Usuario[] = [];
@@ -67,6 +74,7 @@ export class LoginComponent implements AfterViewInit {
         nombreUsuario: this.txtUserName.nativeElement.value,
         contrasenia: this.txtPassword.nativeElement.value
       };
+
 
       this.userService.obtenerUsuarioPorNombre(datosUsuario.nombreUsuario!)
       .subscribe( resp => {
@@ -89,6 +97,7 @@ export class LoginComponent implements AfterViewInit {
                 this.sessionManager.setMenu('menuItems', this.menuItems);
               },
             );
+
             this.navigationService.navegar('principal');
           }
         }
@@ -134,5 +143,21 @@ export class LoginComponent implements AfterViewInit {
     });
 
     return rep;
+  }
+
+  private parseActualUser(jsonString: string): ActualUser {
+    const jsonObject = JSON.parse(jsonString);
+
+    const actualUser: ActualUser = {
+      id_usuario: jsonObject.id_usuario,
+      id_perfil: jsonObject.id_perfil,
+      nombre_usuario: jsonObject.nombre_usuario,
+      contrasenia: jsonObject.contrasenia,
+      activo: jsonObject.activo,
+      nombre_completo: jsonObject.nombre_completo,
+      conf_perfiles: jsonObject.conf_perfiles
+    };
+
+    return actualUser;
   }
 }

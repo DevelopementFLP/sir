@@ -20,6 +20,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { KnobModule } from 'primeng/knob';
 import { ListboxModule } from 'primeng/listbox';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
 import { SidebarModule } from 'primeng/sidebar';
@@ -51,6 +52,7 @@ import { TooltipModule } from 'primeng/tooltip';
     InputTextModule,
     KnobModule,
     ListboxModule,
+    MultiSelectModule,
     PanelMenuModule,
     PasswordModule,
     SelectButtonModule,

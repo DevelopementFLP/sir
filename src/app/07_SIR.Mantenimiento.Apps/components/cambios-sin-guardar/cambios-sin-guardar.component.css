@@ -13,17 +13,20 @@
 
 .datos__title,
 .tipos__actualizar--title,
-.ubicaciones__actualizar--title {
+.ubicaciones__actualizar--title,
+.unidades__actualizar--title {
     color: #E67E22;
 }
 
 .tipos__agregar--title,
-.ubicaciones__agregar--title {
+.ubicaciones__agregar--title,
+.unidades__agregar--title {
     color: #27AE60;
 }
 
 .tipos__eliminar--title,
-.ubicaciones__eliminar--title {
+.ubicaciones__eliminar--title,
+.unidades__eliminar--title {
     color: #E74C3C;
 }
 

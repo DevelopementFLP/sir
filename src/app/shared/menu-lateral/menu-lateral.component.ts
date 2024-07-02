@@ -20,7 +20,7 @@ export class MenuLateralComponent implements OnInit {
   
   ngOnInit(): void {
     setTimeout(() => {
-      this.menuItems = this.navBarService.getSideBarMenu();
+      this.menuItems = JSON.parse(this.navBarService.getSideBarMenu());
       this.menuItems.sort((a, b) => {
         if(a.label! <= b.label!) return -1;
         return 1;

@@ -24,7 +24,7 @@ export class MainPageComponent {
     private elementRef: ElementRef
   ) {
 
-    if(this.sessionManagerService.getStorage() == null)
+    if(this.sessionManagerService.getCurrentUser() == null)
       this.navigationService.navegar('login');
   }
 

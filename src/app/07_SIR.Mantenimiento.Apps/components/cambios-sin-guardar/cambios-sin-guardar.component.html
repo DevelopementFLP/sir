@@ -165,5 +165,68 @@
                 </div>
             </div>
         </p-tabPanel>
+        <p-tabPanel header="Unidades de medida" *ngIf="hayCambiosUnidades()">
+            <div class="unidades__container">
+                <div class="unidades__container--agregar" *ngIf="agregarUnidades.length > 0">
+                    <div class="unidades__agregar--title titulo">Unidades de medida a agregar</div>
+                    <div class="unidades__agregar--data data">
+                        <p-table
+                            [value]="agregarUnidades">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Unidad</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.codigo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="unidades__container--actualizar" *ngIf="actualizarUnidades.length > 0">
+                    <div class="unidades__actualizar--title titulo">Unidades de medida a actualizar</div>
+                    <div class="unidades__actualizar--data data">
+                        <p-table
+                            [value]="actualizarUnidades">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Unidad</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.codigo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="unidades__container--eliminar" *ngIf="eliminarUnidades.length > 0">
+                    <div class="unidades__eliminar--title titulo">Unidades de medida a eliminar</div>
+                    <div class="unidades--data data">
+                        <p-table
+                            [value]="eliminarUnidades">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Unidad</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cambios>
+                                <tr>
+                                    <td>{{cambios.codigo}}</td>
+                                    <td>{{cambios.nombre}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
     </p-tabView>
 </div>

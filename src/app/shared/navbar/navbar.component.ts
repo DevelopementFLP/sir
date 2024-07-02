@@ -15,6 +15,7 @@ import { MenuItemModel } from '../interfaces/MenuItemModel.interface';
 export class NavbarComponent implements OnInit {
 
   actualUser: Usuario;
+  actualUserstr: string | null = null;
   menuUsuario: MenuItem[] = [];
   resultadoBusqueda: MenuItemModel[] = [];
   secciones: string[] = [];
@@ -25,7 +26,9 @@ export class NavbarComponent implements OnInit {
     private navigation: NavigationService
   ) {
 
-    this.actualUser = this.sessionManagerService.getStorage();
+    this.actualUserstr = localStorage.getItem('actualUser');
+  
+    this.actualUser = this.sessionManagerService.parseUsuario(this.actualUserstr!);
 
   }
 
@@ -33,6 +36,7 @@ export class NavbarComponent implements OnInit {
    
   }
 
+  
 
   getIdUsuario(usuario: Usuario) : number {
     return usuario.id_usuario;
@@ -76,7 +80,7 @@ export class NavbarComponent implements OnInit {
       if(input) {
         this.icono = 'search_off';
         this.toolTipText = 'Cerrar búsqueda';
-        this.menuUsuario = this.sessionManagerService.getMenu();
+        this.menuUsuario = JSON.parse(this.sessionManagerService.getMenu());
         this.isResVisible = true;
         input.focus();
       }

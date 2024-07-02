@@ -82,13 +82,24 @@ export const urlIngenieria: string = urlAPI + "Ingenieria/";
 export const urlGetDatosScada: string = urlIngenieria + "GetDatosScadaAsync";
 export const urlGetTiposDispositivo: string = urlIngenieria + "GetTiposDispositivosAsync";
 export const urlGetUbicacionDispositivo: string = urlIngenieria + "GetUbicacionesAsync";
+export const urlGetUnidadesMedida: string = urlIngenieria + "GetUnidadesMedidaAsync";
 export const urlInsertTipoDispositivo: string = urlIngenieria + "InsertTipoDispositivoAsync";
 export const urlInsertUbicaciones: string = urlIngenieria + "InsertUbicacionAsync";
+export const urlInsertUnidadesMedidas: string = urlIngenieria + "InsertUnidadesMedidaAsync";
 export const urlUpdateTipoDispositivo: string = urlIngenieria + "UpdateTipoDispositivoAsync";
 export const urlUpdateUbicacion: string = urlIngenieria + "UpdateUbicacionAsync";
 export const urlUpdateDatosScada: string = urlIngenieria + "UpdateDatosScadaAsync";
+export const urlUpdateUnidadesMedida: string = urlIngenieria + "UpdateUnidadesMedidaAsync";
 export const urlDeleteTipoDispositivo: string = urlIngenieria + "DeleteTipoDispositivoAsync";
 export const urlDeleteUbicacion: string = urlIngenieria + "DeleteUbicacionAsync";
+export const urlDeleteUnidadesMedida: string = urlIngenieria + "DeleteUnidadesMedidaAsync";
+
+// Exportaciones
+export const urlExportaciones: string = urlAPI + "Exportaciones/";
+export const urlGetContainers: string = urlExportaciones + "GetContainersAsync";
+export const urlGetDataByContainer: string = urlExportaciones + "GetDataByContainersAsync";
+export const urlGetTiposMoneda: string = urlExportaciones + "GetTipoMonedaAsync";
+export const urlGetPreciosPorFechas: string = urlExportaciones + "GetPreciosPorFechaAsync"
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

@@ -2,9 +2,6 @@
     <div class="formulario__titulo">
         <div>Configuración de dispositivos SCADA</div>
         <div class="botones__container" *ngIf="hayCambios">
-            <!-- <span class="">
-                <button pButton type="button" icon="pi pi-refresh" class="p-button-primary p-button-sm"></button>
-            </span> -->
             <span class="p-buttonset">
                 <button pButton type="button" label="Guardar cambios" icon="pi pi-check" class="p-button-success p-button-sm" (click)="saveChanges()"></button>
                 <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-danger p-button-sm" (click)="discardChanges()"></button>
@@ -49,6 +46,7 @@
                                 Tipo dispositivo 
                             </th>
                             <th style="width: 20%" class="columna--titulo">Ubicación</th>
+                            <th style="width: 10%" class="columna--titulo">Unidad Medida</th>
                             <th style="width: 10%" class="columna--titulo">Nombre</th>
                             <th style="width: 40%" class="columna--titulo descripcion">Descripción</th>
                         </tr>
@@ -71,6 +69,14 @@
                                     optionLabel="nombre"
                                     optionValue="idUbicacion"
                                     [(ngModel)]="dato.idUbicacion" />
+                            </td>
+                            <td class="columna--valor">
+                                <p-dropdown
+                                    (onChange)="onEditDataScada(dato)"  
+                                    [options]="unidades!"
+                                    optionLabel="codigo"
+                                    optionValue="idUnidadMedida"
+                                    [(ngModel)]="dato.idUnidadMedida" />
                             </td>
                             <td class="columna--valor">
                                 <input
@@ -236,6 +242,75 @@
                         <td></td>
                     </tr>
                     </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Unidades de medida">
+                <p-table
+                    class="tabla--unidades"
+                    [value]="unidades!"
+                    [tableStyle]="{ 'max-width': '40rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 20%;">Unidad</th>
+                        <th>Nombre</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-um let-editing="editing">
+                    <tr>
+                        <td>
+                            <input
+                                (change)="onEditUnidad(um)"
+                                pInputText
+                                type="text"
+                                [(ngModel)]="um.codigo"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                (change)="onEditUnidad(um)"
+                                pInputText
+                                type="text"
+                                [(ngModel)]="um.nombre" />
+                        </td>
+                        <td>
+                            <button
+                                (click)="onDeleteUnidad(um)" 
+                                pbutton="" pripple="" type="button"
+                                icon="pi pi-trash"
+                                class="p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only">
+                                <span
+                                    class="p-button-icon pi pi-trash" aria-hidden="true">
+                                </span>
+                                <span 
+                                    class="p-ink"
+                                    style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                    <td>
+                        <input 
+                            #txtCodigoUnidad
+                            pInputText
+                            type="text"
+                            placeholder="Ingresar unidad"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            (keydown.enter)="agregarNuevaUnidadMedida()"
+                            #txtNombreUnidad
+                            pInputText
+                            type="text"
+                            placeholder="Ingresar nombre" />
+                    </td>
+                    <td></td>
+                </tr>
+                </ng-template>
                 </p-table>
             </p-tabPanel>
         </p-tabView>

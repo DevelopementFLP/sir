@@ -3,6 +3,7 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Scada } from '../../interfaces/Scada.interface';
 import { TipoDispositivo } from '../../interfaces/TipoDispositivo.interface';
 import { Ubicacion } from '../../interfaces/Ubicacion.interface';
+import { UnidadMedida } from '../../interfaces/UnidadMedida.interface';
 
 @Component({
   selector: 'app-cambios-sin-guardar',
@@ -18,9 +19,13 @@ export class CambiosSinGuardarComponent implements OnInit {
   agregarUbicaciones: Ubicacion[] = [];
   actualizarUbicaciones: Ubicacion[] = [];
   eliminarUbicaciones: Ubicacion[] = [];
+  agregarUnidades: UnidadMedida[] = [];
+  actualizarUnidades: UnidadMedida[] = [];
+  eliminarUnidades: UnidadMedida[] = [];
 
   ubicaciones!: Ubicacion[];
   dispositivos!: TipoDispositivo[];
+  unidades!: UnidadMedida[];
 
   constructor(private config: DynamicDialogConfig) {}
 
@@ -38,8 +43,12 @@ export class CambiosSinGuardarComponent implements OnInit {
     this.agregarUbicaciones = this.config.data.addUbicacion;
     this.actualizarUbicaciones = this.config.data.updateUbicacion;
     this.eliminarUbicaciones = this.config.data.deleteUbicacion;
+    this.agregarUnidades = this.config.data.addUnidades;
+    this.actualizarUnidades = this.config.data.updateUnidades;
+    this.eliminarUnidades = this.config.data.deleteUnidades;
     this.ubicaciones = this.config.data.ubicaciones;
     this.dispositivos = this.config.data.dispositivos;
+    this.unidades = this.config.data.unidades;
   }
 
   hayCambiosDatosScada(): boolean {
@@ -58,17 +67,25 @@ export class CambiosSinGuardarComponent implements OnInit {
         || this.eliminarUbicaciones.length > 0
   }
 
+  hayCambiosUnidades(): boolean {
+    return this.agregarUnidades.length > 0
+        || this.actualizarUnidades.length > 0
+        || this.eliminarUnidades.length > 0;
+  }
+
   nombreUbicacionPorId(id: number): string {
     return this.ubicaciones?.find(u => u.idUbicacion == id)?.nombre ?? '';
   }
 
   getNombreDispositivo(id: number): string {
-    console.log(id)
-    console.log(this.dispositivos.find(d => d.idTipo == id)?.nombre!)
     return this.dispositivos.find(d => d.idTipo == id)?.nombre!;
   }
 
   getNombreUbicacion(id: number): string {
     return this.ubicaciones.find(u => u.idUbicacion == id)?.nombre!;
+  }
+
+  getCodigoUnidadMedida(id: number): string {
+    return this.unidades.find(u => u.idUnidadMedida == id)?.codigo!;
   }
 }
