@@ -1,0 +1,39 @@
+@layer primeng {
+    .p-inputwrapper-filled .p-multiselect.p-multiselect-chip .p-multiselect-label {
+        padding: 0.25rem !important;
+    }
+
+    .p-multiselect-label-container {
+        display: flex !important;
+    }
+
+    #mainContent > app-detalle-embarque > div > div.contenedor__embarque > div.container__selection > p-multiselect > div > div.p-element.p-multiselect-label-container > div > div {
+        background-color: beige !important;
+        margin-left: 0.2rem !important;
+    }
+
+}
+
+.embarque__reporte {
+    width: 100%;
+    max-width: 100%;
+}
+
+.btn-buscar {
+    margin-left: 0.5rem;
+}
+
+.container__selection {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.admin__text {
+    font-weight: bold;
+}
+
+.panel-precios {
+    position: relative;
+}
+

@@ -96,10 +96,12 @@ export const urlDeleteUnidadesMedida: string = urlIngenieria + "DeleteUnidadesMe
 
 // Exportaciones
 export const urlExportaciones: string = urlAPI + "Exportaciones/";
-export const urlGetContainers: string = urlExportaciones + "GetContainersAsync";
+export const urlGetContainers: string = urlExportaciones + "GetIdCargaContainersAsync";
 export const urlGetDataByContainer: string = urlExportaciones + "GetDataByContainersAsync";
 export const urlGetTiposMoneda: string = urlExportaciones + "GetTipoMonedaAsync";
-export const urlGetPreciosPorFechas: string = urlExportaciones + "GetPreciosPorFechaAsync"
+export const urlGetPreciosPorFechas: string = urlExportaciones + "GetPreciosPorFechaAsync";
+export const urlGetPrecios: string = urlExportaciones + "GetPreciosAsync";
+export const urlDeleteFechaPrecios: string = urlExportaciones + "DeleteListasPreciosAsync";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

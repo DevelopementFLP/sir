@@ -1,0 +1,30 @@
+.admin__btns {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 2%;
+}
+
+.btn-cancelar {
+    margin-left: 2rem;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.accion {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.accion--agregar {
+    color: green;
+}
+
+.accion--eliminar {
+    color: red;
+}

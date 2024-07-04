@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { urlGetContainers, urlGetDataByContainer, urlGetPreciosPorFechas, urlGetTiposMoneda } from 'src/settings';
+import { urlDeleteFechaPrecios, urlGetContainers, urlGetDataByContainer, urlGetPrecios, urlGetPreciosPorFechas, urlGetTiposMoneda } from 'src/settings';
 import { DWContainer } from '../Interfaces/DWContainer.interface';
 import { ConfMoneda } from '../Interfaces/ConfMoneda.interface';
 import { ConfPreciosDTO } from '../Interfaces/ConfPrecios.DTOinterface';
+import { ContainerDTO } from '../Interfaces/ContainerDTO.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,12 @@ export class CargaKosherService {
 
   constructor(private http: HttpClient) { }
 
-  getContainers(): Observable<string[]> {
-    return this.http.get<string[]>(urlGetContainers);
+  getContainers(): Observable<ContainerDTO[]> {
+    return this.http.get<ContainerDTO[]>(urlGetContainers);
   }
 
-  getDataByContainer(containers: string): Observable<DWContainer[]> {
-    return this.http.get<DWContainer[]>(`${urlGetDataByContainer}?containers=${containers}`);
+  getDataByContainer(idCarga:number, containers: string): Observable<DWContainer[]> {
+    return this.http.get<DWContainer[]>(`${urlGetDataByContainer}?idCarga=${idCarga}&containers=${containers}`);
   }
 
   getTiposMoneda(): Observable<ConfMoneda[]> {
@@ -28,4 +29,13 @@ export class CargaKosherService {
   getPreciosPorFecha(fechaDesde: string, fechaHasta: string): Observable<ConfPreciosDTO[]> {
     return this.http.get<ConfPreciosDTO[]>(`${urlGetPreciosPorFechas}?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`)
   }
+
+  getPrecios(): Observable<ConfPreciosDTO[]> {
+    return this.http.get<ConfPreciosDTO[]>(urlGetPrecios);
+  }
+
+  deleteFechaPrecio(fechas: string[]): Observable<void> {
+    const httpOptions = { body: fechas };
+    return this.http.delete<void>(urlDeleteFechaPrecios, httpOptions);
+  }  
 }

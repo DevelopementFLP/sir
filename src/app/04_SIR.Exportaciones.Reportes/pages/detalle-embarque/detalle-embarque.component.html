@@ -1,34 +1,12 @@
-<div class="detalle__embarque">
-    <div class="detalle__titulo">Detalle de embarque Israel</div>
+<div class="embarque__container">
+    <div class="container--title">Detalle de embarque Israel</div>
     <hr>
-    <div class="contenedor__embarque">
-        <div class="container__selection">
-            <p-multiSelect
-                inputId="float-label"
-                [options]="containersOptions"
-                optionLabel="label"
-                placeholder="Seleccione los contenedores"
-                display="chip" 
-                [showClear]="true"
-                [virtualScroll]="true"
-                [virtualScrollItemSize]="42"
-                [(ngModel)]="selectedContainers"
-                [showToggleAll]="false"
-                (onClear)="dataContainers = []"
-                [displaySelectedLabel]="true"
-            />
-
-            <button *ngIf="selectedContainers != null && selectedContainers.length > 0"
-                (click)="getDataByContainers()"
-                pButton type="button" 
-                label="Buscar" 
-                icon="pi pi-search" 
-                class="p-button-sm btn-buscar">
-            </button>
+    <div class="container--data">
+        <div class="data--cofig">
+            <config-precios />
         </div>
-        <div>
-            <div class="embarque__reporte">
-                
-            </div>
+        <div class="data--reporte">
+            
         </div>
     </div>
+</div>

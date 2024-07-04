@@ -1,6 +1,6 @@
 export interface ConfPreciosDTO {
-    fecha_produccion: Date;
-    codigo_producto: string;
-    precio_tonelada: number;
-    id_moneda: number;
+    fecha_Produccion: Date;
+    codigo_Producto: string;
+    precio_Tonelada: number;
+    id_Moneda: number;
 }

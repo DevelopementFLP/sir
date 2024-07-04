@@ -1,5 +1,5 @@
 export interface DWContainer {
-    idCarga: number | null;
+    id_Carga: number | null;
     container: string;
     boxId: string;
     id_Pallet: number;

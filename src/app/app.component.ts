@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MenuItem, PrimeNGConfig } from 'primeng/api';
-import { NavBarService } from './shared/services/nav-bar.service';
-import { SessionManagerService } from './shared/services/session-manager.service';
-import { DataService } from './shared/services/data.service';
+import { PrimeNGConfig } from 'primeng/api';
+
 
 @Component({
   selector: 'app-root',

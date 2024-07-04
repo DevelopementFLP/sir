@@ -1,0 +1,59 @@
+<div class="admin__listas">
+    <div class="admin__btns">
+        <button
+            *ngIf="mostrarBotones"
+            (click)="showAgregar()"
+            pButton type="button" label="Agregar lista" icon="pi pi-plus"
+            class="p-button-sm btn-agregar">
+        </button>
+
+        <button
+            *ngIf="mostrarBotones && fechas.length > 0"
+            (click)="showEliminar()"
+            pButton type="button" label="Eliminar lista" icon="pi pi-minus"
+            class="p-button-sm p-button-danger btn-eliminar">
+    </button>
+    </div>
+
+    <div class="listas--agregar hide">
+        <div>Acción: <span class="accion accion--agregar">AGREGAR</span></div><br>
+        <hr>
+        <div class="agregar--botones">
+            <button
+                [disabled]="agregarFechas.length == 0"
+                pButton type="button" label="Confirmar" icon="pi pi-check"
+                class="p-button-sm p-button-success btn-confirmar">
+            </button>
+
+            <button
+                (click)="cancelarAgregar()"
+                pButton type="button" label="Cancelar" icon="pi pi-times"
+                class="p-button-sm p-button-danger btn-cancelar">
+            </button>
+        </div>
+    </div>
+    <div class="listas--eliminar hide">
+        <div>Acción: <span class="accion accion--eliminar">ELIMINAR</span></div><br>
+        <div>
+            <span><span>Haga clic en&nbsp;</span><i class="pi pi-times-circle"></i><span>&nbsp;al lado de cada fecha para eliminarla</span></span>
+        </div>
+        <br><br>
+        <p-chip *ngFor="let fecha of fechas" class="fechaChip" [removable]="true" label="{{fecha}}" (onRemove)="eliminarLista(fecha)"/>
+        <br><br>
+        <hr>
+        <div class="eliminar--botones">
+            <button
+                (click)="deleteListaPrecios()"
+                [disabled]="eliminarFechas.length == 0"
+                pButton type="button" label="Confirmar" icon="pi pi-check"
+                class="p-button-sm p-button-success btn-confirmar">
+            </button>
+
+            <button
+                (click)="cancelarEliminar()"
+                pButton type="button" label="Cancelar" icon="pi pi-times"
+                class="p-button-sm p-button-danger btn-cancelar">
+            </button>
+        </div>
+    </div>
+</div>

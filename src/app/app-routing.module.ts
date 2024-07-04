@@ -28,7 +28,6 @@ import { PccAuditableComponent } from './06_SIR.ControlCalidad.Reportes/pages/pc
 import { TrazabilidadComponent } from './01_SIR.Produccion.Trazabilidad/pages/trazabilidad/trazabilidad.component';
 import { CompresorImagenesComponent } from './54_Herramientas/pages/compresor-imagenes/compresor-imagenes.component';
 import { ControlCuartosComponent } from './03_SIR.Produccion.Reportes/pages/control-cuartos/control-cuartos.component';
-import { DetalleEmbarqueComponent } from './04_SIR.Exportaciones.Reportes/pages/detalle-embarque/detalle-embarque.component';
 import { MachuconesComponent } from './06_SIR.ControlCalidad.Reportes/pages/machucones/machucones.component';
 import { DashboardComponent } from './shared/dashboard/dashboard.component';
 import { GraseriaComponent } from './07_SIR.Mantenimiento.Apps/pages/graseria/graseria.component';
@@ -43,6 +42,7 @@ import { RechazoCCPHComponent } from './06_SIR.ControlCalidad.Reportes/formulari
 import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps/pages/dashboard-empaque-secundario/dashboard-empaque-secundario.component';
 import { CabezasFaenadasComponent } from './07_SIR.Mantenimiento.Apps/pages/cabezas-faenadas/cabezas-faenadas.component';
 import { DispositivosScadaComponent } from './07_SIR.Mantenimiento.Apps/formularios/dispositivos-scada/dispositivos-scada.component';
+import { DetalleEmbarqueComponent } from './04_SIR.Exportaciones.Reportes/pages/detalle-embarque/detalle-embarque.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
