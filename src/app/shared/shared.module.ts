@@ -15,6 +15,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { EncabezadoReporteComponent } from './encabezado-reporte/encabezado-reporte.component';
 import { DashboardEagleComponent } from './dashboard-eagle/dashboard-eagle.component';
 import { FormsModule } from '@angular/forms';
+import { ScrollTopComponent } from './scroll-top/scroll-top.component';
 
 
 
@@ -29,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     ProfileMenuComponent,
     DashboardEagleComponent,
+    ScrollTopComponent,
   ],
   exports: [
     EncabezadoReporteComponent,
@@ -37,6 +39,7 @@ import { FormsModule } from '@angular/forms';
     MenuLateralComponent,
     ModalComponent,
     NavbarComponent,
+    ScrollTopComponent
   ],
   imports: [
     AppRoutingModule,

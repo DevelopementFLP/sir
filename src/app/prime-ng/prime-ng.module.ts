@@ -23,6 +23,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { SidebarModule } from 'primeng/sidebar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
@@ -55,6 +56,7 @@ import { TooltipModule } from 'primeng/tooltip';
     MultiSelectModule,
     PanelMenuModule,
     PasswordModule,
+    RadioButtonModule,
     SelectButtonModule,
     SidebarModule,
     TableModule,

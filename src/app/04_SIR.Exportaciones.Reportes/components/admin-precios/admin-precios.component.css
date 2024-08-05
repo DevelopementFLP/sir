@@ -1,3 +1,58 @@
+@layer primeng {
+
+    .p-badge {
+        font-size: 1rem !important;
+    }
+
+    .no-selected .p-badge {
+        background-color: #EC7063 !important;
+    }
+
+    .selected .p-badge{
+        background-color: #52BE80 !important;
+    }
+
+    .badge__agregar .p-badge {
+        background-color: #239B56 !important;
+    }
+
+    .badge__eliminar .p-badge {
+        background-color: #B03A2E !important;
+    }
+
+    .badge__title .p-badge {
+        margin-bottom: 1rem;
+        font-weight: 100 !important;
+        font-size: 1.3rem !important;
+        padding: 0.2rem 1rem !important;
+        height: max-content !important;
+    }
+
+    .badge__tipo--moneda .p-badge {
+        font-weight: 100 !important;
+    }
+
+    .p-datatable .p-datatable-thead > tr > th {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    .p-datatable .p-paginator-bottom {
+        border-width: 1px 0 0 0 !important;
+    }
+    
+    .p-datatable .p-datatable-tbody > tr > td {
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.2rem !important;
+    }
+
+    td.codigo__moneda {
+        text-align: center !important;
+    }
+}
+
 .admin__btns {
     margin-bottom: 2rem;
     display: flex;
@@ -21,10 +76,9 @@
     font-size: 1.2rem;
 }
 
-.accion--agregar {
-    color: green;
+.selection {
+    margin-left: 5rem;
 }
 
-.accion--eliminar {
-    color: red;
-}
+            
+

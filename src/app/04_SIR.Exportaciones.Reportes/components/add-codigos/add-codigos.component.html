@@ -1,0 +1,164 @@
+<div class="">
+    <p-table
+        [value]="nuevosCodigos">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="codigoProducto">Código <p-sortIcon field="codigoProducto"/></th>
+                <th pSortableColumn="nomProducto">Nombre <p-sortIcon field="nomProducto"/></th>
+                <th pSortableColumn="codigoKosher">Código Kosher <p-sortIcon field="codigoKosher"/></th>
+                <th pSortableColumn="clasificacionKosher">Clas. Kosher <p-sortIcon field="clasificacionKosher"/></th>
+                <th pSortableColumn="markKosher">Mark <p-sortIcon field="markKosher"/></th>
+                <th pSortableColumn="especie">Especie <p-sortIcon field="especie"/></th>
+                <th pSortableColumn="tipoProducto">Tipo de producto <p-sortIcon field="tipoProducto"/></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-codigo>
+            <tr>
+                <td>{{codigo.codigoProducto}}</td>
+                <td>{{codigo.nomProducto}}</td>
+                <td>{{codigo.codigoKosher}}</td>
+                <td>{{codigo.clasificacionKosher}}</td>
+                <td>{{codigo.markKosher}}</td>
+                <td>{{codigo.especie}}</td>
+                <td>{{codigo.tipoProducto}}</td>
+                <td>
+                    <button
+                        (click)="onDeleteCodigo(codigo)" 
+                        pbutton="" pripple="" type="button"
+                        icon="pi pi-trash"
+                        class="p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only">
+                        <span
+                            class="p-button-icon pi pi-trash" aria-hidden="true">
+                        </span>
+                        <span 
+                            class="p-ink"
+                            style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                        </span>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr class="footer--background">
+                <td class="footer--background">
+                    <input
+                        #codigoInp
+                        (blur)="getNombreProducto()" 
+                        pInputText
+                        type="text"
+                        placeholder="Código"
+                        id="codigo"
+                    />
+                </td>
+                <td class="footer--background">
+                   <p #nombreInp id="nombreProducto"></p>
+                </td>
+                <td class="footer--background">
+                    <p-dropdown
+                        [(ngModel)]="ckSelected"
+                        #codigoKosherD
+                        id="codigoKosher"
+                        [options]="codigosKosher"
+                        appendTo="body"
+                    />
+                </td>
+                <td class="footer--background">
+                    <p-dropdown
+                        [(ngModel)]="clasSelected"
+                        #clasificacionD
+                        id="clasificacion"
+                        [options]="clasificacionKosher"
+                        appendTo="body"
+                     />
+                </td>
+                <td class="footer--background">
+                    <p-dropdown
+                        [(ngModel)]="markSelected"
+                        #markD
+                        id="mark" 
+                        [options]="markKosher"
+                        appendTo="body"
+                    />
+                </td>
+                <td class="footer--background">
+                    <p-dropdown
+                        [(ngModel)]="espSelected"
+                        #especieD
+                        id="especie" 
+                        [options]="especie"
+                        appendTo="body"
+                    />
+                </td>
+                <td class="footer--background">
+                    <p-dropdown
+                        [(ngModel)]="tipoSelected"
+                        #tipoProductoD
+                        id="tipoProducto" 
+                        [options]="tipoProducto"
+                        appendTo="body"
+                    />
+                </td>
+                <td class="footer--background">
+                    <button
+                        *ngIf="isAdding" 
+                        (click)="agregarCodigo()" 
+                        pbutton="" pripple="" type="button"
+                        icon="pi pi-check"
+                        class="p-element p-ripple p-button-rounded p-button-success p-button-text p-button p-component p-button-icon-only">
+                        <span
+                            class="p-button-icon pi pi-check" aria-hidden="true">
+                        </span>
+                        <span 
+                            class="p-ink"
+                            style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                        </span>
+                    </button>
+                </td>
+                <td class="footer--background">
+                    <button
+                        *ngIf="isAdding"
+                        (click)="quitarCodigo()" 
+                        pbutton="" pripple="" type="button"
+                        icon="pi pi-times"
+                        class="p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only">
+                        <span
+                            class="p-button-icon pi pi-times" aria-hidden="true">
+                        </span>
+                        <span 
+                            class="p-ink"
+                            style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                        </span>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <div class="footer">
+        <hr>
+        <div class="options--button">
+            <button [disabled]="nuevosCodigos.length == 0" (click)="addCodigos()" pButton type="button" label="Guardar cambios"
+            icon="pi pi-save" class="p-button-sm p-button-success"></button>
+            <button (click)="cancelar()" pButton type="button" label="Cancelar"
+            icon="pi pi-times" class="p-button-sm p-button-danger btn-cancelar"></button>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+       <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+          <div
+             class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+             <i class="pi pi-question text-5xl"></i>
+          </div>
+          <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+          <p class="mb-0">{{ message.message }}</p>
+          <div class="flex align-items-center gap-2 mt-4">
+             <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+          </div>
+       </div>
+    </ng-template>
+ </p-confirmDialog>

@@ -66,5 +66,4 @@ export class SessionManagerService {
     return usuario;
 }
 
-
 }

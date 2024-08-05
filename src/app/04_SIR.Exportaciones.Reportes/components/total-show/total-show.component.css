@@ -1,0 +1,21 @@
+.total {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: 700;
+    color: darkblue;
+}
+
+.item--text {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 7%;
+}
+
+.titulo--total {
+    width: 14%;
+    text-align: center;
+}
