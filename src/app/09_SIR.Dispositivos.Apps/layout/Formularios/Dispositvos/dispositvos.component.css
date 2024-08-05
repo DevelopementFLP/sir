@@ -1,0 +1,31 @@
+
+.Botones_Tabla_Dispositivo {
+    display: flex; 
+    gap: 3px;
+    justify-content: center; /* Centra los botones horizontalmente (opcional) */
+    align-items: center; /* Centra los botones verticalmente (opcional) */
+    height: 150px; /* Ajusta la altura del botón */
+}
+
+.Botones_Tabla {
+    display: flex; 
+    gap: 3px;
+    justify-content: center; /* Centra los botones horizontalmente (opcional) */
+    align-items: center; /* Centra los botones verticalmente (opcional) */
+    height: 80px; /* Ajusta la altura del botón */
+}
+
+table{
+    width: 100%;
+}
+
+.mat-form-field{
+    font-size: 14px;
+    width: 100%;
+}
+
+.tituloDispositivo{
+    font: oblique bold 120% cursive;
+}
+
+

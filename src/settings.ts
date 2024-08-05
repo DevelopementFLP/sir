@@ -1,5 +1,5 @@
-export const urlAPI: string = "http://192.168.0.107:82/api/";
-// export const urlAPI: string = "http://localhost:5205/api/";
+//export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -124,3 +124,37 @@ export var gecosHaciendaTipificacion: string = gecosHacienda + "tipificacion" + 
 
 //Gecos Integration Broker
 export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
+
+//Dispositivos
+export const urlDispositivos: string = urlAPI + "Dispositivo/"
+export const urlGetDispositivo: string = urlDispositivos + "ListaDispositivos/NA" 
+export const urlGetDispositivoPorId: string = urlDispositivos + "filtrarDispositivos" 
+export const urlCreateDispositivo: string = urlDispositivos + "crearDispositivos"
+export const urlUpdateDispositivos: string = urlDispositivos + "actualizarDispositivos"
+export const urlDeleteDispositivos: string = urlDispositivos + "eliminarDispositivo"
+
+//Ubicaciones de Dispositivos
+export const urlUbicacionesDispositivo: string = urlAPI + "UbicacionesDispositivos/"
+export const urlGetUbicacionesDisp: string = urlUbicacionesDispositivo + "ListaUbicacionesDispositivos/NA" 
+export const urlCreateUbicacionDisp: string = urlUbicacionesDispositivo + "crearUbicacion"
+export const urlUpdateUbicacionDisp: string = urlUbicacionesDispositivo + "actualizarUbicacionDispositivo"
+export const urlDeleteUbicacionDisp: string = urlUbicacionesDispositivo + "eliminarUbicacionDispositivo"
+
+//Formato de Dispositovo
+export const urlFormatoDispositivo: string = urlAPI + "Formateos/"
+export const urlGetFormatoDisp: string = urlFormatoDispositivo + "ListaFormatosDispositivos/NA" 
+export const urlCreateFormatoDisp: string = urlFormatoDispositivo + "crearFormato"
+export const urlUpdateFormatoDisp: string = urlFormatoDispositivo + "actualizarFormato"
+export const urlDeleteFormatoDisp: string = urlFormatoDispositivo + "eliminarFormato"
+
+//Tipos de Dispositivos
+export const urlTiposDispositivo: string = urlAPI + "TipoDispositivos/"
+export const urlGetTipoDisp: string = urlTiposDispositivo + "ListaTiposDispositivos/NA" 
+export const urlCreateTipoDisp: string = urlTiposDispositivo + "crearTipoDispositivo"
+export const urlUpdateTipoDisp: string = urlTiposDispositivo + "actualizarTipoDeDispositivo"
+export const urlDeleteTipoDisp: string = urlTiposDispositivo + "eliminarTipoDispositivo"
+
+//Lecturas de Dispositivos
+export const urlLecturasDispositivo: string = urlAPI + "ListaDeCajas/"
+export const urlGetLecturaDisp: string = urlLecturasDispositivo + "listaDeLecturas"    
+export const urlGetLecturaDispExpo: string = urlLecturasDispositivo + "listaDeExpoCarga"  

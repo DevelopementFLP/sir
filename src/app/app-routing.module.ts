@@ -43,6 +43,8 @@ import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps
 import { CabezasFaenadasComponent } from './07_SIR.Mantenimiento.Apps/pages/cabezas-faenadas/cabezas-faenadas.component';
 import { DispositivosScadaComponent } from './07_SIR.Mantenimiento.Apps/formularios/dispositivos-scada/dispositivos-scada.component';
 import { DetalleEmbarqueComponent } from './04_SIR.Exportaciones.Reportes/pages/detalle-embarque/detalle-embarque.component';
+import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
+import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -86,7 +88,9 @@ const routes: Routes = [
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},
     { path: 'usuario/:nombreUsuario', component: UserComponent},
-    { path: 'configuracion', component:ConfiguracionMainPageComponent}
+    { path: 'configuracion', component:ConfiguracionMainPageComponent},
+    { path : 'dispositivos/Dispositivo', component: DispositvosComponent},
+    { path: 'dispositivos/LecturasDispositivos', component: LecturasDispositivosComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

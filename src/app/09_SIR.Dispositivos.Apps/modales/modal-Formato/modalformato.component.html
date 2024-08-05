@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>{{tituloDeAccion}} Formatos</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="formularioFormatos">
+        <mat-grid-list cols="1" rowHeight="80px">
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Substring Desde</mat-label>
+                    <input matInput autocomplete="off" formControlName="substringDesde" type="number">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Substring Hasta</mat-label>
+                    <input matInput autocomplete="off" formControlName="substringHasta" type="number">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+            
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Error Lectura</mat-label>
+                    <input matInput autocomplete="off" formControlName="errorLectura">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+        </mat-grid-list>
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="warn">Volver</button>
+    <button mat-raised-button color="primary"
+        [disabled]="formularioFormatos.invalid"
+        (click)="guardarEditar_Formato()"
+    >{{botonDeAccion}}</button>
+</mat-dialog-actions>
+
+
