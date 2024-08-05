@@ -1,5 +1,5 @@
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
-export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -102,6 +102,14 @@ export const urlGetTiposMoneda: string = urlExportaciones + "GetTipoMonedaAsync"
 export const urlGetPreciosPorFechas: string = urlExportaciones + "GetPreciosPorFechaAsync";
 export const urlGetPrecios: string = urlExportaciones + "GetPreciosAsync";
 export const urlDeleteFechaPrecios: string = urlExportaciones + "DeleteListasPreciosAsync";
+export const urlInsertarPrecios: string = urlExportaciones + "InsertListaPreciosAsync";
+export const urlGetFechas: string = urlExportaciones + "GetFechasAsync";
+export const urlGetCajasCarga: string = urlExportaciones + "GetCajasCargaAsync";
+export const urlGetConfProductos: string = urlExportaciones + "GetConfProductosAsync";
+export const urlInsertConfProductos: string = urlExportaciones + "InsertConfProductosAsync";
+export const urlUpdateConfProductos: string = urlExportaciones + "UpdateConfProductosAsync";
+export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProductosAsync";
+export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
 
 //Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";

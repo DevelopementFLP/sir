@@ -12,6 +12,63 @@
         margin-left: 0.2rem !important;
     }
 
+    .p-datatable .p-datatable-thead > tr > th {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.2rem !important;
+        font-size: 0.9rem;
+    }
+    
+    .p-datatable .p-paginator-bottom {
+        border-width: 1px 0 0 0 !important;
+    }
+    
+    .p-datatable .p-datatable-tbody > tr > td {
+        padding-top: 0.2rem !important;
+        padding-bottom: 0.2rem !important;
+        font-size: 0.9rem;
+        font-family: monospace;
+    }
+
+    .p-message .p-message-wrapper {
+        padding: 0.4rem !important;
+    }
+
+    .p-tabview-panels {
+        padding: 0.5rem !important;
+    }
+
+    .p-datatable {
+        background-color: white !important;
+        box-shadow: 2px 2px 0 gray !important;
+        border-radius: 5px !important;
+        border: 0.5px solid gray;
+    }
+
+    .p-tabview .p-tabview-panels {
+        padding: 0.3rem 0 !important;
+    }
+
+    .p-column-filter .p-inputtext {
+        font-size: 0.8rem !important;
+        padding: 0.2rem !important;
+    }
+
+    .input-text .p-column-filter .p-inputtext {
+        width: 50% !important;
+    }
+
+    #pr_id_2-table > thead > tr:nth-child(2) > th:nth-child(3) > p-columnfilter > div > p-columnfilterformelement > p-multiselect > div > div.p-element.p-multiselect-label-container > div,
+    #pr_id_2-table > thead > tr:nth-child(2) > th:nth-child(4) > p-columnfilter > div > p-columnfilterformelement > p-multiselect > div > div.p-element.p-multiselect-label-container > div,
+    #pr_id_2-table > thead > tr:nth-child(2) > th:nth-child(5) > p-columnfilter > div > p-columnfilterformelement > p-multiselect > div > div.p-element.p-multiselect-label-container > div,
+    #pr_id_2-table > thead > tr:nth-child(2) > th:nth-child(6) > p-columnfilter > div > p-columnfilterformelement > p-multiselect > div > div.p-element.p-multiselect-label-container > div,
+    #pr_id_2-table > thead > tr:nth-child(2) > th:nth-child(7) > p-columnfilter > div > p-columnfilterformelement > p-multiselect > div > div.p-element.p-multiselect-label-container > div {
+        font-size: 0.8rem !important;
+        padding: 0.2rem !important;
+    }
+
+
 }
 
 .embarque__reporte {
@@ -37,3 +94,61 @@
     position: relative;
 }
 
+.rango__title {
+    font-weight: bold;
+}
+
+.rango__value {
+    font-style: italic;
+}
+
+.precios__fechas {
+    display: flex;
+    gap: 1%;
+}
+
+.fecha__title {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #5D6D7E;
+}
+
+.admin__precios {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.5rem;
+    background-color: white;
+    box-shadow: 2px 2px 0 gray;
+    border-radius: 5px;
+    border: 0.5px solid gray;
+    padding: 0.2rem;
+    margin-bottom: 0.7rem;
+}
+
+.btn-admin {
+    height: 2.5rem;
+}
+
+.precios__check {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2%;
+    width: 80%;
+}
+
+.edit--buttons {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 0.5%;
+    margin-bottom: 0.3rem;
+}
+
+.add--button {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-bottom: 0.3rem;
+}

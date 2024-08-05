@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IngenieriaService } from '../../services/ingenieria.service';
 import { Scada } from '../../interfaces/Scada.interface';
 import { TipoDispositivo } from '../../interfaces/TipoDispositivo.interface';
 import { Ubicacion } from '../../interfaces/Ubicacion.interface';
-import { InputText } from 'primeng/inputtext';
 import { Dropdown } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CambiosSinGuardarComponent } from '../../components/cambios-sin-guardar/cambios-sin-guardar.component';
 import { ScadaDTO } from '../../interfaces/ScadaDTO.interface';
 import { UnidadMedida } from '../../interfaces/UnidadMedida.interface';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 
 @Component({
@@ -67,7 +67,8 @@ export class DispositivosScadaComponent implements OnInit, OnDestroy {
     private ingSrvc: IngenieriaService,
     public dialogService: DialogService,
     public messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private cs: CommonService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -97,22 +98,22 @@ export class DispositivosScadaComponent implements OnInit, OnDestroy {
 
   private async getDatosScada(): Promise<void> {
     this.datosScada = await this.ingSrvc.getDatosScada().toPromise();
-    this.datosScadaOrigin = this.deepCopy(this.datosScada); //[...this.datosScada!];
+    this.datosScadaOrigin = this.cs.deepCopy(this.datosScada); //[...this.datosScada!];
   }
 
   private async getTiposDispositivos(): Promise<void> {
     this.dispositivos = await this.ingSrvc.getTiposDispositivos().toPromise();
-    this.dispositivosOrigin = this.deepCopy(this.dispositivos); //[...this.dispositivos!];
+    this.dispositivosOrigin = this.cs.deepCopy(this.dispositivos); //[...this.dispositivos!];
   }
 
   private async getUbicacionesDispositivos(): Promise<void> {
     this.ubicaciones = await this.ingSrvc.getUbicacionesDispositivos().toPromise();
-    this.ubicacionesOrigin = this.deepCopy(this.ubicaciones); //[...this.ubicaciones!];
+    this.ubicacionesOrigin = this.cs.deepCopy(this.ubicaciones); //[...this.ubicaciones!];
   }
 
   private async getUnidadesMedida(): Promise<void> {
     this.unidades = await this.ingSrvc.getUnidadesMedida().toPromise();
-    this.unidadesOrigin = this.deepCopy(this.unidades);
+    this.unidadesOrigin = this.cs.deepCopy(this.unidades);
   }
 
   getUbicaciones(): string[] {
@@ -428,10 +429,10 @@ export class DispositivosScadaComponent implements OnInit, OnDestroy {
     this.agregarUnidades = [];
     this.actualizarUnidades = [];
     this.eliminarUnidades = [];
-    this.datosScada =  this.deepCopy(this.datosScadaOrigin); //[...this.datosScadaOrigin!];
-    this.dispositivos = this.deepCopy(this.dispositivosOrigin); //[...this.dispositivosOrigin!];
-    this.ubicaciones = this.deepCopy(this.ubicacionesOrigin); //[...this.ubicacionesOrigin!];
-    this.unidades = this.deepCopy(this.unidadesOrigin);
+    this.datosScada =  this.cs.deepCopy(this.datosScadaOrigin);     //[...this.datosScadaOrigin!];
+    this.dispositivos = this.cs.deepCopy(this.dispositivosOrigin);  //[...this.dispositivosOrigin!];
+    this.ubicaciones = this.cs.deepCopy(this.ubicacionesOrigin);    //[...this.ubicacionesOrigin!];
+    this.unidades = this.cs.deepCopy(this.unidadesOrigin);
     this.hayCambios = false;
     this.mostrarExportacion = true;
   }
@@ -456,24 +457,4 @@ export class DispositivosScadaComponent implements OnInit, OnDestroy {
       descripcion: scada.descripcion
     }
   }
-
-  deepCopy<T>(obj: T): T {
-    if (typeof obj !== 'object' || obj === null) {
-        return obj;
-    }
-    
-    if (Array.isArray(obj)) {
-        return obj.map(item => this.deepCopy(item)) as any;
-    }
-    
-    const newObj: Partial<T> = {};
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            newObj[key] = this.deepCopy(obj[key]);
-        }
-    }
-    
-    return newObj as T;
-}
-
 }

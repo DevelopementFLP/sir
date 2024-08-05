@@ -1,0 +1,16 @@
+<div class="total">
+    <div class="titulo--total">{{titulo}}</div>
+    <div class="item--text">{{totalPallets() | number:'0.0'}}</div>
+    <div class="item--text">{{datosKosher.length | number:'0.0'}}</div>
+    <div class="item--text">{{totalKilosNetos() | number:'0.2'}}</div>
+    <div class="item--text">{{totalKilosBrutos() | number:'0.2'}}</div>
+    <div class="item--text">{{totalPrecio() | number:'0.2'}}</div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text">{{totalPrecio() | number:'0.2'}}</div>
+    <div class="item--text">{{(totalPrecio() / totalKilosNetos() * 1000) | number:'0.2'}}</div>
+</div>

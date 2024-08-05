@@ -1,0 +1,31 @@
+<div *ngIf="mostrarReporte">
+    <p-tabView>
+        <p-tabPanel header="Detalle">
+            <div class="item">
+                <div class="item--text" *ngFor="let titulo of titulos">{{titulo}}</div>
+            </div>
+            <data-show 
+                *ngIf="datosCortesKosher.length > 0" 
+                [dataGroup]="dataCortes"
+                [datosKosher]="datosCortesKosher" />
+            <br>
+            <data-show 
+                *ngIf="datosMenudenciasKosher.length > 0" 
+                [dataGroup]="dataMenudencias"
+                [datosKosher]="datosMenudenciasKosher" />
+            <br>
+            <total-show 
+                *ngIf="datosKosher.length > 0"
+                [datosKosher]="datosKosher" 
+                titulo="TOTAL GENERAL" />
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<sir-exportacion
+    *ngIf="mostrarExcel()"
+    [excel]="true"
+    [idReporte]="7"
+    [nombreArchivo]="nombreReporte"
+    [dataPrint]="{cortes: dataCortes, menudencias: dataMenudencias, config: dataConfig, cajas: datosKosher}"
+/>

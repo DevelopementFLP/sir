@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { PrintModel } from '../models/print-model.interface';
-import { Fill, ImagePosition, Workbook, Worksheet } from 'exceljs';
+import { Alignment, Fill, ImagePosition, Workbook, Worksheet } from 'exceljs';
 import { formatDate } from '@angular/common';
 import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
 import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
@@ -11,10 +11,18 @@ import { DataTemperatura } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/Da
 import { Ubicacion } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/Ubicacion.interface';
 import { Scada } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/Scada.interface';
 import { TipoDispositivo } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/TipoDispositivo.interface';
+import { UnidadMedida } from 'src/app/07_SIR.Mantenimiento.Apps/interfaces/UnidadMedida.interface';
+import { EmbarqueConfig } from '../../04_SIR.Exportaciones.Reportes/Interfaces/EmbarqueConfig.interface';
+import { KosherCommonService } from 'src/app/04_SIR.Exportaciones.Reportes/services/kosher-common.service';
+import { DetalleEmbarquePrintService } from './detalle-embarque-print.service';
+import { DataKosher } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DataKosher.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
-  constructor() {}
+  constructor(
+    private kcs: KosherCommonService,
+    private deps: DetalleEmbarquePrintService 
+  ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
     switch (idReporte) {
@@ -30,6 +38,8 @@ export class PrintService {
         return this.printCabezasFaenadas(dataToPrint, libro);
       case 6:
         return this.printDispositivosScada(dataToPrint, libro);
+      case 7:
+        return this.printDetalleDeEmbarque(dataToPrint, libro);
       default:
         return [];
     }
@@ -926,7 +936,8 @@ export class PrintService {
         sheet.getCell("F" + (filaFechaFaena)).value = cf.secuencial;
         sheet.getCell("G" + (filaFechaFaena)).value = cf.caravana;
         sheet.getCell("H" + (filaFechaFaena)).value = cf.dotNumber;
-        sheet.getCell("I" + (filaFechaFaena)).value = cf.pesoMedia.toFixed(2) ;
+        sheet.getCell("I" + (filaFechaFaena)).value = parseFloat(cf.pesoMedia.toFixed(2)) ;
+        sheet.getCell("I" + (filaFechaFaena)).numFmt = '0.00';
         sheet.getCell("J" + (filaFechaFaena)).value = cf.fechaHoraEtiquetado;
         filaFechaFaena++;
       });
@@ -995,6 +1006,8 @@ export class PrintService {
     const dataScada: Scada[] = dataToPrint.data.datosScada as Scada[];
     const dispositivos: TipoDispositivo[] = dataToPrint.data.dispositivos as TipoDispositivo[];
     const ubicaciones: Ubicacion[] = dataToPrint.data.ubicaciones as Ubicacion[];
+    const unidades: UnidadMedida[] = dataToPrint.data.unidades as UnidadMedida[];
+
     const fuenteTitulo = { bold: true, size: 12};
 
     if(dataScada) {
@@ -1009,18 +1022,21 @@ export class PrintService {
       hojaDatos.getCell("C7").font = fuenteTitulo;
       hojaDatos.getCell("D7").value = "Ubicación";
       hojaDatos.getCell("D7").font = fuenteTitulo;
-      hojaDatos.getCell("E7").value = "Nombre";
+      hojaDatos.getCell("E7").value = "Unidad de medida";
       hojaDatos.getCell("E7").font = fuenteTitulo;
-      hojaDatos.getCell("F7").value = "Descrpción";
-      hojaDatos.getCell("F7").font = fuenteTitulo;   
+      hojaDatos.getCell("F7").value = "Nombre";
+      hojaDatos.getCell("F7").font = fuenteTitulo;
+      hojaDatos.getCell("G7").value = "Descrpción";
+      hojaDatos.getCell("G7").font = fuenteTitulo;   
     
       var filaDatos: number = 8;
       dataScada.forEach(dato => {
         hojaDatos.getCell("B" + filaDatos).value = dato.deviceId;
         hojaDatos.getCell("C" + filaDatos).value = dispositivos ? dispositivos.find(d => d.idTipo == dato.idTipoDispositivo)?.nombre : dato.idTipoDispositivo;
         hojaDatos.getCell("D" + filaDatos).value = ubicaciones ? ubicaciones.find(u => u.idUbicacion == dato.idUbicacion)?.nombre : dato.idUbicacion;
-        hojaDatos.getCell("E" + filaDatos).value = dato.nombre;
-        hojaDatos.getCell("F" + filaDatos).value = dato.descripcion;
+        hojaDatos.getCell("E" + filaDatos).value = unidades ? unidades.find(u => u.idUnidadMedida == dato.idUnidadMedida)?.codigo : dato.idUnidadMedida;
+        hojaDatos.getCell("F" + filaDatos).value = dato.nombre;
+        hojaDatos.getCell("G" + filaDatos).value = dato.descripcion;
         
         filaDatos++;
       });
@@ -1028,8 +1044,9 @@ export class PrintService {
       hojaDatos.getColumn("B").width = 44;
       hojaDatos.getColumn("C").width = 16;
       hojaDatos.getColumn("D").width = 34;
-      hojaDatos.getColumn("E").width = 15;
-      hojaDatos.getColumn("F").width = 15;
+      hojaDatos.getColumn("E").width = 25;
+      hojaDatos.getColumn("F").width = 25;
+      hojaDatos.getColumn("G").width = 25; 
     }
 
     if(dispositivos) {
@@ -1080,7 +1097,703 @@ export class PrintService {
       hojaUbicaciones.getColumn("C").width = 34;
       hojaUbicaciones.getColumn("D").width = 34;
     }
+
+    if(unidades) {
+      const titulo: string = "Unidades de medida";
+      const hojaUnidades = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaUnidades);
+      this.setTitle(libro, hojaUnidades, titulo, 'right', 4);
+
+      hojaUnidades.getCell("B7").value = "Unidad";
+      hojaUnidades.getCell("B7").font = fuenteTitulo;
+      hojaUnidades.getCell("C7").value = "Nombre";
+      hojaUnidades.getCell("C7").font = fuenteTitulo;
+
+      var filaDatos: number = 8;
+      unidades.forEach( um => {
+        hojaUnidades.getCell("B" + filaDatos).value = um.codigo;
+        hojaUnidades.getCell("C" + filaDatos).value = um.nombre;
+
+        filaDatos++;
+      });
+
+      hojaUnidades.getColumn("B").width = 20;
+      hojaUnidades.getColumn("C").width = 34;
+    }
   }
 
-}
+  /* DETALLE DE EMBARQUE */
+  private printDetalleDeEmbarque(dataToPrint: PrintModel, libro: Workbook): void {
+    const dataKosher: DataKosher[] = dataToPrint.data.cajas as DataKosher[];
+    const containers: string[] = this.deps.obtenerContenedoresUnicos(dataKosher);
+    const mercaderias: string[] = this.deps.obtenerMercaderiasUnicas(dataKosher);
+    const precios: number[] = this.deps.obtenerPreciosUnicos(dataKosher);
+    const especies: string[] = this.deps.obtenerEspeciesUnicas(dataKosher);
+    const tipos: string[] = this.deps.obtenerTiposUnicos(dataKosher);
 
+ 
+    const fondoTitulo: Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFF2F3F4' },
+      bgColor: { argb: '00000000'  }
+    };
+
+    const fondoSubTotal: Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFEBF5FB' },
+      bgColor: { argb: '00000000'  }
+    };
+  
+    const fondoTotalGeneral: Fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFFADBD8' },
+      bgColor: { argb: '00000000'  }
+    };
+
+    const fondoTotalMerca: Fill= {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFFFFF00' },
+      bgColor: { argb: '00000000'  }
+    }
+
+    const fuenteTitulo = { bold: true, size: 12};
+    const fuenteSubTitulos = { bold: true, size: 10 };
+    const fuenteContainer = { bold: true, size: 10, color: { argb: 'FF2E86C1'} };
+    const fuenteShippingMark = { bold: true, size: 10, color: { argb: 'FFE74C3C'} };
+    const fuenteSubTotal = { bold: true, size: 12, color: { argb: 'FF2E86C1'} };
+    const fuentePProm = { bold: true, color: {argb: 'FFCD6155'} };
+    const fuenteTotalGeneral = { bold: true, size: 12 };
+    const fuenteMerca = { bold: true, size: 10, color: {argb: 'FFCD6155'} };
+    const fuenteTotalMerca = { bold: true, color: {argb: 'FF2E86C1'}};
+    const fuenteConteinerNoCorte = { size: 10 };
+    const fuenteEspecieTipo = { size: 10, italic: true };
+    const fuenteTotalCortesDesglose = { bold: true, size: 12 , color: { argb: 'FF2E86C1'} };
+    const fuenteTotalDesglose = { bold: true, size: 13 , color: { argb: 'FFCD6155'} };
+    const fuenteEspecieCortes = { bold: true, size: 10 };
+
+    const alineacionCentro: Partial<Alignment> = { vertical: 'middle', horizontal: 'center' };
+
+    const formatoNumero: string = '#,##0.00';
+
+    /* Hoja detalle */
+    const tituloDetalle: string = "Detalle";
+    const hojaDetalle = libro.addWorksheet(tituloDetalle);
+    this.setLogo(libro, hojaDetalle);
+    this.setTitle(libro, hojaDetalle, tituloDetalle, 'right', 16);
+    const embarqueConfig: EmbarqueConfig = dataToPrint.data.config as EmbarqueConfig;
+   
+    hojaDetalle.getCell("B6").value = "DETALLE DE EMBARQUE ISRAEL - FRIGORÍFICO LAS PIEDRAS S.A.";
+    hojaDetalle.getCell("B6").font = fuenteTitulo;
+    
+    hojaDetalle.getCell("O6").value = "SHIPPING MARK:";
+    hojaDetalle.getCell("O6").font = fuenteShippingMark; 
+    hojaDetalle.getCell("O7").value = embarqueConfig.shippingMark;
+    hojaDetalle.getCell("B8").value = "ATTN:";
+    hojaDetalle.getCell("B8").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B9").value = "VENTA:";
+    hojaDetalle.getCell("B9").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B10").value = "CLIENTE:";
+    hojaDetalle.getCell("B10").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B11").value = "BARCO:";
+    hojaDetalle.getCell("B11").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B12").value = "FACTURA:";
+    hojaDetalle.getCell("B12").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B13").value = "CARPETA:";
+    hojaDetalle.getCell("B13").font = fuenteSubTitulos;
+    hojaDetalle.getCell("B14").value = "FECHA B/L:";
+    hojaDetalle.getCell("B14").font = fuenteSubTitulos;
+    hojaDetalle.getCell("C8").value = embarqueConfig.attn;
+    hojaDetalle.getCell("C9").value = embarqueConfig.numeroVenta.toString();
+    hojaDetalle.getCell("C10").value = "NECHEMIA LACHOVITZ";
+    hojaDetalle.getCell("C11").value = embarqueConfig.barco;
+    hojaDetalle.getCell("C12").value = embarqueConfig.factura;
+    hojaDetalle.getCell("C13").value = embarqueConfig.carpeta;
+    hojaDetalle.getCell("C14").value = formatDate(embarqueConfig.fechaBL, "dd/MM/yyyy", "es-UY");
+
+    hojaDetalle.getCell("J8").value = "CONTAINER:";
+    hojaDetalle.getCell("J8").font = fuenteSubTitulos;
+
+    var filaContainerName: number = 8;
+    containers.forEach(container => {
+      const c: string = container as string;
+      hojaDetalle.getCell("K" + filaContainerName).value = c; 
+      hojaDetalle.getCell("K" + filaContainerName).font = fuenteContainer;
+      hojaDetalle.getCell("K" + filaContainerName).alignment = alineacionCentro;
+      filaContainerName++;
+    });
+
+    const filaTitulos = filaContainerName < 16 ? 16 : filaContainerName + 2;
+    const titulos: string[] = this.kcs.getTitulosReporte();
+    const widhts: number[] = [18, 15, 8, 8, 15, 15, 15, 10, 25, 18, 18, 22, 18, 15, 15];
+    var colNumber: number = 2;
+
+    titulos.forEach((titulo, i) => {
+      const row = hojaDetalle.getRow(filaTitulos);
+      const cell = row.getCell(colNumber);
+      cell.value = titulo;
+      cell.font = fuenteSubTitulos;
+      cell.fill = fondoTitulo;
+      hojaDetalle.getColumn(colNumber).width = widhts[i];
+      cell.style.alignment = alineacionCentro;
+      colNumber++;
+    });
+
+    var filaCaja: number = filaTitulos + 1;
+    const cortes = this.deps.obtenerCajasPorMercaderia(dataKosher, "CORTES");
+    if(cortes.length > 0) {
+    //mercaderias.forEach(merca => {
+      if(cortes.length > 0) {
+        const merca = 'CORTES';
+        const cajasPorMerca = dataKosher.filter(dk => dk.mercaderia == merca);
+        containers.forEach(cont => {
+          const cajasPorMercaCont = cajasPorMerca.filter(c => c.container == cont);
+          especies.forEach(esp => {
+            const cajasPorMercaEsp = cajasPorMercaCont.filter(c => c.especie == esp);
+            tipos.forEach(tipo => {
+              const cajasPorMercaEspTipo = cajasPorMercaEsp.filter(c => c.tipoProducto == tipo);
+              if(cajasPorMercaEspTipo.length > 0) {
+                const precios = Array.from(new Set(cajasPorMercaEspTipo.map(cpmet => cpmet.precioTonelada))).sort((a, b) => { if(a >= b) return 1; else return -1});
+                precios.forEach(precio => {
+                  const cajasPorMercaEspTipoPrec = cajasPorMercaEspTipo.filter(c => c.precioTonelada == precio);
+                  // const pallets = this.deps.obtenerPalletsUnicos(cajasPorMercaEspTipoPrec);
+                  // console.log(pallets)
+                  // pallets.forEach(pallet => {
+                    // const c = cajasPorMercaEspTipoPrec.filter(c => c.idPallet == pallet);                  
+                      const kilosNetos = this.deps.sumarKilosNetos(cajasPorMercaEspTipoPrec);
+                      //hojaDetalle.getCell("B" + filaCaja).value = embarqueConfig.dua;
+                      hojaDetalle.getCell("B" + filaCaja).alignment = alineacionCentro;
+                      hojaDetalle.getCell("C" + filaCaja).value = merca;
+                      hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
+                      hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
+                      hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMercaEspTipoPrec)
+                      hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cajasPorMercaEspTipoPrec);
+                      hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                      hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+                      hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorMercaEspTipoPrec).toFixed(2));
+                      hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+                      hojaDetalle.getCell("H" + filaCaja).value = parseFloat((kilosNetos * (precio / 1000)).toFixed(2));
+                      hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+                      hojaDetalle.getCell("I" + filaCaja).value = precio / 1000;
+                      hojaDetalle.getCell("I" + filaCaja).numFmt = formatoNumero;
+                      hojaDetalle.getCell("I" + filaCaja).alignment = alineacionCentro;
+                      hojaDetalle.getCell("J" + filaCaja).value = esp + " " + tipo;
+                      hojaDetalle.getCell("J" + filaCaja).alignment = alineacionCentro;
+                      hojaDetalle.getCell("J" + filaCaja).font = fuenteEspecieTipo;
+                      hojaDetalle.getCell("O" + filaCaja).value = parseFloat((kilosNetos * (precio / 1000)).toFixed(2));
+                      hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+                      hojaDetalle.getCell("P" + filaCaja).value = precio;
+                      hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+                      filaCaja++;
+                  // });
+                });
+              }
+              const cantCajas = this.deps.cantidadCajas(cajasPorMercaEspTipo);
+              if(cantCajas > 0) {
+                const kilosNetos = this.deps.sumarKilosNetos(cajasPorMercaEspTipo);
+                const sumaPrecios = this.deps.sumarPrecios(cajasPorMercaEspTipo);
+                hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMercaEspTipo);
+                hojaDetalle.getCell("D" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("D" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("E" + filaCaja).value = cantCajas;
+                hojaDetalle.getCell("E" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("E" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("F" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("F" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorMercaEspTipo).toFixed(2));
+                hojaDetalle.getCell("G" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("G" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("H" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+                hojaDetalle.getCell("H" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("H" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("I" + filaCaja).value = parseFloat((sumaPrecios / kilosNetos * 1000).toFixed(2));
+                hojaDetalle.getCell("I" + filaCaja).font = fuentePProm;
+                hojaDetalle.getCell("I" + filaCaja).alignment = alineacionCentro;
+                hojaDetalle.getCell("I" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("K" + filaCaja).value = cont;
+                hojaDetalle.getCell("K" + filaCaja).font = fuenteContainer;
+                hojaDetalle.getCell("K" + filaCaja).alignment = alineacionCentro;
+                hojaDetalle.getCell("L" + filaCaja).value = 0.0;
+                hojaDetalle.getCell("L" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("L" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("L" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("M" + filaCaja).value = 0.0;
+                hojaDetalle.getCell("M" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("M" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("M" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("N" + filaCaja).value = 0.0;
+                hojaDetalle.getCell("N" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("N" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("N" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("O" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+                hojaDetalle.getCell("O" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("O" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+                hojaDetalle.getCell("P" + filaCaja).value = parseFloat((sumaPrecios / kilosNetos * 1000).toFixed(2));
+                hojaDetalle.getCell("P" + filaCaja).font = fuenteSubTitulos;
+                hojaDetalle.getCell("P" + filaCaja).style.fill = fondoSubTotal;
+                hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+                filaCaja += 2;
+              }
+            });
+        });
+      });
+    }
+
+    const kilosNetosCortes = this.deps.sumarKilosNetos(cortes);
+    const sumaPreciosCortes = this.deps.sumarPrecios(cortes);
+    hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
+    hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
+    hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
+    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cortes);
+    hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cortes);
+    hojaDetalle.getCell("E" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("E" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetosCortes.toFixed(2));
+    hojaDetalle.getCell("F" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cortes).toFixed(2));
+    hojaDetalle.getCell("G" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("G" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("H" + filaCaja).value = parseFloat(sumaPreciosCortes.toFixed(2));
+    hojaDetalle.getCell("H" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("H" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("K" + filaCaja).value = "TOTAL";
+    hojaDetalle.getCell("K" + filaCaja).alignment = alineacionCentro;
+    hojaDetalle.getCell("K" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("K" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("L" + filaCaja).value = 0;
+    hojaDetalle.getCell("L" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("L" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("M" + filaCaja).value = 0;
+    hojaDetalle.getCell("M" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("M" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("N" + filaCaja).value = 0;
+    hojaDetalle.getCell("N" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("N" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).value = parseFloat(sumaPreciosCortes.toFixed(2));
+    hojaDetalle.getCell("O" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("P" + filaCaja).value = parseFloat((sumaPreciosCortes / kilosNetosCortes * 1000).toFixed(2));
+    hojaDetalle.getCell("P" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("P" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+    filaCaja += 2;
+
+  }
+    // NO CORTES
+    const noCortes = this.deps.obtenerCajasPorMercaderia(dataKosher);
+    if(noCortes.length > 0) {
+    const nombresMercaderias = Array.from(new Set(noCortes.map(nc => nc.mercaderia)));
+    nombresMercaderias.sort((a, b) => {
+      if(a <= b) return -1;
+      return 1;
+    });
+
+    nombresMercaderias.forEach(merca => {
+      const cajasPorMerca = noCortes.filter(nc => nc.mercaderia == merca);
+      containers.forEach(cont => {
+        const cajasPorContainer = cajasPorMerca.filter(cpm => cpm.container == cont);
+        if(cajasPorContainer.length > 0) {
+          especies.forEach(esp => {
+            const cajasPorEspecie = cajasPorContainer.filter(cpc => cpc.especie == esp);
+            if(cajasPorEspecie.length > 0 ) {
+              tipos.forEach(t => {
+                const cajasPorTipo = cajasPorEspecie.filter(cpe => cpe.tipoProducto == t);
+                const precios = Array.from(new Set(cajasPorTipo.map(cpt => cpt.precioTonelada))).sort((a, b) => { if(a >= b) return 1; else return -1});
+                if(precios.length > 0) {
+                  precios.forEach(precio => {
+                    const cajasPorPrecio = cajasPorTipo.filter(cpt => cpt.precioTonelada == precio);
+                    const kilosNetos = this.deps.sumarKilosNetos(cajasPorPrecio);
+                    //hojaDetalle.getCell("B" + filaCaja).value = embarqueConfig.dua;
+                    hojaDetalle.getCell("B" + filaCaja).alignment = alineacionCentro;
+                    hojaDetalle.getCell("C" + filaCaja).value = this.deps.nombresDict[merca];
+                    hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
+                    hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
+                    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorPrecio);
+                    hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cajasPorPrecio);
+                    hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                    hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+                    hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorPrecio).toFixed(2)); 
+                    hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+                    hojaDetalle.getCell("H" + filaCaja).value = parseFloat(((precio / 1000) * kilosNetos).toFixed(2));
+                    hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+                    hojaDetalle.getCell("I" + filaCaja).value = precio / 1000;
+                    hojaDetalle.getCell("I" + filaCaja).numFmt = formatoNumero;
+                    hojaDetalle.getCell("I" + filaCaja).alignment = alineacionCentro;
+                    hojaDetalle.getCell("J" + filaCaja).value = esp + " " + t;
+                    hojaDetalle.getCell("J" + filaCaja).font = fuenteEspecieTipo;
+                    hojaDetalle.getCell("J" + filaCaja).alignment = alineacionCentro;
+                    hojaDetalle.getCell("K" + filaCaja).value = cont;
+                    hojaDetalle.getCell("K" + filaCaja).alignment = alineacionCentro;
+                    hojaDetalle.getCell("K" + filaCaja).font = fuenteConteinerNoCorte;
+                    hojaDetalle.getCell("O" + filaCaja).value = parseFloat(((precio / 1000) * kilosNetos).toFixed(2));
+                    hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+                    hojaDetalle.getCell("P" + filaCaja).value = precio;
+                    hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+                    filaCaja++;
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+      const kilosNetos = this.deps.sumarKilosNetos(cajasPorMerca);
+      const sumaPrecios = this.deps.sumarPrecios(cajasPorMerca);
+      hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
+      hojaDetalle.getCell("C" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("C" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
+      hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMerca);
+      hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cajasPorMerca);
+      hojaDetalle.getCell("E" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("E" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+      hojaDetalle.getCell("F" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("F" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+      hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorMerca).toFixed(2));
+      hojaDetalle.getCell("G" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("G" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+      hojaDetalle.getCell("H" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+      hojaDetalle.getCell("H" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("H" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+      hojaDetalle.getCell("I" + filaCaja).value = parseFloat((sumaPrecios / kilosNetos * 1000).toFixed(2));
+      hojaDetalle.getCell("I" + filaCaja).font = fuentePProm;
+      hojaDetalle.getCell("I" + filaCaja).alignment = alineacionCentro;
+      hojaDetalle.getCell("I" + filaCaja).numFmt = formatoNumero;
+      hojaDetalle.getCell("K" + filaCaja).value = "TOTAL";
+      hojaDetalle.getCell("K" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("K" + filaCaja).alignment = alineacionCentro;
+      hojaDetalle.getCell("K" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("L" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("L" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("M" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("M" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("N" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("N" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("O" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+      hojaDetalle.getCell("O" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("O" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+      hojaDetalle.getCell("P" + filaCaja).value = parseFloat((sumaPrecios / kilosNetos * 1000).toFixed(2));
+      hojaDetalle.getCell("P" + filaCaja).font = fuenteTotalMerca;
+      hojaDetalle.getCell("P" + filaCaja).style.fill = fondoTotalMerca;
+      hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+      filaCaja += 2;
+    });
+
+    const kilosNetosNoCortes = this.deps.sumarKilosNetos(noCortes);
+    const sumaPreciosNoCortes = this.deps.sumarPrecios(noCortes);
+    hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
+    hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
+    hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
+    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(noCortes);
+    hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(noCortes);
+    hojaDetalle.getCell("E" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("E" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetosNoCortes.toFixed(2));
+    hojaDetalle.getCell("F" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(noCortes).toFixed(2));
+    hojaDetalle.getCell("G" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("G" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("H" + filaCaja).value = parseFloat(sumaPreciosNoCortes.toFixed(2));
+    hojaDetalle.getCell("H" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("H" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("K" + filaCaja).value = "TOTAL";
+    hojaDetalle.getCell("K" + filaCaja).alignment = alineacionCentro;
+    hojaDetalle.getCell("K" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("K" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("L" + filaCaja).value = 0;
+    hojaDetalle.getCell("L" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("L" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("L" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("M" + filaCaja).value = 0;
+    hojaDetalle.getCell("M" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("M" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("M" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("N" + filaCaja).value = 0;
+    hojaDetalle.getCell("N" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("N" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("N" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).value = parseFloat(sumaPreciosNoCortes.toFixed(2));
+    hojaDetalle.getCell("O" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("P" + filaCaja).value = parseFloat((sumaPreciosNoCortes / kilosNetosNoCortes * 1000).toFixed(2));
+    hojaDetalle.getCell("P" + filaCaja).font = fuenteTotalMerca;
+    hojaDetalle.getCell("P" + filaCaja).style.fill = fondoTotalMerca;
+    hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+    filaCaja += 2;
+  }
+    //TOTAL GENERAL
+    filaCaja += 2;
+    const kilosNetos = this.deps.sumarKilosNetos(dataKosher);
+    const sumaPrecios = this.deps.sumarPrecios(dataKosher);
+    hojaDetalle.getCell("B" + filaCaja).value = "TOTAL GENERAL";
+    hojaDetalle.getCell("B" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("B" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("C" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("C" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(dataKosher);
+    hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(dataKosher);
+    hojaDetalle.getCell("E" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("E" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+    hojaDetalle.getCell("F" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("F" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("G" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(dataKosher).toFixed(2));
+    hojaDetalle.getCell("G" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("G" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("G" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("H" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+    hojaDetalle.getCell("H" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("H" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("H" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("L" + filaCaja).value = 0.0;
+    hojaDetalle.getCell("L" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("L" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("L" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("M" + filaCaja).value = 0.0;
+    hojaDetalle.getCell("M" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("M" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("M" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("N" + filaCaja).value = 0.0;
+    hojaDetalle.getCell("N" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("N" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("N" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("O" + filaCaja).value = parseFloat(sumaPrecios.toFixed(2));
+    hojaDetalle.getCell("O" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("O" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("O" + filaCaja).numFmt = formatoNumero;
+    hojaDetalle.getCell("P" + filaCaja).value = parseFloat((sumaPrecios / kilosNetos * 1000).toFixed(2));
+    hojaDetalle.getCell("P" + filaCaja).font = fuenteTotalGeneral;
+    hojaDetalle.getCell("P" + filaCaja).style.fill = fondoTotalGeneral;
+    hojaDetalle.getCell("P" + filaCaja).numFmt = formatoNumero;
+  
+
+    /* Hoja desglose */
+    const tituloDesglose: string = "Desglose";
+    const hojaDesglose = libro.addWorksheet(tituloDesglose);
+    this.setLogo(libro, hojaDesglose);
+    this.setTitle(libro, hojaDesglose, tituloDesglose, 'right', 8);
+
+    var filaCaja = 6;
+    if(cortes.length > 0) {
+    especies.forEach(esp => {
+      const cajasPorEspecie = cortes.filter(c => c.especie == esp);
+      if(cajasPorEspecie.length > 0) {
+        tipos.forEach(tipo => {
+          const cajasPorTipo = cajasPorEspecie.filter(c => c.tipoProducto == tipo);
+          if(cajasPorTipo.length > 0) {
+            const precios = Array.from(new Set(cajasPorTipo.map(c => c.precioTonelada))).sort((a, b) => { if(a >= b) return 1; else return -1});
+            if(precios.length > 0) {
+              precios.forEach(precio => {
+                const cajasPorPrecio = cajasPorTipo.filter(c => c.precioTonelada == precio);
+                if(cajasPorPrecio.length > 0) {
+                  const filaEspecie = filaCaja;
+                  containers.forEach(cont => {
+                    const cajasContainer = cajasPorPrecio.filter(c => c.container == cont);
+                    if(cajasContainer.length > 0) {
+                      const kilosNetos = this.deps.sumarKilosNetos(cajasPorPrecio);
+                      hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cajasContainer);
+                      hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cajasContainer);
+                      hojaDesglose.getCell("D" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                      hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasContainer).toFixed(2));
+                      hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(cajasContainer).toFixed(2));
+                      hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaEspecie).value = precio / 1000;
+                      hojaDesglose.getCell("G" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaEspecie).alignment = alineacionCentro;
+                      hojaDesglose.getCell("G" + filaEspecie).font = fuenteEspecieCortes;
+                      hojaDesglose.getCell("H" + filaEspecie).value = esp + " " + tipo;
+                      hojaDesglose.getCell("H" + filaEspecie).alignment = alineacionCentro;
+                      hojaDesglose.getCell("H" + filaEspecie).font = fuenteEspecieCortes;
+                      filaCaja++; 
+                    }
+                  });
+                    const kilosNetos = this.deps.sumarKilosNetos(cajasPorPrecio);
+                    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cajasPorPrecio);
+                    hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cajasPorPrecio);
+                    hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("D" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                    hojaDesglose.getCell("D" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+                    hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorPrecio).toFixed(2));
+                    hojaDesglose.getCell("E" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+                    hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(cajasPorPrecio).toFixed(2));
+                    hojaDesglose.getCell("F" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+                    hojaDesglose.getCell("G" + filaEspecie).value = precio / 1000;
+                    hojaDesglose.getCell("G" + filaCaja).numFmt = formatoNumero;
+                    hojaDesglose.getCell("G" + filaEspecie).alignment = alineacionCentro;
+                    hojaDesglose.getCell("G" + filaCaja).font = fuenteTotalCortesDesglose;
+                    hojaDesglose.getCell("H" + filaEspecie).value = esp + " " + tipo;
+                    hojaDesglose.getCell("H" + filaEspecie).alignment = alineacionCentro;
+                    hojaDesglose.getCell("H" + filaCaja).font = fuenteTotalCortesDesglose;
+                }
+                filaCaja += 2;
+              });
+            }
+          }
+        });
+      }
+    });
+
+    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cortes);
+    hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cortes);
+    hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).value = parseFloat(this.deps.sumarKilosNetos(cortes).toFixed(2));
+    hojaDesglose.getCell("D" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cortes).toFixed(2));
+    hojaDesglose.getCell("E" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(cortes).toFixed(2));
+    hojaDesglose.getCell("F" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+
+    }
+
+    // NO CORTES
+    filaCaja += 2;
+    if(noCortes.length > 0) {
+    mercaderias.forEach(merca => {
+      const cajasMerca = noCortes.filter(c => c.mercaderia == merca);
+      especies.forEach(esp => {
+        const cajasPorEspecie = cajasMerca.filter(c => c.especie == esp);
+        if(cajasPorEspecie.length > 0) {
+          tipos.forEach(tipo => {
+            const cajasPorTipo = cajasPorEspecie.filter(c => c.tipoProducto == tipo);
+            if(cajasPorTipo.length > 0) {
+              const precios = Array.from(new Set(cajasPorTipo.map(c => c.precioTonelada))).sort((a, b) => { if(a >= b) return 1; else return -1});
+              if(precios.length > 0) {
+                precios.forEach(precio => {
+                  const cajasPorPrecio = cajasPorTipo.filter(c => c.precioTonelada == precio);
+                  if(cajasPorPrecio.length > 0) {
+                    hojaDesglose.getCell("B" + filaCaja).value = this.deps.nombresDict[merca];
+                    hojaDesglose.getCell("B" + filaCaja).font = fuenteMerca;
+                    hojaDesglose.getCell("B" + filaCaja).alignment = alineacionCentro;
+                    filaCaja++;
+                    const filaEspecie = filaCaja;
+                    containers.forEach(cont => {
+                      const cajasContainer = cajasPorPrecio.filter(c => c.container == cont);
+                      if(cajasContainer.length > 0) {
+                      const kilosNetos = this.deps.sumarKilosNetos(cajasPorPrecio);
+                      hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cajasContainer);
+                      hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cajasContainer);
+                      hojaDesglose.getCell("D" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                      hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasContainer).toFixed(2));
+                      hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(cajasContainer).toFixed(2));
+                      hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaEspecie).value = precio / 1000;
+                      hojaDesglose.getCell("G" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaEspecie).font = fuenteMerca;
+                      hojaDesglose.getCell("G" + filaEspecie).alignment = alineacionCentro;
+                      hojaDesglose.getCell("H" + filaEspecie).value = esp + " " + tipo;
+                      hojaDesglose.getCell("H" + filaEspecie).font = fuenteMerca;
+                      hojaDesglose.getCell("H" + filaEspecie).alignment = alineacionCentro;
+                      filaCaja++; 
+                    }
+                    });
+                      const kilosNetos = this.deps.sumarKilosNetos(cajasPorPrecio);
+                      hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cajasPorPrecio);
+                      hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cajasPorPrecio);
+                      hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("D" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
+                      hojaDesglose.getCell("D" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(cajasPorPrecio).toFixed(2));
+                      hojaDesglose.getCell("E" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(cajasPorPrecio).toFixed(2));
+                      hojaDesglose.getCell("F" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaEspecie).value = precio;
+                      hojaDesglose.getCell("G" + filaCaja).numFmt = formatoNumero;
+                      hojaDesglose.getCell("G" + filaCaja).font = fuenteTotalDesglose;
+                      hojaDesglose.getCell("H" + filaEspecie).value = esp + " " + tipo;
+                      hojaDesglose.getCell("H" + filaCaja).font = fuenteTotalDesglose;
+                  }
+                  filaCaja += 2;
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+    
+
+    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(noCortes);
+    hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(noCortes);
+    hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).value = parseFloat(this.deps.sumarKilosNetos(noCortes).toFixed(2));
+    hojaDesglose.getCell("D" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(noCortes).toFixed(2));
+    hojaDesglose.getCell("E" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(noCortes).toFixed(2));
+    hojaDesglose.getCell("F" + filaCaja).font = fuenteTotalDesglose;    
+    hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+  }
+
+    // Total general
+    filaCaja += 2;
+    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(dataKosher);
+    hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(dataKosher);
+    hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).value = parseFloat(this.deps.sumarKilosNetos(dataKosher).toFixed(2));
+    hojaDesglose.getCell("D" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("D" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("E" + filaCaja).value = parseFloat(this.deps.sumarKilosBrutos(dataKosher).toFixed(2));
+    hojaDesglose.getCell("E" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("E" + filaCaja).numFmt = formatoNumero;
+    hojaDesglose.getCell("F" + filaCaja).value = parseFloat(this.deps.sumarPrecios(dataKosher).toFixed(2)) ;
+    hojaDesglose.getCell("F" + filaCaja).font = fuenteTotalDesglose;
+    hojaDesglose.getCell("F" + filaCaja).numFmt = formatoNumero;
+
+    hojaDesglose.getColumn(4).width = 18;
+    hojaDesglose.getColumn(5).width = 18;
+    hojaDesglose.getColumn(6).width = 18;
+    hojaDesglose.getColumn(8).width = 27;
+  }
+}

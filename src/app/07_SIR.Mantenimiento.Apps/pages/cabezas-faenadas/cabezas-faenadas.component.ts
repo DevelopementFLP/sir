@@ -44,6 +44,7 @@ export class CabezasFaenadasComponent implements OnInit {
 
   private async getCabezasFaenadas() {
     this.cabezasFaenadas = await this.mantenimientoSrvc.getCabezasFaenadas(this.formatFecha(this.fechaFaenaDesde), this.formatFecha(this.fechaFaenaDesde)).toPromise();
+    
   }
 
   private formatFecha(fecha: Date): string {
@@ -200,7 +201,6 @@ export class CabezasFaenadasComponent implements OnInit {
 
 
   private getChartHoras(): string[] {
-  //return Array.from(new Set(this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h))));
   return this.extractProperty(this.cabezasFaenadas!, 'fechaHoraEtiquetado').map(h => this.showHourOnly(h));
   }
 

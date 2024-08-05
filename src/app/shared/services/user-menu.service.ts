@@ -51,8 +51,12 @@ export class UserMenuService {
   private goToUser(): void {
     const dataUsuarioActual: Usuario = this.sessionManager.getStorage();
 
-    if(dataUsuarioActual == null || dataUsuarioActual == undefined) return;
-    this.navigationService.navegar('principal/usuario/' + dataUsuarioActual.nombre_usuario);
+     var actualUserstr = localStorage.getItem('actualUser');
+     var actualUser: Usuario;
+      actualUser = this.sessionManager.parseUsuario(actualUserstr!);
+
+    if(actualUser == null || actualUser == undefined) return;
+    this.navigationService.navegar('principal/usuario/' + actualUser.nombre_usuario);
   }
 
   private goToConfiguration(): void {
