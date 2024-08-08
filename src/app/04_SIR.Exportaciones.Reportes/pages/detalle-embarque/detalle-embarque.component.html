@@ -25,7 +25,8 @@
                 [productosKosher]="confProductos"
                 [codigosPrecios]="codigosConPrecio"
                 [embarqueData]="cajasCarga!"
-                [dataConfig]="embarqueData"
+                [dataConfig]="embarqueData!"
+                (habilitarReporte)="habilitar($event)"
             />
         </div>
     </div>

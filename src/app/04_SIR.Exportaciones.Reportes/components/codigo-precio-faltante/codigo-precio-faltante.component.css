@@ -1,4 +1,4 @@
-@layer primeng {
+/* @layer primeng {
     body > p-dynamicdialog > div > div > div.p-dialog-content.ng-tns-c97-19 {
         padding-bottom: 0 !important;
     }
@@ -7,7 +7,7 @@
         position: fixed !important;
         width: 80% !important;
     }
-}
+} */
 
 .faltantes {
     display: flex;

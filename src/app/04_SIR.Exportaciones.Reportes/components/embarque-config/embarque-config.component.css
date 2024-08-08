@@ -1,7 +1,7 @@
 @layer primeng {
     .p-calendar .p-datepicker {
-        position: absolute !important;
         left: -100% !important;
+        position: absolute !important;
     }
 
     .custom-calendar .p-inputtext {
@@ -15,18 +15,18 @@
 }
 
 .buttons {
-    display: flex;
-    justify-content: flex-start;
     align-items: center;
+    display: flex;
     gap: 5%;
+    justify-content: flex-start;
     margin-top: 1rem;
 }
 
 .form__data {
-    width: 100%;
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 0.3rem;
+    width: 100%;
 }

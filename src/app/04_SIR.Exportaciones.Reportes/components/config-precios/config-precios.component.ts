@@ -14,7 +14,7 @@ import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
 import { DWContainer } from '../../Interfaces/DWContainer.interface';
 import { formatDate } from '@angular/common';
 import { KosherCommonService } from '../../services/kosher-common.service';
-import { ArgumentOutOfRangeError, lastValueFrom } from 'rxjs';
+import { ArgumentOutOfRangeError, lastValueFrom, Subscription } from 'rxjs';
 import { MultiSelect } from 'primeng/multiselect';
 import { TabView } from 'primeng/tabview';
 
@@ -35,6 +35,8 @@ interface FechasExtremos {
   encapsulation: ViewEncapsulation.None
 })
 export class ConfigPreciosComponent implements OnInit, OnDestroy {
+
+  private mustReset: Subscription | null = null;
 
   //#region Atributos
   @Output() getCodigosKosher = new EventEmitter<ConfProducto[]>();
@@ -112,6 +114,20 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     await this.mapContainerOptions();
     await this.getTiposMoneda();
     await this.getConfProductos();
+
+    this.mustReset = this.ckcs.reset$.subscribe(() => {
+      this.procederConReporte(false);
+      this.dataContainers = []; 
+      //this.mostrarPrecios = false;
+      //this.precios = [];
+      this.datosCajas = [];
+      this.txtButtonConfirmarPrecios = "Confirmar estos precios y códigos";
+      this.iconoButtonConfirmar = 'pi pi-question';
+      this.mostrarPrecioYCodigos = true;
+      //this.idCarga = [];
+      //this.idCargaString = '';
+      //this.mostrarSeleccionContenedores = false;
+    });
   }
   //#endregion 
 
@@ -332,30 +348,12 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     this.mostrarSeleccionContenedores = false;
   }
 
-  private activarTab(index: number): void {
-    if (this.tabView) {
-        const i = this.tabView.activeIndex;
-
-        if (this.tabView.tabs[i]) {
-            this.tabView.tabs[i].selected = false;
-        }
-
-        if (this.tabView.tabs[index]) {
-            this.tabView.tabs[index].selected = true;
-        }
-
-        this.tabView.activeIndex = index;
-        this.tabView.cd.detectChanges();
-    }
-}
-
   private procederConReporte(value: boolean): void {
     this.habilitarReporte.emit(value);
   }
 
   todoListo(): void {
     this.procederConReporte(true);
-    //this.activarTab(0);
     this.getCodigosPrecio.emit(this.precios);
     this.txtButtonConfirmarPrecios = "Precios y códigos confirmados!";
     this.iconoButtonConfirmar = 'pi pi-check';

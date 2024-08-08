@@ -26,7 +26,7 @@ export class CodigoPrecioFaltanteComponent implements OnInit {
   }
 
   close(): void {
-    this.ref.close();
+    this.ref.close('closed');
     this.ref.destroy();
   }
 

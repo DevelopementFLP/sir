@@ -40,7 +40,6 @@ export class LoginComponent implements AfterViewInit {
 
       //this.userStored = this.sessionManagerService.getStorage();
       this.currentUser = this.sessionManagerService.getCurrentUser()!
-      console.log(this.currentUser)
 
       if(this.currentUser != null) {
         this.userStored = this.parseActualUser(this.currentUser);

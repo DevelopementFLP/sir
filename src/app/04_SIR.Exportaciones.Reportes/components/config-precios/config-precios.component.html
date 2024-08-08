@@ -33,7 +33,7 @@
                     <p-messages [(value)]="mensaje" [enableService]="false" [closable]="false"/>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Códigos" *ngIf="mostrarPrecioYCodigos">
+            <p-tabPanel header="Códigos"> <!--*ngIf="mostrarPrecioYCodigos"-->
                 <div class="add--button" *ngIf="canAddAndDelete">
                     <button (click)="agregarCodigos()" pButton type="button" label="Agregar códigos"
                     icon="pi pi-plus" class="p-button-sm p-button-primary"></button>
@@ -301,7 +301,7 @@
                     </ng-template>
                 </p-table>
             </p-tabPanel>
-            <p-tabPanel header="Precios" class="panel-precios" *ngIf="this.mostrarPrecios && this.mostrarPrecioYCodigos">
+            <p-tabPanel header="Precios" class="panel-precios" *ngIf="this.mostrarPrecios"> <!-- && this.mostrarPrecioYCodigos-->
                 <div class="admin__precios">
                     <div class="precios__check">
                         <p-messages [value]="mensajeFechaCarga" [enableService]="false" [closable]="false" [escape]="false"/>

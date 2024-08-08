@@ -7,8 +7,13 @@
         </div> -->
         
         <div class="form__data">
+            <label>Fecha BL</label>
+            <p-calendar (onBlur)="validarCampo(configForm.controls['fechaBL'])" [minDate]="minDate" [maxDate]="maxDate" formControlName="fechaBL" placeholder="Fecha BL" styleClass="custom-calendar"></p-calendar>
+        </div>
+        
+        <div class="form__data">
             <label for="destinatarios">Despachante</label>
-            <input (blur)="validarCampo(configForm.controls['destinatarios'])" pInputText id="destinatarios" formControlName="destinatarios" placeholder="Despachante">
+            <input #dest (blur)="validarCampo(configForm.controls['destinatarios'])" pInputText id="destinatarios" formControlName="destinatarios" placeholder="Despachante">
         </div>
         
         <div class="form__data">
@@ -44,11 +49,6 @@
         <div class="form__data">
             <label for="shippingMark">Shipping Mark</label>
             <input (blur)="validarCampo(configForm.controls['shippingMark'])" pInputText id="shippingMark" formControlName="shippingMark" placeholder="Shipping Mark">
-        </div>
-        
-        <div class="form__data">
-            <label>Fecha BL</label>
-            <p-calendar (onBlur)="validarCampo(configForm.controls['fechaBL'])" [minDate]="minDate" [maxDate]="maxDate" formControlName="fechaBL" placeholder="Fecha BL" styleClass="custom-calendar"></p-calendar>
         </div>
 
         <hr>

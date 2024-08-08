@@ -13,10 +13,18 @@ export class KosherCommonService {
   private confProductosSource = new BehaviorSubject<ConfProducto[]>([]);
   confProductos$ = this.confProductosSource.asObservable();
 
+  private resetStatus: number = 0;
+  private resetSource = new BehaviorSubject<number>(this.resetStatus);
+  reset$ = this.resetSource.asObservable();
+
   constructor() { }
 
   setConfProductos(data: ConfProducto[]) {
     this.confProductosSource.next(data);
+  }
+
+  setReset(): void {
+    this.resetSource.next(this.resetStatus++);
   }
 
   public getCodigoKosher(cK?: string): string {
@@ -24,9 +32,6 @@ export class KosherCommonService {
     var dato: string = cK.trim();
     if(this.tieneNumero(dato)) 
       return this.obtenerNumeros(dato)[0].toString();
-
-    
-
     return '';
   }
 
@@ -47,7 +52,6 @@ export class KosherCommonService {
   }
 
   public getTitulosReporte(): string[] {
-    
     return [
       'DUA',
       'MERCADERÍA',
@@ -66,6 +70,5 @@ export class KosherCommonService {
       'P/U VAE'
     ]
   }
-
 
 }

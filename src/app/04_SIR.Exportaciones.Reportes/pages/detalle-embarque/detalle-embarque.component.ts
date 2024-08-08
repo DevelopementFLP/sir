@@ -38,11 +38,10 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
   confProductos$ = this.confProductosSubject.asObservable();
   
   confProductos: ConfProducto[] = [];
-
   codigosConPrecio: ConfPreciosDTO[] = [];
 
   configPopUp!: DynamicDialogRef;
-  embarqueData!: EmbarqueConfig;
+  embarqueData: EmbarqueConfig | undefined;
   errorIcon: string = "pi pi-exclamation-triangle";
 
   cajasCarga: DWCajaCarga[] | undefined = [];
@@ -133,6 +132,12 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
   //#region Comunes
   habilitar($event: boolean) {  
     this.habilitarReporte = $event;
+    if(!this.habilitarReporte) {
+          this.embarqueData = undefined;
+          this.labelConfigurar = 'Configurar datos del embarque (No configurado)'
+          //this.kcs.setComision(this.embarqueData!.comision)
+          //this.titulos = this.kcs.getTitulosReporte();
+    }
   }
 
   getDatosCarga($datos: CargaDTO) {

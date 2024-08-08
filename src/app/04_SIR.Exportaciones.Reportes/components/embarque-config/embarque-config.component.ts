@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EmbarqueConfig } from '../../Interfaces/EmbarqueConfig.interface';
@@ -14,8 +14,10 @@ export class EmbarqueConfigComponent implements OnInit {
 
   configForm!: FormGroup;
   embarqueConfigData: EmbarqueConfig | undefined = undefined;
-  minDate: Date = new Date(1,1,2020);
+  minDate: Date = new Date(2020,0,1);
   maxDate: Date = new Date();
+
+  @ViewChild('dest') destinatarioField!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -26,6 +28,7 @@ export class EmbarqueConfigComponent implements OnInit {
   ngOnInit(): void {
     this.setConfigFormFields();
     this.loadConfigData();
+    this.destinatarioField.nativeElement.focus();
   }
 
   //#region Form configuration

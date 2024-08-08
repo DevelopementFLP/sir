@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
 import { ConfPreciosDTO } from '../../Interfaces/ConfPreciosDTO.interface';
 import { CodigoData } from '../../Interfaces/CodigoData.interface';
@@ -30,6 +30,8 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
   @Input() codigosPrecios!: ConfPreciosDTO[];
   @Input() productosKosher!: ConfProducto[];
   @Input() dataConfig!: EmbarqueConfig;
+
+  @Output() habilitarReporte = new EventEmitter<boolean>();
 
   dialogRef!: DynamicDialogRef;
 
@@ -271,7 +273,6 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 }
 
   mostrarExcel(): boolean {
-    //return true;
     return this.dataConfig != undefined && this.datosKosher.length > 0;
   }
 
@@ -288,7 +289,12 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
       width: '50vw'
     });
 
-    this.dialogRef.onClose.subscribe(() => {window.location.reload()}); //?
+    this.dialogRef.onClose.subscribe((res) => {
+      if(res != undefined) {
+        this.habilitarReporte.emit(false);
+        this.ckcs.setReset();
+      }
+    });
   }
 }
 

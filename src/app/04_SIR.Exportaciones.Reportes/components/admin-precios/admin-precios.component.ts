@@ -230,6 +230,7 @@ export class AdminPreciosComponent implements OnInit {
     }).catch((error) => {
       this.hayErrores = true;
       this.mostrarMensaje('Verificar lista de precios.', "Se produjo un error", this.errorIcon);
+      console.log(error)
     });
   }
 
