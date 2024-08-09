@@ -1,0 +1,35 @@
+<div class="faltantes">
+    <div class="faltantes--tabview">
+        <p-tabView class="tabview--header">
+            <p-tabPanel header="Códigos faltantes" *ngIf="noCodigos.length > 0" class="tabview--body">
+                <br>
+                <div class="faltantes--mensaje">
+                    <h3>Los siguientes códigos no están en la lista de códigos.</h3>
+                </div>
+                <div *ngFor="let codigo of noCodigos">
+                    <p><b>{{codigo}}</b></p>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Precios faltantes" *ngIf="noCodigosPrecios.length > 0" class="tabview--body">
+                <br>
+                <div class="faltantes--mensaje">
+                    <h3>Los siguientes códigos no están en ninguna lista de precios para las fechas de producción de
+                        esta carga.</h3>
+                </div>
+                <div *ngFor="let codigo of noCodigosPrecios">
+                    <p><b>{{codigo.codigo }}</b>: <i>{{codigo.fecha | date:'dd-MM-yyyy'}}</i></p>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+    <div class="faltantes--footer">
+        <hr>
+        <div class="faltantes--botonera">
+            <button (click)="close()" pButton type="button" label="Cerrar" icon="pi pi-times" class="p-button-sm p-button-danger">
+            </button>
+            <button (click)="copy()" pButton type="button" [label]="txtBotonCopia" icon="pi pi-copy"
+                class="p-button-sm">
+            </button>
+        </div>
+    </div>
+</div>

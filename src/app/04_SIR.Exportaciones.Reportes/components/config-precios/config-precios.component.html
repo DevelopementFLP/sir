@@ -1,14 +1,22 @@
 <div class="detalle__embarque">
     <div class="contenedor__embarque">
-        <p-tabView>
+        <p-tabView #tabView>
             <p-tabPanel header="Reporte">
                 <div class="container__selection">
-                    <input (blur)="filterContainersByIdCarga()" pInputText placeholder="Identificador de carga"
-                        type="number" [min]="0" [(ngModel)]="idCarga" />
-                    <p-multiSelect [options]="containersOptions" optionLabel="label"
+                    <input 
+                        #txtIdCarga
+                        pInputText 
+                        [(ngModel)]="idCargaString" 
+                        (keydown.enter)="filterContainersByIdCarga()" 
+                        (blur)="filterContainersByIdCarga()"
+                        placeholder="Identificadores de carga" 
+                    />
+                    <p-multiSelect 
+                        #multiselect
+                        [options]="containersOptions" optionLabel="label" *ngIf="mostrarSeleccionContenedores"
                         placeholder="Seleccione los contenedores" display="chip" [showClear]="true"
                         [virtualScroll]="true" [virtualScrollItemSize]="42" [(ngModel)]="selectedContainers"
-                        [showToggleAll]="false" (onClear)="dataContainers = []" [displaySelectedLabel]="true"
+                        [showToggleAll]="false" (onClear)="clear()" [displaySelectedLabel]="true"
                         emptyMessage="No hay resultados" />
 
                     <button *ngIf="selectedContainers != null && selectedContainers.length > 0"
@@ -16,37 +24,321 @@
                         class="p-button-sm btn-buscar">
                     </button>
                 </div>
-            </p-tabPanel>
-            <p-tabPanel header="Precios" class="panel-precios">
-                <div class="admin__precios">
-                    <button
-                        (click)="adminPrecios()" pButton type="button" label="Administrar listas de precios" icon="pi pi-cog"
-                        class="p-button-sm btn-admin">
-                    </button>
+                <br>
+                <button *ngIf="precios!.length > 0"  (click)="todoListo()" pButton type="button" [label]="txtButtonConfirmarPrecios"
+                    [icon]="iconoButtonConfirmar" class="p-button-sm p-button-success btn-admin" [disabled]="!mostrarPrecioYCodigos">
+                </button>
+                <br>
+                <div class="message__container" *ngIf="mostrarNoIdCarga">
+                    <p-messages [(value)]="mensaje" [enableService]="false" [closable]="false"/>
                 </div>
-                <p-table *ngIf="codigos.length > 0"
-                [value]="codigos">
-
+            </p-tabPanel>
+            <p-tabPanel header="Códigos"> <!--*ngIf="mostrarPrecioYCodigos"-->
+                <div class="add--button" *ngIf="canAddAndDelete">
+                    <button (click)="agregarCodigos()" pButton type="button" label="Agregar códigos"
+                    icon="pi pi-plus" class="p-button-sm p-button-primary"></button>
+                </div>
+                <div class="edit--buttons" *ngIf="isEditing">
+                    <button (click)="guardarCambios()" pButton type="button" label="Guardar cambios"
+                    icon="pi pi-save" class="p-button-sm p-button-success"></button>
+                    <button (click)="cancelarCambios()" pButton type="button" label="Descartar cambios"
+                    icon="pi pi-trash" class="p-button-sm p-button-danger"></button>
+                </div>
+                <p-table
+                    [globalFilterFields]="['codigoProducto', 'nomProducto', 'codigoKosher', 'clasificacionKosher', 'markKosher', 'especie', 'tipoProducto']"
+                    [value]="confProductos!"
+                    styleClass="p-datatable-striped"
+                    [scrollable]="true"
+                    scrollHeight="600px"
+                    dataKey="codigoProducto"
+                    editMode="row"
+                >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Código</th>
-                            <th *ngFor="let fecha of fechasPrecios">
-                                {{fecha | date:"dd-MM-yyyy"}}
+                            <th pSortableColumn="codigoProducto">Código producto <p-sortIcon field="codigoProducto"/></th>
+                            <th pSortableColumn="nomProducto">Nombre <p-sortIcon field="nomProducto"/></th>
+                            <th pSortableColumn="codigoKosher">Código Kosher <p-sortIcon field="codigoKosher"/></th>
+                            <th pSortableColumn="clasificacionKosher">Clasificación Kosher <p-sortIcon field="clasificacionKosher"/></th>
+                            <th pSortableColumn="markKosher">Mark <p-sortIcon field="markKosher"/></th>
+                            <th pSortableColumn="especie">Especie <p-sortIcon field="especie"/></th>
+                            <th pSortableColumn="tipoProducto">Tipo de producto <p-sortIcon field="tipoProducto"/></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p-columnFilter
+                                    class="input-text"
+                                    type="text"
+                                    field="codigoProducto"
+                                    placeholder="Código" 
+                                    />
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    type="text"
+                                    field="nomProducto"
+                                    placeholder="Buscar nombre"
+                                />
+                            </th>
+                            <th>
+                                <p-columnFilter
+                                    class="producto-select"
+                                    matchMode="in"
+                                    [showMenu]="false"
+                                    field="codigoKosher">
+                                    <ng-template pTemplate="filter" let-filter="filterCallback">
+                                       <p-multiSelect
+                                            [options]="codigosKosherOptions"
+                                            placeholder="Todos"
+                                            (onChange)="filter($event.value)"
+                                            [showHeader]="false"
+                                            [showClear]="true"
+                                            emptyMessage="No hay resultados">
+                                        <ng-template let-ck pTemplate="item">
+                                            <span>{{ck.label}}</span>
+                                        </ng-template>
+                                       </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th>
+                                <p-columnFilter
+                                    field="clasificacionKosher"
+                                    matchMode="in"
+                                    [showMenu]="false">
+                                    <ng-template pTemplate="filter" let-filter="filterCallback">
+                                       <p-multiSelect
+                                        emptyMessage="No hay resultados"
+                                        [options]="clasificacionKosherOptions"
+                                        placeholder="Todos"
+                                        (onChange)="filter($event.value)"
+                                        [showHeader]="false"
+                                            [showClear]="true"
+                                        >
+                                        <ng-template let-clas pTemplate="item">
+                                            <span>{{clas.label}}</span>
+                                        </ng-template>
+                                       </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    field="markKosher"
+                                    matchMode="in"
+                                    [showMenu]="false">
+                                    <ng-template pTemplate="filter" let-ck let-filter="filterCallback">
+                                       <p-multiSelect
+                                        emptyMessage="No hay resultados"
+                                        [options]="markKosherOptions"
+                                        placeholder="Todos"
+                                        (onChange)="filter($event.value)"
+                                        [showHeader]="false"
+                                            [showClear]="true"
+                                        >
+                                        <ng-template let-mk pTemplate="item">
+                                            <span>{{mk.label}}</span>
+                                        </ng-template>
+                                       </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    field="especie"
+                                    matchMode="in"
+                                    [showMenu]="false">
+                                    <ng-template pTemplate="filter" let-ck let-filter="filterCallback">
+                                       <p-multiSelect
+                                        [options]="especieOptions"
+                                        placeholder="Todos"
+                                        (onChange)="filter($event.value)"
+                                        [showHeader]="false"
+                                            [showClear]="true"
+                                        >
+                                        <ng-template let-especie pTemplate="item">
+                                            <span>{{especie.label}}</span>
+                                        </ng-template>
+                                       </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th>
+                                <p-columnFilter 
+                                    field="tipoProducto"
+                                    matchMode="in"
+                                    [showMenu]="false">
+                                    <ng-template pTemplate="filter" let-ck let-filter="filterCallback">
+                                       <p-multiSelect
+                                        [options]="tipoProductoOptions"
+                                        placeholder="Todos"
+                                        (onChange)="filter($event.value)"
+                                        [showHeader]="false"
+                                            [showClear]="true"
+                                        >
+                                        <ng-template let-tipoProducto pTemplate="item">
+                                            <span>{{tipoProducto.label}}</span>
+                                        </ng-template>
+                                       </p-multiSelect>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-codigo let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="codigo">
+                            <td>{{codigo.codigoProducto}}</td>
+                            <td>{{codigo.nomProducto}}</td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="codigosKosher"
+                                            appendTo="body"
+                                            [(ngModel)]="codigo.codigoKosher"
+                                        />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{codigo.codigoKosher}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="clasificacionKosher"
+                                            appendTo="body"
+                                            [(ngModel)]="codigo.clasificacionKosher"
+                                        />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{codigo.clasificacionKosher}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="markKosher"
+                                            appendTo="body"
+                                            [(ngModel)]="codigo.markKosher"
+                                        />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{codigo.markKosher}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="especie"
+                                            appendTo="body"
+                                            [(ngModel)]="codigo.especie"
+                                        />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{codigo.especie}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="tipoProducto"
+                                            appendTo="body"
+                                            [(ngModel)]="codigo.tipoProducto"
+                                        />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{codigo.tipoProducto}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            
+                            <td>
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button
+                                        pTooltip="Editar {{codigo.codigoProducto}}" 
+                                        *ngIf="!editing" 
+                                        pButton 
+                                        pRipple 
+                                        type="button" 
+                                        pInitEditableRow 
+                                        icon="pi pi-pencil" 
+                                        (click)="onRowEditInit(codigo)" 
+                                        class="p-button-rounded p-button-text">
+                                    </button>
+                                    <button 
+                                        pTooltip="Confirmar edición de {{codigo.codigoProducto}}"
+                                        *ngIf="editing" 
+                                        pButton 
+                                        pRipple 
+                                        type="button" 
+                                        pSaveEditableRow 
+                                        icon="pi pi-check" 
+                                        (click)="onRowEditSave(codigo)" 
+                                        class="p-button-rounded p-button-text p-button-success mr-2">
+                                    </button>
+                                    <button
+                                        pTooltip="Cancelar edición de {{codigo.codigoProducto}}" 
+                                        *ngIf="editing" 
+                                        pButton pRipple 
+                                        type="button" 
+                                        pCancelEditableRow 
+                                        icon="pi pi-times" 
+                                        (click)="onRowEditCancel(codigo, ri)" 
+                                        class="p-button-rounded p-button-text p-button-danger">
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+            <p-tabPanel header="Precios" class="panel-precios" *ngIf="this.mostrarPrecios"> <!-- && this.mostrarPrecioYCodigos-->
+                <div class="admin__precios">
+                    <div class="precios__check">
+                        <p-messages [value]="mensajeFechaCarga" [enableService]="false" [closable]="false" [escape]="false"/>
+                        <p-messages [value]="mensajeRangoFechas" [enableService]="false" [closable]="false" [escape]="false"/>
+                    </div>           
+                    <button (click)="adminPrecios()" pButton type="button" label="Administrar listas de precios"
+                        icon="pi pi-cog" class="p-button-sm btn-admin">
+                    </button>
+                </div>
+                <p-table 
+                    [globalFilterFields]="['codigo']"
+                    *ngIf="codigos.length > 0" [value]="codigos" styleClass="p-datatable-striped">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th
+                                pFrozenColumn
+                                style="width: 10%;">Código
+                            </th>
+                            <th 
+                                style="width: 150px;"
+                                *ngFor="let fecha of fechasPrecios">
+                                {{fecha | date:"dd/MM/yyyy"}} ({{getTipoMonedaPorFecha(fecha)}})
                             </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-codigo>
                         <tr>
-                            <th>{{codigo}}</th>
+                            <td style="font-weight: bold;">{{codigo}}</td>
                             <td *ngFor="let fecha of fechasPrecios">
-                                {{getPrecioPorCodigoYFecha(codigo, fecha)}}
-                              </td>
+                                {{getPrecioPorCodigoYFecha(codigo, fecha) | number:'0.0'}}
+                            </td>
                         </tr>
                     </ng-template>
                 </p-table>
-                <!-- <div class="no-data">
-                    No hay precios asociados a ninguna fecha. Haga clic en <span class="admin__text">Administrar lista de precios</span> para agregarlos.
-                </div> -->
+                <div class="no-data" *ngIf="fechasPrecios?.length == 0">
+                    <p-messages [value]="mensajeNoPrecios" [enableService]="false" [closable]="false" [escape]="false"/>
+                </div>
             </p-tabPanel>
         </p-tabView>
     </div>

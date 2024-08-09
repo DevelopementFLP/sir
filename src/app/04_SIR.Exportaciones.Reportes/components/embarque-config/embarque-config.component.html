@@ -1,0 +1,68 @@
+<div class="configracion">
+    <hr>
+    <form [formGroup]="configForm" (ngSubmit)="onSubmit()" #form>
+        <!-- <div class="form__data">
+            <label for="dua">DUA</label>
+            <input (blur)="validarCampo(configForm.controls['dua'])" pInputText id="dua" formControlName="dua" placeholder="DUA">
+        </div> -->
+        
+        <div class="form__data">
+            <label>Fecha BL</label>
+            <p-calendar (onBlur)="validarCampo(configForm.controls['fechaBL'])" [minDate]="minDate" [maxDate]="maxDate" formControlName="fechaBL" placeholder="Fecha BL" styleClass="custom-calendar"></p-calendar>
+        </div>
+        
+        <div class="form__data">
+            <label for="destinatarios">Despachante</label>
+            <input #dest (blur)="validarCampo(configForm.controls['destinatarios'])" pInputText id="destinatarios" formControlName="destinatarios" placeholder="Despachante">
+        </div>
+        
+        <div class="form__data">
+            <label for="nroVenta">Número de Venta</label>
+            <input (blur)="validarCampo(configForm.controls['nroVenta'])" pInputText id="nroVenta" type="number" formControlName="nroVenta" placeholder="Número de venta">
+        </div>
+        
+        <div class="form__data">
+            <label for="barco">Barco</label>
+            <input (blur)="validarCampo(configForm.controls['barco'])" pInputText id="barco" formControlName="barco" placeholder="Barco">
+        </div>
+        
+        <div class="form__data">
+            <label for="factura">Factura</label>
+            <input (blur)="validarCampo(configForm.controls['factura'])" pInputText id="factura" formControlName="factura" placeholder="Factura">
+        </div>
+        
+        <div class="form__data">
+            <label for="carpeta">Carpeta</label>
+            <input (blur)="validarCampo(configForm.controls['carpeta'])" pInputText id="carpeta" formControlName="carpeta" placeholder="Carpeta">
+        </div>
+        
+        <div class="form__data">
+            <label for="comisionSFOB">Comisión S/FOB</label>
+            <input (blur)="validarCampo(configForm.controls['comisionSFOB'])" pInputText id="comisionSFOB" type="number" formControlName="comisionSFOB" placeholder="Comisión S/FOB">
+        </div>
+        
+        <div class="form__data">
+            <label for="comisionUSDTONS">Comisión USD/TONS</label>
+            <input (blur)="validarCampo(configForm.controls['comisionUSDTONS'])" pInputText id="comisionUSDTONS" type="number" formControlName="comisionUSDTONS" placeholder="Comisión USD/TONS">
+        </div>
+        
+        <div class="form__data">
+            <label for="shippingMark">Shipping Mark</label>
+            <input (blur)="validarCampo(configForm.controls['shippingMark'])" pInputText id="shippingMark" formControlName="shippingMark" placeholder="Shipping Mark">
+        </div>
+
+        <hr>
+
+        <div class="buttons">
+            <button pButton type="submit" label="Confirmar"
+            icon="pi pi-save" class="p-button-sm p-button-success btn-confirmar">
+            </button>
+
+            <button 
+                (click)="cerrarConfig()"
+                pButton type="button" label="Cancelar"
+                icon="pi pi-times" class="p-button-sm p-button-danger btn-cancelar">
+            </button>
+        </div>   
+    </form>
+</div>

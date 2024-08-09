@@ -1,0 +1,98 @@
+<h2 mat-dialog-title>{{tituloDeAccion}} Dispositivo</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="formularioDispositivo">
+        
+        <mat-grid-list cols="1" rowHeight="80px">
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput autocomplete="off" formControlName="nombre">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Ip</mat-label>
+                    <input matInput autocomplete="off" formControlName="ip">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Puerto</mat-label>
+                    <input matInput autocomplete="off" formControlName="puerto" type="number">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Descripcion</mat-label>
+                    <input matInput autocomplete="off" formControlName="descripcion">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Formato</mat-label>
+                    <mat-select formControlName="idTipo"> 
+                        <mat-option *ngFor="let item of ListaFormatos " [value]="item.idFormato">
+                            {{item.idFormato}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Ubicaciones</mat-label>
+                    <mat-select formControlName="idUbicacion"> 
+                        <mat-option *ngFor="let item of listaDeUbicaciones" [value]="item.idUbicacion">
+                            {{item.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select formControlName="idFormato"> 
+                        <mat-option *ngFor="let item of listaDeTiposDispositivos" [value]="item.idTipo">
+                            {{item.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Estado</mat-label>
+                    <mat-select formControlName="activo"> 
+                        <mat-option [value]="true">Activo</mat-option>
+                        <mat-option [value]="false">No activo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-grid-tile>
+
+        </mat-grid-list>
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="warn">Volver</button>
+    <button mat-raised-button color="primary"
+        [disabled]="formularioDispositivo.invalid"
+        (click)="guardarEditar_Producto()"
+    >{{botonDeAccion}}</button>
+</mat-dialog-actions>
+

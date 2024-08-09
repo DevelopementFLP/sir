@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>{{tituloDeAccion}} Tipo de Ubicacion</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="formularioTipoDispositivo">
+        <mat-grid-list cols="1" rowHeight="80px">
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput autocomplete="off" formControlName="nombre">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Comando Inicio</mat-label>
+                    <input matInput autocomplete="off" formControlName="comandoInicio">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+            
+            <mat-grid-tile>
+                <mat-form-field appearance="outline">
+                    <mat-label>Comando Fin</mat-label>
+                    <input matInput autocomplete="off" formControlName="comandoFin">
+                    <mat-icon matSuffix>fit_screen</mat-icon>
+                </mat-form-field>
+            </mat-grid-tile>
+
+        </mat-grid-list>
+    </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="warn">Volver</button>
+    <button mat-raised-button color="primary"
+        [disabled]="formularioTipoDispositivo.invalid"
+        (click)="guardarEditar_TipoDispositivo()"
+    >{{botonDeAccion}}</button>
+</mat-dialog-actions>
+
+
+

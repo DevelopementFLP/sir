@@ -1,0 +1,32 @@
+
+.grupo {
+    position: relative;
+}
+
+.item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: bisque;
+}
+
+.total {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: 600;
+}
+
+.item--text {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 7%;
+}
+
+.especie {
+    font-size: 0.5rem;
+}

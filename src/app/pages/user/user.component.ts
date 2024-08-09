@@ -22,15 +22,20 @@ export class UserComponent implements OnInit {
   repeatPassword: string = '';
 
 
+  actualUserstr = localStorage.getItem('actualUser');
+  actualUser!: Usuario;
+  
   constructor(
     private smService: SessionManagerService,
     private navigation: NavigationService,
     private messageService: MessageService,
     private userService: ControlUsuariosService
   ) {}
-
+  
   ngOnInit(): void {
-    this.currentUser = this.smService.getStorage();  
+    this.currentUser = this.smService.getStorage(); 
+    this.actualUserstr = localStorage.getItem('actualUser'); 
+    this.actualUser = this.smService.parseUsuario(this.actualUserstr!);
   }
 
   goBack(): void {

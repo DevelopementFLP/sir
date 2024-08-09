@@ -1,0 +1,32 @@
+@layer primeng {
+    .p-calendar .p-datepicker {
+        left: -100% !important;
+        position: absolute !important;
+    }
+
+    .custom-calendar .p-inputtext {
+        padding: 0.5rem 0.75rem !important;
+        text-align: center !important; 
+      }
+
+    .error {
+        background-color: red;
+    }
+}
+
+.buttons {
+    align-items: center;
+    display: flex;
+    gap: 5%;
+    justify-content: flex-start;
+    margin-top: 1rem;
+}
+
+.form__data {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+    width: 100%;
+}

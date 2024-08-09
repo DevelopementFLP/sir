@@ -36,7 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
       notEquals: 'No es igual',
       removeRule: 'Eliminar regla',
       matchAll: 'Coincidir todos',
-      matchAny: 'Coincidir alguno'
+      matchAny: 'Coincidir alguno',
+      noFilter: 'Borrar filtro'
   };
 
   this.config.setTranslation(this.es);

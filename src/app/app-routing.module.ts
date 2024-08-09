@@ -51,6 +51,10 @@ import { PedidosActivosComponent } from './03_SIR.Produccion.Reportes/pages/stoc
 import { VerStockComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/components/ver-stock/ver-stock.component';
 import { CajasEntregarComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/cajas-entregar/cajas-entregar.component';
 import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
+import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
+import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
+import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -109,7 +113,10 @@ const routes: Routes = [
     { path: 'rrhh/horarioFuncionario', component: PageHorarioFuncionarioComponent},
     { path: 'rrhh/controlHoras', component: ControlHorasComponent},
     { path: 'usuario/:nombreUsuario', component: UserComponent},
-    { path: 'configuracion', component:ConfiguracionMainPageComponent}
+    { path: 'configuracion', component:ConfiguracionMainPageComponent},
+    { path : 'dispositivos/Dispositivo', component: DispositvosComponent},
+    { path: 'dispositivos/LecturasDispositivos', component: LecturasDispositivosComponent},
+    { path: 'dispositivos/MermaPorPeso', component: MermaPorPesoComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

@@ -1,3 +1,4 @@
+
 // export const urlAPI: string = "http://192.168.0.107:90/api/";
 export const urlAPI: string = "http://192.168.0.107:82/api/";
 // export const urlAPI: string = "http://localhost:5205/api/";
@@ -11,7 +12,7 @@ export const urlReportes: string = urlAPI + "Reportes";
 export const urlAccessos: string = urlAPI + "Accesos";
 export const urlAccessosId: string = urlAccessos + "/";
 export const urlModulos: string = urlAPI + "Modulos/";
-export var urlAccesoPorIdUsuario: string = urlPerfiles + "/id/Reportes";
+export const urlAccesoPorIdUsuario: string = urlPerfiles + "/id/Reportes";
 export const urlEnviarEmail: string = urlAPI + "Email/enviarEmail";
 export const urlMarelEspecie: string = urlAPI + "MarelEspecie";
 export const urlMarelDestino: string = urlAPI + "MarelDestino";
@@ -103,6 +104,14 @@ export const urlGetTiposMoneda: string = urlExportaciones + "GetTipoMonedaAsync"
 export const urlGetPreciosPorFechas: string = urlExportaciones + "GetPreciosPorFechaAsync";
 export const urlGetPrecios: string = urlExportaciones + "GetPreciosAsync";
 export const urlDeleteFechaPrecios: string = urlExportaciones + "DeleteListasPreciosAsync";
+export const urlInsertarPrecios: string = urlExportaciones + "InsertListaPreciosAsync";
+export const urlGetFechas: string = urlExportaciones + "GetFechasAsync";
+export const urlGetCajasCarga: string = urlExportaciones + "GetCajasCargaAsync";
+export const urlGetConfProductos: string = urlExportaciones + "GetConfProductosAsync";
+export const urlInsertConfProductos: string = urlExportaciones + "InsertConfProductosAsync";
+export const urlUpdateConfProductos: string = urlExportaciones + "UpdateConfProductosAsync";
+export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProductosAsync";
+export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
 
 // Stock Cajas
 export const urlStockCajas: string = urlAPI + "StockCajas/";
@@ -140,5 +149,48 @@ export var gecosHaciendaAnimales: string = gecosHacienda + "animales" + fechas;
 export var gecosHaciendaLotes: string = gecosHacienda + "lotes" + fechas;
 export var gecosHaciendaTipificacion: string = gecosHacienda + "tipificacion" + fechas;
 
+
 // Gecos Integration Broker
 export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
+
+//Gecos Integration Broker
+export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
+
+//Dispositivos
+export const urlDispositivos: string = urlAPI + "Dispositivo/"
+export const urlGetDispositivo: string = urlDispositivos + "ListaDispositivos/NA"
+export const urlGetDispositivoPorId: string = urlDispositivos + "filtrarDispositivos"
+export const urlCreateDispositivo: string = urlDispositivos + "crearDispositivos"
+export const urlUpdateDispositivos: string = urlDispositivos + "actualizarDispositivos"
+export const urlDeleteDispositivos: string = urlDispositivos + "eliminarDispositivo"
+
+//Ubicaciones de Dispositivos
+export const urlUbicacionesDispositivo: string = urlAPI + "UbicacionesDispositivos/"
+export const urlGetUbicacionesDisp: string = urlUbicacionesDispositivo + "ListaUbicacionesDispositivos/NA"
+export const urlCreateUbicacionDisp: string = urlUbicacionesDispositivo + "crearUbicacion"
+export const urlUpdateUbicacionDisp: string = urlUbicacionesDispositivo + "actualizarUbicacionDispositivo"
+export const urlDeleteUbicacionDisp: string = urlUbicacionesDispositivo + "eliminarUbicacionDispositivo"
+
+//Formato de Dispositovo
+export const urlFormatoDispositivo: string = urlAPI + "Formateos/"
+export const urlGetFormatoDisp: string = urlFormatoDispositivo + "ListaFormatosDispositivos/NA"
+export const urlCreateFormatoDisp: string = urlFormatoDispositivo + "crearFormato"
+export const urlUpdateFormatoDisp: string = urlFormatoDispositivo + "actualizarFormato"
+export const urlDeleteFormatoDisp: string = urlFormatoDispositivo + "eliminarFormato"
+
+//Tipos de Dispositivos
+export const urlTiposDispositivo: string = urlAPI + "TipoDispositivos/"
+export const urlGetTipoDisp: string = urlTiposDispositivo + "ListaTiposDispositivos/NA"
+export const urlCreateTipoDisp: string = urlTiposDispositivo + "crearTipoDispositivo"
+export const urlUpdateTipoDisp: string = urlTiposDispositivo + "actualizarTipoDeDispositivo"
+export const urlDeleteTipoDisp: string = urlTiposDispositivo + "eliminarTipoDispositivo"
+
+//Lecturas de Dispositivos
+export const urlLecturasDispositivo: string = urlAPI + "ListaDeCajas/"
+export const urlGetLecturaDisp: string = urlLecturasDispositivo + "listaDeLecturas"
+export const urlGetLecturaDispExpo: string = urlLecturasDispositivo + "listaDeExpoCarga"
+
+//Merma por Peso
+export const urlMermaPorPeso: string = urlAPI + "MermaPorPeso/"
+export const urlGetMermaPorPeso: string = urlMermaPorPeso + "listaDeMermasPorPeso"
+

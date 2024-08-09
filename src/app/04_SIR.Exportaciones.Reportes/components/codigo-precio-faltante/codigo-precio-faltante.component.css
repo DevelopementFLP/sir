@@ -1,0 +1,41 @@
+/* @layer primeng {
+    body > p-dynamicdialog > div > div > div.p-dialog-content.ng-tns-c97-19 {
+        padding-bottom: 0 !important;
+    }
+
+    .p-tabview-nav-content {
+        position: fixed !important;
+        width: 80% !important;
+    }
+} */
+
+.faltantes {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.faltantes--mensaje {
+    margin-top: 2rem;
+}
+
+.faltantes--footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 11111;  
+    padding-bottom: 0.5rem;
+}
+
+.faltantes--tabview {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 50%; 
+}
+
+.faltantes--botonera {
+    display: flex;
+    justify-content: space-between;
+}

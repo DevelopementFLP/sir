@@ -4,16 +4,11 @@ import { Usuario } from 'src/app/52_SIR.ControlUsuarios/models/usuario.interface
 import { ActualUser } from '../models/actualuser.interface';
 import { MenuItem } from 'primeng/api';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionManagerService {
-
-  constructor(
-    private storage: SessionStorageService,
-  ) { }
-
+  constructor(private storage: SessionStorageService) {}
 
   public getStorage(): ActualUser {
     return this.storage.retrieve('actualUser');
@@ -45,26 +40,24 @@ export class SessionManagerService {
 
   public getMenu(): string {
     //return this.storage.retrieve('menuItems');
+    console.log(localStorage.getItem('menuItems')!)
     return localStorage.getItem('menuItems')!;
   }
 
   parseUsuario(jsonString: string): Usuario {
-    // Parsear el string JSON a un objeto de JavaScript
     const jsonObject = JSON.parse(jsonString);
 
     // Crear un objeto Usuario a partir de las propiedades del objeto JSON
     const usuario: Usuario = {
-        id_usuario: jsonObject.id_usuario,
-        id_perfil: jsonObject.id_perfil,
-        nombre_usuario: jsonObject.nombre_usuario,
-        contrasenia: jsonObject.contrasenia,
-        activo: jsonObject.activo,
-        nombre_completo: jsonObject.nombre_completo,
-        conf_perfiles: jsonObject.conf_perfiles
+      id_usuario: jsonObject.id_usuario,
+      id_perfil: jsonObject.id_perfil,
+      nombre_usuario: jsonObject.nombre_usuario,
+      contrasenia: jsonObject.contrasenia,
+      activo: jsonObject.activo,
+      nombre_completo: jsonObject.nombre_completo,
+      conf_perfiles: jsonObject.conf_perfiles,
     };
 
     return usuario;
-}
-
-
+  }
 }

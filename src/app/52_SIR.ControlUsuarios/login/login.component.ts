@@ -14,7 +14,7 @@ import { NavBarService } from 'src/app/shared/services/nav-bar.service';
 import { Reporte } from 'src/app/shared/models/reporte.interface';
 import { AccesoReporte } from '../interfaces/AccesoReporte.interface';
 import { ReportesService } from 'src/app/shared/services/reportes.service';
-import { map } from 'rxjs';
+import { map, filter } from 'rxjs';
 
 
 @Component({
@@ -40,7 +40,6 @@ export class LoginComponent implements AfterViewInit {
 
       //this.userStored = this.sessionManagerService.getStorage();
       this.currentUser = this.sessionManagerService.getCurrentUser()!
-      console.log(this.currentUser);
 
       if(this.currentUser != null) {
         this.userStored = this.parseActualUser(this.currentUser);
@@ -97,12 +96,10 @@ export class LoginComponent implements AfterViewInit {
                 this.sessionManager.setMenu('menuItems', this.menuItems);
               },
             );
-
             this.navigationService.navegar('principal');
           }
         }
       });
-
   }
 
   checkUserName() : string {
@@ -123,27 +120,17 @@ export class LoginComponent implements AfterViewInit {
 
   private filtrarReportes(rep: MenuItem[]): MenuItem[] {
     const reportes: string[] = Array.from(new Set(this.reportes?.map(r => r.nombre_Reporte.trim())));
-    rep[0].items?.forEach(element => {
-      element.items!.forEach(r => {
-        if(reportes.indexOf(r.label!.trim()) < 0) {
-            var i = element.items?.indexOf(element.items?.find(x => x.label == r.label)!);
-            if(i! >= 0) {
-              element.items?.splice(i!, 1);
-            }
-          }
-          
-          if(element.items?.length == 0) {
-            const k = rep[0].items?.indexOf(rep[0].items.find(x => x.label == element.label)!);
-            if(k! >= 0) {
-              console.log(k)
-              rep[0].items?.splice(k!, 1);
-            }
-          }
+
+    if (rep.length > 0 && rep[0].items) {
+        rep[0].items = rep[0].items.filter(element => {
+            element.items = element.items?.filter(item => reportes.includes(item.label!.trim())) || [];
+            return element.items.length > 0;
         });
-    });
+    }
 
     return rep;
-  }
+}
+
 
   private parseActualUser(jsonString: string): ActualUser {
     const jsonObject = JSON.parse(jsonString);
