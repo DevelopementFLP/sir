@@ -42,7 +42,7 @@ export class LecturasDispositivosComponent {
   ){}
 
   ngOnInit(): void {
-    
+
   }
 
   ngAfterViewInit(): void {
@@ -69,7 +69,7 @@ export class LecturasDispositivosComponent {
     if (idCaja) {
       this._lecturaDispositivoServices.getLecturaDeDispositivo(idCaja).subscribe({
         next: (data) => {
-          if (data.esCorrecto && data.resultado.lenght > 0) {
+          if (data.esCorrecto) {
             this.dataListaLecturas.data = data.resultado;
           } else {
             this._utilidadesServicicio.mostrarAlerta("No se encontraron ","Datos")
@@ -95,7 +95,7 @@ export class LecturasDispositivosComponent {
               }else
               {
                 console.log("No encontre lista");
-              }          
+              }
           },
           error:(e) =>{}
         })
