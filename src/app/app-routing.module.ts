@@ -43,6 +43,14 @@ import { DashboardEmpaqueSecundarioComponent } from './07_SIR.Mantenimiento.Apps
 import { CabezasFaenadasComponent } from './07_SIR.Mantenimiento.Apps/pages/cabezas-faenadas/cabezas-faenadas.component';
 import { DispositivosScadaComponent } from './07_SIR.Mantenimiento.Apps/formularios/dispositivos-scada/dispositivos-scada.component';
 import { DetalleEmbarqueComponent } from './04_SIR.Exportaciones.Reportes/pages/detalle-embarque/detalle-embarque.component';
+import { MenuComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/menu/menu.component';
+import { CrearPedidoComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/crear-pedido/crear-pedido.component';
+import { MainComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/main/main.component';
+import { PedidosRecibidosComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/pedidos-recibidos/pedidos-recibidos.component';
+import { PedidosActivosComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/pedidos-activos/pedidos-activos.component';
+import { VerStockComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/components/ver-stock/ver-stock.component';
+import { CajasEntregarComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/cajas-entregar/cajas-entregar.component';
+import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -66,6 +74,21 @@ const routes: Routes = [
     { path: 'produccion/resumenDesosadoMarel', component: ResumenMarelComponent},
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
+    { path: 'produccion/stockCajas', component: MainComponent, children: [
+      { path: '', component: MenuComponent },
+      { path: 'crearPedido', component: CrearPedidoComponent },
+      { path: 'verStock', component: VerStockComponent },
+      { path: 'pedidosActivos', component: PedidosActivosComponent },
+      { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
+      { path: 'cajasEntregar', component: CajasEntregarComponent },
+      { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
+      
+      
+
+      { path: '**', redirectTo: '', pathMatch: 'full'}
+    
+    ] },
+   
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
     { path: 'carga/packingList', component: PreciosKosherComponent},
     { path: 'controlCalidad/noqueo', component: NoqueoComponent},

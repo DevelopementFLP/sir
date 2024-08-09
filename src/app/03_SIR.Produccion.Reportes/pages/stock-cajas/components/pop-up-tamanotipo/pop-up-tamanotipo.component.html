@@ -1,0 +1,34 @@
+
+
+
+<div class="tamano" *ngIf="tamanoTipo=='Tamano' ">
+
+    <div class="titulo">
+        Seleccione el Tamaño para la Caja
+    </div>
+    
+    <div class="tamanos" *ngFor="let tamano of tamanos_cajas">
+        <button type="button" class="botones" [ngClass]="{ 'activo': tamanoActivo==tamano.nombre}" (click)="activarBotonTamano(tamano.nombre)" >{{tamano.nombre}}</button>
+    
+    
+    </div> 
+
+
+</div>
+
+<div class="Tipo" *ngIf="tamanoTipo == 'Tipo'" >
+    
+        <div class="titulo">
+            Seleccione el Tipo para la Caja
+        </div>
+
+        <div class="tipos" *ngFor="let tipo of tipos">
+            <button type="button" class="botones" [ngClass]="{ 'activo': tipoActivo==tipo.nombre}" (click)="activarBotonTipo(tipo.nombre)">{{tipo.nombre}}</button>
+        </div>
+
+
+</div>
+<!-- 
+<div class="confirmar">
+    <button type="button" class="botonConfirmar" (click)="enviarTamanoTipo()">Confirmar</button>
+</div> -->

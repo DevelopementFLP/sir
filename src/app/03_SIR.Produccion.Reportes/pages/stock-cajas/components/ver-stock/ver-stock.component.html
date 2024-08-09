@@ -1,0 +1,137 @@
+<div class="titulo_consultar_stock">
+    Consultar Stock
+</div>
+
+<div class="popUpCajas" id="popUp" [style.display]="popUpTamanoTipoVisible ? 'block' : 'none'">
+
+    <div class="popup-content">
+        <app-pop-up-tamanotipo (tamanoTipoSeleccionado)="guardarTamanoTipo($event)" [tamanoTipo]="tamanoTipo"></app-pop-up-tamanotipo>
+    </div>
+</div>
+
+<div class="botones">
+    <button class="btn_actualizar" (click)="iniciar()">Actualizar</button>
+    <app-boton-volver></app-boton-volver>
+</div>
+
+<div class="tamanoTipo">
+   
+   
+    <div class="lbl_FiltroTamanoTipo">
+        Filtrar
+    </div>
+
+    <div class = "container_TamanoTipo">
+
+        <div class="lblTamanoTipo">           
+             <button class="boton" (click)="abrirPopUpTamanoTipo('Tamano')"  >Tamaño</button>
+        </div>
+
+        <div class="lblTamanoTipo">
+            <button class="boton" (click)="abrirPopUpTamanoTipo('Tipo')">Tipo</button>
+        </div>
+        
+        <div class="lblTamanoTipo">
+        <button class="boton" (click)="borrarFiltro()">Borrar Filtro</button>
+        </div>
+        
+    </div>
+    
+    
+    
+</div>
+
+
+
+<div class="contenedor">
+    
+    <div>
+    <p-table
+        [value]="StockCajasMostrar!"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+        >
+        <ng-template pTemplate="header">
+            <tr>
+                 <th class=""><div class="columna">Imagen</div></th>
+                 <th class=""><div class="columna">Diseño</div></th>
+                <th class=""><div class="columna">Tamaño</div></th>
+                <th class=""><div class="columna">Tipo</div></th>
+                <th class="" [colSpan]="1"><div class="columna">Cantidad</div></th>
+              
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-stock>
+            <tr>
+                
+                
+                <td class="img"><div class="img_caja"><img src="{{getUrlCaja(stock.idCaja)}}" (click)="setUrlPopUpGrande(getUrlCaja(stock.idCaja))" class="img_Url"></div></td>
+                <td class=""><div class="valor">{{stock.nombreDiseno}}</div></td>
+                <td class=""><div class="valor">{{stock.nombreTamano}}</div></td>
+                <td class=""><div class="valor">{{stock.nombreTipo}}</div></td>
+                <td class=""><div class="valor">{{stock.cantidad}}</div></td>
+
+                
+                <td class="">
+                    
+                    <div *ngIf="modificar" class="botones_editar">
+                        <button class="boton_lapiz" (click)="abrirPopupCantidadNueva(stock.cantidad, stock.idCaja)">
+                          <img src="./../../../../../../assets/images/imagesStockCajas/lapiz.png">
+                        </button>
+                       
+                        <button class="boton_sumar"  (click)="mostrarPopUp(stock.idCaja)">
+                          +
+                        </button>
+                        
+                    </div>
+                </td>   
+               
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="3"></td>
+                <td><div class="total">TOTAL</div></td>
+                <td class="totalFooter"><div class="totalS">{{totalStock()}}</div></td>   
+              
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Pop Up Cantidad -->
+
+ 
+<div class="popUpCajas" id="popUp" [ngClass]="{'pop-up-oculto': !popUpVisible, 'pop-up-visible': popUpVisible}">
+
+    <div class="popup-content">
+        <app-pop-up-cantidad (cantidadSeleccionada)="guardarCantidad($event)"></app-pop-up-cantidad>
+    </div>
+</div>
+
+
+
+
+
+<div class="popUpCajas" id="popUp" [style.display]="popupVisibleEditar ? 'block' : 'none'">
+
+    <div class="popup-content">
+        <app-pop-up-editar-cantidad (cantidadSeleccionada)="guardarCantidad2($event)" [cantidadActualCajas]="cantidad" ></app-pop-up-editar-cantidad>
+    </div>
+</div>
+
+
+</div>
+
+
+<div class="img_Grande_Pop_Up" [style.display]="popUpVisibleImgGrande ? 'block' : 'none'">
+   
+    <div class="contenedor_Img_Grande">
+
+        <img src="{{img_Grande_Url}}" class="imgGrandePopUp">
+        <button class="btn_Img_Grande" (click)="cerrar_PopUp_Grande()">Cerrar</button>
+    </div>
+
+
+</div>

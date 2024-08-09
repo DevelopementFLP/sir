@@ -1,0 +1,111 @@
+<!-- Popup para Aumentar la Cantidad -->
+<div class="popup_agregar_cajas" id="popup_agregar_cajas">
+    
+    <div class="botones_popup">
+        <button type="button"(click)="cancelar()" class="btnCancelar">X</button>
+    </div>
+
+   
+    
+    
+    <div class="contenedor_botones_suma">
+        <div class="titulo_cantidad">Actualizar Cantidad de Cajas</div>
+        <div class="lbl_cantidad">
+         Cantidad Actual de Cajas es: {{cantidadActualCajas}}
+        </div>
+           <div class="container_botones">
+            
+            
+            
+            
+            <div class="botones_1_5_10">
+
+                <div class="containerFila1">
+                    <button type="button" class="btn_operacion_sumar uno" (click)="sumar(12)">12</button>
+                    <button type="button" class="btn_operacion_sumar cinco" (click)="sumar(24)">24</button>
+                    <button type="button" class="btn_operacion_sumar diez" (click)="sumar(36)">36</button>
+                    
+                </div>
+                <div class="containerFila2">
+
+                    <button type="button" class="btn_operacion_sumar diez" (click)="sumar(48)">48</button>
+                    <button type="button" class="btn_operacion_sumar diez" (click)="sumar(60)">60</button>
+                    <button type="button" class="btn_operacion_sumar diez" (click)="sumar(72)">72</button>
+                </div>
+                    
+            </div>
+            
+        </div>
+
+
+
+
+        <div class="caja_cantidad">
+          
+            <input type="number" class="cantidad-input" id="cantidad_sumar_cajas" [(ngModel)]="cantidad" (keyup)="validarNumero($event)">
+              
+        </div>
+
+          
+
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="X">
+            <button class="btnX" (click)=" borrarUnNumero()">
+                <img src="./../../../../../../assets/images/imagesStockCajas/borrar x.png" class="imgX">
+
+            </button>
+
+          <!-- <button class="boton_lapiz" (click)="abrirPopupCantidadNueva(stock.cantidad, stock.idCaja)">
+            <img src="./../../../../../../assets/images/imagesStockCajas/lapiz.png">
+          </button> -->
+
+          
+        </div>
+        <div class="enter">
+            <button class=" btnEnter" (click)="enviarCantidad()">Enter</button>
+        </div>
+        <div class="C">
+            <button class="btnC " (click)="borrarTodo()">C</button>
+            
+        </div>
+        <div class="siete">
+            <button class="botonNumerico" (click)="botonNumerico(7)">7</button>
+        
+        </div>
+        <div class="ocho">
+            <button class="botonNumerico" (click)="botonNumerico(8)">8</button>
+        </div>
+        <div class="nueve">
+            <button class="botonNumerico" (click)="botonNumerico(9)">9</button>
+        </div>
+        <div class="cuatro">
+            <button class="botonNumerico" (click)="botonNumerico(4)">4</button>
+        </div>
+        <div class="cinco">
+            <button class="botonNumerico" (click)="botonNumerico(5)">5</button>
+        </div>
+        <div class="seis">
+            <button class="botonNumerico" (click)="botonNumerico(6)">6</button>
+        </div>
+        <div class="uno">
+            <button class="botonNumerico" (click)="botonNumerico(1)">1</button>
+        </div>
+        <div class="dos">
+            <button class="botonNumerico" (click)="botonNumerico(2)">2</button>
+        </div>
+        <div class="tres">
+            <button class="botonNumerico" (click)="botonNumerico(3)">3</button>
+        </div>
+        <div class="cero">
+            <button class="botonNumerico" (click)="botonNumerico(0)">0</button>
+        </div>
+        <div class="masmenos">
+            <button class="botonNumerico btnSumaResta" [ngClass]="{'activoSumar':activoSumar, 'activoRestar': activoRestar} " (click)="valorSumaResta()">+/-</button>
+        </div>
+      </div>
+       
+   

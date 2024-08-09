@@ -1,0 +1,72 @@
+<!-- Librerias (de prueba luego se borran) -->
+
+<!-- <app-crear-pedido></app-crear-pedido> -->
+ <!-- <app-ver-stock></app-ver-stock> -->
+
+ <!-- <app-pedidos-activos></app-pedidos-activos>  -->
+
+<!-- ID Usuario - Menú -->
+ 
+<!-- 
+1 Administrador
+10 Empaque
+17 Armador
+18 Entregador
+
+-->
+
+
+<div class="menu__container" [ngSwitch]="opcion_Menu">
+    <div class="titulo">
+        Seleccione una opción del menú
+    </div>
+
+    <div *ngSwitchCase="'10'" class="menu menu_Crear_Pedido">
+        <button class="btn_menu" routerLink="./crearPedido">Crear Pedido</button>
+        <button class="btn_menu" routerLink="./verStock">Consultar Stock</button>
+        <button class="btn_menu" routerLink="./pedidosActivos">Pedidos Activos</button>
+    </div>
+
+    <br>
+
+    <div  *ngSwitchCase="'17' or '1'" class="menu armador_Cajas">
+        <button class="btn_menu" routerLink="./verStock">Modificar Stock</button>
+        <button class="btn_menu" routerLink="./pedidosRecibidos">Pedidos Recibidos</button>
+
+    </div>
+
+    <br>
+
+    <div *ngSwitchCase="'18' or '1'" class="menu entregador_Cajas">
+        <button class="btn_menu" routerLink="./cajasEntregar">Entregar Cajas</button>
+        <button class="btn_menu" routerLink="./entregaNoSolicitada">Entrega No Solicitada</button>
+        <button class="btn_menu" routerLink="./verStock">Consultar Stock</button>
+    </div>
+
+    <div class="menu menu_Todos" *ngSwitchCase="'1'" >
+      
+            <button class="btn_menu" routerLink="./crearPedido">Crear Pedido</button>
+            <button class="btn_menu" routerLink="./verStock">Consultar Stock</button>
+            <button class="btn_menu" routerLink="./pedidosActivos">Pedidos Activos</button>
+       
+    
+        <br>
+    
+       
+            <button class="btn_menu" routerLink="./verStock">Modificar Stock</button>
+            <button class="btn_menu" routerLink="./pedidosRecibidos">Pedidos Recibidos</button>   
+        <br>
+            <button class="btn_menu" routerLink="./cajasEntregar">Entregar Cajas</button>
+            <button class="btn_menu" routerLink="./entregaNoSolicitada">Entrega No Solicitada</button>
+        
+
+
+    </div>
+
+
+</div>
+
+ <!-- <app-cajas-entregar></app-cajas-entregar> -->
+
+  <!-- <app-pedidos-recibidos></app-pedidos-recibidos> -->
+
