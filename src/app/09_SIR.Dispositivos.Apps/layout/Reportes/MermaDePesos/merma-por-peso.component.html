@@ -1,0 +1,87 @@
+<h1 class="tituloDispositivo" style="margin:20px 0px 0px 40px"> Porsentajes de Merma</h1>
+
+<mat-card style="margin:20px 40px 40px 40px" >
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="dashboard-card-content">
+
+        <mat-form-field style="margin:20px">
+            <mat-label>Fecha Desde</mat-label>
+            <input matInput [matDatepicker]="pickerDesde" [(ngModel)]="fechaDesde" placeholder="Ingrese Fecha Desde">
+            <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+        </mat-form-field>
+
+        <button style="margin: 10px;" mat-raised-button color="primary" (click)="obtenerLecturaMermaPorPeso(fechaDesde)">
+            <mat-icon mat-list-icon>autorenew</mat-icon> Generar Reporte
+        </button>
+
+        <button  style="margin: 10px;" mat-raised-button color="accent" (click)="exportarExcel()">
+            <mat-icon mat-list-icon>download</mat-icon> Exportar a Excel
+        </button>
+
+        <div class="mat-elevation-z2">
+
+                <table mat-table [dataSource]="dataListaLecturasMerma">
+
+                    <ng-container matColumnDef="fechaDeBalanza">
+                        <th mat-header-cell *matHeaderCellDef> Fecha de Balanza</th>
+                        <td mat-cell *matCellDef="let element"> {{element.fechaDeBalanza}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fechaDeInnova">
+                      <th mat-header-cell *matHeaderCellDef> Fecha de Innova</th>
+                      <td mat-cell *matCellDef="let element"> {{element.fechaDeInnova}} </td>
+                  </ng-container>
+
+                    <ng-container matColumnDef="carcassID">
+                        <th mat-header-cell *matHeaderCellDef> CarcassID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.carcassID}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ladoAnimal">
+                        <th mat-header-cell *matHeaderCellDef> Lado Animal</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ladoAnimal}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="diferenciadePeso">
+                        <th mat-header-cell *matHeaderCellDef> Diferencia Peso</th>
+                        <td mat-cell *matCellDef="let element"> {{element.diferenciadePeso}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pesoInnova">
+                        <th mat-header-cell *matHeaderCellDef> Peso Caliente</th>
+                        <td mat-cell *matCellDef="let element"> {{element.pesoInnova}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="pesoLocal">
+                        <th mat-header-cell *matHeaderCellDef> Peso Frio</th>
+                        <td mat-cell *matCellDef="let element"> {{element.pesoLocal}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="porsentajeDeMerma">
+                        <th mat-header-cell *matHeaderCellDef> % de Merma</th>
+                        <td mat-cell *matCellDef="let element"> {{element.porsentajeDeMerma}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="porsentajePorMenudencia">
+                      <th mat-header-cell *matHeaderCellDef> % Menudencia</th>
+                      <td mat-cell *matCellDef="let element"> Pendiente </td>
+                  </ng-container>
+
+                    <ng-container matColumnDef="etiqueta">
+                        <th mat-header-cell *matHeaderCellDef> Etiqueta</th>
+                        <td mat-cell *matCellDef="let element"> {{element.etiqueta}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnasTablaMermaPorPeso"></tr>
+                    <tr mat-row *matRowDef="let row; columns : columnasTablaMermaPorPeso;"></tr>
+                </table>
+            <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+
