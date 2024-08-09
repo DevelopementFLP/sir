@@ -1,0 +1,297 @@
+<div class="contenedor">
+
+<div class="contenedorFechaTamano">
+
+    <div class="contenedor_fecha">
+        
+ 
+          
+            <div class="fechaInputTitulo">
+                Fecha Producción:
+                <input type="date" [disabled] ="fechaActiva" class="fecha" id="fecha" name="fecha" [(ngModel)]="fechaFiltrada" [attr.min] = "minFecha">
+            </div>
+                
+
+                        <div class="contenedorStock">
+                            
+                            <div class="lbl_form">Para Hoy o Para Stock:</div>
+                            
+                            <div class="stockOProduccion">
+                                <button class="hoyStock" [ngClass]="{ 'activo': stockOProduccion=='1'  } " (click)="activarFecha()">Stock</button>
+                                <button class="hoyStock" [ngClass]="{ 'activo': stockOProduccion=='0'  } " (click)="SetParaHoy()">Hoy</button>
+                            </div>
+                        </div>
+
+
+                        <div class="fechaInputTitulo">
+                            Prioridad Pedido:
+                            <input type="number" [(ngModel)]="prioridadPedidoPadre" class="txt_Prioridad">
+                        </div>
+
+                        <div class="contenedorStock">
+                            
+                            
+                            <div class="container_BotonesPrioridad">
+                                
+
+                                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(1)">
+                                        <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
+                                    </button>
+                                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(-1)">
+                                        
+                                        <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
+                                    </button>
+                               
+                                
+                            </div>
+                        </div>
+
+    </div>
+
+
+    <div class="tamanoTipo">
+    
+        <div class = "botones">
+
+           <div class="lblTamanoTipo">
+
+                Seleccione Tamaño
+                <button class="boton" (click)="abrirPopUpTamanoTipo('Tamano')"  >Tamaño</button>
+                <div class="tamano">
+                    Tamaño Seleccionado: {{tamanioSeleccionado}}
+                </div>
+            </div>
+
+            <div class="lblTamanoTipo" *ngIf="!habilitarTipo">
+                Seleccione Tipo
+                <button class="boton" (click)="abrirPopUpTamanoTipo('Tipo')" [disabled]="habilitarTipo">Tipo</button>
+                <div class="tipo">
+                    Tipo Seleccionado: {{tipoSeleccionado}}
+                </div>
+            </div>
+
+
+            
+                
+        </div>
+    
+       
+    
+    </div>
+    
+</div>
+
+
+<div class="btn_volverBorrar">
+    <div class="boton_volver">
+        <app-boton-volver></app-boton-volver>
+
+    </div>
+
+    <button class="borrarSeleccion" (click)="borrarSeleccion()">Borrar selección</button>
+   
+  
+</div>
+
+<div class="verPedido">
+    <button class="btn_VerPedido" (click)="abrirPopUpGrande()" *ngIf="cantidadAPedir.length!=0">Ver Pedido</button>
+</div>
+
+<div class="contenedor_cajas disabled" [ngClass]="{'disabled': deshabilitado}" *ngIf="!deshabilitado">
+
+        <div class="caja" (click)="mostrarPopUp(caja.id_Diseno,getNombreDiseno(caja.id_Diseno))" *ngFor="let caja of cajasFiltro; let i = index" >
+        
+            <div class="img_caja" [ngClass]="{'img_caja_chica':tamanioSeleccionado=='CHICA'}">
+                <img src="{{getUrlDiseno(caja.id_Diseno)}}" class="img">
+            </div>
+        
+            <div class="nombre_cantidad">
+
+                <div class="nombre_caja">
+                    {{getNombreDiseno(caja.id_Diseno)}}
+                </div>
+
+                
+
+            </div>
+        </div>
+</div>
+
+<br>
+
+<div class="popUpCajas" id="popUp" [style.display]="popUpVisible ? 'block' : 'none'">
+
+    <div class="popup-content">
+        <app-pop-up-cantidad (cantidadSeleccionada)="guardarCantidad($event)"></app-pop-up-cantidad>
+    </div>
+</div>
+
+
+
+
+<div class="popUpCajas" id="popUp" [style.display]="popUpTamanoTipoVisible ? 'block' : 'none'">
+
+    <div class="popup-content">
+        <app-pop-up-tamanotipo (tamanoTipoSeleccionado)="guardarTamanoTipo($event)" [tamanoTipo]="tamanoTipo"></app-pop-up-tamanotipo>
+    </div>
+</div>
+
+</div>
+
+<div class="popUpChico" *ngIf="cantidadAPedir.length!=0 && popUpOrdenGrande==false">
+    <div class="contenedor_Pop_Up" id="revisar_pedido">
+
+        <button class="btn_extender_popUp" (click)="desplegarPopUp()">
+            <span *ngIf="desplegarPoUpVisible">&#9660;</span> <!-- Flecha hacia abajo -->
+            <span *ngIf="!desplegarPoUpVisible">&#9650;</span> <!-- Flecha hacia arriba -->
+        </button>
+
+
+        <div class="lbl_Orden_Armado">Su Orden de Armado:</div>
+        <div class="contenedor_pedido" id="contenedor_pedido" *ngIf="!desplegarPoUpVisible">
+    
+            <div>
+                <p-table
+                    [value]="cantidadAPedir!"
+                    styleClass="p-datatable-striped"
+                    [scrollable]="true"
+                    scrollHeight="500px"
+                    >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class=""><div class="columna">Diseños</div></th>
+                            <th class=""><div class="columna">Tipo Caja</div></th>
+                            <th class=""><div class="columna">Tamaño</div></th>
+                            <th class=""><div class="columna">Cantidad</div></th>
+                            <th class=""><div class="columna">Prioridad</div></th>
+                          
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-cantidad>
+                        <tr>
+                            <td class=""><div class="valor">{{cantidad.nombreDisenio}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.tipo}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.tamano}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.cantidad}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.prioridad}}</div></td>
+                            <td class="">
+                                <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(1, cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
+                                </button></td>
+                            <td class="">
+                                <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(-1, cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
+                            </button></td>
+                            <td class="">
+                                <button class="btn_CambiarPrioridad" (click)="eliminarOdPedido(cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/borrar_papelera_rojo.png">
+                                </button></td>
+                     
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="2"></td>
+                            <td><div class="total">TOTAL</div></td>
+                            <td class="totalFooter"><div class="totalS">{{totalCajas()}}</div></td>   
+                            <td class="totalFooter"><div class="totalS"></div></td>   
+                            <td class="totalFooter"><div class="totalS"></div></td>   
+                          
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+    
+            <div class="botones_Pop_Up">
+                
+                <button class="btn_borrar_cantidades" id="btn_borrar_cantidades" (click)="borrarPedido()" >Borrar Pedido</button>
+                    <button class="btn_confirmar_pedido" (click)="crearPedido()">Crear Pedido</button>
+            </div>
+    
+        </div>
+    
+    </div>
+</div>
+
+<!-- PopUp en Grande -->
+
+<div class="popUp" *ngIf="cantidadAPedir.length!=0" [style.display]="popUpOrdenGrande ? 'block' : 'none'">
+    <div class="contenedor_Pop_Up" id="revisar_pedido">
+        <div class="lbl_Orden_Armado">Su Orden de Armado:</div>
+        <div class="contenedor_pedido" id="contenedor_pedido">
+    
+            <div>
+                <p-table
+                    [value]="cantidadAPedir!"
+                    styleClass="p-datatable-striped"
+                    [scrollable]="true"
+                    scrollHeight="500px"
+                    >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class=""><div class="columna">Imagen</div></th>
+                            <th class=""><div class="columna">Diseños</div></th>
+                            <th class=""><div class="columna">Tipo Caja</div></th>
+                            <th class=""><div class="columna">Tamaño</div></th>
+                            <th class=""><div class="columna">Cantidad</div></th>
+                            <th class=""><div class="columna">prioridad</div></th>
+                          
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-cantidad>
+                        <tr>
+                            <td class="img_PopUp_Div"><div class="img_PopUp"><img src="{{getUrlCaja(cantidad.idDisenio)}}"></div></td>
+                            <td class=""><div class="valor">{{cantidad.nombreDisenio}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.tipo}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.tamano}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.cantidad}}</div></td>
+                            <td class=""><div class="valor">{{cantidad.prioridad}}</div></td>
+
+                            
+                            <td class="">
+                                <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(1, cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
+                                </button></td>
+                            <td class="">
+                                <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(-1, cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
+                                </button></td>
+                                
+                                <td class=""><button class="btn_CambiarPrioridad" (click)="eliminarOdPedido(cantidad)">
+                                    <img src="./../../../../../../assets/images/imagesStockCajas/borrar_papelera_rojo.png">
+                                    
+
+                            </button></td>
+                     
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="3"></td>
+                            <td><div class="total">TOTAL</div></td>
+                            <td class="totalFooter"><div class="totalS">{{totalCajas()}}</div></td>   
+                            <td  colspan="4" class="totalFooter"><div class="totalS"></div></td>   
+                          
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+    
+            <div class="botones_Pop_Up">
+                
+                <button class="btn_VolverPopUp" (click)="cerrarPopUpGrande()">Volver</button>
+                <button class="btn_borrar_cantidades" id="btn_borrar_cantidades" (click)="borrarPedido()" >Borrar Pedido</button>
+                    <button class="btn_confirmar_pedido" (click)="crearPedido()">Crear Pedido</button>
+            </div>
+    
+        </div>
+    
+    </div>
+</div>
+
+
+
+
+

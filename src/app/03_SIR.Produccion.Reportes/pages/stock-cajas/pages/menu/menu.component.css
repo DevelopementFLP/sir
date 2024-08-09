@@ -1,0 +1,40 @@
+
+
+/* Estilos Del Menú */
+
+.titulo {
+    margin-top: 4rem;
+    display: flex;
+    font-size: 6rem;
+    justify-content: center;
+    align-self: center;
+  }
+
+  .menu{
+
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    align-self: center;
+    margin-top: 10rem;
+    row-gap: 1rem;
+
+  }
+
+  .btn_menu{
+    /* margin-top: 10rem; */
+    display: flex;
+    justify-content: center;
+
+    font-size: 2rem;
+    width: 50rem;
+}
+  
+  .menu__container{
+    /* background-color: blue; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  

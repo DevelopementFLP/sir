@@ -1,3 +1,5 @@
+
+// export const urlAPI: string = "http://192.168.0.107:90/api/";
 export const urlAPI: string = "http://192.168.0.107:82/api/";
 // export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -111,7 +113,32 @@ export const urlUpdateConfProductos: string = urlExportaciones + "UpdateConfProd
 export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProductosAsync";
 export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
 
-//Gecos
+// Stock Cajas
+export const urlStockCajas: string = urlAPI + "StockCajas/";
+export const urlGetTiposCajas: string = urlStockCajas + "GetTiposCajasAsync";
+export const urlGetTamanoCajas: string = urlStockCajas + "GetTamanoCajasAsync";
+export const urlGetStockCajas: string = urlStockCajas + "GetStockCajasAsync";
+export const urlGetPedidos: string = urlStockCajas + "GetPedidosAsync";
+export const urlGetPedidosPadre: string = urlStockCajas + "GetPedidosPadreAsync";
+export const urlgetOrdenesEntrega: string = urlStockCajas + "GetOrdenesEntregaAsync?estado=1"; 
+export const urlGetOrdenesArmado: string = urlStockCajas + "GetOrdenesArmadoAsync?estado=1";
+export const urlGetDisenos: string = urlStockCajas + "GetDisenosAsync";
+export const urlGetCajas: string = urlStockCajas + "GetCajasAsync";
+export const urlInsertPedido: string = urlStockCajas + "InsertPedidoAsync";
+export const urlInsertPedidoPadre: string = urlStockCajas + "InsertPedidoPadreAsync";
+export const urlInsertOrdenArmado: string = urlStockCajas + "InsertOrdenArmadoAsync";
+export const urlInsertOrdenEntrega: string = urlStockCajas + "InsertOrdenEntregaAsync";
+export const urlUpdatePrioridadPedido: string = urlStockCajas + "UpdatePrioridadPedidoAsync";
+export const urlUpdatePedido: string = urlStockCajas + "UpdatePedidoAsync";
+export const urlUpdatePedidoPadre: string = urlStockCajas + "UpdatePedidoPadreAsync";
+export const urlUpdateOrdenArmadoCajasArmadas: string = urlStockCajas + "UpdateOrdenArmadoCajasArmadasAsync";
+export const urlUpdateOrdenArmado: string = urlStockCajas + "UpdateOrdenArmadoAsync";
+export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "UpdateOrdenEntregaCajasEntregadasAsync";
+export const urlUpdateOrdenentrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
+export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
+export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
+
+// Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";
 var fechas = "?fechadesde=fd&fechahasta=fh"
 export var gecosProduccion: string = gecosAPI + "produccion/salidas" + fechas;
@@ -121,6 +148,10 @@ const gecosHacienda: string = gecosAPI + "hacienda/";
 export var gecosHaciendaAnimales: string = gecosHacienda + "animales" + fechas;
 export var gecosHaciendaLotes: string = gecosHacienda + "lotes" + fechas;
 export var gecosHaciendaTipificacion: string = gecosHacienda + "tipificacion" + fechas;
+
+
+// Gecos Integration Broker
+export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
 
 //Gecos Integration Broker
 export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
@@ -162,3 +193,4 @@ export const urlGetLecturaDispExpo: string = urlLecturasDispositivo + "listaDeEx
 //Merma por Peso
 export const urlMermaPorPeso: string = urlAPI + "MermaPorPeso/"
 export const urlGetMermaPorPeso: string = urlMermaPorPeso + "listaDeMermasPorPeso"
+

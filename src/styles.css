@@ -162,3 +162,6 @@ input.ng-tns-c59-4.p-inputtext.p-component.ng-star-inserted {
     padding-bottom: 16px;
 } */
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

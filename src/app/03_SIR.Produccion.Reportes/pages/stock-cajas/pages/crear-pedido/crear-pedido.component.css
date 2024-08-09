@@ -1,0 +1,7 @@
+.lbl_orden_armado{
+    display: flex;
+    margin-bottom: 4rem;
+    justify-content: center;
+    font-size: 6rem;
+    margin-top: 4rem;
+}
