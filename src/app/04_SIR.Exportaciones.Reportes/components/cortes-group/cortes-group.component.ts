@@ -71,6 +71,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['embarqueData'] && !changes['embarqueData'].isFirstChange()) {
+
       this.actualizarDatosCajas();
         this.embarqueData.forEach(d => {
           this.setDatosKosher(d);
@@ -163,12 +164,12 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
         this.datosKosher.push(data);
       }
       else {
-        if(this.errorNoPrecio.find(e => e.codigo == caja.codProducto && e.fecha == caja.fechaCorrida) == undefined)
+        if(caja.codProducto != null && this.errorNoPrecio.find(e => e.codigo == caja.codProducto && e.fecha == caja.fechaCorrida) == undefined)
           this.errorNoPrecio.push({codigo: caja.codProducto, fecha: caja.fechaCorrida!});
       }
     }
     else {
-      if(this.errorNoCodigo.find(e => e == caja.codProducto) == undefined)
+      if(caja.codProducto != null && this.errorNoCodigo.find(e => e == caja.codProducto) == undefined)
         this.errorNoCodigo.push(caja.codProducto);
      }
   }
