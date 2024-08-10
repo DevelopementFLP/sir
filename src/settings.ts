@@ -153,7 +153,6 @@ export var gecosHaciendaTipificacion: string = gecosHacienda + "tipificacion" + 
 // Gecos Integration Broker
 export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";
 
-
 //Dispositivos
 export const urlDispositivos: string = urlAPI + "Dispositivo/"
 export const urlGetDispositivo: string = urlDispositivos + "ListaDispositivos/NA"

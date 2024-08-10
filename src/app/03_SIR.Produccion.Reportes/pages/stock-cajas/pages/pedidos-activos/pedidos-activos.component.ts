@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { Pedido } from '../../interfaces/Pedido.interface';
 import { lastValueFrom } from 'rxjs';
@@ -18,7 +18,9 @@ import { PedidoPadreMostrar } from '../../interfaces/PedidoPadreMostrar.interfac
   templateUrl: './pedidos-activos.component.html',
   styleUrls: ['./pedidos-activos.component.css']
 })
-export class PedidosActivosComponent implements OnInit {
+export class PedidosActivosComponent implements OnInit, OnDestroy {
+
+  private intervalId: any;
 
   @ViewChild('fechaPedido', {static: false}) fechaPedido!: HTMLInputElement;
 
@@ -64,11 +66,15 @@ export class PedidosActivosComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.iniciar();    
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       if(!this.isWorking)
         await this.iniciar();    
     }, 60000);
 
+  }
+
+  ngOnDestroy(): void {
+    if(this.intervalId) clearInterval(this.intervalId);
   }
 
 constructor (private stockService: StockCajasService) {}

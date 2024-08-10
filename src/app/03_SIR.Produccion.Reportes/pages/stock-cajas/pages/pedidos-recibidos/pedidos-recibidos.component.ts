@@ -19,7 +19,9 @@ import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
   templateUrl: './pedidos-recibidos.component.html',
   styleUrls: ['./pedidos-recibidos.component.css'] 
 })
-export class PedidosRecibidosComponent implements OnInit{
+export class PedidosRecibidosComponent implements OnInit, OnDestroy {
+
+  private intervalId: any;
 
   idPedido: number = -1;
   idCaja: number = -1;
@@ -67,10 +69,14 @@ export class PedidosRecibidosComponent implements OnInit{
 
   async ngOnInit(): Promise<void> {
     await this.iniciar();    
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       if(!this.isWorking)
         await this.iniciar();    
     }, 60000);
+  }
+
+  ngOnDestroy(): void {
+      if(this.intervalId) clearInterval(this.intervalId);
   }
 
   async iniciar(): Promise<void> {
