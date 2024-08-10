@@ -35,14 +35,14 @@ export class MenuComponent implements OnInit{
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.getTiposCajasAsync();
-    await this.getTamanoCajasAsync();
-    await this.getStockCajasAsync();
-    await this.getPedidosAsync();
-    await this.getOrdenesEntregaAsync();
-    await this.getOrdenesArmadoAsync();
-    await this.getDisenosAsync();
-    await this.getCajasAsync();
+    // await this.getTiposCajasAsync();
+    // await this.getTamanoCajasAsync();
+    // await this.getStockCajasAsync();
+    // await this.getPedidosAsync();
+    // await this.getOrdenesEntregaAsync();
+    // await this.getOrdenesArmadoAsync();
+    // await this.getDisenosAsync();
+    // await this.getCajasAsync();
 
     this.opcion_Menu = this.getIdUsuario();
 

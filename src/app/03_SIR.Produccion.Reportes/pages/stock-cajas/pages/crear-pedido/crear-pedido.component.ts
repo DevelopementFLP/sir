@@ -33,8 +33,8 @@ export class CrearPedidoComponent implements OnInit {
    fechahoy = new Date();
   async ngOnInit(): Promise<void> {
     
-    await this.GetTiposCajasAsync();
-    await this.GetTamanoCajasAsync();
+    // await this.GetTiposCajasAsync();
+    // await this.GetTamanoCajasAsync();
   }
 
   constructor (private stockService: StockCajasService) {}

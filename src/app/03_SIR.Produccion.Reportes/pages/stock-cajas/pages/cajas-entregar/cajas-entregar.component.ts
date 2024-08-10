@@ -1,7 +1,7 @@
-import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { Pedido } from '../../interfaces/Pedido.interface';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, interval } from 'rxjs';
 import { Caja } from '../../interfaces/Caja.interface';
 import { Tamano } from '../../interfaces/Tamano.interface';
 import { Diseno } from '../../interfaces/Diseno.interface';
@@ -18,7 +18,9 @@ import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
   templateUrl: './cajas-entregar.component.html',
   styleUrls: ['./cajas-entregar.component.css']
 })
-export class CajasEntregarComponent implements OnInit{
+export class CajasEntregarComponent implements OnInit, OnDestroy{
+
+  private intervalId: any;
 
   pedidos: Pedido[] | undefined =[];
   cajasCajas: Caja[] | undefined = [];
@@ -56,12 +58,14 @@ export class CajasEntregarComponent implements OnInit{
 
     await this.iniciar();
   
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       if(!this.isWorking)
         await this.iniciar();    
     }, 60000);
+  }
 
-   
+  ngOnDestroy(): void {
+      if(this.intervalId) clearInterval(this.intervalId);
   }
 
   constructor (

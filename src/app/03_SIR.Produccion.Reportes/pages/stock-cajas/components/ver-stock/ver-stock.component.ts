@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { lastValueFrom } from 'rxjs';
@@ -16,7 +16,9 @@ import { stockMostrar } from '../../interfaces/stockMostrar.interface';
 })
 
 
-export class VerStockComponent implements OnInit {
+export class VerStockComponent implements OnInit, OnDestroy {
+
+  private intervalId: any;
 
   tipos: Tipo[] | undefined = [];
   tamanos_cajas: Tamano[] | undefined = [];
@@ -55,12 +57,16 @@ export class VerStockComponent implements OnInit {
 
     await this.iniciar();
   
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       if(!this.isWorking)
         await this.iniciar();    
     }, 60000);
 
    
+  }
+
+  ngOnDestroy(): void {
+      if(this.intervalId) clearInterval(this.intervalId)
   }
 
   constructor (private stockService: StockCajasService) {}
