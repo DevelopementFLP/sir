@@ -282,7 +282,7 @@
     top: 10rem; /* Distancia desde el borde superior */
     left: 20px; /* Distancia desde el borde derecho */
     z-index: 1000; /* Z-index alto para asegurar que esté sobre otros elementos */
-    background-color: rgba(255, 255, 255, 0.568); /* Color de fondo del popup */
+    background-color: rgb(255, 255, 255); /* Color de fondo del popup */
     border: 1px solid #ccc; /* Borde del popup */
     border-radius: 2rem;
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */

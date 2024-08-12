@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { StockCajasService } from '../../services/stock-cajas.service';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, zip } from 'rxjs';
 import { Tamano } from '../../interfaces/Tamano.interface';
 import { Diseno } from '../../interfaces/Diseno.interface';
 import { Stock } from '../../interfaces/Stock.interface';
@@ -304,6 +304,7 @@ export class VerStockComponent implements OnInit, OnDestroy {
 
   async actualizarStock(cantidadCajas:number, idCaja:number){
 
+    await this.getStockCajasAsync();
 
     this.stockActualizar=[];
     this.stockActualizar.push({

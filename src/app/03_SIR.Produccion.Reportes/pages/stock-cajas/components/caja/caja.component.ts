@@ -260,11 +260,12 @@ export class CajaComponent implements OnInit {
       const input = event.target as HTMLInputElement;
       var valor: number = parseInt(input.value);
 
+
+      let valorstr = valor.toString();
       if(valor < 0) {
         
         input.value = "0";
       }
-      
     }
 
 //  Obtener id para luego buscar el nombre
@@ -630,37 +631,17 @@ async crearPedido(){
     this.cantidadAPedir = [];
     this.tamanioSeleccionado="";
     this.tipoSeleccionado="";
-
-
-
-    // this.cantidades.forEach(c => {
-    //   c.cantidad=0;
-    //   c.prioridad=0;
-      
-    // });
-
+    this.popUpOrdenGrande =  false;
+    this.borrarSeleccion();
 
   }
   
   eliminarOdPedido(pedido: CajaDisenioPedido ){
-    // var indicecantidad = this.cantidades.indexOf(pedido);
-    // this.cantidades.splice(indicecantidad, 1);
-    
     var indice = this.cantidadAPedir.indexOf(pedido);
     this.cantidadAPedir.splice(indice, 1);
-    
-
-    // this.filtrarPedidos();
-
   }
 
-
-
-
      filtrarPorTamano(tamanio: string, tipo:string){
-
-
-     
     //  Si tipo es vacio y tamanio está con valor solo buscar por tamano
     if(tipo=="" && tamanio!=""){
      
@@ -769,12 +750,16 @@ async crearPedido(){
 
 
     if(this.tamanoTipo=="Tamano"){
-      this.tamanioSeleccionado = $event;
-      this.habilitarTipo = false;
-      
+      if($event!=""){
+        this.tamanioSeleccionado = $event;
+        this.habilitarTipo = false;
+      }
     }else if(this.tamanoTipo=="Tipo"){
+      if($event!=""){
       this.tipoSeleccionado = $event;
+
       this.deshabilitado = false;
+    }
       
     
 

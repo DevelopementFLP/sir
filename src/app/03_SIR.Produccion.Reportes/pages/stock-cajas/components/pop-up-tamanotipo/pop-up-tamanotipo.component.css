@@ -9,9 +9,7 @@
 .titulo{
     display: flex;
     font-size: 2.5rem;
-    margin-top: 2rem;
     margin-bottom: 2rem;
-
 }
 
 .botones{
@@ -32,4 +30,17 @@
 
 .activo{
     background-color: #ff6347
+}
+
+
+.botones_popup {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 0rem;
+  }
+
+
+.btnCancelar{
+  background-color: red;
+  font-size: 2rem;
 }
