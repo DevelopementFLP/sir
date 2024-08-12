@@ -25,7 +25,7 @@
 
                         <div class="fechaInputTitulo">
                             Prioridad Pedido:
-                            <input type="number" [(ngModel)]="prioridadPedidoPadre" class="txt_Prioridad">
+                            <input type="number" [(ngModel)]="prioridadPedidoPadre" class="txt_Prioridad" (keyup)="validarNumero($event)">
                         </div>
 
                         <div class="contenedorStock">
@@ -130,8 +130,8 @@
 
 
 <div class="popUpCajas" id="popUp" [style.display]="popUpTamanoTipoVisible ? 'block' : 'none'">
-
     <div class="popup-content">
+        
         <app-pop-up-tamanotipo (tamanoTipoSeleccionado)="guardarTamanoTipo($event)" [tamanoTipo]="tamanoTipo"></app-pop-up-tamanotipo>
     </div>
 </div>
@@ -164,6 +164,7 @@
                             <th class=""><div class="columna">Tamaño</div></th>
                             <th class=""><div class="columna">Cantidad</div></th>
                             <th class=""><div class="columna">Prioridad</div></th>
+                            <th class="" colspan="3"><div class="columna"></div></th>
                           
                         </tr>
                     </ng-template>
@@ -195,7 +196,7 @@
                             <td><div class="total">TOTAL</div></td>
                             <td class="totalFooter"><div class="totalS">{{totalCajas()}}</div></td>   
                             <td class="totalFooter"><div class="totalS"></div></td>   
-                            <td class="totalFooter"><div class="totalS"></div></td>   
+                            <td class="totalFooter" colspan="3"><div class="totalS"></div></td>   
                           
                         </tr>
                     </ng-template>

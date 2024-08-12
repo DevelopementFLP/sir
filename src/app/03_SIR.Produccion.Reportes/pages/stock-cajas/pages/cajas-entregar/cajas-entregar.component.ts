@@ -334,7 +334,9 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
 
 
   async armarCajas(idPedido: number, cantidadentregadas:number, idCaja:number, terminarPedido:boolean){
-
+    await this.getStockCajasAsync();
+    await this.getOrdenesEntregaAsync();
+    
     this.ordenEntregaInsertar=[];
     this.ordenEntregaInsertar.push({
       id_Pedido: idPedido,

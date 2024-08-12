@@ -87,5 +87,10 @@ export class PopUpTamanotipoComponent implements OnInit{
     this.enviarTamanoTipo();
   }
 
+  cerrarPopUp(){
+    this.tamanoTipoSeleccionado.emit("");
+    this.tamanoTipoSeleccionado.emit("");
+  }
+
 
 }

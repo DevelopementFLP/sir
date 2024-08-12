@@ -1,8 +1,8 @@
 .titulo_consultar_stock{
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
-    font-size: 2.5rem;
+    margin-top: 4rem;
+    font-size: 4rem;
 }
 
 .botones,

@@ -89,7 +89,15 @@ cancelar(){
     if(this.cantidad== 0 && numero == 0)
       return
 
-    this.cantidad = this.cantidad * 10 + numero;
+    let resultado: number = this.cantidad * 10 + numero;
+
+    if(resultado > 10000){
+      alert("Ingrese una cantidad menor a 10.000");
+      this.cantidad = 0;
+    }else{
+
+      this.cantidad = resultado;
+    }
   }
 
   borrarUnNumero(){

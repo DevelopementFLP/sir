@@ -227,7 +227,7 @@ export class EntregaNoSolicitadaComponent implements OnInit {
 
     async actualizarStock(cantidadCajas:number, idCaja:number){
 
-
+      await this.getStockCajasAsync();
       this.stockActualizar=[];
       this.stockActualizar.push({
         id_Caja: idCaja,

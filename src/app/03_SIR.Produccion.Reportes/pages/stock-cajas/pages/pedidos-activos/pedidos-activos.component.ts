@@ -345,7 +345,9 @@ constructor (private stockService: StockCajasService) {}
   totalCajasSolicitadas(): number{
     let total: number = 0;
 
-    this.pedidosMostrar!.forEach(p => {
+
+
+    this.pedidosActivosMostrar!.forEach(p => {
       total = total + p.cantidadPedida;
     });
     return total;
@@ -354,7 +356,7 @@ constructor (private stockService: StockCajasService) {}
   totalCajasEntregadas(): number{
     let total: number = 0;
 
-    this.pedidosMostrar!.forEach(p => {
+    this.pedidosActivosMostrar!.forEach(p => {
       total = total + p.cantidadEntregados;
     });
 

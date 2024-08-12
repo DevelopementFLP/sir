@@ -333,7 +333,8 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
 
   async armarCajas(idPedido: number, cantidadArmadas:number, idCaja:number){
 
-
+    await this.getStockCajasAsync();
+    await this.getOrdenesArmadoAsync();
     this.ordenArmadoInsertar=[];
     this.ordenArmadoInsertar.push({
       id_Pedido: idPedido,
