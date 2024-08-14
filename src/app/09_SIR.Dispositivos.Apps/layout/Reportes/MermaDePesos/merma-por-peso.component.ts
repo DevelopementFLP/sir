@@ -428,7 +428,7 @@ GetPesoPorProveedorGeneral(): any[] {
 
   resumenDeDatos(): void {
 
-    let dataFiltrada = this.dataListaLecturasMerma.data;
+    let dataFiltrada = this.dataListaLecturasMerma.data
 
     if (this.proveedorSelecionado && this.proveedorSelecionado != "Todos") {
       dataFiltrada = dataFiltrada.filter(item => item.proveedor === this.proveedorSelecionado);
