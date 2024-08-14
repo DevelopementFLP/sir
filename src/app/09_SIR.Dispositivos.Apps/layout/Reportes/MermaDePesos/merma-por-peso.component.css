@@ -1,0 +1,17 @@
+.flex-container {
+  display: flex;
+  flex-wrap: wrap; /* Esto deja que los elementos se ajusten a varias líneas  */
+  gap: 10px; /* Espacio entre las cajitas */
+  justify-content: center; /* alineacion de las cajitas en el medio */
+}
+
+.flex-item {
+  flex: 1 1 200px; /* Crece y se encoge según el espacio disponible, y la base es de 200px */
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comboSelect{
+  width: 100%;
+}

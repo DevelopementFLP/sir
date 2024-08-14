@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select'
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -93,7 +94,8 @@ import { MermaPorPesoComponent } from './layout/Reportes/MermaDePesos/merma-por-
     InputTextModule,
     ButtonModule,
     DropdownModule,
-    InputTextareaModule
+    InputTextareaModule,
+    MatExpansionModule
   ],
   providers:[
     MatDatepickerModule,
