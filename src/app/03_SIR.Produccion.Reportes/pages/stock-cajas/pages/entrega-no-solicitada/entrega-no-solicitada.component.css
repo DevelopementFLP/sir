@@ -1,0 +1,199 @@
+.columna{
+    font-size: 2rem;
+  
+  }
+  
+  .valor,
+  .total,
+  .totalS{
+    font-size: 1.9rem;
+  }
+  .valor,
+  .columna,
+  .total,
+  .totalS{
+    text-align: center;
+  }
+  .valor{
+    color:black;
+  }
+  
+    .popUpCajas{
+      z-index: 99;
+    }
+  
+    .img_caja{
+      display: flex;
+      width: 100%;
+      justify-content: center;
+  }
+  
+  
+    .img{
+      display: flex;
+      justify-content: center;
+    }
+
+
+    .titulo_CajaNoEntregada {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        font-size: 4rem;
+      }
+      
+      .contenedor_filtro {
+        display: flex;
+        column-gap: 2rem;
+        margin-left: 2rem;
+      }
+      
+      .botones {
+        display: flex;
+        column-gap: 2rem;
+        justify-content: start;
+        margin-left: 2rem;
+      }
+      
+      .contenedor {
+        display: flex;
+        border: solid;
+        flex-direction: column;
+        row-gap: 2rem;
+      
+      }
+      
+      .botones_editar {
+        display: flex;
+        font-size: 2rem;
+        justify-content: center;
+      }
+
+      .btn_Entregar {
+        font-size: 2rem;
+        display: flex;
+        justify-content: center;
+        width: max-content;
+        font-size: 2rem;
+        background-color: #00cc66; /* Verde */
+      
+      }
+  
+
+  
+  /* Pop Up cantidad cajas */
+  .popUpCajas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+  
+    /* padding: 20px; */
+    /* z-index: 1000; Ajusta el valor según sea necesario */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  
+    /* display: none; */
+    
+    /* Inicialmente oculto */
+  
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .pop-up-oculto {
+    display: none;
+  }
+  
+  .pop-up-visible {
+    display: block;
+  }
+  .tamanoTipo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* justify-content: center; */
+  }
+
+  .container_TamanoTipo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 2rem;
+  }
+
+  .lbl_FiltroTamanoTipo{
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  .lblTamanoTipo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+
+  .dialog {
+    display: none; /* Ocultar el diálogo por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+  }
+  
+  .dialog-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .dialog button {
+    margin: 10px;
+  }
+
+  .imgGrandePopUp{
+    height: 50rem;
+  }
+
+  .contenedor_Img_Grande{
+    width: 26rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2rem 2rem;
+  }
+  
+  .img_Grande_Pop_Up{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 9999;
+    display: none;
+  }
+  .imgGrandePopUp{
+    max-height: 50rem;
+  }
+
+  .img_Url{
+    max-height: 22rem;
+    width: 14rem;
+  }

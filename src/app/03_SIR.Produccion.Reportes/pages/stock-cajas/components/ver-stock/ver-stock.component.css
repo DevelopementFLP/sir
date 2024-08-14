@@ -1,0 +1,235 @@
+.columna{
+  font-size: 2rem;
+
+}
+
+.valor,
+.total,
+.totalS{
+  font-size: 1.9rem;
+}
+.valor,
+.columna,
+.total,
+.totalS{
+  text-align: center;
+}
+
+  .popUpCajas{
+    z-index: 99;
+  }
+
+  .img_caja{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.img_Url{
+  max-height: 22rem;
+  width: 10rem;
+}
+
+  .img{
+    display: flex;
+    justify-content: center;
+  }
+
+.titulo_consultar_stock {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+
+.botones {
+  display: flex;
+  column-gap: 2rem;
+  justify-content: start;
+  margin-left: 2rem;
+}
+
+.contenedor {
+  display: flex;
+  border: solid;
+  flex-direction: column;
+  row-gap: 2rem;
+
+}
+
+.botones_editar {
+  display: flex;
+  font-size: 2rem;
+}
+
+.boton_lapiz {
+  padding: 0px 0px;
+  /* Padding para espacio alrededor del texto/icono */
+  margin-left: 8px;
+  /* Espacio entre los botones y el texto */
+  width: 4rem;
+  background-color: white;
+  border-color: blueviolet;
+}
+
+.boton_sumar {
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  width: 1rem;
+  font-size: 3rem;
+
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Pop Up cantidad cajas */
+.popUpCajas {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+
+  /* padding: 20px; */
+  /* z-index: 1000; Ajusta el valor según sea necesario */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+
+  /* display: none; */
+  
+  /* Inicialmente oculto */
+
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+
+  /* Responsive  */
+
+
+/* Contenedor general para la grilla */
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  row-gap: 1rem;
+  border: solid;
+}
+
+.pop-up-oculto {
+  display: none;
+}
+
+.pop-up-visible {
+  display: block;
+}
+
+/* Adaptación para pantallas más pequeñas */
+@media (max-width: 1000px) {
+  .col, .valor {
+    font-size: 14px; /* Ajusta el tamaño del texto */
+    padding: 0.5rem 0.2rem; /* Ajusta el espaciado */
+  }
+.col_accion{
+  display: none;
+}
+
+}
+
+@media (max-width: 1201px){
+  .col_accion{
+    display: none;
+  }
+}
+
+/* Adaptación para pantallas muy pequeñas */
+@media (max-width: 768px) {
+  .contenedor {
+    margin: 0.5rem;
+  }
+
+  .columnas, .valores {
+    flex-direction: column; /* Cambia la dirección del flexbox a columna */
+  }
+
+  .col, .valor {
+    width: 100%; /* Asegura que cada celda ocupe el 100% del ancho disponible */
+    border-right: none; /* Elimina el borde derecho */
+    border-bottom: none; /* Elimina el borde inferior */
+  }
+
+  .valor {
+    border-bottom: 1px solid #ddd; /* Agrega borde inferior entre filas */
+  }
+}
+
+
+
+
+.tamanoTipo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* justify-content: center; */
+}
+
+.container_TamanoTipo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  column-gap: 2rem;
+}
+
+.lbl_FiltroTamanoTipo{
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+.lblTamanoTipo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.contenedor_Img_Grande{
+  width: 26rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem 2rem;
+}
+
+.img_Grande_Pop_Up{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 9999;
+  display: none;
+}
+.imgGrandePopUp{
+  max-height: 50rem;
+}
+
+.btn_Img_Grande{
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}

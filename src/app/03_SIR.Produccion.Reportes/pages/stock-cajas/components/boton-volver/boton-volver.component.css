@@ -1,0 +1,25 @@
+.btn_volver:hover {
+    background-color: #007bff;
+    /* Cambio de color de fondo al pasar sobre el botón */
+    cursor: pointer;
+    transform: scale(1.1);
+  
+  }
+
+  .btn_volver {
+    margin-top: 2rem;
+    border: none;
+    /* Sin borde */
+    margin: 0;
+    /* Sin margen externo */
+    cursor: pointer;
+    /* Cambia el cursor al pasar sobre el botón */
+    border-radius: 4px;
+    /* Bordes redondeados */
+    font-size: 2rem;
+    /* Tamaño de fuente */
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: rgb(255, 145, 2);
+  }

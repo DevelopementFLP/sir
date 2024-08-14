@@ -19,6 +19,19 @@ import { PrimeNgModule } from "../prime-ng/prime-ng.module";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { SharedModule } from "../shared/shared.module";
+import { MenuComponent } from './pages/stock-cajas/pages/menu/menu.component';
+import { CrearPedidoComponent } from './pages/stock-cajas/pages/crear-pedido/crear-pedido.component';
+import { CajaComponent } from './pages/stock-cajas/components/caja/caja.component';
+import { VerStockComponent } from './pages/stock-cajas/components/ver-stock/ver-stock.component';
+import { PedidosActivosComponent } from './pages/stock-cajas/pages/pedidos-activos/pedidos-activos.component';
+import { CajasEntregarComponent } from './pages/stock-cajas/pages/cajas-entregar/cajas-entregar.component';
+import { BotonVolverComponent } from './pages/stock-cajas/components/boton-volver/boton-volver.component';
+import { PedidosRecibidosComponent } from './pages/stock-cajas/pages/pedidos-recibidos/pedidos-recibidos.component';
+import { MainComponent } from './pages/stock-cajas/pages/main/main.component';
+import { PopUpCantidadComponent } from './pages/stock-cajas/components/pop-up-cantidad/pop-up-cantidad.component';
+import { PopUpEditarCantidadComponent } from './pages/stock-cajas/components/pop-up-editar-cantidad/pop-up-editar-cantidad.component';
+import { PopUpTamanotipoComponent } from './pages/stock-cajas/components/pop-up-tamanotipo/pop-up-tamanotipo.component';
+import { EntregaNoSolicitadaComponent } from './pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
 
 
 
@@ -40,6 +53,19 @@ import { SharedModule } from "../shared/shared.module";
         RechazoPHComponent,
         ResumenD1Component,
         ResumenMarelComponent,
+        MenuComponent,
+        CrearPedidoComponent,
+        CajaComponent,
+        VerStockComponent,
+        PedidosActivosComponent,
+        CajasEntregarComponent,
+        BotonVolverComponent,
+        PedidosRecibidosComponent,
+        MainComponent,
+        PopUpCantidadComponent,
+        PopUpEditarCantidadComponent,
+        PopUpTamanotipoComponent,
+        EntregaNoSolicitadaComponent
     ],
     exports: [
         MainPageComponent

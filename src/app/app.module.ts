@@ -35,7 +35,9 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { RRHHReportesModule } from './08_SIR.RRHH.Reportes/08_SIR.RRHH.Reportes.module';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { SIRConfiguracionParametrosModule } from './50_SIR.Configuracion.Parametros/sir.configuracion.parametros.module';
+import { MatDialogModule } from '@angular/material/dialog';
 import { DispositivoModule } from './09_SIR.Dispositivos.Apps/09_SIR.Dispositivo.Apps.module';
+
 
 registerLocaleData(localeEs);
 
@@ -47,7 +49,7 @@ registerLocaleData(localeEs);
     RegistroComponent,
     UserComponent,
     ReportesComponent,
-    WelcomeComponent
+    WelcomeComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -69,6 +71,7 @@ registerLocaleData(localeEs);
     NgxUiLoaderModule,
     RRHHReportesModule,
     SIRConfiguracionParametrosModule,
+    MatDialogModule,
     DispositivoModule
   ],
   providers: [

@@ -1,0 +1,218 @@
+<div class="titulo_consultar_stock">
+    Pedidos Activos
+</div>
+
+
+   
+    <div class="botones">
+        <app-boton-volver></app-boton-volver>
+        <button class="btn_Actualizar" (click)="iniciar()"> Actualizar</button>
+    </div>
+    
+    <div class="lbl_fecha_pedido">
+      
+            <div class="filtroFecha">
+
+
+                <input #fechaPedido (ngModelChange)="filtrarPedidosPorFecha(fechaPedido.value)" type="date" class="fecha" id="fecha" name="fecha" [(ngModel)]="fechaFiltrada" [disabled]="habilitadoFecha" > 
+                <button [ngClass]="{'activoFecha':filtroFecha==1 }" (click)="filtrarPedidosPorFecha(fechaFiltrada)"  [(ngModel)]="filtroSeleccionado">Filtrar Por Fecha</button>
+                <button [ngClass]="{'activoFecha':filtroFecha==0 }" (click)="filtrarPedidosTodos()" [(ngModel)]="filtroSeleccionado">Ver Todos</button>
+                 
+            </div>
+
+           
+    </div>
+
+
+
+<div class="container_Btn_GuardarCambios">
+
+    <button class="btn_guardarCambios" (click)="guardarCambios()" [disabled]="habilitarGuardarCambios">Guardar Cambios</button>
+</div>
+
+<div class="pedidosActivosPadres">
+    <p-table
+        [value]="pedidosPadreMostrar!"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th><div class="columna">Fecha</div></th>
+                <th><div class="columna">N° Pedido</div></th>
+                <th><div class="columna">Prioridad Pedido</div></th>
+                <th><div class="columna">Items</div></th>
+                <th><div class="columna">Subir/Bajar Prioridad</div></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-pedido let-i="rowIndex">
+            <tr >
+                <td><div class="valor">{{pedido.fecha_pedido | date:'dd/MM/yyyy' }} </div></td>
+                <td><div class="valor">{{pedido.id_Pedido_Padre}} </div></td>
+                <td><div class="valor">{{pedido.prioridad_Pedido_Padre}}</div></td>
+                <td><div class="valor">{{getItems(pedido.id_Pedido_Padre)}}</div></td>
+                <td class="">
+                    <div class="container_botones_prioridad valor">
+
+                        <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(1,pedido.id_Pedido_Padre,pedido.prioridad_Pedido_Padre)">
+                            <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
+                        </button>
+                        <button class="btn_CambiarPrioridad" (click)="cambiarPrioridad(-1,pedido.id_Pedido_Padre,pedido.prioridad_Pedido_Padre)">
+                            <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
+                        </button>
+                        <button class="btn_CambiarPrioridad ver" (click)="verPedido(pedido.id_Pedido_Padre)">
+                            <img src="./../../../../../../assets/images/imagesStockCajas/ver_azul.png">
+                        </button>
+
+                        <button class="btn_CambiarPrioridad borrar" (click)="borrarPedido(pedido.id_Pedido_Padre)" >
+                            <img src="./../../../../../../assets/images/imagesStockCajas/borrar_papelera_rojo.png">
+                        </button>
+                        
+
+                    </div>
+
+                </td>
+              
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="no__data" *ngIf="pedidosMostrar?.length === 0">
+    No hay pedidos activos para la fecha seleccionada
+</div>
+
+
+
+
+<div class="popUpVerPedido" *ngIf="mostrarPopUp">
+
+    <div class="botones_popup">
+        <button class="btn_guardarCambios" (click)="guardarCambiosPedido()" [disabled]="habilitadoGuardarCambiosPedido">Guardar Cambios</button>
+        <button type="button" class="btnCerrarPopUp" (click)="cerrarPopUpVerPedidos()">X</button>
+    </div>
+
+ 
+    
+    <p-table class="tabla"
+        [value]="pedidosActivosMostrar!"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+        >
+        <ng-template pTemplate="header">
+            <tr>             
+
+               
+                <th class=""><div class="columna">Imagen</div></th>
+                <th class=""><div class="columna">Fecha</div></th>
+                <th class=""><div class="columna">Diseño</div></th>
+                <th class=""><div class="columna">Tamaño</div></th>
+                <th class=""><div class="columna">Tipo</div></th>
+                <th class=""><div class="columna">Prioridad</div></th>
+                <th class=""><div class="columna">Cantidad Solicitada</div></th>
+                <th class=""><div class="columna">Entregados</div></th>
+                <th class=""><div class="columna"></div></th>
+                <th class=""><div class="columna"></div></th>
+            
+             
+          
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pedido *ngIf="pedidosMostrar">
+            <tr> 
+
+
+                <td class="img"><div class="img_caja"><img src="{{getUrlCaja(pedido.idCaja)}}"></div></td>
+                <td class=""><div class="valor">{{pedido.fecha_Pedido | date:'dd/MM/yyyy' }}</div></td>
+                <td class=""><div class="valor">{{pedido.diseno}}</div></td>
+                <td class=""><div class="valor">{{pedido.tamano}}</div></td>
+                <td class=""><div class="valor">{{pedido.tipo}}</div></td>
+                <td class=""><div class="valor">{{pedido.prioridad}}</div></td>
+                <td class=""><div class="valor">{{pedido.cantidadPedida}}</div></td>   
+                <td class=""><div class="valor">{{pedido.cantidadEntregados}}</div></td> 
+                
+                <td class="">
+                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadCaja(1,pedido.idPedido,pedido.prioridad,pedido.id_Pedido_Padre)" >
+                        <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
+                    </button>
+                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadCaja(-1,pedido.idPedido,pedido.prioridad,pedido.id_Pedido_Padre)">
+                        <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
+                    </button>
+                    
+                    <!-- <div class="btn_Cancelar_Pedido">
+                        <button class="btn_CambiarPrioridad" (click)="cancelarPedido(pedido.idPedido)">
+                            
+                            <img src="./../../../../../../assets/images/imagesStockCajas/borrar_papelera_rojo.png">
+                            
+                        </button>
+                    </div> -->
+                </td>   
+
+                <td class="">
+                  
+                    
+                    <div class="btn_Cancelar_Pedido">
+                        <button class="btn_CambiarPrioridad" (click)="cancelarPedido(pedido.idPedido)">
+                            
+                            <img src="./../../../../../../assets/images/imagesStockCajas/borrar_papelera_rojo.png">
+                            
+                        </button>
+                    </div>
+                </td>   
+                
+            </tr>
+
+
+        </ng-template>
+        <ng-template pTemplate="footer" *ngIf="pedidosMostrar">
+            <tr>
+                <td colspan="4"></td>
+                <td><div class="total"></div></td>
+                <td><div class="total">TOTAL</div></td>
+                <td class="totalFooter"><div class="total">{{totalCajasSolicitadas()}}</div></td>   
+                <td class="totalFooter"><div class="total">{{totalCajasEntregadas()}}</div></td> 
+                <td class="totalSaldo" ></td>
+                <td class="totalSaldo" ></td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+
+   
+
+
+</div>
+
+
+
+<!-- Diálogo Eliminar Pedido Padre -->
+<div id="confirmDialog" class="dialog">
+  <div class="dialog-content">
+    <h2>Confirmación</h2>
+    <p>¿Estás seguro de que desea eliminar el pedido?</p>
+    <button (click)="confirmBorrarPedido()">Sí</button>
+    <button (click)="cancelBorrarPedido()">No</button>
+  </div>
+</div>
+
+
+<!-- Diálogo Eliminar Pedido Caja -->
+<div id="confirmDialogPedidoCaja" class="dialog">
+  <div class="dialog-content">
+    <h2>Confirmación</h2>
+    <p>¿Estás seguro de que desea eliminar el pedido?</p>
+    <button (click)="confirmBorrarPedidoCaja()">Sí</button>
+    <button (click)="cancelBorrarPedidoCaja()">No</button>
+  </div>
+</div>
