@@ -76,6 +76,9 @@ export class MermaPorPesoComponent {
       this._lecturasMermaPorPesoServicio.getListaMermaPorPeso(fechaDesdeStr, fechaHastaStr).subscribe({
         next: (data) => {
           if (data.esCorrecto && data.resultado.length > 0) {
+            this.proveedorSelecionado = null;
+            this.etiquetaSeleccionada = null;
+
             this.dataListaLecturasMerma.data = data.resultado;
             this.generarGraficoPesoPorProveedor();
           } else {
@@ -333,6 +336,9 @@ GetPesoPorProveedorGeneral(): any[] {
 
   //Grafica y Paneles
   generarComboBoxProveedores(){
+
+    this.proveedoresSet.clear();
+
     let comboDesplegableProveedor = this.dataListaLecturasMerma.data;
 
      comboDesplegableProveedor.forEach(item => {
@@ -377,6 +383,7 @@ GetPesoPorProveedorGeneral(): any[] {
     }
 
     let datosFiltrados = this.dataListaLecturasMerma.data;
+
     if (this.proveedorSelecionado) {
       datosFiltrados = datosFiltrados.filter(item => item.proveedor === this.proveedorSelecionado);
     }
@@ -470,6 +477,5 @@ GetPesoPorProveedorGeneral(): any[] {
       this.promedioDePesosCalientes = null;
       this.promedioPorcentajeDeMerma = null;
     }
-
   }
 }
