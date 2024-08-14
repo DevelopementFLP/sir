@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component,OnDestroy, OnInit} from '@angular/core';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { lastValueFrom, zip } from 'rxjs';

@@ -16,10 +16,6 @@ export class ApiInterceptor implements HttpInterceptor {
             this.ngxUiLoader.start();
 
         this._activeRequest++;
-
-        
-        console.log(req.url)
-
         return next.handle(req).pipe(finalize(() => this.stopLoader()));
     }
 
