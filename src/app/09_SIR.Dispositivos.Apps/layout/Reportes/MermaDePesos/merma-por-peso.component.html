@@ -5,9 +5,67 @@
     <mat-divider></mat-divider>
 
     <mat-card-content class="dashboard-card-content">
+        <!-- Panel de Datos -->
+        <mat-card style="margin:20px 0;">
+          <mat-card-header>
+            <mat-card-title>Pesos por Proveedor</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <canvas id="chartBarras" style="height: 200px; width: 100%;"></canvas>
+          </mat-card-content>
+
+		      <mat-expansion-panel >
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Promedios
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="flex-container">
+              <div class="flex-item">
+                    <p *ngIf="promedioDePesosFrios !== null">Promedio de Peso Frio: {{ promedioDePesosFrios | number: '1.2-2' }}</p>
+                    <hr>
+                    <p *ngIf="promedioDePesosCalientes !== null">Promedio de Peso Caliente: {{ promedioDePesosCalientes | number: '1.2-2' }}</p>
+                    <hr>
+                    <p *ngIf="promedioPorcentajeDeMerma !== null">Promedio % Merma: {{ promedioPorcentajeDeMerma | number: '1.2-2' }}%</p>
+              </div>
+
+              <div class="flex-item">
+                <p *ngIf="totalKgPorSeleccion !== null">Total por Seleccion: {{totalKgPorSeleccion}} KG</p>
+                <hr>
+                <p *ngIf="totalLecturas !== null">Total Registros Balanza: {{totalLecturas}}</p>
+                <hr>
+                <p *ngIf="totalLecturasInnova !== null">Total Registros Innova: {{totalLecturasInnova}}</p>
+              </div>
+
+              <div class="flex-item">
+                  <mat-form-field class="comboSelect">
+                    <mat-label>Seleccione una opción</mat-label>
+                      <mat-select [(value)]="proveedorSelecionado" (selectionChange)="aplicarFiltroDeProveedor($event.value)" disableRipple>
+                        <mat-option value = "Todos"> Todos </mat-option>
+                        <mat-option *ngFor="let proveedor of proveedoresSet" [value]="proveedor">
+                          {{ proveedor }}
+                        </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+
+
+                  <mat-form-field class="comboSelect" *ngIf="proveedorSelecionado != 'Todos'">
+                    <mat-label> Seleccione una opción </mat-label >
+                    <mat-select  [(value)]="etiquetaSeleccionada" (selectionChange)="resumenDeDatos()" disableRipple >
+                      <mat-option value = "Todos"> Todos </mat-option>
+                      <mat-option *ngFor="let etiqueta of gradeSet" [value]="etiqueta" > {{etiqueta}} </mat-option >
+                    </mat-select>
+                  </mat-form-field>
+              </div>
+
+            </div>
+          </mat-expansion-panel>
+        </mat-card>
+
 
         <mat-form-field style="margin:20px">
-            <mat-label>Fecha Desde</mat-label>
+            <mat-label>Dia de Comienzo</mat-label>
             <input matInput [matDatepicker]="pickerDesde" [(ngModel)]="fechaDesde" placeholder="Ingrese Fecha Desde">
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
@@ -17,8 +75,8 @@
             <mat-icon mat-list-icon>autorenew</mat-icon> Generar Reporte
         </button>
 
-        <button  style="margin: 10px;" mat-raised-button color="accent" (click)="exportarExcel()">
-            <mat-icon mat-list-icon>download</mat-icon> Exportar a Excel
+        <button [disabled]="dataListaLecturasMerma.data.length < 1" style="margin: 10px;" mat-raised-button color="accent" (click)="exportarExcel()">
+          <mat-icon mat-list-icon>download</mat-icon> Exportar a Excel
         </button>
 
         <div class="mat-elevation-z2">
