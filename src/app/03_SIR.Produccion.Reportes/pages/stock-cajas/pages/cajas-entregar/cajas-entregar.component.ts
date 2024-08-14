@@ -1,7 +1,7 @@
-import { Component, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { Pedido } from '../../interfaces/Pedido.interface';
-import { lastValueFrom, interval } from 'rxjs';
+import { lastValueFrom} from 'rxjs';
 import { Caja } from '../../interfaces/Caja.interface';
 import { Tamano } from '../../interfaces/Tamano.interface';
 import { Diseno } from '../../interfaces/Diseno.interface';
@@ -20,17 +20,16 @@ import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
 })
 export class CajasEntregarComponent implements OnInit, OnDestroy{
 
-  private intervalId: any;
-
+  
   pedidos: Pedido[] | undefined =[];
   cajasCajas: Caja[] | undefined = [];
   tamanosCajas: Tamano[] | undefined =[];
   disenosCajas: Diseno[] | undefined = [];
   tipos: Tipo[] | undefined = [];
-
-
+  
+  
   visibleNoSolicitado: boolean = true;
-
+  
   ordenEntregaInsertar: OrdenEntrega[] = [];
   stockCajas: Stock[] | undefined = [];
   stockUpdate: Stock[] = [];
@@ -45,11 +44,12 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
   fechaFiltro = new Date()
   fechaFiltrada: string ="";
   fecha: Date | undefined; 
-
+  
   // Variables para popup cuando presiona click en la imagen
   img_Grande_Url: string ="";
   popUpVisibleImgGrande: boolean = false;
-
+  
+  private intervalId: any;
   isWorking: boolean = false;
   mensaje: string ="";
   

@@ -9,7 +9,7 @@ import { OrdenArmado } from '../../interfaces/OrdenArmado.interface';
 import { Diseno } from '../../interfaces/Diseno.interface';
 import { Caja } from '../../interfaces/Caja.interface';
 import { CajaDisenioPedido } from '../../interfaces/CajaDisenioPedido.interface';
-import { endWith, lastValueFrom, Subscription } from 'rxjs';
+import { endWith, lastValueFrom} from 'rxjs';
 import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
 import { formatDate } from '@angular/common';
 
