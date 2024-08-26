@@ -22,6 +22,7 @@ export class CodigoPrecioFaltanteComponent implements OnInit {
     if(this.config && this.config.data) {
       if(this.config.data.noCodigos) this.noCodigos = this.config.data.noCodigos;
       if(this.config.data.noPrecios) this.noCodigosPrecios = this.config.data.noPrecios;
+
     }
   }
 

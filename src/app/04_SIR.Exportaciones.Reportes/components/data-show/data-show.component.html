@@ -1,4 +1,4 @@
-<div *ngFor="let mercaderiaKey of getKeys(dataGroup)">
+<!-- <div *ngFor="let mercaderiaKey of keysDataGroup">
     <div *ngFor="let containerKey of getKeys(dataGroup[mercaderiaKey].containers)">
       <div *ngFor="let especieKey of getKeys(dataGroup[mercaderiaKey].containers[containerKey].especies)">
         <div *ngFor="let tipoProductoKey of getKeys(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos)">
@@ -6,7 +6,7 @@
             <div class="item">
                 <div class="item--text">{{ dua }}</div>
                 <div class="item--text">{{ mercaderiaKey }}</div>
-                <div class="item--text">{{cantidadPallets(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].precios[+precioKey].items)}}</div>
+                <div class="item--text">{{cantidadPallets(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].precios[+precioKey].items, precioKey)}}</div>
                 <div class="item--text">{{ dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].precios[+precioKey].items.length }}</div>
                 <div class="item--text">{{ dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].precios[+precioKey].totalPesoNeto | number:'0.2'}}</div>
                 <div class="item--text">{{ dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].precios[+precioKey].totalPesoBruto| number:'0.2' }}</div>
@@ -24,19 +24,19 @@
           <div class="total">
             <div class="item--text"></div>
             <div class="item--text"></div>
-            <div class="item--text">{{totalPalletsPorContenedor2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey])}}</div>
-            <div class="item--text">{{totalCajasPorContenedor2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey])}}</div>
+            <div class="item--text">{{totalPalletsPorContenedor(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey])}}</div>
+            <div class="item--text">{{totalCajasPorContenedor(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey])}}</div>
             <div class="item--text">{{ dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoNeto| number:'0.2' }}</div>
             <div class="item--text">{{ dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoBruto | number:'0.2' }}</div>
-            <div class="item--text">{{sumarPrecioContainer2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) | number:'0.2' }}</div>
-            <div class="item--text">{{sumarPrecioContainer2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) / dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoNeto | number:'0.2' }}</div>
+            <div class="item--text">{{sumarPrecioContainer(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) | number:'0.2' }}</div>
+            <div class="item--text">{{sumarPrecioContainer(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) / dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoNeto | number:'0.2' }}</div>
             <div class="item--text"></div>
             <div class="item--text">{{ containerKey }}</div>
             <div class="item--text"></div>
             <div class="item--text"></div>
             <div class="item--text"></div>
-            <div class="item--text">{{sumarPrecioContainer2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) | number:'0.2' }}</div>
-            <div class="item--text">{{sumarPrecioContainer2(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) / dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoNeto | number:'0.2' }}</div>
+            <div class="item--text">{{sumarPrecioContainer(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) | number:'0.2' }}</div>
+            <div class="item--text">{{sumarPrecioContainer(dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey]) / dataGroup[mercaderiaKey].containers[containerKey].especies[especieKey].tipoProductos[tipoProductoKey].totalPesoNeto | number:'0.2' }}</div>
         </div>
         <br>
         </div>
@@ -47,4 +47,50 @@
 <total-show 
     titulo="TOTAL"
     [datosKosher]="datosKosher"
-/>
+/> -->
+
+<div *ngFor="let cont of contenedores">
+  <div *ngFor="let data of getDataByContainer(cont)">
+    <div class="item">
+      <div class="item--text"></div>
+      <div class="item--text">{{data.mercaderia}}</div>
+      <div class="item--text">{{data.cantidadPallets}}</div>
+      <div class="item--text">{{data.cantidadCajas | number:'0.0'}}</div>
+      <div class="item--text">{{data.kilosNetos | number:'0.2'}}</div>
+      <div class="item--text">{{data.kilosBrutos | number:'0.2'}}</div>
+      <div class="item--text">{{data.precioTotal | number:'0.2'}}</div>
+      <div class="item--text">{{data.precioPromedio | number:'0.2'}}</div>
+      <div class="item--text especie">{{data.especieTipo}}</div>
+      <div class="item--text"></div>
+      <div class="item--text"></div>
+      <div class="item--text"></div>
+      <div class="item--text"></div>
+      <div class="item--text">{{data.precioTotal | number:'0.2'}}</div>
+      <div class="item--text">{{data.precioPromedio | number:'0.2'}}</div>
+    </div>
+  </div>
+  <div class="total">
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text">{{dataTotal.cantidadPallets | number:'0.0'}}</div>
+    <div class="item--text">{{dataTotal.cantidadCajas | number:'0.0'}}</div>
+    <div class="item--text">{{dataTotal.kilosNetos | number:'0.2'}}</div>
+    <div class="item--text">{{dataTotal.kilosBrutos | number:'0.2'}}</div>
+    <div class="item--text">{{dataTotal.precioTotal | number:'0.2'}}</div>
+    <div class="item--text">{{dataTotal.precioPromedio | number:'0.2'}}</div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text"></div>
+    <div class="item--text">{{dataTotal.precioTotal | number:'0.2'}}</div>
+    <div class="item--text">{{dataTotal.precioPromedio | number:'0.2'}}</div>
+  </div>
+</div>
+
+<br>
+
+<total-show 
+    titulo="TOTAL"
+    [totalPalletsCount]="totalPalletsByContainer"
+    [datosKosher]="datosKosher" />
