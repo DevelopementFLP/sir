@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { Tamano } from '../../interfaces/Tamano.interface';
 import { Diseno } from '../../interfaces/Diseno.interface';
@@ -13,7 +13,7 @@ import { lastValueFrom } from 'rxjs';
   templateUrl: './entrega-no-solicitada.component.html',
   styleUrls: ['./entrega-no-solicitada.component.css']
 })
-export class EntregaNoSolicitadaComponent implements OnInit {
+export class EntregaNoSolicitadaComponent implements OnInit, OnDestroy {
   tipos: Tipo[] | undefined = [];
   tamanos_cajas: Tamano[] | undefined = [];
   disenosCajas: Diseno[] | undefined =[];
@@ -36,12 +36,32 @@ export class EntregaNoSolicitadaComponent implements OnInit {
   activoRestar: boolean = false;
   mensaje: string = "";
   
+  private intervalId: any;
+  isWorking: boolean = false;
+
+
    // Variables para popup cuando presiona click en la imagen
    img_Grande_Url: string ="";
    popUpVisibleImgGrande: boolean = false;
   
-  async ngOnInit(): Promise<void> {
-       
+   async ngOnInit(): Promise<void> {
+
+    await this.iniciar();
+  
+    this.intervalId = setInterval(async () => {
+      if(!this.isWorking)
+        await this.iniciar();    
+    }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    if(this.intervalId) clearInterval(this.intervalId);
+}
+
+
+  constructor (private stockService: StockCajasService) {}
+  
+  async iniciar(){
     await this.getTiposCajasAsync();
     await this.getTamanoCajasAsync();
     await this.getDisenosAsync();
@@ -49,11 +69,8 @@ export class EntregaNoSolicitadaComponent implements OnInit {
     await this.getCajasAsync();
 
     this.llenarArrayCajas();
+    this.filtrarPorTamano();
   }
-
-  constructor (private stockService: StockCajasService) {}
-  
-
 
   async getTiposCajasAsync(): Promise<void> {
     try {
@@ -159,6 +176,7 @@ export class EntregaNoSolicitadaComponent implements OnInit {
   mostrarPopUp(idCaja: number){
     this.popUpVisible = true;
     this.idCaja = idCaja;
+    this.isWorking = true;
   
   }
 
@@ -220,6 +238,7 @@ export class EntregaNoSolicitadaComponent implements OnInit {
     }
 
    this.popUpVisible = false;
+   this.isWorking = false;
 
     }
 
@@ -254,6 +273,7 @@ export class EntregaNoSolicitadaComponent implements OnInit {
     abrirPopUpTamanoTipo(tamanoTipo: string){
       this.tamanoTipo = tamanoTipo;
       this.popUpTamanoTipoVisible = true;
+      this.isWorking = true;
       
     }
 
@@ -271,14 +291,18 @@ export class EntregaNoSolicitadaComponent implements OnInit {
         this.tipoSeleccionado = $event;
  
       }
-      this.filtrarPorTamano(this.tamanioSeleccionado!,this.tipoSeleccionado!);
+      this.filtrarPorTamano();
       this.popUpTamanoTipoVisible = false;
+      this.isWorking = false;
       this.tamanoTipo="";
     }
 
 
 
-    filtrarPorTamano(tamanio: string, tipo:string){
+    filtrarPorTamano(){
+
+      let tamanio = this.tamanioSeleccionado;
+      let tipo = this.tipoSeleccionado;
     //  Si tipo es vacio y tamanio está con valor solo buscar por tamano
     if(tipo=="" && tamanio!=""){
       this.llenarArrayCajas();
@@ -294,7 +318,10 @@ export class EntregaNoSolicitadaComponent implements OnInit {
       this.llenarArrayCajas();
       this.StockCajasMostrar = this.StockCajasMostrar!.filter( p => p.nombreTamano == tamanio && p.nombreTipo == tipo);
 
-    }    
+    } else if (tamanio=="" && tipo == ""){
+      this.llenarArrayCajas();
+
+    }
 
     // this.getStockDisponible(1);
   }
@@ -307,6 +334,7 @@ export class EntregaNoSolicitadaComponent implements OnInit {
 
 
   openDialog(): void {
+    this.isWorking = true;
     const dialog = document.getElementById('confirmDialogPedidoCaja');
     if (dialog) {
       dialog.style.display = 'flex'; // Muestra el diálogo
@@ -320,16 +348,19 @@ export class EntregaNoSolicitadaComponent implements OnInit {
       dialog.style.display = 'none'; // Oculta el diálogo
       
     }
+    this.isWorking = false;
   }
 
   cerrar_PopUp_Grande(){
     this.img_Grande_Url ="";
     this.popUpVisibleImgGrande=false;
+    this.isWorking = false;
   }
 
   setUrlPopUpGrande(url: string){
     this.img_Grande_Url = url;
     this.popUpVisibleImgGrande=true;
+    this.isWorking = true;
   
   }
 

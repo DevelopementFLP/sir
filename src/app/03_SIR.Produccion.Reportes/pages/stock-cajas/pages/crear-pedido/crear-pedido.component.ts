@@ -2,10 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { Tamano } from '../../interfaces/Tamano.interface';
-import { Fieldset } from 'primeng/fieldset';
-import { CajaComponent } from '../../components/caja/caja.component';
-import { DatePipe, formatDate } from '@angular/common';
-
 
 @Component({
   selector: 'app-crear-pedido',

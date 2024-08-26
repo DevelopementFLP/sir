@@ -7,6 +7,7 @@ export interface MermaPorPesoDTO {
   pesoInnova: number;
   pesoLocal: number;
   porsentajeDeMerma: number;
+  porsentajePorMenudencia: number;
   etiqueta: string;
   tropa: string;
   proveedor: string;

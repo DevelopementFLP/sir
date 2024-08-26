@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,6 +13,7 @@ import { MermaPorPesoService } from 'src/app/09_SIR.Dispositivos.Apps/Services/M
 import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
 
 import * as ExcelJS from 'exceljs';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-merma-por-peso',
@@ -19,14 +21,29 @@ import * as ExcelJS from 'exceljs';
   styleUrls: ['./merma-por-peso.component.css']
 })
 export class MermaPorPesoComponent {
-  fechaDesde: Date | null = null;
-  fechaHasta: Date | null = null;
+
+  public fechaDesde: Date | null = null;
+  public fechaHasta: Date | null = null;
+  public promedioPorcentajeDeMerma: number | null = null;
+  public promedioDePesosFrios: number | null = null;
+  public promedioDePesosCalientes: number | null = null;
+  public promedioDetiquetas: number | null = null;
+  public graficoDeBarras: Chart | null = null;
+  public totalLecturas: number | null = null;
+  public totalLecturasInnova: number | null = null;
+  public totalKgPorSeleccion: number | null = null;
+
+  public proveedoresSet = new Set<string>();
+  public gradeSet = new Set<string>();
+  public proveedorSelecionado: string | null = null;
+  public etiquetaSeleccionada: string | null = null;
+
 
   //Tablas
   columnasTablaMermaPorPeso: string[] = ['fechaDeBalanza', 'fechaDeInnova', 'carcassID', 'ladoAnimal', 'diferenciadePeso', 'pesoInnova', 'pesoLocal', 'porsentajeDeMerma', 'porsentajePorMenudencia', 'etiqueta'];
 
   //Tipos de Datos
-  dataInicioMermaPorPeso:MermaPorPesoDTO[] = [];
+  dataInicioMermaPorPeso: MermaPorPesoDTO[] = [];
 
   //Tabla
   dataListaLecturasMerma = new MatTableDataSource(this.dataInicioMermaPorPeso);
@@ -48,7 +65,8 @@ export class MermaPorPesoComponent {
     this.dataListaLecturasMerma.filter = filterValue.trim().toLocaleLowerCase();
   }
 
-  //Lista de Lecturas
+
+  //Datos de API
   obtenerLecturaMermaPorPeso(fechaDesde: Date | null){
 
     if (fechaDesde) {
@@ -57,9 +75,12 @@ export class MermaPorPesoComponent {
 
       this._lecturasMermaPorPesoServicio.getListaMermaPorPeso(fechaDesdeStr, fechaHastaStr).subscribe({
         next: (data) => {
-          if (data.esCorrecto) {
+          if (data.esCorrecto && data.resultado.length > 0) {
+            this.proveedorSelecionado = null;
+            this.etiquetaSeleccionada = null;
+
             this.dataListaLecturasMerma.data = data.resultado;
-            console.log(data.resultado)
+            this.generarGraficoPesoPorProveedor();
           } else {
             this._utilidadesServicicio.mostrarAlerta("No se encontraron ","Datos")
           }
@@ -88,7 +109,7 @@ export class MermaPorPesoComponent {
     return `${year}${month}${day} 23:59:59`;
 }
 
-//Orden de columnas en el excel
+//Orden de columnas en excel
 customHeaders: string[] = [
   'Fecha de Balanza',
   'Peso Frio',
@@ -130,7 +151,7 @@ exportarExcel() {
   //var sheet = workbook.addWorksheet("hoja libre"); agregar otra hoja
 
 
-  const encabezadoConvinadoNQF = worksheet.mergeCells('A1:D2'); // Combina las celdas
+  const encabezadoConvinadoNQF = worksheet.mergeCells('A1:E2'); // Combina las celdas
     const textoDeceldaConbinadaNQF = worksheet.getCell('A1');
     textoDeceldaConbinadaNQF.value = 'NQF';
     textoDeceldaConbinadaNQF.alignment = { horizontal: 'center', vertical: 'middle' };
@@ -260,4 +281,201 @@ exportarExcel() {
   });
 }
 
+//Función para obtener el peso total por proveedor
+GetPesoPorProveedorGeneral(): any[] {
+  // Crear un objeto para almacenar el conteo de cada proveedor
+    const conteoProveedores: { [proveedor: string]: {sumaDePeso: number}} = {};
+
+    // Recorrer los datos y contar los datos
+    this.dataListaLecturasMerma.data.forEach(item => {
+      if (item.proveedor) {
+
+        // Inicializar el proveedor si no está en la lista
+        if (!conteoProveedores[item.proveedor]) {
+          conteoProveedores[item.proveedor] = {
+            sumaDePeso: 0
+          };
+        }
+        // Incrementar el conteo y sumar los pesos
+        conteoProveedores[item.proveedor].sumaDePeso += item.pesoLocal || 0;
+      }
+    });
+
+    return Object.entries(conteoProveedores).map(([proveedor, { sumaDePeso }]) => ({
+      proveedor,
+      sumaDePeso:  parseFloat(sumaDePeso.toFixed(2)) // Redondear a dos decimales
+    }));
+  }
+
+  GetetiquetasPorProveedorFiltrado(proveedor : string): any[] {
+      // Crear un objeto para almacenar el resultado
+      const conteoEtiquetas: { [etiqueta: string]: {sumaDePeso: number}} = {};
+
+      // Recorrer los datos y contar los datos
+      this.dataListaLecturasMerma.data.forEach(item => {
+        if (item.proveedor === proveedor) {
+
+          // Inicializar el proveedor si no está en la lista
+          if (!conteoEtiquetas[item.etiqueta]) {
+              conteoEtiquetas[item.etiqueta] = {
+              sumaDePeso: 0
+            };
+          }
+          // Incrementar el conteo y sumar los pesos
+          conteoEtiquetas[item.etiqueta].sumaDePeso += item.pesoLocal || 0;
+        }
+      });
+
+      return Object.entries(conteoEtiquetas).map(([etiqueta, { sumaDePeso }]) => ({
+        etiqueta,
+        sumaDePeso:  parseFloat(sumaDePeso.toFixed(2)) // Redondear a dos decimales
+      }));
+    }
+
+
+
+  //Grafica y Paneles
+  generarComboBoxProveedores(){
+
+    this.proveedoresSet.clear();
+
+    let comboDesplegableProveedor = this.dataListaLecturasMerma.data;
+
+     comboDesplegableProveedor.forEach(item => {
+      if (item.proveedor) {
+        this.proveedoresSet.add(item.proveedor);
+      }
+    });
+  }
+
+  aplicarFiltroDeProveedor(proveedor: string | null) {
+    this.proveedorSelecionado = proveedor;
+    this.etiquetaSeleccionada = "Todos"
+
+    if(proveedor){
+      this.getEtiquetasPorProveedor(proveedor);
+      this.generarGraficoPesoPorProveedor();
+    }
+  }
+
+  getEtiquetasPorProveedor(proveedor: string): string[] {
+    this.gradeSet.clear();
+
+    this.dataListaLecturasMerma.data
+      .filter(item => item.proveedor === proveedor)
+      .forEach(item => {
+        if (item.etiqueta) {
+          this.gradeSet.add(item.etiqueta);
+        }
+      });
+
+    return Array.from(this.gradeSet);
+  }
+
+  generarGraficoPesoPorProveedor(){
+
+    let labels: string[] = []
+    let dataPesos: number[] = [];
+    let descripcionDeLabel: string = "";
+
+    if(this.graficoDeBarras){
+      this.graficoDeBarras.destroy();
+    }
+
+    let datosFiltrados = this.dataListaLecturasMerma.data;
+
+    if (this.proveedorSelecionado) {
+      datosFiltrados = datosFiltrados.filter(item => item.proveedor === this.proveedorSelecionado);
+    }
+    if (this.etiquetaSeleccionada) {
+      datosFiltrados = datosFiltrados.filter(item => item.etiqueta === this.etiquetaSeleccionada);
+    }
+
+    //const conteoProveedores = this.obtenerPesoPorProveedor();
+    if (this.proveedorSelecionado == null || this.proveedorSelecionado == "Todos") {
+      const pesosPorProveedor = this.GetPesoPorProveedorGeneral();
+      labels = pesosPorProveedor.map(prov => prov.proveedor);
+      dataPesos  = pesosPorProveedor.map(prov => prov.sumaDePeso);
+      descripcionDeLabel = "Promedio de Pesos Por Proveedor Total"
+     }
+     else if (this.proveedorSelecionado && this.proveedorSelecionado != "Todos") {
+      const etiquetasPorProveedor = this.GetetiquetasPorProveedorFiltrado(this.proveedorSelecionado);
+      labels = etiquetasPorProveedor.map(prov => prov.etiqueta);
+      dataPesos = etiquetasPorProveedor.map(prov => prov.sumaDePeso);
+      descripcionDeLabel = `Promedio de Pesos ${this.proveedorSelecionado}`
+     }
+
+    //Crear grafico
+    this.graficoDeBarras  = new Chart('chartBarras',{
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: descripcionDeLabel,
+          data: dataPesos,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive:true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    })
+
+    this.resumenDeDatos();
+    this.generarComboBoxProveedores()
+  }
+
+  resumenDeDatos(): void {
+
+    let dataFiltrada = this.dataListaLecturasMerma.data
+
+    if (this.proveedorSelecionado && this.proveedorSelecionado != "Todos") {
+      dataFiltrada = dataFiltrada.filter(item => item.proveedor === this.proveedorSelecionado);
+    }
+
+    if(this.etiquetaSeleccionada && this.etiquetaSeleccionada != "Todos")
+      {
+        dataFiltrada = dataFiltrada.filter(etiqueta => etiqueta.etiqueta === this.etiquetaSeleccionada);
+      }
+
+    if (dataFiltrada.length > 0) {
+      // Calcular el promedio de pesoLocal
+      const totalPesoFrio = dataFiltrada.reduce((sum, item) => sum + (item.pesoLocal || 0), 0);
+      this.promedioDePesosFrios = totalPesoFrio / dataFiltrada.length;
+
+      // Calcular el promedio de pesoInnova
+      const totalPesoCaliente = dataFiltrada.reduce((sum, item) => sum + (item.pesoInnova || 0), 0);
+      this.promedioDePesosCalientes = totalPesoCaliente / dataFiltrada.length;
+
+      // Calcular el promedio de porsentajeDeMerma
+      let operacion: number = 0;
+      if(totalPesoFrio > totalPesoCaliente)
+        {
+        operacion  = ((totalPesoFrio - totalPesoCaliente) / totalPesoCaliente) * 100;
+      }else{
+        operacion  = ((totalPesoCaliente - totalPesoFrio) / totalPesoCaliente) * 100;
+      }
+      this.promedioPorcentajeDeMerma = operacion
+
+      this.totalKgPorSeleccion = parseFloat(totalPesoFrio.toFixed(2));
+
+
+      this.totalLecturas = dataFiltrada.filter(x => x.pesoLocal > 0).length;
+      this.totalLecturasInnova = dataFiltrada.filter(x => x.pesoInnova > 0).length;
+
+    } else {
+      // Si no hay datos, asignar valores nulos a todos los promedios
+      this.promedioDePesosFrios = null;
+      this.promedioDePesosCalientes = null;
+      this.promedioPorcentajeDeMerma = null;
+    }
+  }
 }

@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgNumericKeyboardModule } from 'zen-numeric-keyboard';
+import { Component,EventEmitter, Output} from '@angular/core';
+
 
 @Component({
   selector: 'app-pop-up-cantidad',

@@ -37,4 +37,17 @@
     justify-content: center;
   }
 
+
+  @media (max-width: 768px) {
+  
+    .titulo {
+      margin-top: 1rem;
+      display: flex;
+      font-size: 3rem;
+      justify-content: center;
+      align-self: center;
+      text-align: center;
+      
+    }
+  }
   

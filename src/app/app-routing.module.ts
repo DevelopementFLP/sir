@@ -113,7 +113,7 @@ const routes: Routes = [
     { path: 'configuracion', component:ConfiguracionMainPageComponent},
     { path : 'dispositivos/Dispositivo', component: DispositvosComponent},
     { path: 'dispositivos/LecturasDispositivos', component: LecturasDispositivosComponent},
-    { path: 'dispositivos/MermaPorPeso', component: MermaPorPesoComponent}
+    { path: 'faena/MermaPorPeso', component: MermaPorPesoComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

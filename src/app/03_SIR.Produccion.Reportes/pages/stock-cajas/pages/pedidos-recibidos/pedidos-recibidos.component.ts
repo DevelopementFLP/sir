@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Pedido } from '../../interfaces/Pedido.interface';
 import { Caja } from '../../interfaces/Caja.interface';
 import { Tamano } from '../../interfaces/Tamano.interface';
@@ -6,7 +6,7 @@ import { Diseno } from '../../interfaces/Diseno.interface';
 import { Tipo } from '../../interfaces/Tipo.interface';
 import { OrdenEntrega } from '../../interfaces/OrdenEntrega.inteface';
 import { StockCajasService } from '../../services/stock-cajas.service';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { lastValueFrom} from 'rxjs';
 import { Stock } from '../../interfaces/Stock.interface';
 import { PedidoRecibido } from '../../interfaces/PedidoRecibido.interface';
 import { OrdenArmado } from '../../interfaces/OrdenArmado.interface';
