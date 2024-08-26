@@ -54,6 +54,7 @@ import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
+import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 
 
 const routes: Routes = [
@@ -86,15 +87,11 @@ const routes: Routes = [
       { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
       { path: 'cajasEntregar', component: CajasEntregarComponent },
       { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
-      
-      
-
       { path: '**', redirectTo: '', pathMatch: 'full'}
-    
     ] },
-   
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
     { path: 'carga/packingList', component: PreciosKosherComponent},
+    { path: 'carga/configuracionPreciosKosher', component: ConfigPreciosComponent},
     { path: 'controlCalidad/noqueo', component: NoqueoComponent},
     { path: 'controlCalidad/pcc', component: PccComponent},
     { path: 'controlCalidad/pccAuditable', component: PccAuditableComponent},

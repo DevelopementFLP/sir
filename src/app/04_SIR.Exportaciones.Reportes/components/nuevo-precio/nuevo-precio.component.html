@@ -1,0 +1,121 @@
+<div class="nuevos">
+    <div class="nuevos__data">
+            <div class="data--form">
+                <div>
+                    <p-calendar 
+                        placeholder="Fecha" 
+                        [(ngModel)]="fechaSeleccionada"
+                        dateFormat="dd/mm/yy">
+                    </p-calendar>
+                </div>
+                <div>
+                    <input 
+                        #codigoProducto
+                        pInputText
+                        type="text"
+                        placeholder="Código"
+                    />
+                </div>
+                <div>
+                    <input
+                        #txtPrecioTonelada
+                        pInputText
+                        type="number"
+                        min="0"
+                        placeholder="Precio tonelada" />
+                </div>
+                <div>
+                    <p-dropdown
+                        [options]="monedas!"
+                        optionLabel="nombre"
+                        placeholder="Moneda"
+                        [(ngModel)]="monedaSeleccionada"
+                    />
+                </div>
+                <div>
+                    <button
+                        (click)="addToPreciosNuevos()" 
+                        pbutton="" pripple="" type="button"
+                        icon="pi pi-check"
+                        class="p-element p-ripple p-button-rounded p-button-success p-button-text p-button p-component p-button-icon-only">
+                        <span
+                            class="p-button-icon pi pi-check" aria-hidden="true">
+                        </span>
+                        <span 
+                            class="p-ink"
+                            style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+        <hr>
+
+        <p-table
+            [value]="preciosNuevos"
+            [scrollable]="true"
+            scrollHeight="400px"
+        >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha</th>
+                <th>Código</th>
+                <th>Precio Tonelada</th>
+                <th>Moneda</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-codigo>
+            <tr>
+                <td>{{codigo.fecha_Produccion | date:'dd-MM-yyyy'}}</td>
+                <td>{{codigo.codigo_Producto}}</td>
+                <td>{{codigo.precio_Tonelada}}</td>
+                <td>{{nombreMoneda(codigo.id_Moneda)}}</td>
+                <td>
+                    <button
+                        (click)="onDeleteCodigo(codigo)" 
+                        pbutton="" pripple="" type="button"
+                        icon="pi pi-trash"
+                        class="p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only">
+                        <span
+                            class="p-button-icon pi pi-trash" aria-hidden="true">
+                        </span>
+                        <span 
+                            class="p-ink"
+                            style="height: 42px; width: 42px; top: 1.75px; left: 1.5px;">
+                        </span>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr *ngIf="preciosNuevos.length == 0">
+                <td colspan="5">Nada que agregar</td>
+            </tr>
+        </ng-template>
+        </p-table>
+    </div>
+    <div class="nuevos__footer">
+        <hr>
+        <div class="footer--botonera">
+            <button (click)="guardar()" pButton type="button" label="Guardar" icon="pi pi-save"class="p-button-sm"></button>
+            <button (click)="cerrar()" pButton type="button" label="Cerrar" icon="pi pi-times" class="p-button-sm p-button-danger"></button>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+       <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+          <div
+             class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+             <i class="pi pi-question text-5xl"></i>
+          </div>
+          <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+          <p class="mb-0">{{ message.message }}</p>
+          <div class="flex align-items-center gap-2 mt-4">
+             <button pButton label="Aceptar" (click)="cd.accept()" class="w-8rem"></button>
+          </div>
+       </div>
+    </ng-template>
+ </p-confirmDialog>

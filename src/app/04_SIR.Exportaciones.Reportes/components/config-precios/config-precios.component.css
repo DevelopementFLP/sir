@@ -67,8 +67,19 @@
         font-size: 0.8rem !important;
         padding: 0.2rem !important;
     }
+}
 
+.fila-codigo:hover {
+    background-color: #ebf5fb !important;
+    color: #154360 !important;
+}
 
+.contenedor__embarque {
+    margin: 0 15px;
+}
+
+.titular {
+    margin-top: 1rem;
 }
 
 .embarque__reporte {

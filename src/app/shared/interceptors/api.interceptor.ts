@@ -17,9 +17,6 @@ export class ApiInterceptor implements HttpInterceptor {
 
         this._activeRequest++;
 
-        
-        console.log(req.url)
-
         return next.handle(req).pipe(finalize(() => this.stopLoader()));
     }
 
