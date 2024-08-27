@@ -518,6 +518,18 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
 
   //#region Funciones auxiliares
 
+  private getUrl(): string {
+    return window.location.href;
+  }
+
+  esDetalle(): boolean {
+    return this.getUrl().includes("exportaciones/detalleEmbarque");
+  }
+
+  esPrecios(): boolean {
+    return this.getUrl().includes("carga/configuracionPreciosKosher");
+  }
+
   clear(): void {
     this.procederConReporte(false);
     this.dataContainers = [];

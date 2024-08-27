@@ -1,11 +1,11 @@
 <div class="detalle__embarque">
     <div class="contenedor__embarque">
-        <div class="titular" *ngIf="esUsuarioCarga">
+        <div class="titular" *ngIf="esUsuarioCarga || esPrecios()">
             <h1>Configuración precios y códigos Israel</h1>
             <hr>
         </div>
         <p-tabView #tabView>
-            <p-tabPanel header="Reporte" *ngIf="esUsuarioExpo">
+            <p-tabPanel header="Reporte" *ngIf="esUsuarioExpo || esDetalle()">
                 <div class="container__selection">
                     <input 
                         #txtIdCarga
@@ -32,7 +32,7 @@
                     <p-messages [(value)]="mensaje" [enableService]="false" [closable]="false"/>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Códigos" *ngIf="esUsuarioCarga">
+            <p-tabPanel header="Códigos" *ngIf="esUsuarioCarga || esPrecios()">
                 <div class="add--button" *ngIf="canAddAndDelete">
                     <button (click)="agregarCodigos()" pButton type="button" label="Agregar códigos"
                     icon="pi pi-plus" class="p-button-sm p-button-primary"></button>
@@ -299,7 +299,7 @@
                     </ng-template>
                 </p-table>
             </p-tabPanel>
-            <p-tabPanel header="Precios (Por fecha de faena)" class="panel-precios" *ngIf="esUsuarioCarga">
+            <p-tabPanel header="Precios (Por fecha de faena)" class="panel-precios" *ngIf="esUsuarioCarga || esPrecios()">
                 <div class="admin__precios">
                     <button (click)="adminPrecios()" pButton type="button" label="Administrar listas de precios completas"
                         icon="pi pi-cog" class="p-button-sm btn-admin">
