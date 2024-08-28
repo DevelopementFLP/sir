@@ -12,6 +12,8 @@ import { DataShowComponent } from './components/data-show/data-show.component';
 import { TotalShowComponent } from './components/total-show/total-show.component';
 import { AddCodigosComponent } from './components/add-codigos/add-codigos.component';
 import { CodigoPrecioFaltanteComponent } from './components/codigo-precio-faltante/codigo-precio-faltante.component';
+import { NuevoPrecioComponent } from './components/nuevo-precio/nuevo-precio.component';
+import { PesoNetoContenedorComponent } from './components/peso-neto-contenedor/peso-neto-contenedor.component';
 
 
 @NgModule({
@@ -25,6 +27,8 @@ import { CodigoPrecioFaltanteComponent } from './components/codigo-precio-faltan
     TotalShowComponent,
     AddCodigosComponent,
     CodigoPrecioFaltanteComponent,
+    NuevoPrecioComponent,
+    PesoNetoContenedorComponent,
   ],
   imports: [
     CommonModule,

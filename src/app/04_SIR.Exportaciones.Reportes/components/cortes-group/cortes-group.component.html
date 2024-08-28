@@ -16,7 +16,8 @@
             <br>
             <total-show 
                 *ngIf="datosKosher.length > 0"
-                [datosKosher]="datosKosher" 
+                [totalPalletsCount]="totalPallets"
+                [datosKosher]="datosKosher"
                 titulo="TOTAL GENERAL" />
         </p-tabPanel>
     </p-tabView>

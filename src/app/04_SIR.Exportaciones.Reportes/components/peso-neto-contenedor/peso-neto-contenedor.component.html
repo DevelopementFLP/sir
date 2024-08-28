@@ -1,0 +1,35 @@
+<div class="pesos">
+    <div class="pesos--title">Ingrese los pesos brutos para cada uno de los contenedores de esta carga</div>
+    <div class="pesos--values">
+        <p-table
+            [value]="pesosContenedores"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Contenedor</th>
+                    <th>Kilos Brutos</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-contData let-i="index">
+                <tr>
+                    <td class="cont__name">{{contData.contenedor}}</td>
+                    <td>
+                        <input
+                            #kgbrt
+                            type="number"
+                            pInputText
+                            placeholder="Kilos"
+                            min="0"
+                            (focus)="select($event)"
+                            [(ngModel)]="contData.pesoBruto"
+                        />
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <hr>
+    <div class="pesos--botonera">
+        <button [disabled]="habilitarGuardar()" (click)="guardar()" pButton type="button" label="Guardar" icon="pi pi-save"class="p-button-sm"></button>
+    </div>
+</div>

@@ -1,9 +1,5 @@
-
-
-
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
-
-export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -115,6 +111,8 @@ export const urlInsertConfProductos: string = urlExportaciones + "InsertConfProd
 export const urlUpdateConfProductos: string = urlExportaciones + "UpdateConfProductosAsync";
 export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProductosAsync";
 export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
+export const urlGetPrecioToneladaCodigoFechaAsync: string = urlExportaciones + "GetPrecioToneladaCodigoFechaAsync";
+export const urlUpdateCodigoPreciosAsync: string = urlExportaciones + "UpdateCodigoPreciosAsync";
 
 // Stock Cajas
 export const urlStockCajas: string = urlAPI + "StockCajas/";
@@ -152,6 +150,9 @@ export var gecosHaciendaAnimales: string = gecosHacienda + "animales" + fechas;
 export var gecosHaciendaLotes: string = gecosHacienda + "lotes" + fechas;
 export var gecosHaciendaTipificacion: string = gecosHacienda + "tipificacion" + fechas;
 
+// Productos Carga
+export const urlProductosCargaGecos: string = urlAPI + "ProductosCarga/productosCarga";
+export const urlProductosCarga: string = urlProductosCargaGecos + fechas;
 
 // Gecos Integration Broker
 export const urlGecosBroker = urlAPI + "GecosIntegrationBroker";

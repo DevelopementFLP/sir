@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { urlDeleteConfProductos, urlDeleteFechaPrecios, urlGetCajasCarga, urlGetConfProductos, urlGetContainers, urlGetDataByContainer, urlGetFechas, urlGetNombreProductoAsync, urlGetPrecios, urlGetPreciosPorFechas, urlGetTiposMoneda, urlInsertarPrecios, urlInsertConfProductos, urlUpdateConfProductos } from 'src/settings';
+import { gecosCarga, urlDeleteConfProductos, urlDeleteFechaPrecios, urlGetCajasCarga, urlGetConfProductos, urlGetContainers, urlGetDataByContainer, urlGetFechas, urlGetNombreProductoAsync, urlGetPrecios, urlGetPreciosPorFechas, urlGetPrecioToneladaCodigoFechaAsync, urlGetTiposMoneda, urlInsertarPrecios, urlInsertConfProductos, urlProductosCarga, urlUpdateCodigoPreciosAsync, urlUpdateConfProductos } from 'src/settings';
 import { DWContainer } from '../Interfaces/DWContainer.interface';
 import { ConfMoneda } from '../Interfaces/ConfMoneda.interface';
 import { ConfPreciosDTO } from '../Interfaces/ConfPreciosDTO.interface';
@@ -9,6 +9,9 @@ import { ContainerDTO } from '../Interfaces/ContainerDTO.interface';
 import { ConfPrecios } from '../Interfaces/ConfPrecios.interface';
 import { DWCajaCarga } from '../Interfaces/DWCajaCarga.interface';
 import { ConfProducto } from '../Interfaces/ConfProducto.interface';
+import { CodigoFechaPrecio } from '../Interfaces/CodigoFechaPrecio.interface';
+import { DatoCargaExpo } from '../Interfaces/DatoCargaExpo.interface';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +58,28 @@ export class CargaKosherService {
     return this.http.delete<void>(urlDeleteFechaPrecios, httpOptions);
   }
   
+  getPrecioToneladaCodigoFecha(codigo: string, fecha: Date): Observable<number> {
+    return this.http.get<number>(`${urlGetPrecioToneladaCodigoFechaAsync}?codigo=${codigo}&fecha=${fecha}`);
+  }
+
+  updateCodigoPrecio(codigos: CodigoFechaPrecio[]): Observable<void> {
+    return this.http.put<void>(urlUpdateCodigoPreciosAsync, codigos);
+  }
+
+  getExpoCarga(fechaExpo: Date): Observable<DatoCargaExpo[]> {
+    const fechaExpoStr: string = formatDate(fechaExpo, "yyyy-MM-dd", "es-UY");
+    const urlCargaExpo: string = gecosCarga.replace("fd", fechaExpoStr).replace("fh", fechaExpoStr);
+    return this.http.get<DatoCargaExpo[]>(urlCargaExpo);
+  }
+
+  getProductosCarga(fechaExpo: Date): Observable<DatoCargaExpo[]> {
+    const fechaExpoStr: string = formatDate(fechaExpo, "yyyy-MM-dd", "es-UY");
+    const urlCargaExpo: string = urlProductosCarga.replace("fd", fechaExpoStr).replace("fh", fechaExpoStr);
+    console.log(urlProductosCarga)
+    console.log(urlCargaExpo)
+    return this.http.get<DatoCargaExpo[]>(urlCargaExpo);
+  }
+
   //#region ConfProductos
   getNombreProducto(codigo: string): Observable<string[]> {
     return this.http.get<string[]>(`${urlGetNombreProductoAsync}?codigo=${codigo}`);

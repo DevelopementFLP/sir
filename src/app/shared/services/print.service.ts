@@ -16,6 +16,8 @@ import { EmbarqueConfig } from '../../04_SIR.Exportaciones.Reportes/Interfaces/E
 import { KosherCommonService } from 'src/app/04_SIR.Exportaciones.Reportes/services/kosher-common.service';
 import { DetalleEmbarquePrintService } from './detalle-embarque-print.service';
 import { DataKosher } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DataKosher.interface';
+import { DataKosherAgrupada } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DataKosherAgrupada.interface';
+import { TotalDataAgrupada } from '../../04_SIR.Exportaciones.Reportes/Interfaces/TotalDataAgrupada.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -1127,10 +1129,10 @@ export class PrintService {
     const dataKosher: DataKosher[] = dataToPrint.data.cajas as DataKosher[];
     const containers: string[] = this.deps.obtenerContenedoresUnicos(dataKosher);
     const mercaderias: string[] = this.deps.obtenerMercaderiasUnicas(dataKosher);
-    const precios: number[] = this.deps.obtenerPreciosUnicos(dataKosher);
     const especies: string[] = this.deps.obtenerEspeciesUnicas(dataKosher);
     const tipos: string[] = this.deps.obtenerTiposUnicos(dataKosher);
-
+    const dataAgrupada: DataKosherAgrupada[] = this.kcs.setDatosAgrupados(dataKosher);
+    const totalPallets: number = this.kcs.getTotalPalletsByContainer(dataAgrupada);
  
     const fondoTitulo: Fill = {
       type: 'pattern',
@@ -1292,10 +1294,12 @@ export class PrintService {
                 });
               }
               const cantCajas = this.deps.cantidadCajas(cajasPorMercaEspTipo);
+              const dataByContainer: DataKosherAgrupada[] = dataAgrupada.filter(d => d.container === cont);
+              const dataAgrupadaByCont: TotalDataAgrupada = this.kcs.totalDataAgrupadaPorContainer(dataByContainer);
               if(cantCajas > 0) {
                 const kilosNetos = this.deps.sumarKilosNetos(cajasPorMercaEspTipo);
                 const sumaPrecios = this.deps.sumarPrecios(cajasPorMercaEspTipo);
-                hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMercaEspTipo);
+                hojaDetalle.getCell("D" + filaCaja).value = dataAgrupadaByCont.cantidadPallets;
                 hojaDetalle.getCell("D" + filaCaja).font = fuenteSubTitulos;
                 hojaDetalle.getCell("D" + filaCaja).style.fill = fondoSubTotal;
                 hojaDetalle.getCell("E" + filaCaja).value = cantCajas;
@@ -1349,10 +1353,12 @@ export class PrintService {
 
     const kilosNetosCortes = this.deps.sumarKilosNetos(cortes);
     const sumaPreciosCortes = this.deps.sumarPrecios(cortes);
+    const containerByMerca = dataAgrupada.filter(d => d.mercaderia === 'CORTES');
+    
     hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
     hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
     hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
-    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cortes);
+    hojaDetalle.getCell("D" + filaCaja).value = this.kcs.getTotalPalletsByContainer(containerByMerca);
     hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalMerca;
     hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalMerca;
     hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cortes);
@@ -1454,6 +1460,7 @@ export class PrintService {
       });
       const kilosNetos = this.deps.sumarKilosNetos(cajasPorMerca);
       const sumaPrecios = this.deps.sumarPrecios(cajasPorMerca);
+      
       hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
       hojaDetalle.getCell("C" + filaCaja).font = fuenteTotalMerca;
       hojaDetalle.getCell("C" + filaCaja).style.fill = fondoTotalMerca;
@@ -1503,10 +1510,11 @@ export class PrintService {
 
     const kilosNetosNoCortes = this.deps.sumarKilosNetos(noCortes);
     const sumaPreciosNoCortes = this.deps.sumarPrecios(noCortes);
+    const containerByMerca = dataAgrupada.filter(d => d.mercaderia != 'CORTES');
     hojaDetalle.getCell("C" + filaCaja).value = "TOTAL";
     hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
     hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
-    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(noCortes);
+    hojaDetalle.getCell("D" + filaCaja).value = this.kcs.getTotalPalletsByContainer(containerByMerca);
     hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalMerca;
     hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalMerca;
     hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(noCortes);
@@ -1559,7 +1567,7 @@ export class PrintService {
     hojaDetalle.getCell("B" + filaCaja).style.fill = fondoTotalGeneral;
     hojaDetalle.getCell("C" + filaCaja).font = fuenteTotalGeneral;
     hojaDetalle.getCell("C" + filaCaja).style.fill = fondoTotalGeneral;
-    hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(dataKosher);
+    hojaDetalle.getCell("D" + filaCaja).value = totalPallets;
     hojaDetalle.getCell("D" + filaCaja).font = fuenteTotalGeneral;
     hojaDetalle.getCell("D" + filaCaja).style.fill = fondoTotalGeneral;
     hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(dataKosher);
@@ -1671,7 +1679,8 @@ export class PrintService {
       }
     });
 
-    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(cortes);
+    const containerByMerca = dataAgrupada.filter(d => d.mercaderia === 'CORTES');
+    hojaDesglose.getCell("B" + filaCaja).value = this.kcs.getTotalPalletsByContainer(containerByMerca);
     hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
     hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(cortes);
     hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
@@ -1759,8 +1768,8 @@ export class PrintService {
       });
     });
     
-
-    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(noCortes);
+    const containerByMerca = dataAgrupada.filter(d => d.mercaderia != 'CORTES');
+    hojaDesglose.getCell("B" + filaCaja).value = this.kcs.getTotalPalletsByContainer(containerByMerca);
     hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
     hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(noCortes);
     hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
@@ -1777,7 +1786,7 @@ export class PrintService {
 
     // Total general
     filaCaja += 2;
-    hojaDesglose.getCell("B" + filaCaja).value = this.deps.cantidadPallets(dataKosher);
+    hojaDesglose.getCell("B" + filaCaja).value = totalPallets;
     hojaDesglose.getCell("B" + filaCaja).font = fuenteTotalDesglose;
     hojaDesglose.getCell("C" + filaCaja).value = this.deps.cantidadCajas(dataKosher);
     hojaDesglose.getCell("C" + filaCaja).font = fuenteTotalDesglose;
