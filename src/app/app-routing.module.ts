@@ -54,6 +54,8 @@ import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
+import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/reporte-abasto.component';
+import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
 
 
 const routes: Routes = [
@@ -116,7 +118,9 @@ const routes: Routes = [
     { path: 'configuracion', component:ConfiguracionMainPageComponent},
     { path : 'dispositivos/Dispositivo', component: DispositvosComponent},
     { path: 'dispositivos/LecturasDispositivos', component: LecturasDispositivosComponent},
-    { path: 'faena/MermaPorPeso', component: MermaPorPesoComponent}
+    { path: 'faena/MermaPorPeso', component: MermaPorPesoComponent},
+    { path: 'faena/lecturasAbasto', component: FormularioAbastoComponent},
+    { path: 'faena/dashboardAbasto', component: ReporteAbastoComponent},
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

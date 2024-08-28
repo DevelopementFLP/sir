@@ -1,0 +1,56 @@
+<mat-card style="margin:20px 40px 40px 40px">
+
+  <mat-card-content>
+    <mat-form-field class="inputLecturaDeMedia" appearance="fill">
+      <mat-label>Lectura de Etiqueta</mat-label>
+      <input matInput [(ngModel)]="codigoRecibido" name="codigoRecibido" (keyup.enter)="InsertarLecturaDeMedia(codigoRecibido)" >
+    </mat-form-field>
+
+    <div class="flex-container">
+      <div class="flex-item" *ngIf="usuarioLogueado != 'salidaabasto'">
+        <mat-list>
+          <mat-list-item>Items Escaneados: {{totalLecturas}} </mat-list-item>
+          <mat-divider></mat-divider>
+          <button mat-flat-button color="primary" (click)="abrirModalDeLecturasAbasto()" style="margin-top: 10px;">
+            <mat-icon>edit</mat-icon>Agregar Media sin Etiqueta
+          </button>
+        </mat-list>
+      </div>
+    </div>
+
+    <div>
+      <table mat-table [dataSource]="dataListaDeLecturas">
+
+        <ng-container matColumnDef="lecturaDeScaner">
+          <th mat-header-cell *matHeaderCellDef>Lectura de Media</th>
+          <td mat-cell *matCellDef="let element"> {{element.lecturaDeMedia}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="idAnimal">
+          <th mat-header-cell *matHeaderCellDef>Id Animal</th>
+          <td mat-cell *matCellDef="let element"> {{element.idAnimal}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="secuencia">
+          <th mat-header-cell *matHeaderCellDef>Secuencial</th>
+          <td mat-cell *matCellDef="let element"> {{element.secuencial}} </td>
+        </ng-container>
+
+         <ng-container matColumnDef="operacion">
+          <th mat-header-cell *matHeaderCellDef>Operacion</th>
+          <td mat-cell *matCellDef="let element"> {{element.operacion}} </td>
+        </ng-container>
+
+        <!-- Fila de Encabezado -->
+        <tr mat-header-row *matHeaderRowDef="columnasTablaDeAbasto"></tr>
+        <!-- Fila de Datos -->
+        <tr mat-row *matRowDef="let row; columns: columnasTablaDeAbasto;" [ngClass]="{'claseDePrimerColumna': ubicarUltimaFilaInsertada(row)}"></tr>
+
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+
+  </mat-card-content>
+</mat-card>
