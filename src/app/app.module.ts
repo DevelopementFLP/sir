@@ -37,6 +37,7 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { SIRConfiguracionParametrosModule } from './50_SIR.Configuracion.Parametros/sir.configuracion.parametros.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DispositivoModule } from './09_SIR.Dispositivos.Apps/09_SIR.Dispositivo.Apps.module';
+import { FaenaModule } from './10_Sir.Faena.Apps/10_Sir_Faena.Apps.module';
 
 
 registerLocaleData(localeEs);
@@ -72,7 +73,8 @@ registerLocaleData(localeEs);
     RRHHReportesModule,
     SIRConfiguracionParametrosModule,
     MatDialogModule,
-    DispositivoModule
+    DispositivoModule,
+    FaenaModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },

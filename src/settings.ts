@@ -59,6 +59,7 @@ export const urlInactivarReporteConfiguracionParametro: string = urlConfiguratio
 export const urlDeleteReporteConfiguracionParametro: string = urlConfigurationParameters + "DeleteReporteConfiguracionParametroAsync";
 export const urlInsertReporteConfiguracionParametro: string = urlConfigurationParameters + "InsertReporteConfigurationParameterAsync";
 export const urlActivarReporteConfiguracionParametro: string = urlConfigurationParameters + "ActivarReporteConfiguracionParametroAsync";
+export const urlGetParametrosSeccionAbasto: string = urlAPI + "ParametrosDw_Abasto/GetParametrosSeccionAbasto";
 
 // Control de Calidad
 export const urlControlCalidad: string = urlAPI + "ControlCalidad/";
@@ -193,4 +194,10 @@ export const urlGetLecturaDispExpo: string = urlLecturasDispositivo + "listaDeEx
 //Merma por Peso
 export const urlMermaPorPeso: string = urlAPI + "MermaPorPeso/"
 export const urlGetMermaPorPeso: string = urlMermaPorPeso + "listaDeMermasPorPeso"
+
+//Abasto
+export const urlAbasto: string = urlAPI + "LecturasDeAbasto/"
+export const urlGetListaDeLecturas: string = urlAbasto + "getListaDeLecturas"
+export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
+export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
 
