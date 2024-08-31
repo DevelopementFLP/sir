@@ -1,3 +1,5 @@
+import { Data } from '@angular/router';
+import { Workbook } from 'exceljs';
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 
@@ -26,7 +28,7 @@ export class ReporteAbastoComponent {
   public mostrarStockActual: boolean = false;
 
 
-  columnasTablaListaDeAbasto: string[] = ['fechaDeRegistro', 'idAnimal', 'tropa', 'proveedor', 'peso', 'fechaDeFaena', 'clasificacion', 'secuencial']
+  columnasTablaListaDeAbasto: string[] = ['fechaDeFaena', 'secuencial', 'peso', 'proveedor', 'clasificacion', 'idAnimal', 'tropa', 'fechaDeRegistro']
 
   //Tipos de Datos
   dataInicioListaDeAbasto: ListaDeLecturasDTO[] = [];
@@ -63,7 +65,7 @@ export class ReporteAbastoComponent {
             this.dataListaDeLecturasAbasto.data = data.resultado;
             this.dataOriginalSinFiltros = data.resultado;
 
-            this.filtrarPorStock();           
+            this.stockActualEnCamara();           
             this.totalLecturas = data.resultado.length;
 
           } else {
@@ -79,12 +81,12 @@ export class ReporteAbastoComponent {
       }      
     }    
 
-    filtrarPorStock() {
+    stockActualEnCamara() {
       if (this.mostrarStockActual) {
         
         // filtro 2 tablas con las entradas y salidas
-        const entradas = this.dataOriginalSinFiltros.filter(item => item.operacion == "Entrada Abasto");
-        const salidas = this.dataOriginalSinFiltros.filter(item => item.operacion == "Salida Abasto");
+        const entradas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Entrada"));
+        const salidas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Salida"));
 
         // me quedo con los id de las salidas
         const idDeSalidas = new Set(salidas.map(item => item.idAnimal));
@@ -125,181 +127,223 @@ export class ReporteAbastoComponent {
 
 //Orden de columnas en excel
 customHeaders: string[] = [
-  'Fecha de Registro',
+  'Fecha Faena',
+  'Secuencial',
+  'Peso',
+  'Proveedor',
+  'Clasificacion',
   'Id Animal',
   'Tropa',
-  'Proveedor',
-  'Peso',
-  'Fecha Faena',
-  'Clasificacion',
-  'Secuencial'
+  'Fecha de Registro',
 ];
 
 
 // Mapea los encabezados a los nombres de las columnas originales para moverlos como quiera
 columnMapping: { [key: string]: string } = {
-  'Fecha de Registro': 'fechaDeRegistro',
+  'Fecha Faena': 'fechaDeFaena',
+  'Secuencial': 'secuencial',
+  'Peso': 'peso',
+  'Proveedor': 'proveedor',
+  'Clasificacion': 'clasificacion',
   'Id Animal': 'idAnimal',
   'Tropa': 'tropa',
-  'Proveedor': 'proveedor',
-  'Peso': 'peso',
-  'Fecha Faena': 'fechaDeFaena',
-  'Clasificacion': 'clasificacion',
-  'Secuencial': 'secuencial'
+  'Fecha de Registro': 'fechaDeRegistro',
 };
 
 
-
 async exportarAExcel(): Promise<void> {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Reporte de Abasto');
+    const workbookAbasto = new ExcelJS.Workbook();
+    const worksheetAbasto = workbookAbasto.addWorksheet('Stock Actual');
+    const WorksheetEntradas = workbookAbasto.addWorksheet('Entradas Abasto');
+    const WorksheetSalidas = workbookAbasto.addWorksheet('Salidas Abasto');
 
-    const logoUrl = 'assets/images/logo_relleno_azul.png'; // Ruta a tu logo
-    
-    // Cargar la imagen como buffer
-    const imageBuffer = await this.http.get(logoUrl, { responseType: 'arraybuffer' }).toPromise();
-    // Agregar la imagen al libro de trabajo
-    const imageId = workbook.addImage({
-      buffer: imageBuffer,
-      extension: 'png',
-    });
-    
+    const startRow = 3; // Fila donde comienzan los datos
+    const startColumn = 2; // Columna B es la columna 2
+    // Filtrar y agregar datos a las hojas correspondientes
+    const listaTotal = this.dataListaDeLecturasAbasto.data;
+    const entradas = listaTotal.filter(item => item.operacion.includes('Entrada'));
+    const salidas = listaTotal.filter(item => item.operacion.includes('Salida'));
 
-    worksheet.mergeCells(('A1:A3'))
-    // Insertar la imagen en la celda A1
-    worksheet.addImage(imageId, {
-      tl: { col: 0, row: 0}, // Coordenadas de la esquina superior izquierda
-      ext: { width: 130, height: 55}, // Tamaño de la imagen
-      editAs: 'undefined'
-    });
-  
+    // me quedo con los id de las salidas
+    const idDeSalidas = new Set(salidas.map(item => item.idAnimal));    
+    // filtro las entradas que no tienen salidas por los ID
+    const stockActual = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
+
 
     // Agregar encabezado      
-    worksheet.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeceldaConbinadaNQF = worksheet.getCell('B1');
-    textoDeceldaConbinadaNQF.value = 'REPORTE ABASTO';
-    textoDeceldaConbinadaNQF.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeceldaConbinadaNQF.font = { bold: true, italic: true}
-    textoDeceldaConbinadaNQF.border = {
-      top: {style:'thin'},
-      left: {style:'thin'},
-      bottom: {style:'thin'},
-      right: {style:'thin'}
-    }
-
-
-     const startRow = 3; // Fila donde comienzan los datos
-     const startColumn = 2; // Columna B es la columna 2
- 
-     // Agregar encabezados de columna
-     this.customHeaders.forEach((header, index) => {
-       worksheet.getCell(startRow, startColumn + index).value = header;
-     });
- 
-     // Agregar datos a partir de la fila 4
-     this.dataListaDeLecturasAbasto.data.forEach((item, rowIndex) => {
-       const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
-       row.forEach((value, colIndex) => {
-         worksheet.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
-       });
-     });
-
-    //Ancho de las columnas
-    const columnWidths: { [key: string]: number } = {
-      'Fecha de Registro': 20,
-      'Id Animal' : 20,
-      'Tropa' : 20,
-      'Proveedor' : 30,
-      'Peso' : 20,
-      'Fecha Faena' : 30,
-      'Clasificacion' : 20,
-      'Secuencial' : 20
+    worksheetAbasto.mergeCells('B1:I2'); // Combina las celdas
+    const textoDeEncabezadoNQF = worksheetAbasto.getCell('B1');
+    textoDeEncabezadoNQF.value = 'REPORTE ABASTO';
+    textoDeEncabezadoNQF.alignment = { horizontal: 'center', vertical: 'middle' };
+    textoDeEncabezadoNQF.font = { bold: true, italic: true };
+    textoDeEncabezadoNQF.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
     };
 
-    worksheet.columns.forEach((column, index) => {
-      const header = this.customHeaders[index];
-      column.width = columnWidths[header] || 30; // Asignar ancho personalizado o 25 si no está definido
+    // Agregar encabezado Hoja de Entrada      
+    WorksheetEntradas.mergeCells('B1:I2'); // Combina las celdas
+    const textoDeEncabezadoEntradas = WorksheetEntradas.getCell('B1');
+    textoDeEncabezadoEntradas.value = 'Entradas al Abasto';
+    textoDeEncabezadoEntradas.alignment = { horizontal: 'center', vertical: 'middle' };
+    textoDeEncabezadoEntradas.font = { bold: true, italic: true };
+    textoDeEncabezadoEntradas.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
+    };
+
+    // Agregar encabezado Hoja de Salida      
+    WorksheetSalidas.mergeCells('B1:I2'); // Combina las celdas
+    const textoDeEncabezadoSalidas = WorksheetSalidas.getCell('B1');
+    textoDeEncabezadoSalidas.value = 'Salidas al Abasto';
+    textoDeEncabezadoSalidas.alignment = { horizontal: 'center', vertical: 'middle' };
+    textoDeEncabezadoSalidas.font = { bold: true, italic: true };
+    textoDeEncabezadoSalidas.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' }
+    };
+
+    // Agregar encabezados de columna
+    this.customHeaders.forEach((header, index) => {
+      worksheetAbasto.getCell(startRow, startColumn + index).value = header;
+      WorksheetEntradas.getCell(startRow, startColumn + index).value = header;
+      WorksheetSalidas.getCell(startRow, startColumn + index).value = header;
     });
 
-    worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-      if (rowNumber > 3) { // Empieza desde la fila 4
-        row.eachCell({ includeEmpty: true }, (cell) => {
-          if (cell.value === 'Manual') {
-            cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: 'aadade' } // Color de fonde de la celda
-            };
-          }
-        });
-      }
-    });
-  
-  
-    //Añadir los datos
-    this.dataListaDeLecturasAbasto.data.forEach(lectura => {
-      worksheet.addRow({
-        fechaDeRegistro: lectura.fechaDeRegistro,
-        idAnimal: lectura.idAnimal,
-        tropa: lectura.tropa,
-        proveedor: lectura.proveedor,
-        peso: lectura.peso,
-        fechaDeFaena: lectura.fechaDeFaena,
-        clasificacion: lectura.clasificacion,
-        secuencial: lectura.secuencial
+
+    // Agregar datos a la hoja de Reporte de Abasto
+    stockActual.forEach((item, rowIndex) => {
+      const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
+      row.forEach((value, colIndex) => {
+        worksheetAbasto.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
       });
     });
 
-    worksheet.autoFilter = {
-      from: 'B3',
-      to: 'I3',
-     }
-    
-    // Calcular la suma de los valores en la columna Peso por proveedor
-    const sumaPorProveedor: { [key: string]: number } = {};
-      this.dataListaDeLecturasAbasto.data.forEach(lectura => {
-        if (lectura.proveedor && !isNaN(lectura.peso)) {
-        if (!sumaPorProveedor[lectura.proveedor]) {
-          sumaPorProveedor[lectura.proveedor] = 0;
-        }
-        sumaPorProveedor[lectura.proveedor] += lectura.peso;
-      }
+    // Agregar datos a la hoja de Entradas
+    entradas.forEach((item, rowIndex) => {
+      const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
+      row.forEach((value, colIndex) => {
+        WorksheetEntradas.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
+      });
     });
 
+    // Agregar datos a la hoja de Salidas
+    salidas.forEach((item, rowIndex) => {
+      const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
+      row.forEach((value, colIndex) => {
+        WorksheetSalidas.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
+      });
+    });
+    
+   
+    worksheetAbasto.getCell('J3').value = 'Suma de Pesos por Proveedor';
+    worksheetAbasto.getCell('J3').font = { bold: true };
 
+    this.CreatTablasDeContenido("sumaDePesosPorClasificacion", "J4", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
+    this.CreatTablasDeContenido("sumaDePesosPorEntradas", "J4", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
+    this.CreatTablasDeContenido("sumaDePesosPorSalidas", "J4", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))
+
+
+    // Ajustar el ancho de las columnas para cada hoja
+    this.AdjustColumnWidths(worksheetAbasto);
+    this.AdjustColumnWidths(WorksheetEntradas);
+    this.AdjustColumnWidths(WorksheetSalidas);    
+
+    // Insertar el logo en todas las hojas
+    await this.InsertarLogoEnLasHojas(workbookAbasto, worksheetAbasto);
+    await this.InsertarLogoEnLasHojas(workbookAbasto, WorksheetEntradas);
+    await this.InsertarLogoEnLasHojas(workbookAbasto, WorksheetSalidas);
+ 
+    const fechaActual = new Date();
+    const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds();
+
+    // Guardar el archivo
+    const buffer = await workbookAbasto.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), 'Reporte_Abasto ' + horaActual + '.xlsx');
+  }
+
+  SumaDePesosPorClasificacion(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
+    const sumaPorClasificacion: { [key: string]: number } = {};
+    listaDeDatos.forEach(lectura => {
+      if (lectura.clasificacion && !isNaN(lectura.peso)) {
+        if (!sumaPorClasificacion[lectura.clasificacion]) {
+          sumaPorClasificacion[lectura.clasificacion] = 0;
+        }
+        sumaPorClasificacion[lectura.clasificacion] += lectura.peso;
+      }
+    });
+    return sumaPorClasificacion;
+  }
+
+  CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: number }): void {
     // Definir la tabla
-    worksheet.addTable({
-      name: 'SumaPorProveedorTable',
-      ref: 'J4', // Asegúrate de que este rango no sobrescriba datos existentes
+    sheet.addTable({
+      name: nombreDeTabla,
+      ref: celdaDeInicio, 
       headerRow: true,
-      totalsRow: true, // Puedes cambiar a true si deseas una fila de totales
+      totalsRow: true, 
       style: {
         theme: 'TableStyleDark3',
         showRowStripes: true,
       },
       columns: [
-        { name: 'Proveedor', filterButton: true },
-        { name: 'Suma de Pesos', totalsRowFunction: 'sum', filterButton: false },
+        { name: nombreDeColumna1, filterButton: true },
+        { name: nombreDeColumna2, filterButton: false },
       ],
-      rows: Object.keys(sumaPorProveedor).map(proveedor => [proveedor, sumaPorProveedor[proveedor]]),
+      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [clasificacion, sumaPorClasificacion[clasificacion]]),
     });
+  }
 
+  //Metodo para Insertar el logo en las hojas
+  async InsertarLogoEnLasHojas(Workbook: ExcelJS.Workbook, sheet: ExcelJS.Worksheet) {
+    try {
+      sheet.mergeCells('A1:A3'); 
+      sheet.getColumn('A').width = 20; 
 
-    worksheet.getColumn('J').width = 35;
-    worksheet.getColumn('K').width = 20;
-
-
-    worksheet.getCell('J3').value = 'Suma de Pesos por Proveedor';
-    worksheet.getCell('J3').font = { bold: true };
-    // worksheet.getCell('I3').alignment = { horizontal: 'left' };
-
-
-    const fechaActual = new Date();
-    const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds()
-
-    // Guardar el archivo
-    const buffer = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), 'Reporte_Abasto ' + horaActual + '.xlsx');
+      const logoUrl = 'assets/images/logo_relleno_azul.png'; // Ruta del logo
+      const imageBuffer = await this.http.get(logoUrl, { responseType: 'arraybuffer' }).toPromise();
+  
+      // Agregar la imagen al libro de trabajo
+      const imageId = Workbook.addImage({
+        buffer: imageBuffer,
+        extension: 'png',
+      });             
+  
+      // Insertar la imagen en la celda A1
+      sheet.addImage(imageId, {
+        tl: { col: 0, row: 0 }, // Coordenadas de la esquina superior izquierda
+        ext: { width: 130, height: 55 }, // Tamaño de la imagen
+        editAs: 'oneCell'
+      });
+  
+    } catch (error) {
+      console.error('Error al insertar el logo:', error);
     }
+  }
+
+
+  //Metodo para ajustar el ancho de las columnas
+  AdjustColumnWidths(sheet: ExcelJS.Worksheet) {
+    try {
+      sheet.columns.forEach(column => {
+        let maxLength = 10; // Longitud mínima de las celdas
+        column.eachCell!({ includeEmpty: true }, cell => {
+          const cellLength = cell.value ? cell.value.toString().length : 0;
+          if (cellLength > maxLength) {
+            maxLength = cellLength;
+          }
+        });
+        column.width = maxLength + 2; // Agregar un poco de espacio extra
+      });      
+    } catch (error) {
+      console.error('Error al ajustar las columnas:', error);
+    }    
+  }
 }
   

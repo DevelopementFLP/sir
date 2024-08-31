@@ -33,6 +33,10 @@ import { HttpClientModule } from '@angular/common/http';
     ReporteAbastoComponent,
     ModalAbastoComponent
   ],
+  exports:[
+    FormularioAbastoComponent,
+    ReporteAbastoComponent
+  ],
   imports: [
     CommonModule,
     MatCardModule,
