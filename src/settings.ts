@@ -1,3 +1,10 @@
+ Actualizacion-31-8
+
+
+
+//export const urlAPI: string = "http://192.168.0.107:82/api/";
+
+
 export const urlAPI: string = "http://192.168.0.107:82/api/";
 // export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -198,6 +205,7 @@ export const urlGetMermaPorPeso: string = urlMermaPorPeso + "listaDeMermasPorPes
 //Abasto
 export const urlAbasto: string = urlAPI + "LecturasDeAbasto/"
 export const urlGetListaDeLecturas: string = urlAbasto + "getListaDeLecturas"
+export const urlGetLecturaFiltrada: string = urlAbasto + "getLecturaDeQr"
 export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
 export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
 

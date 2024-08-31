@@ -28,19 +28,19 @@
     color: #566573;
 }
 
-:host >>> .p-toast-message-custom-error {
+:host .p-toast-message-custom-error {
     background-color: #FDEDEC;
     border: solid #FF5757;
     border-width: 0 0 0 6px;
     color: #FF5757;
   }
 
-:host >>> .p-toast-icon-close {
+:host  .p-toast-icon-close {
     color: #fff;
   }
 
 
-  :host >>> .p-toast-message-custom-success {
+  :host  .p-toast-message-custom-success {
     background-color: #EAF9F3;
     border: solid #1EA97C;
     border-width: 0 0 0 6px;

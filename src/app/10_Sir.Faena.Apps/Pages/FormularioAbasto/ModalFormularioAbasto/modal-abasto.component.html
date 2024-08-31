@@ -3,8 +3,8 @@
       <form>
         
         <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
-            <mat-label>ID Media Aleatorio</mat-label>
-            <input matInput placeholder="Número aleatorio" disabled>
+            <mat-label>Codigo QR</mat-label>
+            <input matInput placeholder="Escaneo de QR" type="number" [(ngModel)]="lecturaQRInput" name="peso">
         </mat-form-field>
 
         <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
@@ -16,8 +16,8 @@
         </mat-form-field>
       
         <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
-          <mat-label>Peso</mat-label>
-          <input matInput placeholder="Ingrese el Peso" type="number" [(ngModel)]="pesoInput" name="peso">
+          <mat-label>Ordinal</mat-label>
+          <input matInput placeholder="Ingrese el Ordinal" type="number" [(ngModel)]="ordinalInput" name="peso" >          
         </mat-form-field>
 
         <mat-form-field style="width: 100%; margin-bottom: 1rem;">
