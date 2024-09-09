@@ -34,4 +34,5 @@ export class CommonService {
     const numberPattern = /^-?\d+(\.\d+)?$/;
     return numberPattern.test(value);
   }
+
 }

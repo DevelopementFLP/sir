@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { PrintModel } from '../models/print-model.interface';
-import { Alignment, Fill, ImagePosition, Workbook, Worksheet } from 'exceljs';
+import { Alignment, Fill, Font, ImagePosition, Workbook, Worksheet } from 'exceljs';
 import { formatDate } from '@angular/common';
 import { LOGO_RGB_V1_BEIGE } from '../models/logos/RGB_v1-beige';
 import { InconsistenciaDataPrint } from '../../08_SIR.RRHH.Reportes/interfaces/InconsistenciaDataPrint.interface';
@@ -18,12 +18,27 @@ import { DetalleEmbarquePrintService } from './detalle-embarque-print.service';
 import { DataKosher } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DataKosher.interface';
 import { DataKosherAgrupada } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DataKosherAgrupada.interface';
 import { TotalDataAgrupada } from '../../04_SIR.Exportaciones.Reportes/Interfaces/TotalDataAgrupada.interface';
+import { ReporteCuota } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ReporteCuota.interface';
+import { LoteEntradaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/LoteEntradaDTO.interface';
+import { CommonCuotaService } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/services/common-cuota.service';
+import { ConfTipoCuotaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ConfTipoCuotaDTO.interface';
+import { SalidaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/SalidaDTO.interface';
+import { EntradaDisplay } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/EntradaDisplay.interface';
+import { CortesReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/CortesReporte.interface';
+import { EntradaReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/EntradaReporte.interface';
+import { EntradaDisplayReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/EntradaDisplayReporte.interface';
+import { QamarkDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/QamarkDTO.interface';
+import { Comparativo } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/Comparativo.inteface';
+import { ComparativoDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComprativoDict.interface';
+import { ComparativoReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComparativoReporte.interface';
+import { TipoCuotaDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/TipoCuotaDict.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
   constructor(
     private kcs: KosherCommonService,
-    private deps: DetalleEmbarquePrintService 
+    private deps: DetalleEmbarquePrintService ,
+    private ccs: CommonCuotaService
   ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
@@ -42,6 +57,8 @@ export class PrintService {
         return this.printDispositivosScada(dataToPrint, libro);
       case 7:
         return this.printDetalleDeEmbarque(dataToPrint, libro);
+      case 8:
+        return this.printRendimientosCuota(dataToPrint, libro);
       default:
         return [];
     }
@@ -1804,5 +1821,437 @@ export class PrintService {
     hojaDesglose.getColumn(5).width = 18;
     hojaDesglose.getColumn(6).width = 18;
     hojaDesglose.getColumn(8).width = 27;
+  }
+
+  private printRendimientosCuota(dataToPrint: PrintModel, libro: Workbook): void {
+    //ESTILOS
+    const fondoTituloEntrada:       Fill                  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF000000' }, bgColor: { argb: '00000000' }};
+    const colorFuenteEntrada:       Partial<Font>         = { bold: true, color: {argb: 'FFFFFFFF'} };
+    const fuenteAnimal:             Partial<Font>         = { bold: true, size: 7 };
+    const fuenteTituloNombreCuota:  Partial<Font>         = { bold: true, size: 12, color: { argb: 'FF1f618d'}};
+    const fuenteTitulo:             Partial<Font>         = { bold: true, size: 12 };
+    const fuenteSubTitulo:          Partial<Font>         = { bold: true, size: 11 };
+    const fuenteTituloCortes:       Partial<Font>         = { bold: true, size: 9 };
+    const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
+    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
+    const alineacionIzquierda:      Partial<Alignment>    = { vertical: 'middle', horizontal: 'left' };
+    const formatoNumeroDecimal:     string                = '#,##0.00';
+    const formatoNumeroMillar:      string                = '#,##0';
+
+    const qamarks:                  QamarkDTO[]           = dataToPrint.data.qamarks as QamarkDTO[];
+    const tiposCuota:               ConfTipoCuotaDTO[]    = dataToPrint.data.tiposCuota as ConfTipoCuotaDTO[];
+    const dataReporte:              ReporteCuota[]        = dataToPrint.data.reporteCuotaData as ReporteCuota[];
+    let idsReporte:                 number[]              = dataToPrint.data.idsReporte;
+    let reportes:                   TipoCuotaDict         = dataToPrint.data.reportes;
+    let comparativoData:            Comparativo[]         = [];
+    let qamarksUnicos:              QamarkDTO[]           = [];
+    let comparativoDataFiltrada:    Comparativo[]         = [];
+    let comparativoCuota:           Comparativo[]         = [];
+    let comparativoNoCuota:         Comparativo[]         = [];
+    let cuotaComparativoReporte:    ComparativoReporte[]  = [];
+    let noCuotaComparativoReporte:  ComparativoReporte[]  = [];
+    let qamarksCuota:               number[]              = [];
+    let qamarksNoCuota:             number[]              = [];
+
+    idsReporte = Array.from(new Set(idsReporte.map(i => i)));
+    idsReporte.forEach(id => {
+      let columna:  number = 2;
+      const reporte:    ReporteCuota[]        = dataReporte.filter(dr => dr.id === id);
+      const fechas:     string[]              = Array.from(new Set(reporte.map(r => r.fecha)));
+      const tipoCuota:  string | undefined    = tiposCuota.find(tc => tc.id === id)?.nombre;
+      const titulo:     string                = tipoCuota ?? `cuota_${id}`;
+      const hoja:       Worksheet             = libro.addWorksheet(titulo);
+      
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 16);
+
+      fechas.forEach(fecha => {
+        const reporteFecha: ReporteCuota[]              = reporte.filter(r => r.fecha === fecha);
+        let repo:                     ReporteCuota      = reporteFecha[0];      
+        let entradaDelantero:         LoteEntradaDTO[]  = [];
+        let entradaTrasero:           LoteEntradaDTO[]  = [];
+        let cortesCuota:              SalidaDTO[]       = [];
+        let cortesNoCuota:            SalidaDTO[]       = [];
+        let cortesDelanterosNoCuota:  SalidaDTO[]       = [];
+        let cortesTraserosNoCuota:    SalidaDTO[]       = [];
+        let totalDelanteros:          EntradaDisplay[]  = [];
+        let totalTraseros:            EntradaDisplay[]  = [];
+
+        let cortesReporte!:           CortesReporte;  
+        let entradaReporte!:          EntradaReporte;
+        let totalEntradaPorTipo!:     EntradaDisplayReporte;
+
+        let rendimientoCortesCuota:   number = 0;
+        let rendimientoCortesNoCuota: number = 0;
+        let rendimientoCortesTotal:   number = 0;
+        let totalCajas:               number = 0;
+        let totalPesoCortes:          number = 0;
+        let totalPesoCortesCuota:     number = 0;
+        let totalPesoCortesNoCuota:   number = 0;
+
+        let pesoDelanteros:          number = 0;
+        let pesoTraseros:            number = 0;
+
+        entradaReporte            = this.ccs.separarEntradaPorTipo(repo);
+        entradaDelantero          = entradaReporte.entradaDelantero;
+        entradaTrasero            = entradaReporte.entradaTrasero;
+        totalEntradaPorTipo       = this.ccs.agruparEntrada(entradaDelantero, entradaTrasero);
+        totalDelanteros           = totalEntradaPorTipo.delantero;
+        totalTraseros             = totalEntradaPorTipo.trasero;
+        cortesReporte             = this.ccs.separarCortesPorTipo(repo);
+        cortesCuota               = cortesReporte.cuota;
+        cortesNoCuota             = cortesReporte.nocuota;
+        cortesDelanterosNoCuota   = cortesReporte.delanteroNoCuota;
+        cortesTraserosNoCuota     = cortesReporte.traseroNoCuota;
+        totalPesoCortesCuota      = this.ccs.totalPesoPorCortes(cortesCuota);
+        totalPesoCortesNoCuota    = this.ccs.totalPesoPorCortes(cortesNoCuota);
+        rendimientoCortesCuota    = totalPesoCortesCuota / totalEntradaPorTipo.peso;
+        rendimientoCortesNoCuota  = totalPesoCortesNoCuota / totalEntradaPorTipo.peso;
+        totalPesoCortes           = this.ccs.totalPesoCajas(repo.cortes!);
+        totalCajas                = this.ccs.totalCajas(repo.cortes!);
+        rendimientoCortesTotal    = totalPesoCortes / totalEntradaPorTipo.peso;
+
+        // ENTRADA
+        let fila: number = 6;
+        hoja.getRow(fila).getCell(columna).value  = fecha;
+        hoja.getRow(fila).getCell(columna).font   = fuenteTitulo;
+        fila++;
+        hoja.getRow(fila).getCell(columna).value  = "ENTRADA";
+        hoja.getRow(fila).getCell(columna).font   = fuenteTitulo;
+
+        fila++;
+        totalDelanteros.forEach(del => {
+          hoja.getRow(fila).getCell(columna).value      = del.nombre;
+          hoja.getRow(fila).getCell(columna).font       = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 3).value  = del.cuartos;
+          hoja.getRow(fila).getCell(columna + 3).font   = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 4).value  = del.peso;
+          hoja.getRow(fila).getCell(columna + 4).font   = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroDecimal;
+          fila++;  
+        }); 
+
+        totalTraseros.forEach(tra => {
+          hoja.getRow(fila).getCell(columna).value      = tra.nombre;
+          hoja.getRow(fila).getCell(columna).font       = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 3).value  = tra.cuartos;
+          hoja.getRow(fila).getCell(columna + 3).font   = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 4).value  = tra.peso;
+          hoja.getRow(fila).getCell(columna + 4).font   = fuenteSubTitulo;
+          hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroDecimal;
+          fila++;  
+        });
+
+        hoja.getRow(fila).getCell(columna).value          = 'TOTAL';
+        hoja.getRow(fila).getCell(columna).font           = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 3).value      = totalEntradaPorTipo.cuartos;
+        hoja.getRow(fila).getCell(columna + 3).font       = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 3).numFmt     = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 4).value      = totalEntradaPorTipo.peso;
+        hoja.getRow(fila).getCell(columna + 4).font       = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal; 
+        hoja.getRow(fila).getCell(columna + 5).value      = "Kg x canal S/FALDA\n y S/ASADO a 13C";
+        hoja.getRow(fila).getCell(columna + 5).alignment  = {wrapText: true, vertical: 'middle', horizontal: 'center'};
+        hoja.getRow(fila).getCell(columna + 5).font       = fuenteAnimal;
+        
+        fila++;
+        hoja.getRow(fila).getCell(columna).value      = "TOTAL ANIMALES";
+        hoja.getRow(fila).getCell(columna).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna).font       = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 1).fill   = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 2).fill   = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 3).value  = totalTraseros[0].cuartos != 0 ? totalTraseros[0].cuartos / 2 : totalDelanteros[0].cuartos / 2;
+        hoja.getRow(fila).getCell(columna + 3).fill   = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 3).font   = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 4).value  = totalEntradaPorTipo.peso;
+        hoja.getRow(fila).getCell(columna + 4).fill   = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 4).font   = colorFuenteEntrada; 
+        hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 5).value  = totalEntradaPorTipo.pesoAnimal;
+        hoja.getRow(fila).getCell(columna + 5).fill   = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 5).font   = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroDecimal;
+
+        hoja.getColumn(columna + 4).width = 12;
+
+        // CORTES
+        totalDelanteros.forEach(del => {
+          pesoDelanteros += del.peso;
+        });
+    
+        totalTraseros.forEach(tra => {
+          pesoTraseros += tra.peso;
+        });
+
+        fila += 2;
+        hoja.getRow(fila).getCell(columna).value  = 'SALIDA';
+        hoja.getRow(fila).getCell(columna).font   = fuenteTitulo;
+        
+        fila++;
+        hoja.getRow(fila).getCell(columna).value  = 'CORTES CUOTA';
+        hoja.getRow(fila).getCell(columna).font   = fuenteSubTitulo;
+
+        fila++;
+        hoja.getRow(fila).getCell(columna).value      = 'Código';
+        hoja.getRow(fila).getCell(columna + 1).value  = 'Producto';
+        hoja.getRow(fila).getCell(columna + 2).value  = 'Piezas';
+        hoja.getRow(fila).getCell(columna + 3).value  = 'Cajas';
+        hoja.getRow(fila).getCell(columna + 4).value  = 'Peso';
+        hoja.getRow(fila).getCell(columna + 5).value  = 'Kg/Un';
+        hoja.getRow(fila).getCell(columna + 6).value  = '% Rend';
+
+        hoja.getColumn(columna + 5).width  = 16;
+
+        for(let i = 0; i <= 6; i++) {
+          hoja.getRow(fila).getCell(columna + i).font = fuenteTituloCortes;
+          if(i >= 2)
+            hoja.getRow(fila).getCell(columna + i).alignment = alineacionDerecha;
+        }
+        
+        fila++;
+        cortesCuota.forEach(cc => {
+          hoja.getRow(fila).getCell(columna).value      = cc.code;
+          hoja.getRow(fila).getCell(columna + 1).value  = cc.name;
+          hoja.getRow(fila).getCell(columna + 2).value  = cc.piezas;
+          hoja.getRow(fila).getCell(columna + 2).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 3).value  = cc.cajas;
+          hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 4).value  = cc.peso;
+          hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(columna + 5).value  = cc.pesoPorPieza;
+          hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(columna + 6).value  = cc.condition.startsWith('D') ? parseFloat(((cc.peso / pesoDelanteros) * 100).toFixed(2)) + ' %' : parseFloat(((cc.peso / pesoTraseros) * 100).toFixed(2)) + ' %';
+          hoja.getRow(fila).getCell(columna + 6).alignment = alineacionDerecha;
+          fila++;
+        });
+
+        hoja.getRow(fila).getCell(columna).value          = 'TOTAL CORTES CUOTA';
+        hoja.getRow(fila).getCell(columna).font           = fuenteSubTitulo;
+        hoja.getRow(fila).getCell(columna + 4).value      = totalPesoCortesCuota;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 4).font       = fuenteSubTitulo;
+        hoja.getRow(fila).getCell(columna + 6).value      = parseFloat((rendimientoCortesCuota * 100).toFixed(2))  + ' %';
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 6).font       = fuenteSubTitulo;
+        
+        fila += 2;
+        hoja.getRow(fila).getCell(columna).value = 'CORTES SIN DESTINO CUOTA';
+        hoja.getRow(fila).getCell(columna).font  = fuenteSubTitulo;
+
+        fila++;
+        hoja.getRow(fila).getCell(columna).value      = 'Código';
+        hoja.getRow(fila).getCell(columna + 1).value  = 'Producto';
+        hoja.getRow(fila).getCell(columna + 2).value  = '';
+        hoja.getRow(fila).getCell(columna + 3).value  = '';
+        hoja.getRow(fila).getCell(columna + 4).value  = 'Peso';
+        hoja.getRow(fila).getCell(columna + 5).value  = 'Kg/Un';
+        hoja.getRow(fila).getCell(columna + 6).value  = '% Rend';
+
+        for(let i = 0; i <= 6; i++) {
+          hoja.getRow(fila).getCell(columna + i).font = fuenteTituloCortes;
+          if(i >= 2)
+            hoja.getRow(fila).getCell(columna + i).alignment = alineacionDerecha;
+        }
+
+        fila++;
+        cortesDelanterosNoCuota.forEach(cc => {
+          hoja.getRow(fila).getCell(columna).value          = cc.code;
+          hoja.getRow(fila).getCell(columna + 1).value      = cc.name;
+          hoja.getRow(fila).getCell(columna + 2).value      = '';
+          hoja.getRow(fila).getCell(columna + 3).value      = '';
+          hoja.getRow(fila).getCell(columna + 4).value      = cc.peso;
+          hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(columna + 5).value      = cc.pesoPorPieza;
+          hoja.getRow(fila).getCell(columna + 5).numFmt     = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(columna + 6).value      = parseFloat(((cc.peso / pesoDelanteros) * 100).toFixed(2)) + ' %';
+          hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+          fila++;
+        });
+
+        cortesTraserosNoCuota.forEach(cc => {
+          hoja.getRow(fila).getCell(columna).value          = cc.code;
+          hoja.getRow(fila).getCell(columna + 1).value      = cc.name;
+          hoja.getRow(fila).getCell(columna + 2).value      = '';
+          hoja.getRow(fila).getCell(columna + 3).value      = '';
+          hoja.getRow(fila).getCell(columna + 4).value      = cc.peso;
+          hoja.getRow(fila).getCell(columna + 5).value      = cc.pesoPorPieza;
+          hoja.getRow(fila).getCell(columna + 6).value      = parseFloat(((cc.peso / pesoTraseros) * 100).toFixed(2)) + ' %';
+          hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+          fila++;
+        });
+
+        hoja.getRow(fila).getCell(columna + 1).value      = "MANTA";
+        hoja.getRow(fila).getCell(columna + 4).value      = cortesReporte.manta[0].peso;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 6).value      = parseFloat(((cortesReporte.manta[0].peso / totalEntradaPorTipo.peso) * 100).toFixed(2)) + ' %';
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+
+        fila++;
+        hoja.getRow(fila).getCell(columna).value          = 'TOTAL CORTES SIN DESTINO CUOTA';
+        hoja.getRow(fila).getCell(columna).font           = fuenteSubTitulo;
+        hoja.getRow(fila).getCell(columna + 4).value      = totalPesoCortesNoCuota;
+        hoja.getRow(fila).getCell(columna + 4).font       = fuenteSubTitulo;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 6).value      = parseFloat((rendimientoCortesNoCuota * 100).toFixed(2))  + ' %';
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 6).font       = fuenteSubTitulo;
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+
+        fila += 2;
+        hoja.getRow(fila).getCell(columna).value          = 'TOTAL';
+        hoja.getRow(fila).getCell(columna).fill           = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna).font           = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 1).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 2).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 3).value      = totalCajas;
+        hoja.getRow(fila).getCell(columna + 3).numFmt     = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 3).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 3).font       = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 4).value      = totalPesoCortes;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 4).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 4).font       = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 5).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 6).value      = parseFloat((rendimientoCortesTotal * 100).toFixed(2))  + ' %';
+        hoja.getRow(fila).getCell(columna + 6).fill       = fondoTituloEntrada;
+        hoja.getRow(fila).getCell(columna + 6).font       = colorFuenteEntrada;
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+
+        hoja.getColumn(columna + 1).width = 36;
+        columna += 8;
+      });
+    });
+
+    // COMPARATIVO
+    const hojaComp: Worksheet = libro.addWorksheet('COMPARATIVO');
+    this.setLogo(libro, hojaComp);
+    this.setTitle(libro, hojaComp, "COMPARATIVO", 'right', 16);
+    comparativoData          = this.ccs.getComparativoData(idsReporte, reportes);
+    qamarksUnicos            = this.ccs.getQamarksUnicos(comparativoData, qamarks);
+    comparativoDataFiltrada  = this.ccs.agruparDataComparativo(comparativoData, idsReporte);
+    comparativoData          = this.ccs.getComparativoData(idsReporte, reportes);
+    comparativoCuota         = comparativoDataFiltrada.filter(cdf => cdf.tipo == 'CUOTA');
+    comparativoNoCuota       = comparativoDataFiltrada.filter(cdf => cdf.tipo == 'NO CUOTA');
+    
+    comparativoCuota
+    .sort((a, b) => {
+      if(a.conditon <= b.conditon) return -1;
+      return 1;
+    })
+    .sort((a, b) => {
+      if(a.qamark <= b.qamark) return -1;
+      return 1
+    });
+    
+    comparativoNoCuota
+    .sort((a, b) => {
+      if(a.conditon <= b.conditon) return -1;
+      return 1;
+    })
+    .sort((a, b) => {
+      if(a.qamark <= b.qamark) return -1;
+      return 1
+    });
+
+    cuotaComparativoReporte   = this.ccs.formatearDatosComparativo(comparativoCuota, qamarksUnicos, idsReporte);
+    noCuotaComparativoReporte = this.ccs.formatearDatosComparativo(comparativoNoCuota, qamarksUnicos, idsReporte);
+    
+    qamarksCuota   = Array.from(new Set(cuotaComparativoReporte.map(c => c.qamark)));
+    qamarksNoCuota = Array.from(new Set(noCuotaComparativoReporte.map(c => c.qamark)));
+
+    let fila = 6;
+    let columna = 2;
+
+    hojaComp.getRow(fila).getCell(columna).value = "CORTE CUOTA"
+    hojaComp.getRow(fila).getCell(columna).font  = fuenteTituloNombreCuota;
+    fila += 2;
+
+    qamarksCuota.forEach(qmc => {
+      hojaComp.getRow(fila).getCell(columna).value = qamarks.find(q => q.qamark == qmc)?.name;
+      hojaComp.getRow(fila).getCell(columna).font  = fuenteTitulo;
+      fila++;
+    });
+
+    fila++;
+    hojaComp.getRow(fila).getCell(columna).value = "CORTE SIN DESTINO CUOTA";
+    hojaComp.getRow(fila).getCell(columna).font  = fuenteTituloNombreCuota;
+    fila += 2;
+
+    qamarksNoCuota.forEach(qmc => {
+      hojaComp.getRow(fila).getCell(columna).value = qamarks.find(q => q.qamark == qmc)?.name;
+      hojaComp.getRow(fila).getCell(columna).font  = fuenteTitulo;
+      fila++;
+    });
+
+    columna++;
+    idsReporte.forEach(id => {
+      fila = 6;
+      hojaComp.getRow(fila).getCell(columna).value  = tiposCuota.find(tc => tc.id == id)?.nombre;
+      hojaComp.getRow(fila).getCell(columna).font   = fuenteTituloNombreCuota;
+      hojaComp.mergeCells(fila, columna, fila, columna + 1);
+      hojaComp.getRow(fila).getCell(columna).alignment = alineacionCentro;
+      fila++;
+      hojaComp.getRow(fila).getCell(columna).value          = "Kg Prom.";
+      hojaComp.getRow(fila).getCell(columna).font           = fuenteTituloCortes;
+      hojaComp.getRow(fila).getCell(columna).alignment      = alineacionIzquierda;
+      hojaComp.getRow(fila).getCell(columna + 1).value      = "Rend. Prom.";
+      hojaComp.getRow(fila).getCell(columna + 1).font       = fuenteTituloCortes;
+      hojaComp.getRow(fila).getCell(columna + 1).alignment  = alineacionDerecha;
+      fila++;
+      
+      const comp = this.comparativoPorIdCuota(id, cuotaComparativoReporte);
+      comp.forEach((c, i) => {
+        let col = columna;
+        c.datos.forEach((d, j) => {
+          if(j % 2 == 0){
+            hojaComp.getRow(fila).getCell(col).value = parseFloat(d.toFixed(2));
+            hojaComp.getRow(fila).getCell(col).alignment = alineacionIzquierda;
+          }
+          else {
+            hojaComp.getRow(fila).getCell(col).value = parseFloat((d * 100).toFixed(2)) + ' %';
+            hojaComp.getRow(fila).getCell(col).alignment = alineacionDerecha;
+          }
+          col++;
+        });
+        fila++;
+      });
+      
+      fila += 2;
+      hojaComp.getRow(fila).getCell(columna).value          = "Kg Prom.";
+      hojaComp.getRow(fila).getCell(columna).font           = fuenteTituloCortes;
+      hojaComp.getRow(fila).getCell(columna).alignment      = alineacionIzquierda;
+      hojaComp.getColumn(columna).width                     = 10;
+      hojaComp.getRow(fila).getCell(columna + 1).value      = "Rend. Prom.";
+      hojaComp.getRow(fila).getCell(columna + 1).font       = fuenteTituloCortes;
+      hojaComp.getRow(fila).getCell(columna + 1).alignment  = alineacionDerecha;
+      hojaComp.getColumn(columna + 1).width                 = 10;
+      
+      fila++
+      const cmpNc = this.comparativoPorIdCuota(id, noCuotaComparativoReporte);
+      cmpNc.forEach((c, i) => {
+        let col = columna;
+        c.datos.forEach((d, j) => {
+          if(j % 2 == 0) {
+            hojaComp.getRow(fila).getCell(col).value = parseFloat(d.toFixed(2));
+            hojaComp.getRow(fila).getCell(col).alignment = alineacionIzquierda;
+          }  else {
+            hojaComp.getRow(fila).getCell(col).value = parseFloat((d * 100).toFixed(2)) + ' %';
+            hojaComp.getRow(fila).getCell(col).alignment = alineacionDerecha;
+          }
+          col++;
+        });
+        fila++;
+      });
+      hojaComp.getColumn(columna + 2).width = 3;
+      columna += 3;
+    });
+    hojaComp.getColumn(2).width = 30;
+  }
+
+  comparativoPorIdCuota(id: number, c: ComparativoReporte[]): ComparativoReporte[] {
+    return c.filter(c => c.idCuota == id);
   }
 }
