@@ -59,6 +59,7 @@ import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/
 import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
 
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
+import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 
 
 
@@ -84,6 +85,7 @@ const routes: Routes = [
     { path: 'produccion/resumenDesosadoMarel', component: ResumenMarelComponent},
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
+    { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },

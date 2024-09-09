@@ -1,5 +1,5 @@
-export const urlAPI: string = "http://192.168.0.107:82/api/";
-// export const urlAPI: string = "http://localhost:5205/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -201,3 +201,13 @@ export const urlGetListaDeLecturas: string = urlAbasto + "getListaDeLecturas"
 export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
 export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
 
+// Reporte Cuota
+export const urlLoteEntrada: string = urlAPI + "LoteEntrada/";
+export const urlCajaLote: string = urlAPI + "CajaLote/";
+export const urlGetLotesEntrada: string = urlLoteEntrada + "GetLotesEntradaAsync";
+export const urlGetCajasLote: string = urlCajaLote + "GetLotesEntradaAsync";
+export const urlReporteCuota: string = urlAPI + "ReporteCuota/";
+export const urlConfReporteCuota: string = urlReporteCuota + "GetConfReporteCuotaAsync";
+export const urlTipoCuota: string = urlReporteCuota + "GetTipoCuotaAsync";
+export const urlLotes: string = urlReporteCuota + "GetLotesAsync";
+export const urlQamarks: string = urlReporteCuota + "GetQamarks";

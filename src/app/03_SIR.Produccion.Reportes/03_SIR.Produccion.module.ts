@@ -17,7 +17,7 @@ import { DetalleCamarasComponent } from './pages/detalle-camaras/detalle-camaras
 import { ControlCuartosComponent } from './pages/control-cuartos/control-cuartos.component';
 import { PrimeNgModule } from "../prime-ng/prime-ng.module";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SharedModule } from "../shared/shared.module";
 import { MenuComponent } from './pages/stock-cajas/pages/menu/menu.component';
 import { CrearPedidoComponent } from './pages/stock-cajas/pages/crear-pedido/crear-pedido.component';
@@ -32,6 +32,8 @@ import { PopUpCantidadComponent } from './pages/stock-cajas/components/pop-up-ca
 import { PopUpEditarCantidadComponent } from './pages/stock-cajas/components/pop-up-editar-cantidad/pop-up-editar-cantidad.component';
 import { PopUpTamanotipoComponent } from './pages/stock-cajas/components/pop-up-tamanotipo/pop-up-tamanotipo.component';
 import { EntregaNoSolicitadaComponent } from './pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
+import { ReporteCuotaComponent } from './pages/cuota/pages/reporte-cuota/reporte-cuota.component';
+import { ReporteCuotaDisplayComponent } from './pages/cuota/components/reporte-cuota-display/reporte-cuota-display.component';
 
 
 
@@ -65,7 +67,9 @@ import { EntregaNoSolicitadaComponent } from './pages/stock-cajas/pages/entrega-
         PopUpCantidadComponent,
         PopUpEditarCantidadComponent,
         PopUpTamanotipoComponent,
-        EntregaNoSolicitadaComponent
+        EntregaNoSolicitadaComponent,
+        ReporteCuotaComponent,
+        ReporteCuotaDisplayComponent
     ],
     exports: [
         MainPageComponent
@@ -75,6 +79,7 @@ import { EntregaNoSolicitadaComponent } from './pages/stock-cajas/pages/entrega-
         CommonModule,
         FormsModule,
         SharedModule,
+        ReactiveFormsModule
     ]
 })
 
