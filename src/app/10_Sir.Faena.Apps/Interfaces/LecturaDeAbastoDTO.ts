@@ -3,4 +3,5 @@ export interface LecturaDeAbastoDTO{
   idAnimal: string
   secuencial: string
   operacion: string
+  usuarioLogueado: string
 }

@@ -1,3 +1,4 @@
+import { Data } from '@angular/router';
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -9,8 +10,8 @@ import { AbastoService } from '../../Services/AbastoService.service';
 import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
 import { LecturaDeAbastoDTO } from '../../Interfaces/LecturaDeAbastoDTO';
 import { ModalAbastoComponent } from './ModalFormularioAbasto/modal-abasto.component';
-import { ConfiguracionAbastoService } from '../../Services/configuracionAbasto.service';
-import { ConfiguracionesDTO } from '../../Interfaces/configuracionesDTO';
+import { ConfiguracionesDTO } from '../../Interfaces/ConfiguracionesDTO';
+import { GetInformacionService } from '../../helpers/Data-Local-Storage/getInformacion.service';
 
 @Component({
   selector: 'app-reporte-faena',
@@ -34,40 +35,37 @@ export class FormularioAbastoComponent {
   public totalLecturas: number = 0
 
 
-   //Tipos de Datos
-   dataInicioLecturasDeMedia: LecturaDeAbastoDTO[] = [];
+  //Tipos de Datos
+  dataInicioLecturasDeMedia: LecturaDeAbastoDTO[] = [];
 
   constructor(
     private dialog: MatDialog,
     private _utilidadesServicicio: UtilidadesService,
-    private _lecturaDeMediaService : AbastoService,
-    private _configuracionesAbasto: ConfiguracionAbastoService
+    private _abastoService : AbastoService,
+    private _configuracionService: GetInformacionService
   ){}
 
-  // Obtener configuraciones desde la API y guardarlas en localStorage
-  GetConfiguraciones() {
-    this._configuracionesAbasto.GetParametrosSeccionAbasto().subscribe({
-      next: (data) => {
-        this.parametrosDeConfiguracion = data.resultado;
-        localStorage.setItem('configuraciones', JSON.stringify(this.parametrosDeConfiguracion));
-        this.setConfiguraciones();
-      },
-      error: (e) => {
-        this._utilidadesServicicio.mostrarAlerta("Error al obtener los datos", "Error");
-      }
-    });
-  }
-
-   // Cargar configuraciones desde localStorage o API
-   loadConfiguraciones() {
-    const configuracionDesdeLocalStorage = localStorage.getItem('configuraciones');
-    if (configuracionDesdeLocalStorage) {
-      this.parametrosDeConfiguracion = JSON.parse(configuracionDesdeLocalStorage);
+   // Obtener configuraciones desde el helper
+   async GetConfiguraciones() {
+    try {
+      this.parametrosDeConfiguracion = await this._configuracionService.obtenerConfiguraciones();
+      this.loadConfiguraciones();
       this.setConfiguraciones();
-    } else {
-      this.GetConfiguraciones();
+      this.establecerOperacionValor();
+    } catch (e) {
+      // El error lo maneje en el helper
     }
   }
+
+  // Cargar configuraciones desde localStorage o API
+  loadConfiguraciones() {
+    try {
+      this.parametrosDeConfiguracion = this._configuracionService.cargarConfiguraciones();
+    } catch (e) {
+      this.GetConfiguraciones(); // Intentar obtener desde la API si no hay en localStorage
+    }
+  }
+
 
   // Establecer configuraciones en variables del componente
   setConfiguraciones() {
@@ -75,25 +73,6 @@ export class FormularioAbastoComponent {
     this.usuarioDeSalida = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 4)?.parametroDeConfiguracion!;
     this.operacionEntrada = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 5)?.parametroDeConfiguracion!;
     this.operacionSalida = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 6)?.parametroDeConfiguracion!;
-  }
-
-   //Tabla
-  dataListaDeLecturas = new MatTableDataSource(this.dataInicioLecturasDeMedia);
-  @ViewChild(MatPaginator) paginacionTabla! : MatPaginator;  
-
-  ngOnInit(): void {
-    this.establecerOperacionValor();
-    this.GetListaDeLecturas();
-    this.GetConfiguraciones();
-  }
-
-  ngAfterViewInit(): void {
-    this.dataListaDeLecturas.paginator = this.paginacionTabla;
-  }
-
-  aplicarFiltroTabla(event: Event){
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataListaDeLecturas.filter = filterValue.trim().toLocaleLowerCase();
   }
 
    //Usuario Logueado
@@ -111,46 +90,72 @@ export class FormularioAbastoComponent {
     else
     {
       this.valorDeOperacion = 'Operación desconocida';
-    }
+    }   
   }
 
-// Obtiene y filtra las lecturas según el tipo de operación del usuario
-GetListaDeLecturas() {
-  this._lecturaDeMediaService.GetLecturasDeAbasto().subscribe({
-    next: (data) => {
-      if (data.esCorrecto && data.resultado.length > 0) {
-        this.dataInicioLecturasDeMedia = data.resultado; // Asignar los datos recibidos
+   //Tabla
+  dataListaDeLecturas = new MatTableDataSource(this.dataInicioLecturasDeMedia);
+  @ViewChild(MatPaginator) paginacionTabla! : MatPaginator;  
 
-        // Filtrar los datos segun el usuario logueado
-        if (this.usuarioLogueado == this.usuarioDeEntrada) {
-          this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.operacion == this.operacionEntrada);
-        } else if (this.usuarioLogueado == this.usuarioDeSalida) {
-          this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.operacion == this.operacionSalida);
+
+  ngAfterViewInit(): void {
+    this.dataListaDeLecturas.paginator = this.paginacionTabla;
+  }
+
+  aplicarFiltroTabla(event: Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataListaDeLecturas.filter = filterValue.trim().toLocaleLowerCase();
+  }
+
+  // Obtiene y filtra las lecturas según el tipo de operación del usuario
+  GetListaDeLecturas() {
+
+    this._abastoService.GetLecturasDeAbasto().subscribe({
+      next: (data) => {
+        if (data.esCorrecto && data.resultado.length > 0) {
+          this.dataInicioLecturasDeMedia = data.resultado; 
+
+          // Filtrar los datos segun el usuario logueado
+          if (this.usuarioLogueado == this.usuarioDeEntrada || this.usuarioLogueado == this.usuarioDeSalida) {
+            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.usuarioLogueado === this.usuarioLogueado);        
+          } else {          
+            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia;
+          }
+
+          this.totalLecturas = this.dataListaDeLecturas.data.length;
         } else {
-          this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia;
+          this._utilidadesServicicio.mostrarAlerta("No se encontraron datos", "Información");
         }
-
-        this.totalLecturas = this.dataListaDeLecturas.data.length;
-      } else {
-        this._utilidadesServicicio.mostrarAlerta("No se encontraron datos", "Información");
+      },
+      error: (e) => {
+        console.error(e);
+        this._utilidadesServicicio.mostrarAlerta("Error al obtener los datos", "Error");
       }
-    },
-    error: (e) => {
-      console.error(e);
-      this._utilidadesServicicio.mostrarAlerta("Error al obtener los datos", "Error");
+    });
+  }
+
+
+  async InsertarLecturaDeMedia(idMedia: string) {
+    if(this.usuarioLogueado == this.usuarioDeSalida){
+      try {
+        const respuesta = await this._abastoService.GetLecturaDeAbastoFiltrada(idMedia).toPromise();
+        if(respuesta?.esCorrecto){
+          idMedia = respuesta.resultado.lecturaDeMedia;
+        }
+      } catch (error) {
+        this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
+        return; 
+      }
     }
-  });
-}
 
-
-  InsertarLecturaDeMedia(idMedia: string) {
-    this._lecturaDeMediaService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion).subscribe({
+    this._abastoService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion, this.usuarioLogueado).subscribe({
       next: (data) => {
         if (data.esCorrecto) {
-          this.GetListaDeLecturas(); 
           this.codigoRecibido = ''; 
+          this.GetListaDeLecturas();           
         } else {
           this._utilidadesServicicio.mostrarAlerta('No se puede insertar los datos', 'Error');
+          this.codigoRecibido = '';
         }
       },
       error: (e) => {
@@ -175,6 +180,12 @@ GetListaDeLecturas() {
         this.GetListaDeLecturas();
       }
     });
+  }
+
+
+  ngOnInit(): void {
+    this.GetConfiguraciones();    
+    this.GetListaDeLecturas();    
   }
 }
 

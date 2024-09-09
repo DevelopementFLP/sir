@@ -25,12 +25,12 @@
     font-weight: 700;
 }
 
-:host >>> .p-toast-message-custom-error {
+:host .p-toast-message-custom-error {
     background-color: #FDEDEC;
     border: solid #FF5757;
     border-width: 0 0 0 6px;
     color: #FF5757;
   }
-:host >>> .p-toast-icon-close {
+:host .p-toast-icon-close {
     color: #FF5757;
   }
