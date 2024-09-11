@@ -1,0 +1,117 @@
+
+<div>
+    <div class="flex-container" style="margin:5px 60px 5px 60px">
+        <div>
+            <h1>Cajas Con Error</h1>
+        </div>
+        <div>
+            <button mat-raised-button color="accent" (click)="generarReporteExel()" style="margin-left: 2rem;">
+                <mat-icon mat-list-icon>download</mat-icon> Exportar Excel
+            </button>
+        </div>
+    </div>
+
+    <p-tabView>
+        
+        <mat-card style="margin:20px 40px 40px 40px">
+            <mat-divider></mat-divider>
+            
+            <p-table
+                [value]="dataListaDeCajasConError"
+                [paginator]="true"
+                [rows]="10"
+                [rowsPerPageOptions]="[5, 10, 20]"
+                [globalFilterFields]="['estado']"
+                [scrollable]="true"
+                scrollHeight="650px"
+                dataKey="idCaja">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            Id Caja
+                            <p-columnFilter
+                                type="text"
+                                field="idCaja"
+                                placeholder="Buscar por Id"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Id QR
+                            <p-columnFilter
+                                type="text"
+                                field="idQr"
+                                placeholder="Buscar por IdQr"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Codigo
+                            <p-columnFilter
+                                type="text"
+                                field="codigo"
+                                placeholder="Buscar por Codigo"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Nombre                            
+                        </th>
+                        <th>
+                            Peso
+                        </th>
+                        <th>
+                            CL
+                        </th>
+                        <th>
+                            Registro
+                        </th>
+                        <th>
+                            Estado
+                            <p-columnFilter
+                                type="text"
+                                field="estado"
+                                placeholder="Buscar por nombre"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Fecha De Creado 
+                            <p-columnFilter
+                                type="text"
+                                field="fechaDeCreado"
+                                placeholder="Buscar por fecha"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                      
+                        <th style="margin: auto;">
+                            
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-element>
+                    <tr>
+                        <td>{{element.idCaja}}</td>
+                        <td>{{element.idQr}}</td>
+                        <td>{{element.codigo}}</td>
+                        <td>{{element.nombre}}</td>
+                        <td>{{element.peso}}</td>
+                        <td>{{element.cl}}</td>
+                        <td>{{element.registro}}</td>
+                        <td>{{element.estado}}</td>
+                        <td>{{element.fechaDeCreado}}</td>                        
+                        <td >
+                            <button pButton icon="pi pi-eye" (click)="VerMovimientosDecajas(element.idCaja)" class="Botones_Tabla_Dispositivo"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </mat-card>
+    </p-tabView>
+</div>
+
+
+

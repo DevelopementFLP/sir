@@ -23,7 +23,7 @@ import { DispositivosService } from '../../../Services/DispositivoService.servic
 import { FormatoService } from 'src/app/09_SIR.Dispositivos.Apps/Services/FormatoService.service';
 import { TiposDispositivosService } from 'src/app/09_SIR.Dispositivos.Apps/Services/TiposDispositivos.service';
 import { UbicacionesService } from 'src/app/09_SIR.Dispositivos.Apps/Services/UbicacionesService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 
 
 @Component({

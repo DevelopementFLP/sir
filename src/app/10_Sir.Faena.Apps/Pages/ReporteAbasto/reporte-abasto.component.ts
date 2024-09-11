@@ -6,11 +6,12 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { AbastoService } from '../../Services/AbastoService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { ListaDeLecturasDTO } from '../../Interfaces/ListaDeLecturasDTO';
 
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { MetodosExcelFaenaService } from '../../helpers/Metodos-Excel-Faena/metodos-excel-faena.service';
 
 @Component({
   selector: 'app-reporte-abasto',
@@ -45,7 +46,8 @@ export class ReporteAbastoComponent {
   constructor(
     private _utilidadesServicicio: UtilidadesService,
     private _lecturaDeMediaService : AbastoService,
-    private http: HttpClient
+    private http: HttpClient,
+    private _metodosDeExcelService: MetodosExcelFaenaService
   ){}
 
   formatoFecha(date: Date): string {
@@ -110,7 +112,7 @@ export class ReporteAbastoComponent {
         this.dataListaDeLecturasAbasto.data.forEach((lectura) => {
             totalPesos += lectura.peso;
 
-            if(lectura.proveedor == "Manual")
+            if(lectura.operacion.includes("Manual"))
             {
               totalRegistrosSinEtiqueta += 1
             }
@@ -170,45 +172,6 @@ async exportarAExcel(): Promise<void> {
     const stockActual = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
 
 
-    // Agregar encabezado      
-    worksheetAbasto.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeEncabezadoNQF = worksheetAbasto.getCell('B1');
-    textoDeEncabezadoNQF.value = 'REPORTE ABASTO';
-    textoDeEncabezadoNQF.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeEncabezadoNQF.font = { bold: true, italic: true };
-    textoDeEncabezadoNQF.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-
-    // Agregar encabezado Hoja de Entrada      
-    WorksheetEntradas.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeEncabezadoEntradas = WorksheetEntradas.getCell('B1');
-    textoDeEncabezadoEntradas.value = 'Entradas al Abasto';
-    textoDeEncabezadoEntradas.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeEncabezadoEntradas.font = { bold: true, italic: true };
-    textoDeEncabezadoEntradas.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-
-    // Agregar encabezado Hoja de Salida      
-    WorksheetSalidas.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeEncabezadoSalidas = WorksheetSalidas.getCell('B1');
-    textoDeEncabezadoSalidas.value = 'Salidas al Abasto';
-    textoDeEncabezadoSalidas.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeEncabezadoSalidas.font = { bold: true, italic: true };
-    textoDeEncabezadoSalidas.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-
     // Agregar encabezados de columna
     this.customHeaders.forEach((header, index) => {
       worksheetAbasto.getCell(startRow, startColumn + index).value = header;
@@ -240,26 +203,29 @@ async exportarAExcel(): Promise<void> {
         WorksheetSalidas.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
       });
     });
-    
-   
-    worksheetAbasto.getCell('J3').value = 'Suma de Pesos por Proveedor';
-    worksheetAbasto.getCell('J3').font = { bold: true };
 
-    this.CreatTablasDeContenido("sumaDePesosPorClasificacion", "J4", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
-    this.CreatTablasDeContenido("sumaDePesosPorEntradas", "J4", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
-    this.CreatTablasDeContenido("sumaDePesosPorSalidas", "J4", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))
+    //Combina las celdas y agrega el enxabezado con el mismo formato
+    this._metodosDeExcelService.AgregarEncabezadoDeHojas(worksheetAbasto, "Stock Actual")
+    this._metodosDeExcelService.AgregarEncabezadoDeHojas(WorksheetEntradas, "Entradas En Abasto")
+    this._metodosDeExcelService.AgregarEncabezadoDeHojas(WorksheetSalidas, "Salidas En Abasto")
+    
+
+    //Crear la tabla con los datos
+    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "J4", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
+    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "J4", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
+    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "J4", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))
 
 
     // Ajustar el ancho de las columnas para cada hoja
-    this.AdjustColumnWidths(worksheetAbasto);
-    this.AdjustColumnWidths(WorksheetEntradas);
-    this.AdjustColumnWidths(WorksheetSalidas);    
+    this._metodosDeExcelService.AdjustColumnWidths(worksheetAbasto);
+    this._metodosDeExcelService.AdjustColumnWidths(WorksheetEntradas);
+    this._metodosDeExcelService.AdjustColumnWidths(WorksheetSalidas);    
 
     // Insertar el logo en todas las hojas
-    await this.InsertarLogoEnLasHojas(workbookAbasto, worksheetAbasto);
-    await this.InsertarLogoEnLasHojas(workbookAbasto, WorksheetEntradas);
-    await this.InsertarLogoEnLasHojas(workbookAbasto, WorksheetSalidas);
- 
+    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, worksheetAbasto);
+    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, WorksheetEntradas);
+    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, WorksheetSalidas);
+
     const fechaActual = new Date();
     const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds();
 
@@ -279,71 +245,7 @@ async exportarAExcel(): Promise<void> {
       }
     });
     return sumaPorClasificacion;
-  }
+  }  
 
-  CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: number }): void {
-    // Definir la tabla
-    sheet.addTable({
-      name: nombreDeTabla,
-      ref: celdaDeInicio, 
-      headerRow: true,
-      totalsRow: true, 
-      style: {
-        theme: 'TableStyleDark3',
-        showRowStripes: true,
-      },
-      columns: [
-        { name: nombreDeColumna1, filterButton: true },
-        { name: nombreDeColumna2, filterButton: false },
-      ],
-      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [clasificacion, sumaPorClasificacion[clasificacion]]),
-    });
-  }
-
-  //Metodo para Insertar el logo en las hojas
-  async InsertarLogoEnLasHojas(Workbook: ExcelJS.Workbook, sheet: ExcelJS.Worksheet) {
-    try {
-      sheet.mergeCells('A1:A3'); 
-      sheet.getColumn('A').width = 20; 
-
-      const logoUrl = 'assets/images/logo_relleno_azul.png'; // Ruta del logo
-      const imageBuffer = await this.http.get(logoUrl, { responseType: 'arraybuffer' }).toPromise();
-  
-      // Agregar la imagen al libro de trabajo
-      const imageId = Workbook.addImage({
-        buffer: imageBuffer,
-        extension: 'png',
-      });             
-  
-      // Insertar la imagen en la celda A1
-      sheet.addImage(imageId, {
-        tl: { col: 0, row: 0 }, // Coordenadas de la esquina superior izquierda
-        ext: { width: 130, height: 55 }, // Tamaño de la imagen
-        editAs: 'oneCell'
-      });
-  
-    } catch (error) {
-      console.error('Error al insertar el logo:', error);
-    }
-  }
-
-
-  //Metodo para ajustar el ancho de las columnas
-  AdjustColumnWidths(sheet: ExcelJS.Worksheet) {
-    try {
-      sheet.columns.forEach(column => {
-        let maxLength = 10; // Longitud mínima de las celdas
-        column.eachCell!({ includeEmpty: true }, cell => {
-          const cellLength = cell.value ? cell.value.toString().length : 0;
-          if (cellLength > maxLength) {
-            maxLength = cellLength;
-          }
-        });
-        column.width = maxLength + 2; // Agregar un poco de espacio extra
-      });      
-    } catch (error) {
-      console.error('Error al ajustar las columnas:', error);
-    }    
-  }
 }
   

@@ -7,7 +7,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormatoDispositivoDTO } from '../../Interfaces/FormatosDTO';
 import { FormatoService } from '../../Services/FormatoService.service';
 
-import { UtilidadesService } from '../../Utilidades/UtilidadesService.service';
+import { UtilidadesService } from '../../Utilities/UtilidadesService.service';
 
 
 @Component({

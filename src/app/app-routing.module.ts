@@ -57,6 +57,8 @@ import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reporte
 
 import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/reporte-abasto.component';
 import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
+import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasConError/lecturas-con-error.component';
+import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteDeMedias/reporte-de-medias.component';
 
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
@@ -120,9 +122,11 @@ const routes: Routes = [
     { path: 'configuracion', component:ConfiguracionMainPageComponent},
     { path : 'dispositivos/Dispositivo', component: DispositvosComponent},
     { path: 'dispositivos/LecturasDispositivos', component: LecturasDispositivosComponent},
+    { path: 'dispositivos/LecturasConError', component: LecturasConErrorComponent},
     { path: 'faena/MermaPorPeso', component: MermaPorPesoComponent},
     { path: 'faena/lecturasAbasto', component: FormularioAbastoComponent},
     { path: 'faena/dashboardAbasto', component: ReporteAbastoComponent},
+    {path: 'faena/ReporteDeMedias', component: ReporteDeMediasComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},

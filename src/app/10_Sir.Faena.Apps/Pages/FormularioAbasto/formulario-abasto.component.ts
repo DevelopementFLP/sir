@@ -7,7 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 
 
 import { AbastoService } from '../../Services/AbastoService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { LecturaDeAbastoDTO } from '../../Interfaces/LecturaDeAbastoDTO';
 import { ModalAbastoComponent } from './ModalFormularioAbasto/modal-abasto.component';
 import { ConfiguracionesDTO } from '../../Interfaces/ConfiguracionesDTO';
