@@ -1,0 +1,78 @@
+<h1 mat-dialog-title>Detalles de Lecturas</h1>
+<div>
+    <div mat-dialog-content>
+      <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataListaLecturas">
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dispositivo">
+            <th mat-header-cell *matHeaderCellDef> Dispositivo </th>
+            <td mat-cell *matCellDef="let element"> {{element.dispositivo}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ubicacion">
+            <th mat-header-cell *matHeaderCellDef> Ubicación </th>
+            <td mat-cell *matCellDef="let element"> {{element.ubicacion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lectura">
+            <th mat-header-cell *matHeaderCellDef> Lectura </th>
+            <td mat-cell *matCellDef="let element"> {{element.lectura}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="idCaja">
+            <th mat-header-cell *matHeaderCellDef> Id Caja </th>
+            <td mat-cell *matCellDef="let element"> {{element.idCaja}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnasTablaLecturas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnasTablaLecturas;"></tr>
+
+        </table>
+      </div>
+    </div>
+
+    <div mat-dialog-content *ngIf="dataListaLecturasExpo.data.length > 0">
+      <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataListaLecturasExpo">
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Esport Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dispositivo">
+            <th mat-header-cell *matHeaderCellDef> Palletizado </th>
+            <td mat-cell *matCellDef="let element"> {{element.dispositivo}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ubicacion">
+            <th mat-header-cell *matHeaderCellDef> Palletizado </th>
+            <td mat-cell *matCellDef="let element"> {{element.ubicacion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lectura">
+            <th mat-header-cell *matHeaderCellDef> Container </th>
+            <td mat-cell *matCellDef="let element"> {{element.lectura}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="idCaja">
+            <th mat-header-cell *matHeaderCellDef> Id Pallet </th>
+            <td mat-cell *matCellDef="let element"> {{element.idCaja}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnasTablaLecturaExpo"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnasTablaLecturaExpo;"></tr>
+        </table>
+      </div>
+    </div>
+  <div mat-dialog-actions style="margin-left: 20px;">
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </div>
+
+</div>
+

@@ -28,4 +28,15 @@
 }
 
 
+.mostrarEnPAntallaDePC {
+  display: block;
+}
+
+@media (max-width: 600px) { /* Ajusta el valor según el tamaño que consideres para dispositivos móviles */
+  .mostrarEnPAntallaDePC{
+    display: none;
+  }
+}
+
+
 

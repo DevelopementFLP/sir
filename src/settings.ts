@@ -189,6 +189,7 @@ export const urlDeleteTipoDisp: string = urlTiposDispositivo + "eliminarTipoDisp
 export const urlLecturasDispositivo: string = urlAPI + "ListaDeCajas/"
 export const urlGetLecturaDisp: string = urlLecturasDispositivo + "listaDeLecturas"
 export const urlGetLecturaDispExpo: string = urlLecturasDispositivo + "listaDeExpoCarga"
+export const urlGetListaDeCajasConError: string = urlLecturasDispositivo + "listaDeCajasConError"
 
 //Merma por Peso
 export const urlMermaPorPeso: string = urlAPI + "MermaPorPeso/"
@@ -201,3 +202,8 @@ export const urlGetLecturaFiltrada: string = urlAbasto + "getLecturaDeQr"
 export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
 export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
 
+//Faena
+export const urlFaena: string = urlAPI + "ReporteDeMedias/"
+export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
+export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
+export const urlGetReporteDeMediasGrade: string = urlFaena + "reporteDeMediasPorGrade"

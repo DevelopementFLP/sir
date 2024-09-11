@@ -48,6 +48,8 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MermaPorPesoComponent } from './layout/Reportes/MermaDePesos/merma-por-peso.component';
+import { LecturasConErrorComponent } from './layout/Reportes/LecturasConError/lecturas-con-error.component';
+import { ModalCajaConErrorComponent } from './modales/modal-caja-con-error/modal-caja-con-error.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,10 @@ import { MermaPorPesoComponent } from './layout/Reportes/MermaDePesos/merma-por-
     ModalTipoDispositivoComponent,
     ModalformatoComponent,
     LecturasDispositivosComponent,
-    MermaPorPesoComponent
+    MermaPorPesoComponent,
+    LecturasConErrorComponent,
+    LecturasConErrorComponent,
+    ModalCajaConErrorComponent
   ],
   imports: [
     CommonModule,

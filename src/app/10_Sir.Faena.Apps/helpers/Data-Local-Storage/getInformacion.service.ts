@@ -1,7 +1,7 @@
 import { ConfiguracionesDTO } from './../../Interfaces/ConfiguracionesDTO';
 import { Injectable } from '@angular/core';
 import { ConfiguracionAbastoService } from '../../Services/configuracionAbasto.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 
 @Injectable({
   providedIn: 'root'

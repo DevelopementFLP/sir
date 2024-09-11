@@ -1,5 +1,5 @@
-import { filter } from 'rxjs';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+
+import { Component, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,10 +10,13 @@ import { MermaPorPesoDTO } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/Mer
 
 //Servicios
 import { MermaPorPesoService } from 'src/app/09_SIR.Dispositivos.Apps/Services/MermaPorPesoService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
+import { MetodosExcelMermaService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Merma/metodos-excel-merma.service';
 
 import * as ExcelJS from 'exceljs';
 import { Chart } from 'chart.js';
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-merma-por-peso',
@@ -53,7 +56,8 @@ export class MermaPorPesoComponent {
   constructor(
     private dialog: MatDialog,
     private _utilidadesServicicio: UtilidadesService,
-    private _lecturasMermaPorPesoServicio : MermaPorPesoService
+    private _lecturasMermaPorPesoServicio : MermaPorPesoService,
+    private _metodosDeExelMerma: MetodosExcelMermaService
   ){}
 
   ngAfterViewInit(): void {
@@ -109,177 +113,6 @@ export class MermaPorPesoComponent {
     return `${year}${month}${day} 23:59:59`;
 }
 
-//Orden de columnas en excel
-customHeaders: string[] = [
-  'Fecha de Balanza',
-  'Peso Frio',
-  '% de Merma',
-  '% Menudencia',
-  'Diferencia Peso',
-  ' ',
-  'Fecha E+V',
-  'Peso Caliente',
-  'Etiqueta',
-  'CarcassID',
-  'Lado Animal',
-  'Tropa',
-  'Proveedor'
-];
-
-
-// Mapea los encabezados a los nombres de las columnas originales para moverlos como quiera
-columnMapping: { [key: string]: string } = {
-  'Fecha de Balanza': 'fechaDeBalanza',
-  'Peso Frio': 'pesoLocal',
-  '% de Merma': 'porsentajeDeMerma',
-  '% Menudencia': 'porsentajePorMenudencia',
-  'Diferencia Peso': 'diferenciadePeso',
-  'Fecha E+V': 'fechaDeInnova',
-  'Peso Caliente': 'pesoInnova',
-  'Etiqueta': 'etiqueta',
-  'CarcassID': 'carcassID',
-  'Lado Animal': 'ladoAnimal',
-  'Tropa': 'tropa',
-  'Proveedor': 'proveedor'
-};
-
-exportarExcel() {
-
-  // Crear una nueva instancia de ExcelJS
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('Merma por Peso');
-  //var sheet = workbook.addWorksheet("hoja libre"); agregar otra hoja
-
-
-  const encabezadoConvinadoNQF = worksheet.mergeCells('A1:E2'); // Combina las celdas
-    const textoDeceldaConbinadaNQF = worksheet.getCell('A1');
-    textoDeceldaConbinadaNQF.value = 'NQF';
-    textoDeceldaConbinadaNQF.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeceldaConbinadaNQF.font = { bold: true, italic: true}
-    textoDeceldaConbinadaNQF.border = {
-      top: {style:'thin'},
-      left: {style:'thin'},
-      bottom: {style:'thin'},
-      right: {style:'thin'}
-    }
-
-  const encabezadoConbinadoEmasV = worksheet.mergeCells('G1:M2');
-    const textoDeceldaConbinadaEmasV = worksheet.getCell('G1');
-    textoDeceldaConbinadaEmasV.value = 'E+V Toma de Foto';
-    textoDeceldaConbinadaEmasV.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeceldaConbinadaEmasV.font = { bold: true, italic: true}
-    textoDeceldaConbinadaEmasV.border ={
-      top: {style:'thin'},
-      left: {style:'thin'},
-      bottom: {style:'thin'},
-      right: {style:'thin'}
-    }
-
-  const headerRow = worksheet.addRow(this.customHeaders);
-
-  // Agregar los datos
-  this.dataListaLecturasMerma.data.forEach(item => {
-    const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof MermaPorPesoDTO] || '');
-    worksheet.addRow(row);
-  });
-
-
-  //Ancho de las columnas
-  const columnWidths: { [key: string]: number } = {
-    'Fecha de Balanza': 25,
-    'Peso Frio': 15,
-    '% de Merma': 16,
-    '% Menudencia': 20,
-    'Diferencia Peso': 20,
-    'Fecha E+V': 25,
-    'Peso Caliente': 20,
-    'Etiqueta': 15,
-    'CarcassID': 15,
-    'Lado Animal': 15,
-    'Tropa': 15,
-    'Proveedor': 30,
-  };
-
-  worksheet.columns.forEach((column, index) => {
-    const header = this.customHeaders[index];
-    column.width = columnWidths[header] || 25; // Asignar ancho personalizado o 25 si no está definido
-  });
-
-
-  // Función para aplicar estilos a columnas específicas
-  const applyColumnStyles = (nombreDeEncabezado: string, colorDeFuente: string, colorDeFondo: string) => {
-    const columnIndex = this.customHeaders.indexOf(nombreDeEncabezado) + 1; // +1 porque los índices de Excel son 1-basados
-    headerRow.getCell(columnIndex).font = {
-      name: 'Calibri',
-      size: 14,
-      bold: true,
-      color: { argb: colorDeFuente }
-    };
-    headerRow.getCell(columnIndex).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: colorDeFondo }
-    };
-
-    worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-      if (rowNumber > 3) { // Comienza desde la fila 4
-        row.getCell(columnIndex).font = {
-          name: 'Calibri',
-          size: 10,
-          color: { argb: colorDeFuente },
-          bold: true
-        };
-        row.getCell(columnIndex).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: colorDeFondo }
-        };
-      }
-    });
-  };
-
-  // Aplicar estilos a las columnas específicas
-  applyColumnStyles('Peso Frio', 'FF000000', 'a4ccf0');
-  applyColumnStyles('Peso Caliente', 'FF000000', 'd34343');
-  applyColumnStyles('% de Merma', 'f6f7f9', 'a7acb1');
-
-  worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-    if (rowNumber > 3) { // Empieza desde la fila 4
-      row.eachCell({ includeEmpty: true }, (cell) => {
-        if (cell.value === 'Negativo') {
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'f18518' } // Color de fonde de la celda
-          };
-        }
-        else if (cell.value === 'Diferencia'){
-          cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'c5e79e' } // Color de fondo de la celda
-          };
-        }
-      });
-    }
-  });
-
-  const fechaActual = new Date();
-  const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds()
-
-  // Generar el archivo Excel
-  workbook.xlsx.writeBuffer().then(buffer => {
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Reporte de Merma ' + horaActual
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }).catch(error => {
-    this._utilidadesServicicio.mostrarAlerta("No se pudo generar el archivo:", "Error");
-  });
-}
 
 //Función para obtener el peso total por proveedor
 GetPesoPorProveedorGeneral(): any[] {
@@ -331,8 +164,6 @@ GetPesoPorProveedorGeneral(): any[] {
         sumaDePeso:  parseFloat(sumaDePeso.toFixed(2)) // Redondear a dos decimales
       }));
     }
-
-
 
   //Grafica y Paneles
   generarComboBoxProveedores(){
@@ -478,4 +309,132 @@ GetPesoPorProveedorGeneral(): any[] {
       this.promedioPorcentajeDeMerma = null;
     }
   }
+
+  
+  //Orden de columnas en excel
+  customHeaders: string[] = [
+    'Fecha de Balanza',
+    'Peso Frio',
+    '% de Merma',
+    '% Menudencia',
+    'Diferencia Peso',
+    ' ',
+    'Fecha E+V',
+    'Peso Caliente',
+    'Etiqueta',
+    'CarcassID',
+    'Lado Animal',
+    'Tropa',
+    'Proveedor'
+  ];
+
+
+  // Mapea los encabezados a los nombres de las columnas originales
+  columnMapping: { [key: string]: string } = {
+    'Fecha de Balanza': 'fechaDeBalanza',
+    'Peso Frio': 'pesoLocal',
+    '% de Merma': 'porsentajeDeMerma',
+    '% Menudencia': 'porsentajePorMenudencia',
+    'Diferencia Peso': 'diferenciadePeso',
+    'Fecha E+V': 'fechaDeInnova',
+    'Peso Caliente': 'pesoInnova',
+    'Etiqueta': 'etiqueta',
+    'CarcassID': 'carcassID',
+    'Lado Animal': 'ladoAnimal',
+    'Tropa': 'tropa',
+    'Proveedor': 'proveedor'
+  };
+
+  public async exportarExcel() {
+
+    // Crear una nueva instancia de ExcelJS
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Merma por Peso');
+    //var sheet = workbook.addWorksheet("hoja libre"); agregar otra hoja
+
+    this._metodosDeExelMerma.EncabezadosDeHojas(worksheet, "NQF", "A1", "E2", "A1");
+    this._metodosDeExelMerma.EncabezadosDeHojas(worksheet, "E+V Toma de Foto", "G1", "M2", "G1");
+
+
+    const headerRow = worksheet.addRow(this.customHeaders);
+
+    // Agregar los datos
+    this.dataListaLecturasMerma.data.forEach(item => {
+      const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof MermaPorPesoDTO] || '');
+      worksheet.addRow(row);
+    });
+
+
+    this._metodosDeExelMerma.AdjustColumnWidths(worksheet);
+
+
+    // Función para aplicar estilos a columnas específicas
+    const applyColumnStyles = (nombreDeEncabezado: string, colorDeFuente: string, colorDeFondo: string) => {
+      const columnIndex = this.customHeaders.indexOf(nombreDeEncabezado) + 1; // +1 porque los índices de Excel son 1-basados
+      headerRow.getCell(columnIndex).font = {
+        name: 'Calibri',
+        size: 14,
+        bold: true,
+        color: { argb: colorDeFuente }
+      };
+      headerRow.getCell(columnIndex).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: colorDeFondo }
+      };
+
+     
+
+      worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+        if (rowNumber > 3) { // Comienza desde la fila 4
+          row.getCell(columnIndex).font = {
+            name: 'Calibri',
+            size: 10,
+            color: { argb: colorDeFuente },
+            bold: true
+          };
+          row.getCell(columnIndex).fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: colorDeFondo }
+          };
+        }
+      });
+
+       // Aplicar estilos a las columnas específicas
+       applyColumnStyles('Peso Frio', 'FF000000', 'a4ccf0');
+       applyColumnStyles('Peso Caliente', 'FF000000', 'd34343');
+       applyColumnStyles('% de Merma', 'f6f7f9', 'a7acb1');
+    };
+    
+
+    worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+      if (rowNumber > 3) { // Empieza desde la fila 4
+        row.eachCell({ includeEmpty: true }, (cell) => {
+          if (cell.value === 'Negativo') {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'f18518' } // Color de fonde de la celda
+            };
+          }
+          else if (cell.value === 'Diferencia'){
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'c5e79e' } // Color de fondo de la celda
+            };
+          }
+        });
+      }
+    });
+
+    const fechaActual = new Date();
+    const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds()
+
+    // Guardar el archivo
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), 'Reporte_Merma ' + horaActual + '.xlsx');
+  }
+
 }
