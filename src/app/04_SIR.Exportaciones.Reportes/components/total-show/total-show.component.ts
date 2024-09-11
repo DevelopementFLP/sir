@@ -1,18 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DataKosher } from '../../Interfaces/DataKosher.interface';
+import { DataKosherAgrupada } from '../../Interfaces/DataKosherAgrupada.interface';
 
 @Component({
   selector: 'total-show',
   templateUrl: './total-show.component.html',
   styleUrls: ['./total-show.component.css']
 })
-export class TotalShowComponent {
+export class TotalShowComponent implements OnInit {
   @Input() datosKosher: DataKosher[] = [];
   @Input() titulo: string = '';
+  @Input() totalPalletsCount: number = 0;
+  
+  dataAgrupada: DataKosherAgrupada[] = [];
 
-  totalPallets(): number {
-    const pallets = Array.from(new Set(this.datosKosher.map(d => d.idPallet)));
-    return pallets.length;
+  ngOnInit(): void {
+    
   }
 
   totalKilosNetos(): number {

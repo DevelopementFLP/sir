@@ -1,0 +1,26 @@
+.nuevos__footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+}
+
+.footer--botonera {
+    display: flex;
+    justify-content: flex-start;
+    gap: 2%;
+}
+
+.data--form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.nuevos {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}

@@ -1,0 +1,108 @@
+.reporte__display {
+    font-family: "Courier New", monospace;
+}
+
+.fecha--txt {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--blue-800);
+}
+
+.cortes--cuota,
+.display--entrada {
+    margin-bottom: 1rem;
+}
+
+.detalle--titulo {
+    width: 150px;
+    justify-self: flex-start;
+}
+
+.entrada--delantero,
+.entrada--trasero,
+.entrada--total {
+    display: flex;
+    width: 100%;
+}
+
+.total--animales {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.delantero--detalle,
+.trasero--detalle,
+.total--detalle {
+    width: 100%;
+    justify-self: flex-end;
+}
+
+.detalle--nombre {
+    flex: 3;
+}
+
+.detalle--cuartos,
+.detalle--peso {
+    flex: 1;
+}
+
+.display--cortes {
+    margin-bottom: 1rem;
+}
+
+.entrada--tipoCuarto,
+.cortes--cuota__line,
+.cortes--nocuota__line {
+    display: flex;
+    font-size: 0.9rem;
+    font-weight: 100;
+}
+
+.entrada--tipoCuarto {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cortes--cuota__line,
+.cortes--nocuota__line {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.corte--nombre {
+    flex: 4;
+}
+
+.corte--codigo {
+    flex: 1;
+}
+
+.corte--peso {
+    flex: 2;
+     align-self: flex-end;
+    text-align: right;
+}
+
+.corte--cajas,
+.corte--pesoxpieza,
+.corte--rend {
+    flex: 1;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.peso__animal {
+    text-align: right;
+}
+
+.valor--titulo {
+    font-weight: 600;
+}
+
+.divider {
+    width: 100%;
+    border-bottom: 2px solid #f2f4f4;
+}

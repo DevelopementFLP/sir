@@ -7,16 +7,16 @@
             class="p-button-sm btn-agregar">
         </button>
 
-        <!-- <button
+        <button
             *ngIf="mostrarBotones && fechas.length > 0"
             (click)="showEliminar()"
             pButton type="button" label="Eliminar lista" icon="pi pi-minus"
             class="p-button-sm p-button-danger btn-eliminar">
-        </button> -->
+        </button>
     </div>
 
     <div class="listas--agregar hide">
-        <p-badge class="badge__title badge__agregar" value="Agregando precios"></p-badge>
+        <p-badge class="badge__title badge__agregar" value="AGREGAR"></p-badge>
         <p-accordion #accordion [(activeIndex)]="activeIndex">
             <p-accordionTab #tab1>
                 <ng-template pTemplate="header">
@@ -96,8 +96,8 @@
 
     <!--*** ELIMINAR PRECIOS ***-->
 
-    <!-- <div class="listas--eliminar hide">
-        <p-badge value="ELIMINAR"></p-badge>
+    <div class="listas--eliminar hide">
+        <p-badge class="badge__title badge__eliminar" value="ELIMINAR"></p-badge>
         <br>
         <div>
             <span><span>Haga clic en&nbsp;</span><i class="pi pi-times-circle"></i><span>&nbsp;al lado de cada fecha para eliminarla</span></span>
@@ -119,7 +119,7 @@
                 class="p-button-sm p-button-danger btn-cancelar">
             </button>
         </div>
-    </div> -->
+    </div>
 </div>
 
 <p-confirmDialog #cd>

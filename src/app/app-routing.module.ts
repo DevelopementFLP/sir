@@ -54,10 +54,15 @@ import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
+
 import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/reporte-abasto.component';
 import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
 import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasConError/lecturas-con-error.component';
 import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteDeMedias/reporte-de-medias.component';
+
+import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
+import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
+
 
 
 const routes: Routes = [
@@ -82,6 +87,7 @@ const routes: Routes = [
     { path: 'produccion/resumenDesosadoMarel', component: ResumenMarelComponent},
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
+    { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },
@@ -90,15 +96,11 @@ const routes: Routes = [
       { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
       { path: 'cajasEntregar', component: CajasEntregarComponent },
       { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
-
-
-
       { path: '**', redirectTo: '', pathMatch: 'full'}
-
     ] },
-
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
     { path: 'carga/packingList', component: PreciosKosherComponent},
+    { path: 'carga/configuracionPreciosKosher', component: ConfigPreciosComponent},
     { path: 'controlCalidad/noqueo', component: NoqueoComponent},
     { path: 'controlCalidad/pcc', component: PccComponent},
     { path: 'controlCalidad/pccAuditable', component: PccAuditableComponent},

@@ -1,0 +1,85 @@
+.fechas__container {
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px gray;
+    display: flex;
+    gap: 1%;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.reporte__display {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5%;
+    overflow-x: scroll;
+}
+
+.reporte {
+    display: block;
+    width: 750px;
+    min-width: 750px;
+}
+
+.no__data {
+    margin-top: 3rem;
+}
+
+.comparativo__container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    font-family: "Courier New", monospace;
+}
+
+.comparativo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comparativo__reportes {
+    display: flex;
+    flex-direction: column;
+    gap: 1%;
+    width: 150px;
+    min-width: 200px;
+    margin-right: 2rem;
+}
+
+.comparativo__titulo {
+    font-weight: 600;
+    color: #1f618d;
+}
+
+.reporte__titulo {
+    display: flex;
+    justify-content: center;
+}
+
+.comprativo__tipo {
+    display: flex; 
+}
+
+.comparativo__qamark {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    min-width: 400px;
+}
+
+.titulo__prom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.divider {
+    width: 100%;
+    border-bottom: 2px solid #f2f4f4;
+}
