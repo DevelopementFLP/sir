@@ -8,10 +8,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { AbastoService } from 'src/app/10_Sir.Faena.Apps/Services/AbastoService.service';
 
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { LecturaDeAbastoDTO } from 'src/app/10_Sir.Faena.Apps/Interfaces/LecturaDeAbastoDTO';
 import { GetInformacionService } from 'src/app/10_Sir.Faena.Apps/helpers/Data-Local-Storage/getInformacion.service';
-import { disableDebugTools } from '@angular/platform-browser';
 
 
 @Component({
@@ -54,6 +53,11 @@ export class ModalAbastoComponent {
       this.botonDeAccion = "Actualizar"
     }
   }
+
+  ngOnInit(): void {
+    this.loadConfiguraciones();
+  }
+
 
   // Obtener configuraciones desde el helper
   async GetConfiguraciones() {
@@ -154,8 +158,12 @@ export class ModalAbastoComponent {
     // ${horas}:${minutos}:${segundos}
   }
 
-
-  ngOnInit(): void {
-    this.loadConfiguraciones();
+  
+  limitarCaracteres(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 4) {
+      input.value = input.value.slice(0, 4);
+      this.ordinalInput = Number(input.value); // Actualiza el valor en el modelo
+    }
   }
 }

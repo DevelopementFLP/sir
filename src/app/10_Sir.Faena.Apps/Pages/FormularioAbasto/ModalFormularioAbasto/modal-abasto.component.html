@@ -17,7 +17,7 @@
       
         <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
           <mat-label>Ordinal</mat-label>
-          <input matInput placeholder="Ingrese el Ordinal" type="number" [(ngModel)]="ordinalInput" name="peso" >          
+          <input matInput placeholder="Ingrese el Ordinal" type="number" [(ngModel)]="ordinalInput" name="peso" (input)="limitarCaracteres($event)" >          
         </mat-form-field>
 
         <mat-form-field style="width: 100%; margin-bottom: 1rem;">

@@ -1,0 +1,134 @@
+
+<div class="flex-container" style="margin:20px 40px 40px 40px" >
+    <div class="flex-item" >
+        <p-calendar 
+        [(ngModel)]="fechaDesde"
+        [showIcon]="true" 
+        [showOnFocus]="false" 
+        inputId="buttondisplay" 
+        placeholder="Fecha Desde"/>                
+    </div>
+
+    <div class="flex-item">
+        <p-calendar 
+        [(ngModel)]="fechaHasta"
+        [showIcon]="true" 
+        [showOnFocus]="false" 
+        inputId="buttondisplay"
+        placeholder="Fecha Hasta" />  
+    </div>
+
+    <div class="flex-item">
+        <p-button label="Actualizar" icon="pi pi-sync" severity="secondary" (click)="GetReporteDeMediasProducto(fechaDesde!, fechaHasta!)" />
+    </div>
+
+    <!-- <div class="flex-item">
+        <p-button label="Generar Excel" icon="pi pi-arrow-down" />
+    </div> -->
+</div>
+
+<p-tabView >
+    <p-tabPanel header="Producto">
+        <div>
+
+            <div class="grid-container" style="margin:20px 40px 40px 40px" >
+
+                <div class="grid-item table-container-producto" >
+                        <p-table
+                            [value]="responseReporteDeMediasProducto"
+                            [paginator]="true"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[10, 20]"
+                            [globalFilterFields]="['estado']"
+                            [scrollable]="true"
+                            scrollHeight="650px"
+                            >
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        Producto
+                                        <p-columnFilter
+                                            type="text"
+                                            field="producto"
+                                            placeholder="Buscar por Producto"
+                                            display="menu">
+                                        </p-columnFilter>
+                                    </th>
+                                    <th>
+                                        Grade
+                                        <p-columnFilter
+                                            type="text"
+                                            field="grade"
+                                            placeholder="Buscar por Grade"
+                                            display="menu">
+                                        </p-columnFilter>
+                                    </th>
+                                    <th>
+                                        Cuartos
+                                    </th>
+                                    <th>
+                                        Peso De Cuartos                      
+                                    </th>            
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-element>
+                                <tr>
+                                    <td>{{element.producto}}</td>
+                                    <td>{{element.grade}}</td>
+                                    <td>{{element.cuartos}}</td>
+                                    <td>{{element.pesoCuartos}}</td>                      
+                                    <!-- <td >
+                                        <button pButton icon="pi pi-eye" (click)="VerMovimientosDecajas(element.idCaja)" class="Botones_Tabla_Dispositivo"></button>
+                                    </td> -->
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                </div>
+                
+                <div class="grid-item">
+                    <p-card header="Resumen General" class="target">
+                        <p-table styleClass="p-datatable-striped" >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Cuartos Totales:</th>
+                                    <td>{{ sumaDeUnidades }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Peso en KG Total:</th>
+                                    <td>{{ sumaDePesos }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-card>
+
+                    <p-card header="Cuartos Por Grade" class="target">
+                        <p-table styleClass="p-datatable-striped" *ngFor="let items of resultadoCuartosPorGrade">
+                            <ng-template pTemplate="header"
+                            >
+                                <tr>
+                                    <th>{{ items.grade}}</th>
+                                    <td style="text-align: end;">{{ items.totalCuartos }}</td>                                    
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-card>
+                </div>
+
+                <div class="grid-item seccion-de-relleno">
+                    
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="Proveedor">
+        <app-component-reporte-faena-producto></app-component-reporte-faena-producto>
+    </p-tabPanel>
+
+    <!-- <p-tabPanel header="Grade">
+        <app-component-reporte-faena-grade></app-component-reporte-faena-grade>
+    </p-tabPanel> -->
+
+</p-tabView>

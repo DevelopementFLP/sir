@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TipoDispositivoDTO } from '../../Interfaces/TipoDispositivoDTO';
 import { TiposDispositivosService } from '../../Services/TiposDispositivos.service';
 
-import { UtilidadesService } from '../../Utilidades/UtilidadesService.service';
+import { UtilidadesService } from '../../Utilities/UtilidadesService.service';
 
 
 @Component({
