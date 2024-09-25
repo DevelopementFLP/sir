@@ -29,7 +29,6 @@ export class DataShowComponent implements OnInit {
 
   ngOnInit(): void {
     this.contenedores = Array.from(new Set(this.datosKosher.map(c => c.container)));
-
     this.datosAgrupados = this.cks.setDatosAgrupados(this.datosKosher);
     this.totalPalletsByContainer = this.cks.getTotalPalletsByContainer(this.datosAgrupados);
   }

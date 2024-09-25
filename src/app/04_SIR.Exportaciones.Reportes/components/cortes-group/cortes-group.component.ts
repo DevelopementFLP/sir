@@ -52,7 +52,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
   errorNoCodigo: string[] = [];
   errorNoPrecio: {codigo: string, fecha: Date}[] = [];
-
+  
   dataAgrupada: DataKosherAgrupada[] = [];
   totalPallets: number = 0;
 
@@ -85,13 +85,13 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
       });
 
       if(this.errorNoCodigo.length == 0 && this.errorNoPrecio.length == 0) {
+        console.log(this.datosKosher)
         this.dataAgrupada = this.ckcs.setDatosAgrupados(this.datosKosher);
         this.totalPallets = this.ckcs.getTotalPalletsByContainer(this.dataAgrupada);
         this.datosCortesKosher = this.datosKosher.filter(d => !isNaN(parseFloat(d.codigoKosher!)));
         this.datosMenudenciasKosher = this.datosKosher.filter(d => isNaN(parseFloat(d.codigoKosher!)));
         this.dataCortes = this.agruparData(this.datosCortesKosher);
         this.dataMenudencias = this.agruparData(this.datosMenudenciasKosher);
-
         this.mostrarReporte = this.datosCortesKosher.length > 0 || this.datosMenudenciasKosher.length > 0;
       } else {
         this.mostrarDialogoErrores();

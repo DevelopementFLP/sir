@@ -212,14 +212,14 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Obtener datos de contenedores
-  filterContainersByIdCarga(): void {
+  filterContainersByIdCarga(): void {    
     this.idCarga = [];
     this.containers = this.cs.deepCopy(this.containersOriginal);
     if (this.idCargaString != '') {
       var idCargaStringCopy = this.idCargaString;
       idCargaStringCopy = idCargaStringCopy.replaceAll(' ', '');
       const ids = idCargaStringCopy.split(',');
-      ids.forEach((id) => {
+      ids.forEach((id) => {  
         if (this.cs.isNumber(id)) this.idCarga.push(parseInt(id));
       });
       this.containers = this.containers?.filter((c) =>

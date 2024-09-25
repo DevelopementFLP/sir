@@ -15,6 +15,7 @@
     justify-content: flex-start;
     gap: 5%;
     overflow-x: scroll;
+    padding-left: 3rem;
 }
 
 .reporte {
@@ -32,6 +33,7 @@
     flex-direction: row;
     overflow-x: scroll;
     font-family: "Courier New", monospace;
+    padding-left: 3rem;
 }
 
 .comparativo {

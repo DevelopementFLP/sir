@@ -91,7 +91,6 @@ export class KosherCommonService {
 
     // Precios
     const preciosValues: number[] = Array.from(new Set(datosKosher.map(d => d.precioTonelada)));
-
     // Desglose
     mercaderiaNames.forEach(merca => {
       const dataByMerca = datosKosher.filter(d => d.mercaderia === merca);
@@ -114,7 +113,8 @@ export class KosherCommonService {
                 precioTotal: this.precioTotal(dataByPrecio, p),
                 especieTipo: esp + " " + t
               };
-              d.push(reg);
+              if(reg.cantidadCajas > 0)
+                d.push(reg);
             })
           })
         });       

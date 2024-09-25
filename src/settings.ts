@@ -1,5 +1,5 @@
 export const urlAPI: string = "http://localhost:5205/api/";
-export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -212,3 +212,8 @@ export const urlConfReporteCuota: string = urlReporteCuota + "GetConfReporteCuot
 export const urlTipoCuota: string = urlReporteCuota + "GetTipoCuotaAsync";
 export const urlLotes: string = urlReporteCuota + "GetLotesAsync";
 export const urlQamarks: string = urlReporteCuota + "GetQamarks";
+export const urlDWCajaLote: string = urlCajaLote + "GetDWCajaLoteAsync";
+export const urlDWCortesPorFecha: string = urlCajaLote + "GetDWCortesPorFechaYLoteAsync";
+export const urlDWLoteEntrada: string = urlLoteEntrada + "GetDWEntradaAsync";
+export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFechaAsync";
+export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
