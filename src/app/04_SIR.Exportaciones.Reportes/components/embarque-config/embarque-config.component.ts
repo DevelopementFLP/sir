@@ -28,7 +28,7 @@ export class EmbarqueConfigComponent implements OnInit {
   ngOnInit(): void {
     this.setConfigFormFields();
     this.loadConfigData();
-    this.destinatarioField.nativeElement.focus();
+    //this.destinatarioField.nativeElement.focus();
   }
 
   //#region Form configuration

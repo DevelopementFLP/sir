@@ -92,7 +92,7 @@
             <div class="cortes--cuota__line">
                 <div class="corte--codigo valor--titulo">Código</div>
                 <div class="corte--nombre valor--titulo">Producto</div>
-                <div class="corte--piezas valor--titulo"></div>
+                <div class="corte--piezas valor--titulo">Piezas</div>
                 <div class="corte--cajas valor--titulo"></div>
                 <div class="corte--peso valor--titulo">Kilos</div>
                 <div class="corte--pesoxpieza valor--titulo">Kg/Un</div>
@@ -101,7 +101,7 @@
             <div *ngFor="let corte of cortesDelanterosNoCuota" class="cortes--nocuota__line">
                 <div class="corte--codigo">{{corte.code}}</div>
                 <div class="corte--nombre">{{corte.name}}</div>
-                <div class="corte--piezas"></div>
+                <div class="corte--piezas">{{corte.piezas}}</div>
                 <div class="corte--cajas"></div>
                 <div class="corte--peso">{{corte.peso | number:'0.2'}}</div>
                 <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2'}}</div>
@@ -111,13 +111,22 @@
             <div *ngFor="let corte of cortesTraserosNoCuota" class="cortes--nocuota__line">
                 <div class="corte--codigo">{{corte.code}}</div>
                 <div class="corte--nombre">{{corte.name}}</div>
-                <div class="corte--piezas"></div>
+                <div class="corte--piezas">{{corte.piezas}}</div>
                 <div class="corte--cajas"></div>
                 <div class="corte--peso">{{corte.peso | number:'0.2'}}</div>
                 <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2'}}</div>
                 <div class="corte--rend">{{corte.peso / pesoTraseros | percent:'0.2'}}</div>
             </div>
             <div class="divider"></div>
+            <div class="cortes--nocuota__line">
+                <div class="corte--codigo"></div>
+                <div class="corte--nombre">TRIMMING</div>
+                <div class="corte--piezas"></div>
+                <div class="corte--cajas"></div>
+                <div class="corte--peso">{{cortesReporte.trimming[0].peso| number:'0.2'}}</div>
+                <div class="corte--pesoxpieza"></div>
+                <div class="corte--rend">{{cortesReporte.trimming[0].peso / totalEntradaPorTipo.peso | percent:'0.2' }}</div>
+            </div>
             <div class="cortes--nocuota__line">
                 <div class="corte--codigo"></div>
                 <div class="corte--nombre">MANTA</div>

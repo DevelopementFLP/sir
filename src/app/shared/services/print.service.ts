@@ -29,7 +29,6 @@ import { EntradaReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/i
 import { EntradaDisplayReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/EntradaDisplayReporte.interface';
 import { QamarkDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/QamarkDTO.interface';
 import { Comparativo } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/Comparativo.inteface';
-import { ComparativoDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComprativoDict.interface';
 import { ComparativoReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComparativoReporte.interface';
 import { TipoCuotaDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/TipoCuotaDict.interface';
 
@@ -1904,7 +1903,7 @@ export class PrintService {
         cortesDelanterosNoCuota   = cortesReporte.delanteroNoCuota;
         cortesTraserosNoCuota     = cortesReporte.traseroNoCuota;
         totalPesoCortesCuota      = this.ccs.totalPesoPorCortes(cortesCuota);
-        totalPesoCortesNoCuota    = this.ccs.totalPesoPorCortes(cortesNoCuota);
+        totalPesoCortesNoCuota    = this.ccs.totalPesoPorCortes(cortesNoCuota) + cortesReporte.manta[0].peso;
         rendimientoCortesCuota    = totalPesoCortesCuota / totalEntradaPorTipo.peso;
         rendimientoCortesNoCuota  = totalPesoCortesNoCuota / totalEntradaPorTipo.peso;
         totalPesoCortes           = this.ccs.totalPesoCajas(repo.cortes!);
@@ -2044,7 +2043,7 @@ export class PrintService {
         fila++;
         hoja.getRow(fila).getCell(columna).value      = 'Código';
         hoja.getRow(fila).getCell(columna + 1).value  = 'Producto';
-        hoja.getRow(fila).getCell(columna + 2).value  = '';
+        hoja.getRow(fila).getCell(columna + 2).value  = 'Cortes';
         hoja.getRow(fila).getCell(columna + 3).value  = '';
         hoja.getRow(fila).getCell(columna + 4).value  = 'Peso';
         hoja.getRow(fila).getCell(columna + 5).value  = 'Kg/Un';
@@ -2060,7 +2059,7 @@ export class PrintService {
         cortesDelanterosNoCuota.forEach(cc => {
           hoja.getRow(fila).getCell(columna).value          = cc.code;
           hoja.getRow(fila).getCell(columna + 1).value      = cc.name;
-          hoja.getRow(fila).getCell(columna + 2).value      = '';
+          hoja.getRow(fila).getCell(columna + 2).value      = cc.piezas;
           hoja.getRow(fila).getCell(columna + 3).value      = '';
           hoja.getRow(fila).getCell(columna + 4).value      = cc.peso;
           hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
@@ -2074,15 +2073,24 @@ export class PrintService {
         cortesTraserosNoCuota.forEach(cc => {
           hoja.getRow(fila).getCell(columna).value          = cc.code;
           hoja.getRow(fila).getCell(columna + 1).value      = cc.name;
-          hoja.getRow(fila).getCell(columna + 2).value      = '';
+          hoja.getRow(fila).getCell(columna + 2).value      = cc.piezas;
           hoja.getRow(fila).getCell(columna + 3).value      = '';
           hoja.getRow(fila).getCell(columna + 4).value      = cc.peso;
+          hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
           hoja.getRow(fila).getCell(columna + 5).value      = cc.pesoPorPieza;
+          hoja.getRow(fila).getCell(columna + 5).numFmt     = formatoNumeroDecimal;
           hoja.getRow(fila).getCell(columna + 6).value      = parseFloat(((cc.peso / pesoTraseros) * 100).toFixed(2)) + ' %';
           hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
           fila++;
         });
 
+        hoja.getRow(fila).getCell(columna + 1).value      = "TRIMMING";
+        hoja.getRow(fila).getCell(columna + 4).value      = cortesReporte.trimming[0].peso;
+        hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 6).value      = parseFloat(((cortesReporte.trimming[0].peso / totalEntradaPorTipo.peso) * 100).toFixed(2)) + ' %';
+        hoja.getRow(fila).getCell(columna + 6).alignment  = alineacionDerecha;
+
+        fila++;
         hoja.getRow(fila).getCell(columna + 1).value      = "MANTA";
         hoja.getRow(fila).getCell(columna + 4).value      = cortesReporte.manta[0].peso;
         hoja.getRow(fila).getCell(columna + 4).numFmt     = formatoNumeroDecimal;

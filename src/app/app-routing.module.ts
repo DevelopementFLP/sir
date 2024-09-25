@@ -54,12 +54,10 @@ import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
-
 import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/reporte-abasto.component';
 import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
 import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasConError/lecturas-con-error.component';
 import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteDeMedias/reporte-de-medias.component';
-
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 
