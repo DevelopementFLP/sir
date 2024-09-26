@@ -1,13 +1,13 @@
 <p-tabView>
-    <p-tabPanel header="Reporte">
+    <p-tabPanel header="Reporte cuotas">
         <div class="fechas__container">
             <div>
                 <label for="fechaDesde">Desde:</label>
-                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()">
+                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
             </div>
             <div>
                 <label for="fechaHasta">Hasta:</label>
-                <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()">
+                <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
             </div>
             <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
         </div>
@@ -62,8 +62,9 @@
                                 <div>Rend. Prom.</div>
                             </div>
                             <div *ngFor="let cmp of comparativoPorIdCuota(id, noCuotaComparativoReporte)" class="comparativo">
-                                <div *ngFor="let d of cmp.datos">
-                                    <div>{{d | number:'0.1'}}</div>
+                                <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
+                                    <div *ngIf="i % 2 == 0">{{d | number:'0.1'}}</div>
+                                    <div *ngIf="i % 2 != 0">{{d | percent:'0.1'}}</div>
                                 </div>
                             </div>
                         </div>

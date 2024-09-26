@@ -123,6 +123,7 @@ export class CommonCuotaService {
     let cortesManta: SalidaDTO[] = [];
     let cortesDelanteroCuota: SalidaDTO[] = [];
     let cortesTraseroCuota: SalidaDTO[] = [];
+    let trimming: SalidaDTO[] = [];
     let cortesReporte: CortesReporte;
 
     cortesReporte = {
@@ -133,34 +134,76 @@ export class CommonCuotaService {
       manta: cortesManta,
       delanteroCuota: cortesDelanteroCuota,
       traseroCuota: cortesTraseroCuota,
+      trimming: trimming
     };
 
     cortesCuota = reporte?.cortes.filter((c) => c.tipo === 'CUOTA')!;
-    cortesNoCuota = reporte?.cortes.filter((c) => c.tipo === 'NO CUOTA')!;
+    cortesNoCuota = reporte?.cortes.filter((c) => c.tipo === 'NO CUOTA' && !c.name.includes('MANTA'))!;
+
     cortesDelanterosNoCuota = cortesNoCuota.filter(
       (cnc) => cnc.condition != null && cnc.condition.startsWith('D')
     );
     cortesTraserosNoCuota = cortesNoCuota.filter(
       (cnc) => cnc.condition != null && cnc.condition.startsWith('T')
     );
-    cortesManta = reporte?.cortes.filter((c) => c.name === 'MANTA')!;
 
+    
+    const totalManta: SalidaDTO[] = [
+      {
+        cajas: 0,
+        code: '',
+        condition: '',
+        name: 'MANTA',
+        peso: 0,
+        pesoPorPieza: 0,
+        piezas: 0,
+        qamark: 1,
+        tipo: 'NO CUOTA'
+      }
+    ];
+    
+    const totalTrimming: SalidaDTO[] = [
+      {
+        cajas: 0,
+        code: '',
+        condition: '',
+        name: 'TRIMMING',
+        peso: 0,
+        pesoPorPieza: 0,
+        piezas: 0,
+        qamark: 1,
+        tipo: 'NO CUOTA'
+      }
+    ];
+    
+    cortesManta = reporte?.cortes.filter((c) => c.name.includes('MANTA'))!;
+    trimming = cortesNoCuota.filter(c => c.name.includes('TRIMM'));
+
+    cortesManta.forEach(it => {
+      totalManta[0].peso += it.peso;
+    });
+    cortesManta = totalManta;
+
+    trimming.forEach(it => {
+      totalTrimming[0].peso += it.peso;
+    });
+    trimming = totalTrimming;
+    
     cortesReporte.cuota = cortesCuota;
     cortesReporte.nocuota = cortesNoCuota;
     cortesReporte.delanteroNoCuota = cortesDelanterosNoCuota;
     cortesReporte.traseroNoCuota = cortesTraserosNoCuota;
     cortesReporte.manta = cortesManta;
+    cortesReporte.trimming = trimming;
 
     return cortesReporte;
   }
 
   totalPesoPorCortes(cortes: SalidaDTO[]): number {
     let peso: number = 0;
-
     cortes.forEach((ct) => {
       peso += ct.peso;
     });
-
     return peso;
   }
 
@@ -223,7 +266,6 @@ export class CommonCuotaService {
         });
       });
     });
-
     return comparativo;
   }
 

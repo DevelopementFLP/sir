@@ -8,4 +8,5 @@ export interface CortesReporte {
     manta:              SalidaDTO[];
     delanteroCuota:     SalidaDTO[];
     traseroCuota:       SalidaDTO[];
+    trimming:           SalidaDTO[];
 }

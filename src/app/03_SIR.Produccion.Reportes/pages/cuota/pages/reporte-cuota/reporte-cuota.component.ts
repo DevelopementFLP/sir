@@ -4,9 +4,13 @@ import { lastValueFrom } from 'rxjs';
 
 import { CommonCuotaService } from '../../services/common-cuota.service';
 import { Comparativo } from '../../interfaces/Comparativo.inteface';
+import { ComparativoDict } from '../../interfaces/ComprativoDict.interface';
+import { ComparativoReporte } from '../../interfaces/ComparativoReporte.interface';
 import { ConfReporteCuotaDTO } from '../../interfaces/ConfReporteCuotaDTO.interface';
 import { ConfTipoCuotaDTO } from '../../interfaces/ConfTipoCuotaDTO.interface';
 import { CuotaService } from '../../services/cuota.service';
+import { DWCajaSalidaDTO } from '../../interfaces/DWCajaSalidaDTO.interface';
+import { DWSalidaDTO } from '../../interfaces/DWSalidaDTO.interface';
 import { LoteDTO } from '../../interfaces/LoteDTO.interface';
 import { LoteEntradaDTO } from '../../interfaces/LoteEntradaDTO.interface';
 import { LotesTipo } from '../../interfaces/LotesTipo.interface';
@@ -15,8 +19,6 @@ import { QamarkDTO } from '../../interfaces/QamarkDTO.interface';
 import { ReporteCuota } from '../../interfaces/ReporteCuota.interface';
 import { SalidaDTO } from '../../interfaces/SalidaDTO.interface';
 import { TipoCuotaDict } from '../../interfaces/TipoCuotaDict.interface';
-import { ComparativoDict } from '../../interfaces/ComprativoDict.interface';
-import { ComparativoReporte } from '../../interfaces/ComparativoReporte.interface';
 
 @Component({
   selector: 'app-reporte-cuota',
@@ -55,6 +57,14 @@ export class ReporteCuotaComponent implements OnInit {
   nombreReporte:              string                = '';
   idReporte:                  number                = 8;
   ist:                        boolean               = false;
+
+  // DW
+  dwCajas:        DWCajaSalidaDTO[] = [];
+  dwCortes:       DWSalidaDTO[]     = [];
+  dwLotesEntrada: LoteEntradaDTO[]  = [];
+
+  hoy: Date = new Date();
+  hoyStr: string = this.formatearFecha(this.hoy);
 
   constructor(
     private cuotaService: CuotaService,
@@ -96,7 +106,7 @@ export class ReporteCuotaComponent implements OnInit {
 
     this.cuotaComparativoReporte = this.ccs.formatearDatosComparativo(this.comparativoCuota, this.qamarksUnicos, this.idsReportes);
     this.noCuotaComparativoReporte = this.ccs.formatearDatosComparativo(this.comparativoNoCuota, this.qamarksUnicos, this.idsReportes);
-    
+     
     this.qamarksCuota   = Array.from(new Set(this.cuotaComparativoReporte.map(c => c.qamark)));
     this.qamarksNoCuota = Array.from(new Set(this.noCuotaComparativoReporte.map(c => c.qamark)));
   }
@@ -144,8 +154,9 @@ export class ReporteCuotaComponent implements OnInit {
   }
 
   private formatearFecha(fecha: Date): string {
+    let f = fecha;
     return formatDate(
-      fecha.setHours(fecha.getHours() + 3),
+      f.setHours(f.getHours() + 3),
       'yyyy-MM-dd',
       'es-UY'
     );
@@ -202,33 +213,111 @@ export class ReporteCuotaComponent implements OnInit {
   private async setReporteCuotaDatos(): Promise<void> {
     this.reporteCuotaData = [];
     this.idsReportes      = [];
-    for (const f of this.fechasReporte) {
-      const fecha = this.formatearFecha(f);
+    
+    const ultimaFechaReporte = this.formatearFecha(this.fechasReporte[this.fechasReporte.length - 1]);
 
-      for (const lt of this.lotesTipo) {
-        const lotesStr  = this.lotesToSting(lt.lotes);
-        const entrada   = await lastValueFrom(
-          this.cuotaService.getLotesEntrada(fecha, fecha, lotesStr)
-        );
+    if(this.hoyStr == ultimaFechaReporte) {
+      await lastValueFrom(this.cuotaService.execInsertarDatosDW());
+    }
+    
 
-        if (entrada.length > 0) {
-          const cortes = await lastValueFrom(
-            this.cuotaService.getCajasLotes(fecha, lotesStr)
+    let fechaD = this.formatearFecha(this.fechasReporte[0]);
+    let fechaH = this.formatearFecha(this.fechasReporte[this.fechasReporte.length - 1]);
+
+    for (const lt of this.lotesTipo) {
+      const shnameCuota = this.tiposCuota.find(t => t.id == lt.id)?.shname;
+      const lotesStr  = this.lotesToSting(lt.lotes);
+      this.dwCajas = await lastValueFrom(this.cuotaService.getDWCajasLotes(fechaD, fechaH, 'CUOTA'));
+      if(this.dwCajas.length > 0) {
+        this.dwCortes = await lastValueFrom(this.cuotaService.getDWCortes(fechaD, fechaH, lotesStr));
+        if(this.dwCortes.length > 0) {
+          const ctsCuota = this.dwCortes.filter(c => c.customer?.startsWith('CUOTA'));
+          const conditions: string[] = Array.from(
+            new Set(
+              ctsCuota
+                .filter(c => c.condition.includes(shnameCuota!))
+                .map(c => c.condition)
+            )
           );
-          const repoCta: ReporteCuota = {
-            id:       lt.id,
-            fecha:    fecha,
-            entrada:  entrada,
-            cortes:   cortes,
-          };
-          this.idsReportes.push(repoCta.id);
-          this.reporteCuotaData.push(repoCta);
+          this.dwLotesEntrada = await lastValueFrom(this.cuotaService.getDWELotesEntrada(fechaD, fechaH, lotesStr));
+          this.fechasReporte.forEach(fecha => {
+            const target: Date = new Date(fecha);
+            target.setHours(-3);
+            const entrada = this.dwLotesEntrada.filter(
+              c => 
+                {
+                  const cDate = new Date(c.fecha);
+                  cDate.setHours(-3);
+                  return cDate.getTime() === target.getTime();
+                }
+            );
+            const cortes  = this.dwCortes.filter(
+              c => 
+                {
+                  const cDate = new Date(c.fecha);
+                  cDate.setHours(-3);
+                  return cDate.getTime() === target.getTime() && !c.customer?.includes('CUOTA');
+                }
+            );
+            const cajas   = this.dwCajas.filter(
+              c => 
+                {
+                  const cDate = new Date(c.fecha);
+                  cDate.setHours(-3);
+                  return cDate.getTime() === target.getTime() && conditions.includes(c.condition!);
+                }
+            );
+
+            let productos: SalidaDTO[] = [];
+
+            cortes.forEach(ct => {
+              let c: SalidaDTO = {
+                cajas: 0,
+                code: ct.codigo,
+                condition: ct.condition,
+                name: ct.producto,
+                peso: ct.peso,
+                piezas: ct.piezas,
+                qamark: ct.marca,
+                tipo: 'NO CUOTA',
+                pesoPorPieza: ct.peso / ct.piezas
+              };
+              productos.push(c);
+            });
+
+            cajas.forEach(cj => {
+              let c: SalidaDTO = {
+                cajas: cj.cajas,
+                code: cj.code,
+                condition: cj.condition!,
+                name: cj.producto,
+                peso: cj.peso,
+                piezas: cj.piezas,
+                qamark: cj.qamark!,
+                tipo: 'CUOTA',
+                pesoPorPieza: cj.peso / cj.piezas
+              };
+              productos.push(c);
+            });
+            
+            const repoCta: ReporteCuota = {
+              id:       lt.id,
+              fecha:    this.formatearFecha(fecha),
+              entrada:  entrada,
+              cortes:   productos,
+            };
+
+            if(entrada.length > 0) {
+              this.idsReportes.push(repoCta.id);
+              this.reporteCuotaData.push(repoCta);
+            }
+          });
         }
       }
     }
 
-    this.agruparReportesPorId();
     this.setNombresReportes();
+    this.agruparReportesPorId();
   }
 
   private getIdsReportes(): void {
@@ -244,7 +333,7 @@ export class ReporteCuotaComponent implements OnInit {
     return this.tiposCuota.find((tp) => tp.id === id)?.nombre!;
   }
 
-  filtrarReportesPorId(id: number): ReporteCuota[] {
+  filtrarReportesPorId(id: number): ReporteCuota[] {    
     return this.reporteCuotaData.filter(rcd => rcd.id === id);
   }
 
@@ -265,7 +354,10 @@ export class ReporteCuotaComponent implements OnInit {
     return this.qamarks.find(q => q.qamark === id)?.name!;
   }
  
-  comparativoPorIdCuota(id: number, c: ComparativoReporte[]): ComparativoReporte[] {
+  comparativoPorIdCuota(id: number, c: ComparativoReporte[]): ComparativoReporte[] { 
     return c.filter(c => c.idCuota == id);
   }
+
+  
 }
+ 
