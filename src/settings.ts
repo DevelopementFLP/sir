@@ -1,5 +1,7 @@
 export const urlAPI: string = "http://localhost:5205/api/";
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
+
+//export const urlAPI: string = "http://192.168.0.107:82/api/";
+
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -204,11 +206,6 @@ export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDe
 export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
 
 
-export const urlFaena: string = urlAPI + "ReporteDeMedias/"
-export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
-export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
-export const urlGetReporteDeMediasGrade: string = urlFaena + "reporteDeMediasPorGrade"
-
 // Reporte Cuota
 export const urlLoteEntrada: string = urlAPI + "LoteEntrada/";
 export const urlCajaLote: string = urlAPI + "CajaLote/";
@@ -225,3 +222,8 @@ export const urlDWLoteEntrada: string = urlLoteEntrada + "GetDWEntradaAsync";
 export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFechaAsync";
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
+
+//Reporte de medias Faena
+export const urlFaena: string = urlAPI + "ReporteDeMedias/"
+export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
+export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"

@@ -54,7 +54,6 @@ export class MermaPorPesoComponent {
 
 
   constructor(
-    private dialog: MatDialog,
     private _utilidadesServicicio: UtilidadesService,
     private _lecturasMermaPorPesoServicio : MermaPorPesoService,
     private _metodosDeExelMerma: MetodosExcelMermaService
@@ -96,11 +95,12 @@ export class MermaPorPesoComponent {
     }
   }
 
+  
   formatoFechaDesde(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
-    return `${year}${month}${day} 00:00:01`;
+    return `${year}${month}${day} 00:00:01.000`;
   }
 
   formatoFechaHasta(baseDate: Date): string {
@@ -109,14 +109,14 @@ export class MermaPorPesoComponent {
     nextDay.setDate(baseDate.getDate() + 1); // Agregar un día
     const year = nextDay.getFullYear();
     const month = ('0' + (nextDay.getMonth() + 1)).slice(-2);
-    const day = ('0' + nextDay.getDate()).slice(-2);
-    return `${year}${month}${day} 23:59:59`;
+    const day = ('0' + nextDay.getDate()).slice(-2); 
+    return `${year}${month}${day} 23:59:59.000`;
 }
 
 
 //Función para obtener el peso total por proveedor
 GetPesoPorProveedorGeneral(): any[] {
-  // Crear un objeto para almacenar el conteo de cada proveedor
+    //Crear un objeto para almacenar el conteo de cada proveedor
     const conteoProveedores: { [proveedor: string]: {sumaDePeso: number}} = {};
 
     // Recorrer los datos y contar los datos

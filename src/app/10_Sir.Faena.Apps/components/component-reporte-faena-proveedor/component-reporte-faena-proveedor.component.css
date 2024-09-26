@@ -1,8 +1,10 @@
 
 .grid-container {
     display: grid;
-    grid-template-columns: 60% auto;
+    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+    grid-template-columns: 60% auto; 
     gap: 20px; 
+    margin: 20px 40px;
 }
 
 .table-container-producto {
@@ -13,13 +15,14 @@
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: 600px 250px;
+    max-height: 400px; /* Altura máxima para el scroll */
+    overflow-y: auto; /* Permitir scroll vertical */
 }
 
 .grid-item{
     padding: 20px;
     text-align: left;
     font-weight: bold;
-    overflow: hidden;
 }
 
 .seccion-de-relleno{
@@ -33,3 +36,9 @@
     padding: 10px;
 }
 
+/* Estilo para pantallas más grandes */
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: 60% 40%; /* Dos columnas en pantallas más grandes */
+    }
+}

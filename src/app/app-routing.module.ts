@@ -124,7 +124,7 @@ const routes: Routes = [
     { path: 'faena/MermaPorPeso', component: MermaPorPesoComponent},
     { path: 'faena/lecturasAbasto', component: FormularioAbastoComponent},
     { path: 'faena/dashboardAbasto', component: ReporteAbastoComponent},
-    {path: 'faena/ReporteDeMedias', component: ReporteDeMediasComponent}
+    {path: 'faena/ReporteDeCuarteo', component: ReporteDeMediasComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},
