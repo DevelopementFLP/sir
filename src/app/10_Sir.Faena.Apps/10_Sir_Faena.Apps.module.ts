@@ -32,13 +32,13 @@ import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
 
 
+
 import { ReporteAbastoComponent } from './Pages/ReporteAbasto/reporte-abasto.component';
 import { FormularioAbastoComponent } from './Pages/FormularioAbasto/formulario-abasto.component';
 import { ModalAbastoComponent } from './Pages/FormularioAbasto/ModalFormularioAbasto/modal-abasto.component';
 import { ReporteDeMediasComponent } from './Pages/ReporteDeMedias/reporte-de-medias.component';
 import { BodyReporteMediasComponent } from './components/body-reporte-medias/body-reporte-medias.component';
 import { ComponenteReporteFaenaProductoComponent } from './components/component-reporte-faena-proveedor/component-reporte-faena-proveedor.component';
-import { ComponentReporteFaenaGradeComponent } from './components/component-reporte-faena-grade/component-reporte-faena-grade.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +48,6 @@ import { ComponentReporteFaenaGradeComponent } from './components/component-repo
     ReporteDeMediasComponent,
     BodyReporteMediasComponent,
     ComponenteReporteFaenaProductoComponent,
-    ComponentReporteFaenaGradeComponent
   ],
   exports:[
     FormularioAbastoComponent,

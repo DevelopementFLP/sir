@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { urlGetReporteDeMediasGrade, urlGetReporteDeMediasProducto, urlGetReporteDeMediasProveedor} from 'src/settings';
+import { urlGetReporteDeMediasProducto, urlGetReporteDeMediasProveedor} from 'src/settings';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 
 @Injectable({
@@ -13,25 +13,22 @@ export class DataFaenaService {
     private http:HttpClient
   ) { }
 
-  public GetReporteDeMediasProducto(fechaDesde: string, fechahasta: string):Observable<ApiResponse>{
+  public GetReporteDeMediasProducto(fechaDesde: string, fechahasta: string, horaDesde: number, horaHasta: number ):Observable<ApiResponse>{
     let params = new HttpParams()
     .set('fechaDesde', fechaDesde)
-    .set('fechaHasta', fechahasta);
+    .set('fechaHasta', fechahasta)
+    .set('horaDesde', horaDesde)
+    .set('horaHasta', horaHasta);
     return this.http.get<ApiResponse>(`${urlGetReporteDeMediasProducto}`, {params})
   }
 
-  public GetReporteDeMediasProveedor(fechaDesde: string, fechahasta: string):Observable<ApiResponse>{
+  public GetReporteDeMediasProveedor(fechaDesde: string, fechahasta: string, horaDesde: number, horaHasta: number):Observable<ApiResponse>{
     let params = new HttpParams()
     .set('fechaDesde', fechaDesde)
-    .set('fechaHasta', fechahasta);
+    .set('fechaHasta', fechahasta)
+    .set('horaDesde', horaDesde)
+    .set('horaHasta', horaHasta);
     return this.http.get<ApiResponse>(`${urlGetReporteDeMediasProveedor}`, {params})
-  }
-
-  public GetReporteDeMediasGrade(fechaDesde: string, fechahasta: string):Observable<ApiResponse>{
-    let params = new HttpParams()
-    .set('fechaDesde', fechaDesde)
-    .set('fechaHasta', fechahasta);
-    return this.http.get<ApiResponse>(`${urlGetReporteDeMediasGrade}`, {params})
   }
 
 }

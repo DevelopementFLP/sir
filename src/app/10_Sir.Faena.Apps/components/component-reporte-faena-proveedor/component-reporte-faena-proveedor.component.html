@@ -1,114 +1,137 @@
 
-        <div>
-            <div class="grid-container" style="margin:20px 40px 40px 40px">
+<div>
+    <div class="grid-container" style="margin:20px 40px 40px 40px">
 
-                <div class="grid-item table-container-producto" >
-                    <p-table 
-                        [value]="responseReporteDeMediasProveedor"
-                        [paginator]="true"
-                        [rows]="10"
-                        [rowsPerPageOptions]="[10, 20]"
-                        [scrollable]="true"  
-                        scrollHeight="650px"                      
-                        >
-            
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>
-                                    Proveedor
-                                    <p-columnFilter
-                                        type="text"
-                                        field="producto"
-                                        placeholder="Buscar por Producto"
-                                        display="menu">
-                                    </p-columnFilter>
-                                </th>
-                                <th>
-                                    Tropa
-                                    <p-columnFilter
-                                        type="text"
-                                        field="grade"
-                                        placeholder="Buscar por Grade"
-                                        display="menu">
-                                    </p-columnFilter>
-                                </th>
-                                <th>
-                                    Grade
-                                </th>
-                                <th>
-                                    Medias                      
-                                </th>   
-                                <th>
-                                    Peso Medias                      
-                                </th>          
-                            </tr>
-                        </ng-template>
-            
-                        <ng-template pTemplate="body" let-element>
-                            <tr>
-                                <td>{{element.proveedor}}</td>
-                                <td>{{element.tropa}}</td>
-                                <td>{{element.grade}}</td>
-                                <td>{{element.medias}}</td>   
-                                <td>{{element.pesoMedias}}</td>                       
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-                
-                <div class="grid-item">
-                    <p-card header="Resumen General" class="target">
-                        <p-table styleClass="p-datatable-striped" >
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>Medias Totales:</th>
-                                    <td>{{ sumaDeUnidades }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Peso en KG Total:</th>
-                                    <td>{{ sumaDePesos }}</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-
-                    <p-card header="Medias Por Proveedor" class="target">
-                        <p-table styleClass="p-datatable-striped" *ngFor="let items of resultadoCuartosPorProveedor">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>{{ items.proveedor}}</th>
-                                    <td style="text-align: end;">{{ items.totalCuartos }}</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-
-                    <p-card header="Medias Por Grade" class="target">
-                        <p-table styleClass="p-datatable-striped" 
-                        [value]="resultadoCuartosPorGrade"
-                        [scrollable]="true"
-                        scrollHeight="250px">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>Grade</th>
-                                    <th>Medias</th>
-                                    <th>Peso</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-element>
-                                <tr>                                    
-                                    <td style="text-align: start;">{{ element.grade }}</td>
-                                    <td style="text-align: start;">{{ element.totalCuartos }}</td>
-                                    <td style="text-align: start;">{{ element.totalKg }}</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-                </div>
-
-                <div class="grid-item seccion-de-relleno">
-                
-                </div>
-            </div>
+        <div class="grid-item table-container-producto" >
+            <p-table 
+                [value]="responseReporteDeMediasProveedor"
+                [paginator]="true"
+                [rows]="15"
+                [rowsPerPageOptions]="[15, 20]"                   
+                >
+    
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            Proveedor
+                            <p-columnFilter
+                                type="text"
+                                field="proveedor"
+                                placeholder="Buscar"
+                                >
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Tropa
+                            <p-columnFilter
+                                type="text"
+                                field="grade"
+                                placeholder="Buscar por Grade"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                            Grade
+                        </th>
+                        <th>
+                            Medias                      
+                        </th>   
+                        <th>
+                            Peso Medias                      
+                        </th>          
+                    </tr>
+                </ng-template>
+    
+                <ng-template pTemplate="body" let-element>
+                    <tr>
+                        <td>{{element.proveedor}}</td>
+                        <td>{{element.tropa}}</td>
+                        <td>{{element.grade}}</td>
+                        <td>{{element.medias}}</td>   
+                        <td>{{element.pesoMedias | number:'1.1-5'}}</td>                       
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
+        
+        <div class="grid-item">
+            <p-card header="Resumen General" class="target">
+                <p-table styleClass="p-datatable-striped" >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Medias Totales:</th>
+                            <td>{{ sumaDeUnidades | number:'1.0-0' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Peso en KG Total:</th>
+                            <td>{{ sumaDePesos | number:'1.0-0' }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+
+            <p-card header="Medias Por Proveedor" class="target">
+                <p-table styleClass="p-datatable-striped"
+                    [value]="resultadoCuartosPorProveedor"
+                    [paginator]="true"
+                    [rows]="5"
+                    >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Proveedor
+                                <p-columnFilter
+                                type="text"
+                                [field]="'proveedor'"
+                                placeholder="Proveedor"
+                                >
+                                </p-columnFilter>
+                            </th>
+                            <th>Total Cuartos</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-element>
+                        <tr>                                    
+                            <td style="text-align: start;">{{ element.proveedor }}</td>
+                            <td style="text-align: start;">{{ element.totalCuartos }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+
+            <p-card header="Medias Por Grade" class="target">
+                <p-table styleClass="p-datatable p-datatable-striped" 
+                [value]="resultadoCuartosPorGrade"
+                [paginator]="true"
+                [rows]="5"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Grade
+                                <p-columnFilter
+                                type="text"
+                                [field]="'grade'"
+                                placeholder="Grade"
+                                >
+                                </p-columnFilter>
+                            </th>
+                            <th>Medias</th>
+                            <th>Peso</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-element>
+                        <tr>                                    
+                            <td style="text-align: start;">{{ element.grade }}</td>
+                            <td style="text-align: start;">{{ element.totalMedias }}</td>
+                            <td style="text-align: start;">{{ element.totalKg | number:'1.0-0' }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+
+        <div class="grid-item seccion-de-relleno">
+        
+        </div>
+    </div>
+</div>
 

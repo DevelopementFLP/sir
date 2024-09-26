@@ -1,0 +1,4 @@
+.cotenidoDePagina {
+    padding: 20px;
+    overflow-y: auto; /* Permitir scroll si el contenido excede el contenedor */
+}
