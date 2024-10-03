@@ -61,7 +61,7 @@ export class ReporteCuotaDisplayComponent implements OnInit {
     this.cortesTraserosNoCuota    = this.cortesReporte.traseroNoCuota;
 
     this.totalPesoCortesCuota     = this.utils.totalPesoPorCortes(this.cortesCuota);
-    this.totalPesoCortesNoCuota   = this.utils.totalPesoPorCortes(this.cortesNoCuota);
+    this.totalPesoCortesNoCuota   = this.utils.totalPesoPorCortes(this.cortesNoCuota) + this.cortesReporte.manta[0].peso;
     this.rendimientoCortesCuota   = this.totalPesoCortesCuota / this.totalEntradaPorTipo.peso;
     this.rendimientoCortesNoCuota = this.totalPesoCortesNoCuota / this.totalEntradaPorTipo.peso;
 
