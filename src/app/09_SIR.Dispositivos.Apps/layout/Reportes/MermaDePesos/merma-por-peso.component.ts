@@ -95,7 +95,7 @@ export class MermaPorPesoComponent {
     }
   }
 
-  
+
   formatoFechaDesde(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -300,7 +300,7 @@ GetPesoPorProveedorGeneral(): any[] {
 
 
       this.totalLecturas = dataFiltrada.filter(x => x.pesoLocal > 0).length;
-      this.totalLecturasInnova = dataFiltrada.filter(x => x.pesoInnova > 0).length;
+      this.totalLecturasInnova = dataFiltrada.filter(x => x.carcassID != "").length;
 
     } else {
       // Si no hay datos, asignar valores nulos a todos los promedios

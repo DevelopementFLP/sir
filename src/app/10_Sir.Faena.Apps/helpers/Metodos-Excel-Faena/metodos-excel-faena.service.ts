@@ -11,22 +11,6 @@ export class MetodosExcelFaenaService {
     private http: HttpClient
   ) { }
 
-  
-  public AgregarEncabezadoDeHojas(unaHoja: ExcelJS.Worksheet, encabezado: string){
-       
-    unaHoja.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeEncabezado = unaHoja.getCell('B1');
-    textoDeEncabezado.value = encabezado;
-    textoDeEncabezado.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeEncabezado.font = { bold: true, italic: true };
-    textoDeEncabezado.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-  }
-
   public async InsertarLogoEnLasHojas(Workbook: ExcelJS.Workbook, sheet: ExcelJS.Worksheet) {
     try {
       sheet.mergeCells('A1:A3'); 
@@ -72,21 +56,4 @@ export class MetodosExcelFaenaService {
     });
   }
 
-  //Metodo para ajustar el ancho de las columnas
-  public AdjustColumnWidths(sheet: ExcelJS.Worksheet) {
-    try {
-      sheet.columns.forEach(column => {
-        let maxLength = 10; // Longitud mínima de las celdas
-        column.eachCell!({ includeEmpty: true }, cell => {
-          const cellLength = cell.value ? cell.value.toString().length : 0;
-          if (cellLength > maxLength) {
-            maxLength = cellLength;
-          }
-        });
-        column.width = maxLength + 2; // Agregar un poco de espacio extra
-      });      
-    } catch (error) {
-      console.error('Error al ajustar las columnas:', error);
-    }    
-  }
 }

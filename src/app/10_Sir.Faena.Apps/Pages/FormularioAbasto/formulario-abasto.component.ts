@@ -58,7 +58,7 @@ export class FormularioAbastoComponent {
   }
 
   // Cargar configuraciones desde localStorage o API
-  loadConfiguraciones() {
+  public loadConfiguraciones() {
     try {
       this.parametrosDeConfiguracion = this._configuracionService.cargarConfiguraciones();
     } catch (e) {
@@ -68,7 +68,7 @@ export class FormularioAbastoComponent {
 
 
   // Establecer configuraciones en variables del componente
-  setConfiguraciones() {
+  public setConfiguraciones() {
     this.usuarioDeEntrada = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 3)?.parametroDeConfiguracion!;
     this.usuarioDeSalida = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 4)?.parametroDeConfiguracion!;
     this.operacionEntrada = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 5)?.parametroDeConfiguracion!;
@@ -76,7 +76,7 @@ export class FormularioAbastoComponent {
   }
 
    //Usuario Logueado
-   establecerOperacionValor() {
+   public establecerOperacionValor() {
     const usuarioLogueado = JSON.parse(localStorage.getItem('actualUser') || '{}');
     this.usuarioLogueado = usuarioLogueado.nombre_usuario;
     if (usuarioLogueado.nombre_usuario == this.usuarioDeEntrada)
@@ -102,13 +102,13 @@ export class FormularioAbastoComponent {
     this.dataListaDeLecturas.paginator = this.paginacionTabla;
   }
 
-  aplicarFiltroTabla(event: Event){
+  public aplicarFiltroTabla(event: Event){
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataListaDeLecturas.filter = filterValue.trim().toLocaleLowerCase();
   }
 
   // Obtiene y filtra las lecturas según el tipo de operación del usuario
-  GetListaDeLecturas() {
+  public GetListaDeLecturas() {
 
     this._abastoService.GetLecturasDeAbasto().subscribe({
       next: (data) => {
@@ -135,34 +135,42 @@ export class FormularioAbastoComponent {
   }
 
 
-  async InsertarLecturaDeMedia(idMedia: string) {
-    if(this.usuarioLogueado == this.usuarioDeSalida){
-      try {
-        const respuesta = await this._abastoService.GetLecturaDeAbastoFiltrada(idMedia).toPromise();
-        if(respuesta?.esCorrecto){
-          idMedia = respuesta.resultado.lecturaDeMedia;
+  public async InsertarLecturaDeMedia(idMedia: string) {
+    
+    if(idMedia.length <= 39){
+      if(this.usuarioLogueado == this.usuarioDeSalida){
+        try {
+          const respuesta = await this._abastoService.GetLecturaDeAbastoFiltrada(idMedia).toPromise();
+          if(respuesta?.esCorrecto){
+            idMedia = respuesta.resultado.lecturaDeMedia;
+          }
+        } catch (error) {
+          this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
+          return; 
         }
-      } catch (error) {
-        this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
-        return; 
       }
-    }
 
-    this._abastoService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion, this.usuarioLogueado).subscribe({
-      next: (data) => {
-        if (data.esCorrecto) {
-          this.codigoRecibido = ''; 
-          this.GetListaDeLecturas();           
-        } else {
-          this._utilidadesServicicio.mostrarAlerta('No se puede insertar los datos', 'Error');
-          this.codigoRecibido = '';
+      this._abastoService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion, this.usuarioLogueado).subscribe({
+        next: (data) => {
+          if (data.esCorrecto) {
+            this.codigoRecibido = ''; 
+            this.GetListaDeLecturas();           
+          } else {
+            this._utilidadesServicicio.mostrarAlerta('No se puede insertar los datos', 'Error');
+            this.codigoRecibido = '';
+          }
+        },
+        error: (e) => {
+          console.error(e);
+          this._utilidadesServicicio.mostrarAlerta('Error al enviar el código QR', 'Error');
         }
-      },
-      error: (e) => {
-        console.error(e);
-        this._utilidadesServicicio.mostrarAlerta('Error al enviar el código QR', 'Error');
-      }
-    });
+      });
+    }else{
+      this._utilidadesServicicio.mostrarAlerta("La lectura no puede exceder los 39 caracteres", "Error")
+      this.codigoRecibido = '';
+      return;
+    }
+      
   }
 
   ubicarUltimaFilaInsertada(row: LecturaDeAbastoDTO): boolean {
