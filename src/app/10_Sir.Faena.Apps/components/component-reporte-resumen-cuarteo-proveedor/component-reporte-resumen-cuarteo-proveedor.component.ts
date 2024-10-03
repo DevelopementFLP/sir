@@ -6,7 +6,6 @@ import { ReporteDeMediasProveedorDTO } from '../../Interfaces/ReporteDeMediasDTO
 
 import * as ExcelJS from 'exceljs';
 import { MetodosExcelCuarteoService } from '../../helpers/Metodos-Excel-Cuarteo/metodos-excel-cuarteo.service';
-import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Genericos/metodos-Excel-Genericos.service';
 
 @Component({
   selector: 'component-reporte-resumen-cuarteo-proveedor',
@@ -24,7 +23,6 @@ export class ComponenteReporteFaenaProveedorComponent {
   constructor(
     private _reporteDeMedia: DataFaenaService,
     private _utilidadesServicicio: UtilidadesService,
-    private _metodosDeExcelGenericosServicio: MetodosExcelGenericosService,
     private _metodosDeExcelCuarteoServicio: MetodosExcelCuarteoService
   ){
   }

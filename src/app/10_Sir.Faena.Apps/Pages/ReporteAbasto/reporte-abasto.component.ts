@@ -156,7 +156,7 @@ columnMapping: { [key: string]: string } = {
 public async exportarAExcel(): Promise<void> {
 
     const workbookAbasto = new ExcelJS.Workbook();
-    const worksheetAbasto = workbookAbasto.addWorksheet('Stock Actual');
+    const worksheetStockActual = workbookAbasto.addWorksheet('Stock Actual');
     const WorksheetEntradas = workbookAbasto.addWorksheet('Entradas Abasto');
     const WorksheetSalidas = workbookAbasto.addWorksheet('Salidas Abasto');
 
@@ -164,7 +164,7 @@ public async exportarAExcel(): Promise<void> {
     const startRow = 5; // Fila donde comienzan los datos
     const startColumn = 2; // Columna B es la columna 2
 
-    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, worksheetAbasto, 'Stock Actual', 'B2', 'L4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, worksheetStockActual, 'Stock Actual', 'B2', 'L4')
     await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetEntradas, 'Entradas de Abasto', 'B2', 'L4')
     await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetSalidas, 'Salidas de Abasto', 'B2', 'L4')
 
@@ -181,7 +181,7 @@ public async exportarAExcel(): Promise<void> {
 
     // Agregar encabezados de columna
     this.customHeaders.forEach((header, index) => {
-      worksheetAbasto.getCell(startRow, startColumn + index).value = header;
+      worksheetStockActual.getCell(startRow, startColumn + index).value = header;
       WorksheetEntradas.getCell(startRow, startColumn + index).value = header;
       WorksheetSalidas.getCell(startRow, startColumn + index).value = header;
     });
@@ -190,7 +190,7 @@ public async exportarAExcel(): Promise<void> {
     stockActual.forEach((item, rowIndex) => {
       const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
       row.forEach((value, colIndex) => {
-        worksheetAbasto.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
+        worksheetStockActual.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
       });
     });
 
@@ -210,13 +210,13 @@ public async exportarAExcel(): Promise<void> {
       });
     });
 
-    this.EncabezadoDeTabla(worksheetAbasto, "K5", "L5", "Resumen por Clasificacion")
+    this.EncabezadoDeTabla(worksheetStockActual, "K5", "L5", "Resumen por Clasificacion")
     this.EncabezadoDeTabla(WorksheetEntradas, "K5", "L5", "Resumen por Clasificacion")
     this.EncabezadoDeTabla(WorksheetSalidas, "K5", "L5", "Resumen por Clasificacion")
 
     //Crear la tabla con los datos
     if(stockActual.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "K6", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "K6", worksheetStockActual, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
     }
     if(entradas.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "K6", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
@@ -224,24 +224,36 @@ public async exportarAExcel(): Promise<void> {
     if(salidas.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "K6", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))      
     }
+
+    if(stockActual.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(stockActual))      
+    }
+
+    if(entradas.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(entradas))      
+    }
+
+    if(salidas.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(salidas))      
+    }
     
     //Estilos de Encabezados
-    this.AgregarEstilosEncabezados(worksheetAbasto, startRow)
+    this.AgregarEstilosEncabezados(worksheetStockActual, startRow)
     this.AgregarEstilosEncabezados(WorksheetEntradas, startRow)
     this.AgregarEstilosEncabezados(WorksheetSalidas, startRow)
 
     //Anchos de encabezados por Hojas
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 2, 18)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 3, 17)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 4, 12)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 5, 28)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 6, 20)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 7, 15)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 8, 10)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 9, 28)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 10, 5)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 11, 20)
-    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 12, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 2, 18)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 3, 17)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 4, 12)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 5, 28)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 6, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 7, 15)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 8, 10)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 9, 28)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 10, 5)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 11, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 12, 20)
 
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 2, 18)
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 3, 17)
@@ -305,6 +317,21 @@ public async exportarAExcel(): Promise<void> {
   public EncabezadoDeTabla(workSheet : ExcelJS.Worksheet, cellStart: string, cellEnd: string, titleTable: string){
     workSheet.mergeCells(cellStart + ':' + cellEnd);
     workSheet.getCell('K5').value = titleTable
+  }
+
+  public SumaCantidadPorTropa(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
+    const sumaPorTropa: { [key: string]: number } = {};
+    
+    listaDeDatos.forEach(lectura => {
+      if (lectura.tropa) {
+        if (!sumaPorTropa[lectura.tropa]) {
+          sumaPorTropa[lectura.tropa] = 0;
+        }
+        sumaPorTropa[lectura.tropa] += 1; // Incrementa la cantidad por cada lectura
+      }
+    });
+
+    return sumaPorTropa;
   }
 
 }
