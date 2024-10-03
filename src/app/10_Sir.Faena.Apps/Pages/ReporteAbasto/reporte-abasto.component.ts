@@ -1,6 +1,4 @@
-import { Data } from '@angular/router';
-import { Workbook } from 'exceljs';
-import { HttpClient } from '@angular/common/http';
+
 import { Component, ViewChild } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,9 +7,11 @@ import { AbastoService } from '../../Services/AbastoService.service';
 import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { ListaDeLecturasDTO } from '../../Interfaces/ListaDeLecturasDTO';
 
+import { MetodosExcelFaenaService } from '../../helpers/Metodos-Excel-Faena/metodos-excel-faena.service';
+import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Genericos/metodos-Excel-Genericos.service';
+
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import { MetodosExcelFaenaService } from '../../helpers/Metodos-Excel-Faena/metodos-excel-faena.service';
 
 @Component({
   selector: 'app-reporte-abasto',
@@ -46,18 +46,18 @@ export class ReporteAbastoComponent {
   constructor(
     private _utilidadesServicicio: UtilidadesService,
     private _lecturaDeMediaService : AbastoService,
-    private http: HttpClient,
-    private _metodosDeExcelService: MetodosExcelFaenaService
+    private _metodosDeExcelGenericoService: MetodosExcelGenericosService,
+    private _metodosDeExcelService: MetodosExcelFaenaService    
   ){}
 
-  formatoFecha(date: Date): string {
+  public formatoFecha(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
 
-  GetListaDeLecturasAbasto(fechaDelDia: Date | null) {
+  public GetListaDeLecturasAbasto(fechaDelDia: Date | null) {
       
       if(fechaDelDia){
       const fecha = this.formatoFecha(fechaDelDia);
@@ -83,7 +83,7 @@ export class ReporteAbastoComponent {
       }      
     }    
 
-    stockActualEnCamara() {
+    public stockActualEnCamara() {
       if (this.mostrarStockActual) {
         
         // filtro 2 tablas con las entradas y salidas
@@ -104,7 +104,7 @@ export class ReporteAbastoComponent {
       this.sumarPesosPorLinea();
     }
 
-    sumarPesosPorLinea(): void {
+    public sumarPesosPorLinea(): void {
         let totalPesos = 0;
         let totalRegistrosEtiquetados = 0;
         let totalRegistrosSinEtiqueta = 0;
@@ -153,20 +153,27 @@ columnMapping: { [key: string]: string } = {
 };
 
 
-async exportarAExcel(): Promise<void> {
+public async exportarAExcel(): Promise<void> {
+
     const workbookAbasto = new ExcelJS.Workbook();
     const worksheetAbasto = workbookAbasto.addWorksheet('Stock Actual');
     const WorksheetEntradas = workbookAbasto.addWorksheet('Entradas Abasto');
     const WorksheetSalidas = workbookAbasto.addWorksheet('Salidas Abasto');
 
-    const startRow = 3; // Fila donde comienzan los datos
+
+    const startRow = 5; // Fila donde comienzan los datos
     const startColumn = 2; // Columna B es la columna 2
+
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, worksheetAbasto, 'Stock Actual', 'B2', 'L4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetEntradas, 'Entradas de Abasto', 'B2', 'L4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetSalidas, 'Salidas de Abasto', 'B2', 'L4')
+
     // Filtrar y agregar datos a las hojas correspondientes
     const listaTotal = this.dataListaDeLecturasAbasto.data;
     const entradas = listaTotal.filter(item => item.operacion.includes('Entrada'));
     const salidas = listaTotal.filter(item => item.operacion.includes('Salida'));
 
-    // me quedo con los id de las salidas
+    // Me quedo con los id de las salidas
     const idDeSalidas = new Set(salidas.map(item => item.idAnimal));    
     // filtro las entradas que no tienen salidas por los ID
     const stockActual = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
@@ -178,7 +185,6 @@ async exportarAExcel(): Promise<void> {
       WorksheetEntradas.getCell(startRow, startColumn + index).value = header;
       WorksheetSalidas.getCell(startRow, startColumn + index).value = header;
     });
-
 
     // Agregar datos a la hoja de Reporte de Abasto
     stockActual.forEach((item, rowIndex) => {
@@ -204,27 +210,62 @@ async exportarAExcel(): Promise<void> {
       });
     });
 
-    //Combina las celdas y agrega el enxabezado con el mismo formato
-    this._metodosDeExcelService.AgregarEncabezadoDeHojas(worksheetAbasto, "Stock Actual")
-    this._metodosDeExcelService.AgregarEncabezadoDeHojas(WorksheetEntradas, "Entradas En Abasto")
-    this._metodosDeExcelService.AgregarEncabezadoDeHojas(WorksheetSalidas, "Salidas En Abasto")
-    
+    this.EncabezadoDeTabla(worksheetAbasto, "K5", "L5", "Resumen por Clasificacion")
+    this.EncabezadoDeTabla(WorksheetEntradas, "K5", "L5", "Resumen por Clasificacion")
+    this.EncabezadoDeTabla(WorksheetSalidas, "K5", "L5", "Resumen por Clasificacion")
 
     //Crear la tabla con los datos
-    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "J4", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
-    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "J4", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
-    this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "J4", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))
+    if(stockActual.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "K6", worksheetAbasto, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
+    }
+    if(entradas.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "K6", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
+    }
+    if(salidas.length > 0){
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "K6", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))      
+    }
+    
+    //Estilos de Encabezados
+    this.AgregarEstilosEncabezados(worksheetAbasto, startRow)
+    this.AgregarEstilosEncabezados(WorksheetEntradas, startRow)
+    this.AgregarEstilosEncabezados(WorksheetSalidas, startRow)
 
+    //Anchos de encabezados por Hojas
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 2, 18)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 3, 17)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 4, 12)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 5, 28)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 6, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 7, 15)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 8, 10)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 9, 28)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 10, 5)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 11, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetAbasto, 12, 20)
 
-    // Ajustar el ancho de las columnas para cada hoja
-    this._metodosDeExcelService.AdjustColumnWidths(worksheetAbasto);
-    this._metodosDeExcelService.AdjustColumnWidths(WorksheetEntradas);
-    this._metodosDeExcelService.AdjustColumnWidths(WorksheetSalidas);    
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 2, 18)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 3, 17)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 4, 12)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 5, 28)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 6, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 7, 15)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 8, 10)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 9, 28)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 10, 5)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 11, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 12, 20)
 
-    // Insertar el logo en todas las hojas
-    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, worksheetAbasto);
-    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, WorksheetEntradas);
-    await this._metodosDeExcelService.InsertarLogoEnLasHojas(workbookAbasto, WorksheetSalidas);
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 2, 18)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 3, 17)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 4, 12)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 5, 28)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 6, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 7, 15)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 8, 10)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 9, 28)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 10, 5)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 11, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 12, 20)
 
     const fechaActual = new Date();
     const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds();
@@ -234,7 +275,7 @@ async exportarAExcel(): Promise<void> {
     saveAs(new Blob([buffer]), 'Reporte_Abasto ' + horaActual + '.xlsx');
   }
 
-  SumaDePesosPorClasificacion(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
+  public SumaDePesosPorClasificacion(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
     const sumaPorClasificacion: { [key: string]: number } = {};
     listaDeDatos.forEach(lectura => {
       if (lectura.clasificacion && !isNaN(lectura.peso)) {
@@ -244,8 +285,27 @@ async exportarAExcel(): Promise<void> {
         sumaPorClasificacion[lectura.clasificacion] += lectura.peso;
       }
     });
-    return sumaPorClasificacion;
+    return sumaPorClasificacion;    
   }  
+
+  public AgregarEstilosEncabezados(workSheet : ExcelJS.Worksheet, row: number){
+    workSheet.getRow(row).font = {
+      size: 16,
+      name: 'Cambria', 
+      bold: true,
+    }
+  }
+
+  public AjustarAnchoDeLasColumnas(workSheet : ExcelJS.Worksheet, column: number ,broad: number){
+
+    workSheet.getColumn(column).width = broad;
+
+  }
+
+  public EncabezadoDeTabla(workSheet : ExcelJS.Worksheet, cellStart: string, cellEnd: string, titleTable: string){
+    workSheet.mergeCells(cellStart + ':' + cellEnd);
+    workSheet.getCell('K5').value = titleTable
+  }
 
 }
   

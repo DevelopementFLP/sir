@@ -34,6 +34,8 @@ import { PopUpTamanotipoComponent } from './pages/stock-cajas/components/pop-up-
 import { EntregaNoSolicitadaComponent } from './pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
 import { ReporteCuotaComponent } from './pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 import { ReporteCuotaDisplayComponent } from './pages/cuota/components/reporte-cuota-display/reporte-cuota-display.component';
+import { FichaTecnicaProductoComponent } from './pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
+import { SplitterModule } from 'primeng/splitter';
 
 
 
@@ -69,7 +71,8 @@ import { ReporteCuotaDisplayComponent } from './pages/cuota/components/reporte-c
         PopUpTamanotipoComponent,
         EntregaNoSolicitadaComponent,
         ReporteCuotaComponent,
-        ReporteCuotaDisplayComponent
+        ReporteCuotaDisplayComponent,
+        FichaTecnicaProductoComponent,
     ],
     exports: [
         MainPageComponent
@@ -79,7 +82,8 @@ import { ReporteCuotaDisplayComponent } from './pages/cuota/components/reporte-c
         CommonModule,
         FormsModule,
         SharedModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SplitterModule
     ]
 })
 

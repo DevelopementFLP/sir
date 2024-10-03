@@ -2,7 +2,7 @@
 
   <mat-card-content>
     <mat-form-field style="margin:20px">
-      <mat-label>Dia de Comienzo</mat-label>
+      <mat-label>Fecha de Consulta</mat-label>
       <input matInput [matDatepicker]="pickerDesde" [(ngModel)]="fechaDelDia" placeholder="Ingrese Fecha Desde">
       <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
       <mat-datepicker #pickerDesde></mat-datepicker>
@@ -24,7 +24,7 @@
           <mat-list-item>Peso Total En Stock: {{totalDePesos}}  </mat-list-item>                  
           <mat-divider></mat-divider>
           <section class="example-section">
-            <mat-checkbox class="example-margin" [(ngModel)]="mostrarStockActual" (change)="stockActualEnCamara()">Stock Sin Salidas</mat-checkbox>
+            <mat-checkbox class="example-margin" [(ngModel)]="mostrarStockActual" (change)="stockActualEnCamara()">Stock Disponible</mat-checkbox>
           </section>
         </mat-list>
       </div>

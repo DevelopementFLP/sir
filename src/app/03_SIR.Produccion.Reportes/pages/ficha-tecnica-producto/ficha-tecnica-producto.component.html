@@ -1,0 +1,431 @@
+<body>
+    <div class="flex-container-encabezado">
+        <div class="flex-items-encabezado">
+            <input             
+             type="text" 
+             pInputText [(ngModel)]="codigoDeProducto" 
+             placeholder="Codigo de Producto"
+             />
+        </div>  
+        
+        <div class="flex-items-encabezado">
+            <p-button 
+            label="Descargar Excel" 
+            (click)="GenerarFichaEnExcel()"
+            />
+        </div>
+    </div>    
+
+    <!-- SECCION 1 -->
+
+    <div class="grid-container-seccion-1">
+        <div class="grid-items-seccion caj-1">
+            <img src="assets/images/logos/logo_ficha_tecnica_1.png">            
+        </div>
+        <div class="grid-items-seccion caj-2">
+            <h1>FRIGORIFICO LAS PIEDRAS S.A.</h1>          
+        </div>
+        <div class="grid-items-seccion caj-3">
+            <img src="assets/images/logos/logo_ficha_tecnica_2.png">            
+        </div>
+        <div class="grid-items-seccion caj-4">
+            <p>RUTA 36 km 26.100  - CANELONES - URUGUAY</p>            
+        </div>
+        <div class="grid-items-seccion caj-5">
+            <p> Tel: (+598) 2367 7720</p>            
+        </div>
+        <div class="grid-items-seccion caj-6">
+            <p>Website: flp.uy</p>            
+        </div>
+        <div class="grid-items-seccion caj-7">
+            <p>ESTABLECIMIENTO HABILITADO MGAP 379 </p>            
+        </div>
+    </div>
+
+    <!-- SECCION 2 -->
+
+    <div class="grid-container-seccion-2">
+        <div class="grid-items-seccion caj-1-sec-2">
+            <h1>FICHA TÉCNICA / DATA SHEET</h1>
+        </div>     
+        <div class="grid-items-seccion caj-2-sec-2">
+            <p>Producto / Product</p>
+        </div>  
+        <div class="grid-items-seccion caj-3-sec-2">
+            <p>Nombre / Name</p>
+        </div>  
+        <div class="grid-items-seccion caj-4-sec-2">
+            <p>Código /Code</p>
+        </div>  
+        <div class="grid-items-seccion caj-5-sec-2">
+            <p>Otro /Other</p>
+        </div>   
+
+        <!-- Datos a Cargar -->
+        <div class="grid-items-seccion cajas-de-datos">
+            <p>Datos Pendientes</p>
+        </div>  
+        <div class="grid-items-seccion cajas-de-datos">
+            <p>Datos Pendientes</p>
+        </div>  
+        <div class="grid-items-seccion cajas-de-datos">
+            <p>Datos Pendientes</p>
+        </div>  
+        <div class="grid-items-seccion cajas-de-datos">
+            <p>Datos Pendientes</p>
+        </div>  
+    </div>
+
+    <!-- SECCION 3 -->
+
+    <div class="grid-container-seccion-3">
+        <div class="grid-items-seccion caj-1-sec-3">
+            <h1>ASPECTOS GENERALES / GENERAL DATA</h1>
+        </div> 
+        <div class="grid-items-seccion caj-2-sec-3">
+            <p>Marca / Brand</p>
+        </div>  
+        <div class="grid-items-seccion caj-3-sec-3">
+            <p>Destino / Destination</p>
+        </div> 
+        <div class="grid-items-seccion caj-4-sec-3">
+            <p>Uso previsto / Expected use</p>
+        </div> 
+        <div class="grid-items-seccion caj-5-sec-3">
+            <p>Alérgenos / Allergens</p>
+        </div> 
+        <div class="grid-items-seccion caj-6-sec-3">
+            <p>Condiciones de almacenamiento / Storage conditions</p>
+        </div> 
+        <div class="grid-items-seccion caj-7-sec-3">
+            <p>Vida útil / Shelf life</p>
+        </div> 
+        
+        <!-- Datos a Cargar -->
+        <div class="grid-items-seccion caj-8-sec-3">
+            <p>Datos Pendientes 1</p>
+        </div>  
+
+        <div class="grid-items-seccion caj-9-sec-3">
+            <p>Datos Pendientes 2</p>
+        </div>  
+
+        <div class="grid-items-seccion caj-10-sec-3">
+            <p>Datos Pendientes 3</p>
+        </div> 
+         
+        <div class="grid-items-seccion caj-11-sec-3">
+            <p>Datos Pendientes 4</p>
+        </div>  
+
+        <div class="grid-items-seccion caj-12-sec-3">
+            <p>Datos Pendientes 5</p>
+        </div>  
+
+        <div class="grid-items-seccion caj-13-sec-3">
+            <p>Datos Pendientes 6</p>
+        </div>  
+    </div>
+
+    <!-- SECCION 4 -->
+
+    <div class="grid-container-seccion-4">
+        <div class="grid-items-seccion caj-1-sec-4">
+            <h1>CORTE / CUT</h1>
+        </div>
+    </div>
+
+    <div class="grid-container-imagenes-sec-4">
+        <div class="grid-item-imagenes-sec-4">
+            <img src= "assets/images/FichaTecnica/foto_sec_1.png" />
+        </div>
+        <div class="grid-item-imagenes-sec-4">
+            <img src= "assets/images/FichaTecnica/foto_sec_2.png" />
+        </div>
+        <div class="grid-item-imagenes-sec-4">
+            <img src= "assets/images/FichaTecnica/foto_sec_3.png" />
+        </div>  
+    </div>
+
+    <!-- SECCION 5 -->
+
+    <div class="grid-container-seccion-5">
+        <div class="grid-items-seccion caj-1-sec-5">
+            <h1>ENVASE / PACKING</h1>
+        </div>
+        <div class="grid-items-seccion caj-2-sec-5">
+            <p>Envase primario con etiqueta interna / Primary packing with internal label</p>
+        </div>
+    </div>
+
+    <div class="grid-container-imagenes-sec-5">
+        <div class="grid-item-imagenes-sec-5">
+            <img src= "assets/images/FichaTecnica/foto1.png" />
+        </div>
+        <div class="grid-item-imagenes-sec-5">
+            <img src= "assets/images/FichaTecnica/foto2.png" />
+        </div>
+        <div class="grid-item-imagenes-sec-5">
+            <img src= "assets/images/FichaTecnica/foto3.png" />
+        </div>  
+    </div>
+
+
+    <!-- SECCION 6 -->
+
+    <div class="grid-container-seccion-6">
+        <div class="grid-items-seccion caj-1-sec-6">
+            <p>Tipo / Type</p>
+        </div>
+        
+        <div class="grid-items-seccion caj-2-sec-6">
+            <p>Datos Pendientes 1</p>
+        </div>
+
+        <div class="grid-items-seccion caj-3-sec-6">
+            <p>Presentación / Presentation</p>
+        </div>
+
+        <div class="grid-items-seccion caj-4-sec-6">
+            <p>Datos Pendientes 2</p>
+        </div>
+    </div>
+
+    <!-- SECCION 7 -->
+
+    <div class="grid-container-seccion-7">
+        <div class="grid-items-seccion caj-1-sec-7">
+            <p>Envase secundario / Secondary packing</p>
+        </div>
+        
+        <div class="grid-items-seccion caj-2-sec-7">
+            <p>Peso Promedio / Avg. Weight</p>
+        </div>
+
+        <div class="grid-items-seccion caj-3-sec-7">
+            <p>Unidades por caja / Pieces in the box</p>
+        </div>
+
+        <div class="grid-items-seccion caj-4-sec-7">
+            <p>Dimensiones / Dimensions (cm)</p>
+        </div>
+
+        <div class="grid-container-imagenes-sec-7">
+            <div class="grid-item-imagenes-sec-7">
+                <img src= "assets/images/FichaTecnica/foto_sec_2_1.png" />
+            </div>
+            <div class="grid-item-imagenes-sec-7">
+                <img src= "assets/images/FichaTecnica/foto_sec_2_2.png" />
+            </div>
+            <div class="grid-item-imagenes-sec-7">
+                <img src= "assets/images/FichaTecnica/foto_sec_2_3.png" />
+            </div>  
+        </div>
+
+        <div class="grid-container-imagenes-sec-7-img-2">
+            <div class="grid-item-imagenes-sec-7-img-2">
+                <img src= "assets/images/FichaTecnica/foto_sec_2_4.png" />
+            </div>  
+        </div>
+        
+        <!-- DATOS -->
+        <div class="grid-items-seccion caj-5-sec-7">
+            <p>Datos Pendientes 1</p>
+        </div>
+
+        <div class="grid-items-seccion caj-6-sec-7">
+            <p>Datos Pendientes 2</p>
+        </div>
+
+        <div class="grid-items-seccion caj-7-sec-7">
+            <p>Datos Pendientes 3</p>
+        </div>
+
+        <div class="grid-items-seccion caj-8-sec-7">
+            <p>Datos Pendientes 4</p>
+        </div>
+
+        <div class="grid-items-seccion caj-9-sec-7">
+            <p>Idioma / Language</p>
+        </div>
+    </div>
+
+    <!-- SECCION 8 -->
+
+    <div class="grid-container-seccion-8">
+        <div class="grid-items-seccion caj-1-sec-8">
+            <p>ESPECIFICACIONES / SPECIFICATION</p>
+        </div>
+        
+        <div class="grid-items-seccion caj-2-sec-8">
+            <p>Especificaciones de corte - Cut specifications</p>
+        </div>
+
+        <div class="grid-items-seccion caj-3-sec-8">
+            <p>Parámetros microbiológicos - Microbiological parameters</p>
+        </div>
+
+        <div class="grid-items-seccion caj-4-sec-8">
+            <p>Grasa visible/Visible fat</p>
+        </div>
+
+        <div class="grid-items-seccion caj-5-sec-8">
+            <p>Espesor cobertura/coverage thickness</p>
+        </div>
+
+        <div class="grid-items-seccion caj-6-sec-8">
+            <p>Ganglios/Node</p>
+        </div>
+
+        <div class="grid-items-seccion caj-7-sec-8">
+            <p>Hematomas</p>
+        </div>
+
+        <div class="grid-items-seccion caj-8-sec-8">
+            <p>Huesos y cartilagos/Bones and cartilage</p>
+        </div>
+
+        <div class="grid-items-seccion caj-9-sec-8">
+            <p>Elementos extraños/Foreig element</p>
+        </div>
+
+        <div class="grid-items-seccion caj-10-sec-8">
+            <p>Color/Color</p>
+        </div>
+
+        <div class="grid-items-seccion caj-11-sec-8">
+            <p>Olor/odor</p>
+        </div>
+
+        <div class="grid-items-seccion caj-12-sec-8">
+            <p>pH</p>
+        </div>
+
+        <div class="grid-items-seccion caj-13-sec-8">
+            <p>Aerobios mesófilos totales (ufc/g)/ Mesophilic Total (cfu/g)</p>
+        </div>
+
+        <div class="grid-items-seccion caj-14-sec-8">
+            <p>Enterobacterias (ufc/g)/ Enterobacterias (cfu/g)</p>
+        </div>
+
+        <div class="grid-items-seccion caj-15-sec-8">
+            <p>STEC O157:H7 (en/in 375g)</p>
+        </div>
+
+        <div class="grid-items-seccion caj-16-sec-8">
+            <p>STEC no O157:H7 (en/in 375g)</p>
+        </div>
+
+        <div class="grid-items-seccion caj-17-sec-8">
+            <p>Salmonella (en/in 25g)</p>
+        </div>
+
+        <div class="grid-items-seccion caj-18-sec-8">
+            <p>Estafilococos (ufc/g)/Staphylococcus(cfu/g)</p>
+        </div>
+
+        <!-- DATOS -->
+
+        <div class="grid-items-seccion caj-19-sec-8">
+            <p>Datos Pendientes 1</p>
+        </div>
+
+        <div class="grid-items-seccion caj-20-sec-8">
+            <p>Datos Pendientes 2</p>
+        </div>
+
+        <div class="grid-items-seccion caj-21-sec-8">
+            <p>Datos Pendientes 3</p>
+        </div>
+
+        <div class="grid-items-seccion caj-22-sec-8">
+            <p>Datos Pendientes 4</p>
+        </div>
+
+        <div class="grid-items-seccion caj-23-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-24-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-25-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-26-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-27-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-28-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-29-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-30-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-31-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-32-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+
+        <div class="grid-items-seccion caj-33-sec-8">
+            <p>Datos Pendientes 5</p>
+        </div>
+    </div>
+    
+    <!-- SECCION 9 -->
+
+    <div class="grid-container-seccion-9">
+        <div class="grid-items-seccion caj-1-sec-9">
+            <p>Observaciones / Observations</p>
+        </div>
+        
+        <div class="grid-items-seccion caj-2-sec-9">
+            <p>Elaborado por :</p>
+        </div>
+
+        <div class="grid-items-seccion caj-3-sec-9">
+            <p>Aprobado por :</p>
+        </div>
+
+        <div class="grid-items-seccion caj-4-sec-9">
+            <p>Fecha: </p>
+        </div>
+
+        <!-- DATOS -->
+
+        <div class="grid-items-seccion caj-5-sec-9">
+            <p>Datos pendientes 1 </p>
+        </div>
+
+        <div class="grid-items-seccion caj-6-sec-9">
+            <p>Datos pendientes 2 </p>
+        </div>
+
+        <div class="grid-items-seccion caj-7-sec-9">
+            <p>Datos pendientes 3 </p>
+        </div>
+
+        <div class="grid-items-seccion caj-7-sec-9">
+            <p>Datos pendientes 4 </p>
+        </div>
+
+    </div>
+
+  
+</body>
