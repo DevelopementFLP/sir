@@ -27,6 +27,12 @@ export class BodyReporteMediasComponent {
   public listaDeHorasDesde: string[] = [];
   public listaDeHorasHasta: string[] = [];
 
+  public sumaDePesos: number = 0;
+  public sumaDeUnidades: number = 0;
+  public sumaPorGrade: number = 0;
+  public resultadoCuartosPorGrade: { grade: string, totalCuartos: number, porcentaje: number }[] = []; 
+  public responseReporteDeMediasProducto: ReporteDeMediasProductosDTO[] = [];
+
   public generarListaDesde(): void {
     this.listaDeHorasDesde = [];
     for (let i = 14; i < 22; i += 2) {
@@ -40,11 +46,7 @@ export class BodyReporteMediasComponent {
     }
   }
 
-  public sumaDePesos: number = 0;
-  public sumaDeUnidades: number = 0;
-  public sumaPorGrade: number = 0;
-  public resultadoCuartosPorGrade: { grade: string, totalCuartos: number, porcentaje: number }[] = []; 
-  public responseReporteDeMediasProducto: ReporteDeMediasProductosDTO[] = [];
+
 
   @ViewChild(ComponenteReporteFaenaProveedorComponent) _conexionConComponenteProveedor! : ComponenteReporteFaenaProveedorComponent;
 
