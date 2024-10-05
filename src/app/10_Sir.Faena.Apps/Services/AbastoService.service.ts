@@ -39,7 +39,7 @@ export class AbastoService {
       return this.http.get<ApiResponse>(`${urlInsertarLecturaDeAbasto}`, { params });
   }
 
-  GetVistaLecturasDeAbasto(fechaDelDia: string):Observable<ApiResponse>{
-    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}=${fechaDelDia}`)
+  GetListarStockAbasto():Observable<ApiResponse>{
+    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}`)
   }
 }

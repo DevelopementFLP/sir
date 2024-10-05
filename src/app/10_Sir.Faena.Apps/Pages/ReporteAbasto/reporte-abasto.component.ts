@@ -57,11 +57,9 @@ export class ReporteAbastoComponent {
     return `${year}-${month}-${day}`;
   }
 
-  public GetListaDeLecturasAbasto(fechaDelDia: Date | null) {
+  public GetListaDeStockDeAbasto() {
       
-      if(fechaDelDia){
-      const fecha = this.formatoFecha(fechaDelDia);
-      this._lecturaDeMediaService.GetVistaLecturasDeAbasto(fecha).subscribe({
+      this._lecturaDeMediaService.GetListarStockAbasto().subscribe({
         next: (data) => {
           if (data.esCorrecto && data.resultado.length > 0) {
             this.dataListaDeLecturasAbasto.data = data.resultado;
@@ -76,11 +74,9 @@ export class ReporteAbastoComponent {
         },
         error: (e) => {
           console.error(e);
+          this._utilidadesServicicio.mostrarAlerta(e.Message,"Error")
         }
-      });
-      }else{
-        this._utilidadesServicicio.mostrarAlerta("Seleccione una Fecha ","Error")
-      }      
+      });    
     }    
 
     public stockActualEnCamara() {
@@ -230,11 +226,11 @@ public async exportarAExcel(): Promise<void> {
     }
 
     if(entradas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(entradas))      
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropaEntradas", "K24", WorksheetEntradas, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(entradas))      
     }
 
     if(salidas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(salidas))      
+      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropaSalidas", "K24", WorksheetSalidas, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(salidas))      
     }
     
     //Estilos de Encabezados
