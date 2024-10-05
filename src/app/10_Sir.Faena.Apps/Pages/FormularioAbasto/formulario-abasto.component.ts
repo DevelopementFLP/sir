@@ -27,10 +27,12 @@ export class FormularioAbastoComponent {
   public usuarioDeSalida: string = "";
   public operacionEntrada: string = ""
   public operacionSalida: string = ""
+  public ultimoSecuencialEscaneado: string = "";
+  public ultimoLadoEscaneado: string = "";
 
   //Auxiliares
   public codigoRecibido: string = '';
-  public columnasTablaDeAbasto: string[] = ['lecturaDeScaner', 'idAnimal', 'secuencia', 'operacion']
+  public columnasTablaDeAbasto: string[] = ['lecturaDeScaner', 'idAnimal', 'secuencia', 'operacion', 'fechaDeRegistro']
   public valorDeOperacion: string = ""
   public totalLecturas: number = 0
 
@@ -117,7 +119,9 @@ export class FormularioAbastoComponent {
 
           // Filtrar los datos segun el usuario logueado
           if (this.usuarioLogueado == this.usuarioDeEntrada || this.usuarioLogueado == this.usuarioDeSalida) {
-            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.usuarioLogueado === this.usuarioLogueado);        
+            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.usuarioLogueado === this.usuarioLogueado);   
+            this.ultimoSecuencialEscaneado = data.resultado[0].secuencial;    
+            this.ultimoLadoEscaneado = data.resultado[0].idAnimal.substring(12) 
           } else {          
             this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia;
           }
@@ -156,7 +160,7 @@ export class FormularioAbastoComponent {
             this.codigoRecibido = ''; 
             this.GetListaDeLecturas();           
           } else {
-            this._utilidadesServicicio.mostrarAlerta('No se puede insertar los datos', 'Error');
+            this._utilidadesServicicio.mostrarAlerta('Dato Duplicado o Error de lectura', 'Error');
             this.codigoRecibido = '';
           }
         },

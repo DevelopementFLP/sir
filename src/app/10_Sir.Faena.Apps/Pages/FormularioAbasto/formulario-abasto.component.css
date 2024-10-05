@@ -4,18 +4,43 @@
   width: 100%;
 }
 
-.flex-container {
-  display: flex;
-  flex-wrap: wrap; /* Esto deja que los elementos se ajusten a varias líneas  */
-  gap: 10px; /* Espacio entre las cajitas */
-  justify-content: center; /* alineacion de las cajitas en el medio */
+.grid-container-panel{
+  display: grid;
+  grid-template-columns: 40% auto;
+  border: 1px solid #ddd;
 }
 
-.flex-item {
-  flex: 1 1 200px; /* Crece y se encoge según el espacio disponible, y la base es de 200px */
+.grid-item-panel-1{
   padding: 10px;
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item-panel-2 {
+  display: grid; 
+  grid-template-columns: auto auto; 
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: black;
+  color: red; 
+  font-weight: bold; 
+  align-items: center; 
+}
+
+.grid-item-panel-titulo {
+  display: flex; /* Activar Flexbox para la alineación */
+  align-items: center; /* Alinear verticalmente el contenido */
+}
+
+.secuencial {
+  font-size: 16px; /* Tamaño de fuente para "Sec:" */
+  margin-right: 5px; /* Espacio entre "Sec:" y el párrafo */
+}
+
+.codigo {
+  font-size: 80px; /* Tamaño de fuente más grande para "Seccion" */
+  margin: 0; /* Eliminar margen del párrafo */
 }
 
 .inputLecturaDeMedia{

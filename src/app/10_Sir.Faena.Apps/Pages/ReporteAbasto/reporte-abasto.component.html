@@ -1,14 +1,7 @@
 <mat-card style="margin:20px 40px 40px 40px">
 
   <mat-card-content>
-    <mat-form-field style="margin:20px">
-      <mat-label>Fecha de Consulta</mat-label>
-      <input matInput [matDatepicker]="pickerDesde" [(ngModel)]="fechaDelDia" placeholder="Ingrese Fecha Desde">
-      <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
-      <mat-datepicker #pickerDesde></mat-datepicker>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" (click)="GetListaDeLecturasAbasto(fechaDelDia)">
+    <button style="margin-bottom: 2rem; margin-top: 2rem;" mat-raised-button color="primary" (click)="GetListaDeStockDeAbasto()">
       <mat-icon mat-list-icon>autorenew</mat-icon> Actualizar
     </button>
 
