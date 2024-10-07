@@ -160,9 +160,9 @@ public async exportarAExcel(): Promise<void> {
     const startRow = 5; // Fila donde comienzan los datos
     const startColumn = 2; // Columna B es la columna 2
 
-    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, worksheetStockActual, 'Stock Actual', 'B2', 'L4')
-    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetEntradas, 'Entradas de Abasto', 'B2', 'L4')
-    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetSalidas, 'Salidas de Abasto', 'B2', 'L4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, worksheetStockActual, 'Stock Actual', 'B2', 'M4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetEntradas, 'Entradas de Abasto', 'B2', 'M4')
+    await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetSalidas, 'Salidas de Abasto', 'B2', 'M4')
 
     // Filtrar y agregar datos a las hojas correspondientes
     const listaTotal = this.dataListaDeLecturasAbasto.data;
@@ -220,18 +220,6 @@ public async exportarAExcel(): Promise<void> {
     if(salidas.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "K6", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))      
     }
-
-    if(stockActual.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropa", "K24", worksheetStockActual, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(stockActual))      
-    }
-
-    if(entradas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropaEntradas", "K24", WorksheetEntradas, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(entradas))      
-    }
-
-    if(salidas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaCantidadPorTropaSalidas", "K24", WorksheetSalidas, "Tropa", "Unidades por Tropa", this.SumaCantidadPorTropa(salidas))      
-    }
     
     //Estilos de Encabezados
     this.AgregarEstilosEncabezados(worksheetStockActual, startRow)
@@ -250,6 +238,7 @@ public async exportarAExcel(): Promise<void> {
     this.AjustarAnchoDeLasColumnas(worksheetStockActual, 10, 5)
     this.AjustarAnchoDeLasColumnas(worksheetStockActual, 11, 20)
     this.AjustarAnchoDeLasColumnas(worksheetStockActual, 12, 20)
+    this.AjustarAnchoDeLasColumnas(worksheetStockActual, 13, 20)
 
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 2, 18)
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 3, 17)
@@ -283,18 +272,22 @@ public async exportarAExcel(): Promise<void> {
     saveAs(new Blob([buffer]), 'Reporte_Abasto ' + horaActual + '.xlsx');
   }
 
-  public SumaDePesosPorClasificacion(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
-    const sumaPorClasificacion: { [key: string]: number } = {};
+  public SumaDePesosPorClasificacion(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: { totalPeso: number, totalUnidades: number } } {
+    const sumaPorClasificacion: { [key: string]: { totalPeso: number, totalUnidades: number } } = {};
+  
     listaDeDatos.forEach(lectura => {
       if (lectura.clasificacion && !isNaN(lectura.peso)) {
         if (!sumaPorClasificacion[lectura.clasificacion]) {
-          sumaPorClasificacion[lectura.clasificacion] = 0;
+          sumaPorClasificacion[lectura.clasificacion] = { totalPeso: 0, totalUnidades: 0 };
         }
-        sumaPorClasificacion[lectura.clasificacion] += lectura.peso;
+        sumaPorClasificacion[lectura.clasificacion].totalPeso += lectura.peso;
+        sumaPorClasificacion[lectura.clasificacion].totalUnidades += 1; 
       }
     });
+  
     return sumaPorClasificacion;    
-  }  
+  }
+
 
   public AgregarEstilosEncabezados(workSheet : ExcelJS.Worksheet, row: number){
     workSheet.getRow(row).font = {
@@ -313,21 +306,6 @@ public async exportarAExcel(): Promise<void> {
   public EncabezadoDeTabla(workSheet : ExcelJS.Worksheet, cellStart: string, cellEnd: string, titleTable: string){
     workSheet.mergeCells(cellStart + ':' + cellEnd);
     workSheet.getCell('K5').value = titleTable
-  }
-
-  public SumaCantidadPorTropa(listaDeDatos: ListaDeLecturasDTO[]): { [key: string]: number } {
-    const sumaPorTropa: { [key: string]: number } = {};
-    
-    listaDeDatos.forEach(lectura => {
-      if (lectura.tropa) {
-        if (!sumaPorTropa[lectura.tropa]) {
-          sumaPorTropa[lectura.tropa] = 0;
-        }
-        sumaPorTropa[lectura.tropa] += 1; // Incrementa la cantidad por cada lectura
-      }
-    });
-
-    return sumaPorTropa;
   }
 
 }

@@ -37,7 +37,7 @@ export class MetodosExcelFaenaService {
     }
   }
 
-  public CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: number }): void {
+  public CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: { totalPeso: number, totalUnidades: number } }): void {
     // Definir la tabla
     sheet.addTable({
       name: nombreDeTabla,
@@ -50,10 +50,16 @@ export class MetodosExcelFaenaService {
       },
       columns: [
         { name: nombreDeColumna1, filterButton: true },
-        { name: nombreDeColumna2,  totalsRowFunction: 'sum', filterButton: false },
+        { name: 'Total Peso', totalsRowFunction: 'sum', filterButton: false },
+        { name: 'Total Unidades', totalsRowFunction: 'sum', filterButton: false },
       ],
-      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [clasificacion, sumaPorClasificacion[clasificacion]]),
+      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [
+        clasificacion,
+        sumaPorClasificacion[clasificacion].totalPeso, // Peso total
+        sumaPorClasificacion[clasificacion].totalUnidades // Conteo de unidades
+      ]),
     });
   }
+  
 
 }

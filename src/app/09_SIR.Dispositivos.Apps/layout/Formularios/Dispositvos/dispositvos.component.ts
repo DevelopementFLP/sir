@@ -1,7 +1,6 @@
-import { Component, Inject, inject, OnInit , AfterViewInit, ViewChild } from '@angular/core';
+import { Component,  OnInit , ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
