@@ -1,0 +1,39 @@
+<h1>Ficha Técnica Sección Vida Útil</h1>
+<button (click)="CrearElemento()" pButton label="Crear Vida Útil"></button>
+
+<div class="flex-container">
+    <p-table    
+        [value]="responseVidaUtilDTO"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 15, 20]"
+        [scrollable]="true">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:20%">ID Vida Útil</th>
+                <th style="width:20%">Nombre</th>
+                <th style="width:20%">Duración</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-element>
+            <tr>
+                <td>{{element.idVidaUtil}}</td>
+                <td>
+                    <input *ngIf="vidaUtilSeleccionada?.idVidaUtil === element.idVidaUtil" [(ngModel)]="vidaUtilSeleccionada!.nombre" />
+                    <span *ngIf="vidaUtilSeleccionada?.idVidaUtil !== element.idVidaUtil">{{element.nombre}}</span>
+                </td>
+                <td>
+                    <input *ngIf="vidaUtilSeleccionada?.idVidaUtil === element.idVidaUtil" [(ngModel)]="vidaUtilSeleccionada!.duracion" />
+                    <span *ngIf="vidaUtilSeleccionada?.idVidaUtil !== element.idVidaUtil">{{element.duracion}}</span>
+                </td>
+                <td>
+                    <button pButton icon="pi pi-pencil" (click)="EditarElemento(element)" *ngIf="vidaUtilSeleccionada?.idVidaUtil !== element.idVidaUtil"></button>
+                    <button pButton icon="pi pi-check" (click)="GuardarCambios()" *ngIf="vidaUtilSeleccionada?.idVidaUtil === element.idVidaUtil"></button>
+                    <button pButton icon="pi pi-trash" (click)="EliminarElemento(element)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

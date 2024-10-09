@@ -1,0 +1,39 @@
+<h1>Ficha Técnica Sección pH</h1>
+<button (click)="CrearElemento()" pButton label="Crear pH"></button>
+
+<div class="flex-container">
+    <p-table    
+        [value]="responsePhDTO"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 15, 20]"
+        [scrollable]="true">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:20%">ID pH</th>
+                <th style="width:20%">Nombre</th>
+                <th style="width:20%">Valor</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-element>
+            <tr>
+                <td>{{element.idPh}}</td>
+                <td>
+                    <input *ngIf="phSeleccionado?.idPh === element.idPh" [(ngModel)]="phSeleccionado!.nombre" />
+                    <span *ngIf="phSeleccionado?.idPh !== element.idPh">{{element.nombre}}</span>
+                </td>
+                <td>
+                    <input *ngIf="phSeleccionado?.idPh === element.idPh" [(ngModel)]="phSeleccionado!.valor" type="number" />
+                    <span *ngIf="phSeleccionado?.idPh !== element.idPh">{{element.valor}}</span>
+                </td>
+                <td>
+                    <button pButton icon="pi pi-pencil" (click)="EditarElemento(element)" *ngIf="phSeleccionado?.idPh !== element.idPh"></button>
+                    <button pButton icon="pi pi-check" (click)="GuardarCambios()" *ngIf="phSeleccionado?.idPh === element.idPh"></button>
+                    <button pButton icon="pi pi-trash" (click)="EliminarElemento(element)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

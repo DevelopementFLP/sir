@@ -38,6 +38,7 @@ import { SIRConfiguracionParametrosModule } from './50_SIR.Configuracion.Paramet
 import { MatDialogModule } from '@angular/material/dialog';
 import { DispositivoModule } from './09_SIR.Dispositivos.Apps/09_SIR.Dispositivo.Apps.module';
 import { FaenaModule } from './10_Sir.Faena.Apps/10_Sir_Faena.Apps.module';
+import { ProduccionFichaTecnicaModule } from './11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module';
 
 
 registerLocaleData(localeEs);
@@ -74,7 +75,8 @@ registerLocaleData(localeEs);
     SIRConfiguracionParametrosModule,
     MatDialogModule,
     DispositivoModule,
-    FaenaModule
+    FaenaModule,
+    ProduccionFichaTecnicaModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },

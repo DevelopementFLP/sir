@@ -62,6 +62,7 @@ import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/componen
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 import { FichaTecnicaProductoComponent } from './03_SIR.Produccion.Reportes/pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
+import { HomeFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-ficha-tecnica/home-ficha-tecnica.component';
 
 
 
@@ -129,7 +130,8 @@ const routes: Routes = [
     { path: 'faena/lecturasAbasto', component: FormularioAbastoComponent},
     { path: 'faena/dashboardAbasto', component: ReporteAbastoComponent},
     {path: 'faena/ReporteDeCuarteo', component: ReporteDeMediasComponent},
-    {path: 'produccion/fichaTecnica', component: FichaTecnicaProductoComponent}
+    {path: 'produccion/fichaTecnica', component: FichaTecnicaProductoComponent},
+    {path: 'faena/MantenimientoDeFichaTecnica', component: HomeFichaTecnicaComponent}
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},
