@@ -60,6 +60,7 @@ import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Rep
 import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteDeMedias/reporte-de-medias.component';
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
+import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 
 
 
@@ -86,6 +87,7 @@ const routes: Routes = [
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
     { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
+    { path: 'produccion/rendimientos', component: RendimientosComponent},
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },

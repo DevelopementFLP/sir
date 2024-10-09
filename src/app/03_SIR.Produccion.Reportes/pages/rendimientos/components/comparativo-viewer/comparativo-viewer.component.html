@@ -1,0 +1,36 @@
+<div class="comparativo__container">    
+    <div class="contenedor">
+        <div class="qamark--container">
+            <div *ngFor="let qm of qamarksFiltrados">
+                <div class="">
+                    <div class="qamark-titulo">
+                        <p class="qm-title">{{qm}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tipo--container">
+            <div *ngFor="let tipo of tiposRendmientos; let i = index" class="tipo-rend">
+                <div class="tipos-title">
+                    {{tipo}}
+                </div>
+                <div class="tipos-title-data">
+                    <div>Peso Prom.</div>
+                    <div>% Rend.</div>
+                </div>
+                <div class="values--container">
+                    <div *ngFor="let data of dataAgrupada[i]; let idx = index"  [ngClass]="{'tipos-values-par': idx % 2 === 0, 'tipos-values-impar': idx % 2 !== 0}">
+                        <div>
+                            <div class="tipos-values" >
+                                <p *ngIf="data.pesoPromedio > 0">{{data.pesoPromedio | number:'0.2-2'}}</p>
+                                <p *ngIf="data.rendimiento > 0">{{data.rendimiento | percent:'0.2-2'}}</p>
+                                <p *ngIf="data.pesoPromedio == 0" class="no-data">-</p>
+                                <p *ngIf="data.rendimiento == 0" class="no-data">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
