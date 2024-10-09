@@ -251,6 +251,7 @@ public async exportarAExcel(): Promise<void> {
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 10, 5)
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 11, 20)
     this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 12, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetEntradas, 13, 20)
 
     this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 2, 18)
     this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 3, 17)
@@ -263,6 +264,7 @@ public async exportarAExcel(): Promise<void> {
     this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 10, 5)
     this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 11, 20)
     this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 12, 20)
+    this.AjustarAnchoDeLasColumnas(WorksheetSalidas, 13, 20)
 
     const fechaActual = new Date();
     const horaActual = fechaActual.getHours() + ':' + fechaActual.getMinutes() + ':' + fechaActual.getSeconds();
