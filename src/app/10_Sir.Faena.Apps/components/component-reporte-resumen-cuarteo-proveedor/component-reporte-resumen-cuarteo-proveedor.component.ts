@@ -5,17 +5,14 @@ import { ReporteDeMediasProveedorDTO } from '../../Interfaces/ReporteDeMediasDTO
 
 
 import * as ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
 import { MetodosExcelCuarteoService } from '../../helpers/Metodos-Excel-Cuarteo/metodos-excel-cuarteo.service';
-import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Genericos/metodos-Excel-Genericos.service';
-import { numbers } from '@material/textfield';
 
 @Component({
-  selector: 'app-component-reporte-faena-producto',
-  templateUrl: './component-reporte-faena-proveedor.component.html',
-  styleUrls: ['./component-reporte-faena-proveedor.component.css']
+  selector: 'component-reporte-resumen-cuarteo-proveedor',
+  templateUrl: './component-reporte-resumen-cuarteo-proveedor.component.html',
+  styleUrls: ['./component-reporte-resumen-cuarteo-proveedor.component.css']
 })
-export class ComponenteReporteFaenaProductoComponent {
+export class ComponenteReporteFaenaProveedorComponent {
   public sumaDePesos: number = 0;
   public sumaDeUnidades: number = 0;
   public resultadoCuartosPorProveedor: { proveedor: string, totalCuartos: number }[] = []; 
@@ -26,7 +23,6 @@ export class ComponenteReporteFaenaProductoComponent {
   constructor(
     private _reporteDeMedia: DataFaenaService,
     private _utilidadesServicicio: UtilidadesService,
-    private _metodosDeExcelGenericosServicio: MetodosExcelGenericosService,
     private _metodosDeExcelCuarteoServicio: MetodosExcelCuarteoService
   ){
   }

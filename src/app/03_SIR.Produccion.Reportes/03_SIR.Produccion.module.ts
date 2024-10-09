@@ -37,6 +37,9 @@ import { ReporteCuotaDisplayComponent } from './pages/cuota/components/reporte-c
 import { RendimientosComponent } from './pages/rendimientos/rendimientos.component';
 import { RendimientoViewerComponent } from './pages/rendimientos/components/rendimiento-viewer/rendimiento-viewer.component';
 import { ComparativoViewerComponent } from './pages/rendimientos/components/comparativo-viewer/comparativo-viewer.component';
+import { FichaTecnicaProductoComponent } from './pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
+import { SplitterModule } from 'primeng/splitter';
+
 
 
 
@@ -76,6 +79,7 @@ import { ComparativoViewerComponent } from './pages/rendimientos/components/comp
         RendimientosComponent,
         RendimientoViewerComponent,
         ComparativoViewerComponent
+        FichaTecnicaProductoComponent,
     ],
     exports: [
         MainPageComponent
@@ -85,7 +89,8 @@ import { ComparativoViewerComponent } from './pages/rendimientos/components/comp
         CommonModule,
         FormsModule,
         SharedModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SplitterModule
     ]
 })
 

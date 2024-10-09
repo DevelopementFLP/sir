@@ -1,5 +1,5 @@
-import { Data } from '@angular/router';
-import { Component, ViewChild } from '@angular/core';
+
+import { Component, ViewChild, ElementRef  } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MatTableDataSource } from '@angular/material/table';
@@ -13,12 +13,16 @@ import { ModalAbastoComponent } from './ModalFormularioAbasto/modal-abasto.compo
 import { ConfiguracionesDTO } from '../../Interfaces/ConfiguracionesDTO';
 import { GetInformacionService } from '../../helpers/Data-Local-Storage/getInformacion.service';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-reporte-faena',
   templateUrl: './formulario-abasto.component.html',
   styleUrls: ['./formulario-abasto.component.css']
 })
 export class FormularioAbastoComponent {
+
+  @ViewChild('lecturaInput') lecturaInput!: ElementRef;
 
   //Configuraciones
   public usuarioLogueado: string = "";
@@ -27,10 +31,12 @@ export class FormularioAbastoComponent {
   public usuarioDeSalida: string = "";
   public operacionEntrada: string = ""
   public operacionSalida: string = ""
+  public ultimoSecuencialEscaneado: string = "";
+  public ultimoLadoEscaneado: string = "";
 
   //Auxiliares
   public codigoRecibido: string = '';
-  public columnasTablaDeAbasto: string[] = ['lecturaDeScaner', 'idAnimal', 'secuencia', 'operacion']
+  public columnasTablaDeAbasto: string[] = ['lecturaDeScaner', 'idAnimal', 'secuencia', 'operacion', 'fechaDeRegistro', 'acciones']
   public valorDeOperacion: string = ""
   public totalLecturas: number = 0
 
@@ -58,7 +64,7 @@ export class FormularioAbastoComponent {
   }
 
   // Cargar configuraciones desde localStorage o API
-  loadConfiguraciones() {
+  public loadConfiguraciones() {
     try {
       this.parametrosDeConfiguracion = this._configuracionService.cargarConfiguraciones();
     } catch (e) {
@@ -68,7 +74,7 @@ export class FormularioAbastoComponent {
 
 
   // Establecer configuraciones en variables del componente
-  setConfiguraciones() {
+  public setConfiguraciones() {
     this.usuarioDeEntrada = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 3)?.parametroDeConfiguracion!;
     this.usuarioDeSalida = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 4)?.parametroDeConfiguracion!;
     this.operacionEntrada = this.parametrosDeConfiguracion.find(p => p.idConfiguracion == 5)?.parametroDeConfiguracion!;
@@ -76,7 +82,7 @@ export class FormularioAbastoComponent {
   }
 
    //Usuario Logueado
-   establecerOperacionValor() {
+   public establecerOperacionValor() {
     const usuarioLogueado = JSON.parse(localStorage.getItem('actualUser') || '{}');
     this.usuarioLogueado = usuarioLogueado.nombre_usuario;
     if (usuarioLogueado.nombre_usuario == this.usuarioDeEntrada)
@@ -102,13 +108,13 @@ export class FormularioAbastoComponent {
     this.dataListaDeLecturas.paginator = this.paginacionTabla;
   }
 
-  aplicarFiltroTabla(event: Event){
+  public aplicarFiltroTabla(event: Event){
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataListaDeLecturas.filter = filterValue.trim().toLocaleLowerCase();
   }
 
   // Obtiene y filtra las lecturas según el tipo de operación del usuario
-  GetListaDeLecturas() {
+  public GetListaDeLecturas() {
 
     this._abastoService.GetLecturasDeAbasto().subscribe({
       next: (data) => {
@@ -117,7 +123,9 @@ export class FormularioAbastoComponent {
 
           // Filtrar los datos segun el usuario logueado
           if (this.usuarioLogueado == this.usuarioDeEntrada || this.usuarioLogueado == this.usuarioDeSalida) {
-            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.usuarioLogueado === this.usuarioLogueado);        
+            this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia.filter(lectura => lectura.usuarioLogueado === this.usuarioLogueado);   
+            this.ultimoSecuencialEscaneado = data.resultado[0].secuencial;    
+            this.ultimoLadoEscaneado = data.resultado[0].idAnimal.substring(12) 
           } else {          
             this.dataListaDeLecturas.data = this.dataInicioLecturasDeMedia;
           }
@@ -135,34 +143,42 @@ export class FormularioAbastoComponent {
   }
 
 
-  async InsertarLecturaDeMedia(idMedia: string) {
-    if(this.usuarioLogueado == this.usuarioDeSalida){
-      try {
-        const respuesta = await this._abastoService.GetLecturaDeAbastoFiltrada(idMedia).toPromise();
-        if(respuesta?.esCorrecto){
-          idMedia = respuesta.resultado.lecturaDeMedia;
+  public async InsertarLecturaDeMedia(idMedia: string) {
+    
+    if(idMedia.length <= 39){
+      if(this.usuarioLogueado == this.usuarioDeSalida){
+        try {
+          const respuesta = await this._abastoService.GetLecturaDeAbastoFiltrada(idMedia).toPromise();
+          if(respuesta?.esCorrecto){
+            idMedia = respuesta.resultado.lecturaDeMedia;
+          }
+        } catch (error) {
+          this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
+          return; 
         }
-      } catch (error) {
-        this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
-        return; 
       }
-    }
 
-    this._abastoService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion, this.usuarioLogueado).subscribe({
-      next: (data) => {
-        if (data.esCorrecto) {
-          this.codigoRecibido = ''; 
-          this.GetListaDeLecturas();           
-        } else {
-          this._utilidadesServicicio.mostrarAlerta('No se puede insertar los datos', 'Error');
-          this.codigoRecibido = '';
+      this._abastoService.createLecturaDeMediaAbasto(idMedia, this.valorDeOperacion, this.usuarioLogueado).subscribe({
+        next: (data) => {
+          if (data.esCorrecto) {
+            this.codigoRecibido = ''; 
+            this.GetListaDeLecturas();           
+          } else {
+            this._utilidadesServicicio.mostrarAlerta('Dato Duplicado o Error de lectura', 'Error');
+            this.codigoRecibido = '';
+          }
+        },
+        error: (e) => {
+          console.error(e);
+          this._utilidadesServicicio.mostrarAlerta('Error al enviar el código QR', 'Error');
         }
-      },
-      error: (e) => {
-        console.error(e);
-        this._utilidadesServicicio.mostrarAlerta('Error al enviar el código QR', 'Error');
-      }
-    });
+      });
+    }else{
+      this._utilidadesServicicio.mostrarAlerta("La lectura no puede exceder los 39 caracteres", "Error")
+      this.codigoRecibido = '';
+      return;
+    }
+      
   }
 
   ubicarUltimaFilaInsertada(row: LecturaDeAbastoDTO): boolean {
@@ -178,14 +194,57 @@ export class FormularioAbastoComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.GetListaDeLecturas();
+        this.setFocus();
       }
     });
   }
 
+  public eliminarLectura(element: any): void {
+    const idAnimal = element.idAnimal; // Asegúrate de que idAnimal está disponible en el elemento
+  
+    Swal.fire({
+      title: '¿Desea eliminar la lectura?',
+      text: `ID Animal: ${idAnimal}`,
+      icon: 'warning',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'No, volver'
+    }).then((resultado) => {
+      if (resultado.isConfirmed) {
+        this._abastoService.DeleteLecturaDeAbasto(idAnimal).subscribe({
+          next: (data) => {
+            if (data.esCorrecto) {
+              const index = this.dataListaDeLecturas.data.indexOf(element);
+              if (index >= 0) {
+                this.dataListaDeLecturas.data.splice(index, 1);
+                this._utilidadesServicicio.mostrarAlerta('Lectura eliminada', 'Éxito');
+                this.GetListaDeLecturas();
+                this.setFocus();
+              }
+            } else {
+              this._utilidadesServicicio.mostrarAlerta('Error al eliminar la lectura', 'Error');
+            }
+          },
+          error: (error) => {
+            this._utilidadesServicicio.mostrarAlerta('Error en la solicitud', 'Error');
+          }
+        });
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.GetConfiguraciones();    
     this.GetListaDeLecturas();    
+    this.setFocus()
+  }
+
+  private setFocus(): void {
+    setTimeout(() => {
+      this.lecturaInput.nativeElement.focus();
+    }, 0);
   }
 }
 

@@ -36,9 +36,9 @@ import { TabViewModule } from 'primeng/tabview';
 import { ReporteAbastoComponent } from './Pages/ReporteAbasto/reporte-abasto.component';
 import { FormularioAbastoComponent } from './Pages/FormularioAbasto/formulario-abasto.component';
 import { ModalAbastoComponent } from './Pages/FormularioAbasto/ModalFormularioAbasto/modal-abasto.component';
-import { ReporteDeMediasComponent } from './Pages/ReporteDeMedias/reporte-de-medias.component';
-import { BodyReporteMediasComponent } from './components/body-reporte-medias/body-reporte-medias.component';
-import { ComponenteReporteFaenaProductoComponent } from './components/component-reporte-faena-proveedor/component-reporte-faena-proveedor.component';
+import { ReporteDeMediasComponent } from './Pages/ReporteResumenDeCuarteo/reporte-resumen-de-cuarteo.component';
+import { BodyReporteMediasComponent } from './components/body-reporte-resumen-de-cuarteo/body-reporte-resumen-de-cuarteo.component';
+import { ComponenteReporteFaenaProveedorComponent } from './components/component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +47,7 @@ import { ComponenteReporteFaenaProductoComponent } from './components/component-
     ModalAbastoComponent,
     ReporteDeMediasComponent,
     BodyReporteMediasComponent,
-    ComponenteReporteFaenaProductoComponent,
+    ComponenteReporteFaenaProveedorComponent,
   ],
   exports:[
     FormularioAbastoComponent,

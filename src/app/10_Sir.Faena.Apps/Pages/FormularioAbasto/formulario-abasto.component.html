@@ -3,11 +3,11 @@
   <mat-card-content>
     <mat-form-field class="inputLecturaDeMedia" appearance="fill">
       <mat-label>Lectura de Etiqueta</mat-label>
-      <input matInput [(ngModel)]="codigoRecibido" name="codigoRecibido" (keyup.enter)="InsertarLecturaDeMedia(codigoRecibido)" >
+      <input matInput #lecturaInput [(ngModel)]="codigoRecibido" name="codigoRecibido" (keyup.enter)="InsertarLecturaDeMedia(codigoRecibido)" >
     </mat-form-field>
 
-    <div class="flex-container">
-      <div class="flex-item" *ngIf="usuarioLogueado != 'salidaabasto'">
+    <div class="grid-container-panel">
+      <div class="grid-item-panel-1" *ngIf="usuarioLogueado != 'salidaabasto'">
         <mat-list>
           <mat-list-item>Items Escaneados: {{totalLecturas}} </mat-list-item>
           <mat-divider></mat-divider>
@@ -15,6 +15,17 @@
             <mat-icon>edit</mat-icon>Agregar Media sin Etiqueta
           </button>
         </mat-list>
+      </div>
+
+      <div class="grid-item-panel-2" *ngIf="usuarioLogueado != 'salidaabasto'">
+        <h1 class="grid-item-panel-titulo">
+          <span class="secuencial">Secuencial:  </span>
+          <p class="codigo">{{ ultimoSecuencialEscaneado }}</p>
+        </h1>
+        <h1 class="grid-item-panel-titulo">
+          <span class="secuencial">Lado:   </span>
+          <p class="codigo">{{ ultimoLadoEscaneado }}</p>
+        </h1>
       </div>
     </div>
 
@@ -36,9 +47,23 @@
           <td mat-cell *matCellDef="let element"> {{element.secuencial}} </td>
         </ng-container>
 
-         <ng-container matColumnDef="operacion">
+        <ng-container matColumnDef="operacion">
           <th mat-header-cell *matHeaderCellDef>Operacion</th>
           <td mat-cell *matCellDef="let element"> {{element.operacion}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaDeRegistro">
+          <th mat-header-cell *matHeaderCellDef>Fecha de Registro</th>
+          <td mat-cell *matCellDef="let element"> {{element.fechaDeRegistroString}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="eliminarLectura(element)">
+              <i class="pi pi-trash" style="color: red"></i>
+            </button>
+          </td>
         </ng-container>
 
         <!-- Fila de Encabezado -->

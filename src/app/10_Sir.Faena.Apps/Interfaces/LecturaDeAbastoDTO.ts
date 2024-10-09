@@ -4,4 +4,5 @@ export interface LecturaDeAbastoDTO{
   secuencial: string
   operacion: string
   usuarioLogueado: string
+  fechaDeRegistroString: string
 }

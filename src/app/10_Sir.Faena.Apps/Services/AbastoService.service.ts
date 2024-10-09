@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetVistaDeLecturasAbasto, urlGetLecturaFiltrada } from 'src/settings';
+import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetVistaDeLecturasAbasto, urlGetLecturaFiltrada, urlDeleteLecturaDeAbasto } from 'src/settings';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 
 @Injectable({
@@ -11,17 +11,17 @@ export class AbastoService {
 
   constructor(private http:HttpClient) { }
 
-  GetLecturasDeAbasto():Observable<ApiResponse>{
+  public GetLecturasDeAbasto():Observable<ApiResponse>{
     return this.http.get<ApiResponse>(`${urlGetListaDeLecturas}`)
   }
 
-  GetLecturaDeAbastoFiltrada(codigoQr: string):Observable<ApiResponse>{
+  public GetLecturaDeAbastoFiltrada(codigoQr: string):Observable<ApiResponse>{
     let params = new HttpParams()
     .set('codigoQr', codigoQr)
     return this.http.get<ApiResponse>(`${urlGetLecturaFiltrada}`, {params})
   }
 
-  createLecturaDeMediaAbasto(idMedia: string, operacion: string, usuarioLogueado: string): Observable<ApiResponse> {
+  public createLecturaDeMediaAbasto(idMedia: string, operacion: string, usuarioLogueado: string): Observable<ApiResponse> {
     let params = new HttpParams()
       .set('lecturaDeAbasto', idMedia)
       .set('operacion', operacion)
@@ -29,7 +29,7 @@ export class AbastoService {
       return this.http.get<ApiResponse>(`${urlInsertarLecturaDeAbasto}`, { params });
   }
 
-  createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string, peso: number): Observable<ApiResponse> {
+  public createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string, peso: number): Observable<ApiResponse> {
     let params = new HttpParams()
       .set('lecturaDeAbasto', idMedia)
       .set('operacion', operacion)
@@ -39,7 +39,11 @@ export class AbastoService {
       return this.http.get<ApiResponse>(`${urlInsertarLecturaDeAbasto}`, { params });
   }
 
-  GetVistaLecturasDeAbasto(fechaDelDia: string):Observable<ApiResponse>{
-    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}=${fechaDelDia}`)
+  public GetListarStockAbasto():Observable<ApiResponse>{
+    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}`)
+  }
+
+  public DeleteLecturaDeAbasto(idAnimal: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${urlDeleteLecturaDeAbasto}?idAnimal=${idAnimal}`);
   }
 }

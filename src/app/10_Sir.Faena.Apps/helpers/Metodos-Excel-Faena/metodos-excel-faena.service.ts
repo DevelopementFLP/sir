@@ -11,22 +11,6 @@ export class MetodosExcelFaenaService {
     private http: HttpClient
   ) { }
 
-  
-  public AgregarEncabezadoDeHojas(unaHoja: ExcelJS.Worksheet, encabezado: string){
-       
-    unaHoja.mergeCells('B1:I2'); // Combina las celdas
-    const textoDeEncabezado = unaHoja.getCell('B1');
-    textoDeEncabezado.value = encabezado;
-    textoDeEncabezado.alignment = { horizontal: 'center', vertical: 'middle' };
-    textoDeEncabezado.font = { bold: true, italic: true };
-    textoDeEncabezado.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-  }
-
   public async InsertarLogoEnLasHojas(Workbook: ExcelJS.Workbook, sheet: ExcelJS.Worksheet) {
     try {
       sheet.mergeCells('A1:A3'); 
@@ -53,7 +37,7 @@ export class MetodosExcelFaenaService {
     }
   }
 
-  public CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: number }): void {
+  public CreatTablasDeContenido(nombreDeTabla: string, celdaDeInicio: string, sheet: ExcelJS.Worksheet, nombreDeColumna1: string, nombreDeColumna2: string, sumaPorClasificacion: { [key: string]: { totalPeso: number, totalUnidades: number } }): void {
     // Definir la tabla
     sheet.addTable({
       name: nombreDeTabla,
@@ -66,27 +50,16 @@ export class MetodosExcelFaenaService {
       },
       columns: [
         { name: nombreDeColumna1, filterButton: true },
-        { name: nombreDeColumna2,  totalsRowFunction: 'sum', filterButton: false },
+        { name: 'Total Peso', totalsRowFunction: 'sum', filterButton: false },
+        { name: 'Total Unidades', totalsRowFunction: 'sum', filterButton: false },
       ],
-      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [clasificacion, sumaPorClasificacion[clasificacion]]),
+      rows: Object.keys(sumaPorClasificacion).map(clasificacion => [
+        clasificacion,
+        sumaPorClasificacion[clasificacion].totalPeso, // Peso total
+        sumaPorClasificacion[clasificacion].totalUnidades // Conteo de unidades
+      ]),
     });
   }
+  
 
-  //Metodo para ajustar el ancho de las columnas
-  public AdjustColumnWidths(sheet: ExcelJS.Worksheet) {
-    try {
-      sheet.columns.forEach(column => {
-        let maxLength = 10; // Longitud mínima de las celdas
-        column.eachCell!({ includeEmpty: true }, cell => {
-          const cellLength = cell.value ? cell.value.toString().length : 0;
-          if (cellLength > maxLength) {
-            maxLength = cellLength;
-          }
-        });
-        column.width = maxLength + 2; // Agregar un poco de espacio extra
-      });      
-    } catch (error) {
-      console.error('Error al ajustar las columnas:', error);
-    }    
-  }
 }

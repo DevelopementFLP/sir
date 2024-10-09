@@ -203,6 +203,7 @@ export const urlGetListaDeLecturas: string = urlAbasto + "getListaDeLecturas"
 export const urlGetLecturaFiltrada: string = urlAbasto + "getLecturaDeQr"
 export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
 export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
+export const urlDeleteLecturaDeAbasto: string = urlAbasto + "eliminarLectura"
 
 
 // Reporte Cuota

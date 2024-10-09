@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ReporteDeMediasProductosDTO, ReporteDeMediasProveedorDTO } from '../../Interfaces/ReporteDeMediasDTO';
 import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { DataFaenaService } from '../../Services/Data-Faena.service';
-import { ComponenteReporteFaenaProductoComponent } from '../component-reporte-faena-proveedor/component-reporte-faena-proveedor.component';
+import { ComponenteReporteFaenaProveedorComponent } from '../component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
 import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Genericos/metodos-Excel-Genericos.service';
 
 
@@ -11,9 +11,9 @@ import { saveAs } from 'file-saver';
 import { MetodosExcelCuarteoService } from '../../helpers/Metodos-Excel-Cuarteo/metodos-excel-cuarteo.service';
 
 @Component({
-  selector: 'app-components-body-reporte-medias',
-  templateUrl: './body-reporte-medias.component.html',
-  styleUrls: ['./body-reporte-medias.component.css']
+  selector: 'app-components-body-resumen-de-cuarteo',
+  templateUrl: './body-reporte-resumen-de-cuarteo.component.html',
+  styleUrls: ['./body-reporte-resumen-de-cuarteo.component.css']
 })
 export class BodyReporteMediasComponent {
 
@@ -26,6 +26,12 @@ export class BodyReporteMediasComponent {
 
   public listaDeHorasDesde: string[] = [];
   public listaDeHorasHasta: string[] = [];
+
+  public sumaDePesos: number = 0;
+  public sumaDeUnidades: number = 0;
+  public sumaPorGrade: number = 0;
+  public resultadoCuartosPorGrade: { grade: string, totalCuartos: number, porcentaje: number }[] = []; 
+  public responseReporteDeMediasProducto: ReporteDeMediasProductosDTO[] = [];
 
   public generarListaDesde(): void {
     this.listaDeHorasDesde = [];
@@ -40,13 +46,9 @@ export class BodyReporteMediasComponent {
     }
   }
 
-  public sumaDePesos: number = 0;
-  public sumaDeUnidades: number = 0;
-  public sumaPorGrade: number = 0;
-  public resultadoCuartosPorGrade: { grade: string, totalCuartos: number, porcentaje: number }[] = []; 
-  public responseReporteDeMediasProducto: ReporteDeMediasProductosDTO[] = [];
 
-  @ViewChild(ComponenteReporteFaenaProductoComponent) _conexionConComponenteProveedor! : ComponenteReporteFaenaProductoComponent;
+
+  @ViewChild(ComponenteReporteFaenaProveedorComponent) _conexionConComponenteProveedor! : ComponenteReporteFaenaProveedorComponent;
 
   constructor(
     private _reporteDeMedia: DataFaenaService,
