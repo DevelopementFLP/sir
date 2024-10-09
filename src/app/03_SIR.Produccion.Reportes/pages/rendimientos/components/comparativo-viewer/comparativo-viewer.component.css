@@ -1,0 +1,80 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 0.5;
+    font-size: 0.9rem;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+
+.comparativo {
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+
+.qamark--container {
+    margin-top: 4rem;
+    width: 15%;
+}
+
+.tipo--container {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%
+}
+
+.tipo-rend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+}
+
+.tipos-title-data {
+    font-weight: bold;
+    width: 100%;
+    display: flex;
+    gap: 1%;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.tipos-title {
+    font-weight: bold;
+    color: #1f618d;
+}
+
+.qm-title {
+    font-weight: bold;
+    text-align: right;
+}
+
+.tipos-values {
+    width: 100%;
+    display: flex;
+    gap: 1%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.values--container {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.no-data {
+    color: #ddd;
+}
+
+/* .tipos-values-par {
+    background-color: #f0f0f0;
+  }
+  
+.tipos-values-impar {
+    background-color: #c0c0c0;
+} */

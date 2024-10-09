@@ -58,10 +58,11 @@ import { ReporteAbastoComponent } from './10_Sir.Faena.Apps/Pages/ReporteAbasto/
 import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioAbasto/formulario-abasto.component';
 import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasConError/lecturas-con-error.component';
 import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteResumenDeCuarteo/reporte-resumen-de-cuarteo.component';
-
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
+import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 import { FichaTecnicaProductoComponent } from './03_SIR.Produccion.Reportes/pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
+
 
 
 
@@ -88,6 +89,7 @@ const routes: Routes = [
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
     { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
+    { path: 'produccion/rendimientos', component: RendimientosComponent},
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },
