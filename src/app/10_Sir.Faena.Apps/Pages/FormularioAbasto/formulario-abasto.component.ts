@@ -154,6 +154,7 @@ export class FormularioAbastoComponent {
           }
         } catch (error) {
           this._utilidadesServicicio.mostrarAlerta('No hay una entrada con ese QR', 'Error');
+          this.codigoRecibido = '';
           return; 
         }
       }
