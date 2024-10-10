@@ -1,5 +1,5 @@
 
-//export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 
 export const urlAPI: string = "http://192.168.0.107:82/api/";
 
@@ -224,6 +224,12 @@ export const urlDWLoteEntrada: string = urlLoteEntrada + "GetDWEntradaAsync";
 export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFechaAsync";
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
+// Rendimientos
+export const urlRendimientos: string = urlAPI + "Rendimientos/";
+export const urlCortesPorLoteYFecha: string = urlRendimientos + "GetCortesPorLoteYFecha";
+export const urlConfTipoRendimiento: string = urlRendimientos + "GetConfigTipoRendimiento";
+export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
+export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
 
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
