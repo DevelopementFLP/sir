@@ -16,7 +16,14 @@
                 <rendimiento-viewer [data]="data[i]" [fechas]="fechasReporte" />
             </p-tabPanel>
             <p-tabPanel header="COMPARATIVO">
-                <comparativo-viewer [data]="dataCortes"  [qamarksDto]="qamarks" [fechas]="fechasReporte"/>
+                <comparativo-viewer
+                    [data]="dataCortes"  
+                    [qamarksDto]="qamarks" 
+                    [fechas]="fechasReporte"
+                    (emitirTiposRendimientos)="recibirTiposRendimientos($event)"
+                    (emitirRendimientosAgrupados)="recibirRendimientosAgrupados($event)"
+                    (emitirNombreTipos)="recibirNombresRendimientos($event)"
+                />
             </p-tabPanel>
         </p-tabView>
     </p-tabPanel>
@@ -33,6 +40,9 @@
         fechas: fechasReporte,
         nombresRend: nombresRends,
         idsRend: idsRendimientos,
-        qamarks: qamarks
+        qamarks: qamarks,
+        tiposSeleccionados: tiposRendimientosSeleccionados,
+        dataAgrupada:  rendimientosAgrupados,
+        nombresComparativos: nombresRendimientosComparativos
     }"
 />

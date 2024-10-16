@@ -10,6 +10,7 @@ import { DWSalidaDTO } from '../cuota/interfaces/DWSalidaDTO.interface';
 import { LoteEntradaDTO } from '../cuota/interfaces/LoteEntradaDTO.interface';
 import { formatDate } from '@angular/common';
 import { QamarkDTO } from '../cuota/interfaces/QamarkDTO.interface';
+import { TipoFechaDataAgrupado } from './interfaces/TipoFechaDataAgrupado.interface';
 
 @Component({
   selector: 'app-rendimientos',
@@ -17,6 +18,10 @@ import { QamarkDTO } from '../cuota/interfaces/QamarkDTO.interface';
   styleUrls: ['./rendimientos.component.css']
 })
 export class RendimientosComponent implements OnInit {
+
+  tiposRendimientosSeleccionados: boolean[] = [];
+  rendimientosAgrupados:          TipoFechaDataAgrupado[] = [];
+  nombresRendimientosComparativos: string[] = [];
 
   fechaDesde!:        Date;
   fechaDesdeStr!:     string;
@@ -47,6 +52,18 @@ export class RendimientosComponent implements OnInit {
     private rendSrvc:   RendimientosService,
     private cuotaSrvc:  CuotaService
   ) {}
+
+  recibirTiposRendimientos(tipos: boolean[]) {
+    this.tiposRendimientosSeleccionados = tipos;
+  }
+
+  recibirRendimientosAgrupados(rends: TipoFechaDataAgrupado[]) {
+    this.rendimientosAgrupados = rends;
+  }
+
+  recibirNombresRendimientos(nombres: string[]) {
+    this.nombresRendimientosComparativos = nombres;
+  }
 
   async ngOnInit(): Promise<void> {
     await lastValueFrom(this.cuotaSrvc.execInsertarDatosDW());
@@ -138,7 +155,7 @@ export class RendimientosComponent implements OnInit {
     while (fechaActual <= fechaFin) {
       this.fechasReporte.push(new Date(fechaActual));
       fechaActual.setDate(fechaActual.getDate() + 1);
-    }
+    }  
   }
 
   private resetearFechas(): void {
@@ -171,6 +188,6 @@ export class RendimientosComponent implements OnInit {
     await this.setCortes();
     await this.setDataCortes();
     await this.setIdsNombresRendimientos();
-    await this.setDataRendimientos();
+    await this.setDataRendimientos();    
   }
 }
