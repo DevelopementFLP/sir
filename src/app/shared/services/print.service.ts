@@ -37,6 +37,7 @@ import { ComparativoRendData } from 'src/app/03_SIR.Produccion.Reportes/pages/re
 import { CommonService } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/services/common.service';
 import { DWSalidaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/DWSalidaDTO.interface';
 import { DataRendimiento } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/DataRendimiento.interface';
+import { TipoFechaDataAgrupado } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/TipoFechaDataAgrupado.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -2276,12 +2277,9 @@ export class PrintService {
     const dataRendimientos: CorteLote[][] = dataToPrint.data.rendimientos as CorteLote[][];
     const dataComprativo: CorteLote[] = dataToPrint.data.comparativo as CorteLote[];
     const fechas: Date[] = dataToPrint.data.fechas as Date[];
-    const idsRendimientos: number[] = dataToPrint.data.idsRend as number[];
     const nombresRendimientos: string[] = dataToPrint.data.nombresRend as string[];
     const qamarksDto: QamarkDTO[] = dataToPrint.data.qamarks as QamarkDTO[];
 
-    const fondoTituloEntrada:       Fill                  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF000000' }, bgColor: { argb: '00000000' }};
-    const colorFuenteEntrada:       Partial<Font>         = { bold: true, color: {argb: 'FFFFFFFF'} };
     const fuenteTituloNombre:       Partial<Font>         = { bold: true, size: 12, color: { argb: 'FF1f618d'}};
     const fuenteTitulo:             Partial<Font>         = { bold: true, size: 12 };
     const fuenteSubTitulo:          Partial<Font>         = { bold: true, size: 7 };
@@ -2420,9 +2418,98 @@ export class PrintService {
       }
     });
 
+    // COMPARATIVO DIARIO
+    {
+      const titulo: string = 'COMPARATIVO POR FECHA';
+      const hojaComp: Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaComp);
+      this.setTitle(libro, hojaComp, titulo, 'right', 16);
+
+      let qamarks:          number[] = [];
+      let qamarksFiltrados: string[] = []
+      let tiposSeleccionados: boolean[] = dataToPrint.data.tiposSeleccionados;
+      let data: TipoFechaDataAgrupado[] = dataToPrint.data.dataAgrupada;
+      let nombresComprativo: string[] = dataToPrint.data.nombresComparativos;
+            
+      // QAMARKS
+      const len = dataComprativo.length;
+      qamarks = [];
+      for(let i = 0; i < len; i++) {
+        const cortes = dataComprativo[i].cortes;
+        const arrQamark = Array.from(new Set(cortes.map(c => c.marca)));
+        qamarks = qamarks.concat(qamarks, arrQamark);
+      }
+
+      qamarks = Array.from(new Set(qamarks.map(m => m))).sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      // QAMARKS FILTRADOS
+      qamarksFiltrados = [];
+
+      qamarks.forEach(qm => {
+        let q = qamarksDto.find(qma => qma.qamark == qm)?.name;
+        if(q && !q.includes('MANTA') && !q.includes('TRIMM')) qamarksFiltrados.push(q)
+      });
+
+      hojaComp.getColumn(3).width = 1;
+
+      qamarksFiltrados = qamarksFiltrados.sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      let fila: number = 9;
+      let columna: number = 2;
+      qamarksFiltrados.forEach(qm => {
+        hojaComp.getRow(fila).getCell(columna).value  = qm;
+        hojaComp.getRow(fila).getCell(columna).font = fuenteTituloCortes;
+        hojaComp.getRow(fila).getCell(columna).alignment = alineacionDerecha;
+        fila++;
+      });
+
+      columna = 4;
+      
+      tiposSeleccionados.forEach((rend, i) => {
+        if(rend) {
+          fila = 6;
+          let cantFechas = 0;
+          let colInicial = columna;
+          const tipo = nombresComprativo[i];
+          const datos = data.filter(x => x.tipo == tipo);
+          
+          hojaComp.getRow(fila).getCell(columna).value = tipo;
+          fila++;
+
+          for(let i = 0; i < datos[0].data.length; i++) {
+            fila = 7;
+            const fecha = datos[0].data[i].fecha;
+            hojaComp.getRow(fila).getCell(columna).value = fecha;
+            hojaComp.mergeCells(fila, columna, fila, columna + 1);
+            hojaComp.getRow(fila).getCell(columna).alignment = alineacionCentro;
+            hojaComp.getRow(fila + 1).getCell(columna + 1).alignment = alineacionDerecha;
+            hojaComp.getRow(fila + 1).getCell(columna).value = "Peso Prom.";
+            hojaComp.getRow(fila + 1).getCell(columna + 1).value = "% Rend.";
+          
+            fila += 2;
+            datos[0].data[i].data.forEach(d => {
+              hojaComp.getRow(fila).getCell(columna).value = d.pesoPromedio > 0 ? d.pesoPromedio.toFixed(2) : '-';
+              hojaComp.getRow(fila).getCell(columna + 1).value = d.rendimiento > 0 ? (d.rendimiento * 100).toFixed(2) + ' %': '-';
+              hojaComp.getRow(fila).getCell(columna + 1).alignment = alineacionDerecha;
+              fila++;
+            });
+            hojaComp.getColumn(columna + 2).width = 5;
+            columna += 3;
+            cantFechas++;
+          }
+
+          hojaComp.mergeCells(6, colInicial, 6, columna - 2);
+          hojaComp.getRow(6).getCell(colInicial).alignment = alineacionCentro;
+          hojaComp.getRow(6).getCell(colInicial).font = fuenteTituloNombre;
+
+          hojaComp.getColumn(columna - 1).width = 10;
+        }
+      });
+    }
+
     //COMPARATIVO
     {
-      const titulo: string = 'COMPARATIVO';
+      const titulo: string = 'COMPARATIVO ACUMULADO';
       const hojaComp: Worksheet = libro.addWorksheet(titulo);
       this.setLogo(libro, hojaComp);
       this.setTitle(libro, hojaComp, titulo, 'right', 16);

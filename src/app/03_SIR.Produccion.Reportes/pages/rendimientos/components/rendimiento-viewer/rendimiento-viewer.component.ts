@@ -19,7 +19,7 @@ export class RendimientoViewerComponent implements OnInit, OnChanges {
   constructor(private cmnSrvc: CommonService) {}
 
   ngOnInit(): void {
-   this.processData();
+   this.processData();      
   }
 
   ngOnChanges(changes: SimpleChanges): void {    
@@ -30,23 +30,25 @@ export class RendimientoViewerComponent implements OnInit, OnChanges {
 
   private processData(): void {
     this.rendimientos = [];
-    this.fechas.forEach(f => {
+    this.fechas.forEach((f, i) => {
       const entrada = this.data[0].entrada.filter(e => this.cmnSrvc.sonFechasIguales(e.fecha, f));
       if(entrada.length > 0) {
         const cortes  = this.data[0].cortes.filter(c => this.cmnSrvc.sonFechasIguales(c.fecha, f));
-        let entr = this.cmnSrvc.agruparEntrada(entrada);
-        let cts = this.cmnSrvc.agruparCortes(cortes);
+        let entr  = this.cmnSrvc.agruparEntrada(entrada);
+        let cts   = this.cmnSrvc.agruparCortes(cortes);
+        let fecha = new Date(f);
+        fecha.setHours(fecha.getHours() + 3);
+
         this.rendimientos.push({
-          fecha: f,
-          entrada: entr,
-          cortes: cts,
+          fecha:    fecha,
+          entrada:  entr,
+          cortes:   cts,
           totalCuartos: this.cmnSrvc.cantidadTotalCuartos(entr),
-          pesoCuartos: this.cmnSrvc.pesoTotalCuartos(entr),
-          totalCortes: this.cmnSrvc.cantidadTotalCortes(cts),
-          pesoCortes: this.cmnSrvc.pesoTotalCortes(cts)
+          pesoCuartos:  this.cmnSrvc.pesoTotalCuartos(entr),
+          totalCortes:  this.cmnSrvc.cantidadTotalCortes(cts),
+          pesoCortes:   this.cmnSrvc.pesoTotalCortes(cts)
         });  
       }
-    });
+    }); 
   }
-
 }

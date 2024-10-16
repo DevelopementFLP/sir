@@ -1,4 +1,4 @@
-import { NgModule, Component } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MainPageComponent } from './pages/main-page/main-page.component';
@@ -63,9 +63,6 @@ import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 import { FichaTecnicaProductoComponent } from './03_SIR.Produccion.Reportes/pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
 import { HomeFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-ficha-tecnica/home-ficha-tecnica.component';
-
-
-
 
 const routes: Routes = [
   { path: '', component: LoginComponent},

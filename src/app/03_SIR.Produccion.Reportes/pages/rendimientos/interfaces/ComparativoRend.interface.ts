@@ -3,4 +3,7 @@ export interface ComparativoRend {
     qamark:         string;
     pesoPromedio:   number;
     rendimiento:    number;
+    peso:           number;
+    piezas:         number;
+    pesoCuartos:    number;
 }

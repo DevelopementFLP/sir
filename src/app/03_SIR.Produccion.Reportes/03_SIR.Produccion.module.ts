@@ -78,7 +78,7 @@ import { SplitterModule } from 'primeng/splitter';
         ReporteCuotaDisplayComponent,
         RendimientosComponent,
         RendimientoViewerComponent,
-        ComparativoViewerComponent
+        ComparativoViewerComponent,
         FichaTecnicaProductoComponent,
     ],
     exports: [
