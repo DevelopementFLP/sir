@@ -1,0 +1,247 @@
+
+
+<div class="contenedor-de-pagina">
+
+    <div class="seccion-titulo">
+        <h1>Crear Plantilla Ficha Técnica</h1>
+    </div>
+
+    <div>
+        <label>Selecciona una sección:</label>
+        <select [(ngModel)]="seccionSeleccionada">
+          <option value="">Seleccionar...</option>
+          <option value="formularioAspectosGenerales">Aspectos Gnereales</option>
+          <option value="formularioDeEspecificaciones">Especificaiones</option>
+        </select>
+    </div>
+
+    <div *ngIf="seccionSeleccionada === 'formularioAspectosGenerales'">
+      <h3>Formulario Aspectos Generales</h3>
+  
+      <form [formGroup]="formularioAspectosGenerales" (ngSubmit)="EnviarFormularioAspectosGenerales()">
+          <div>
+              <label>Nombre:</label>
+              <input formControlName="nombre" required />
+          </div>
+  
+          <div>
+              <label>ID Marca:</label>
+              <select formControlName="idMarca" required>
+                  <option *ngFor="let marca of listaDeMarcas" [value]="marca.idMarca">{{ marca.nombre }}</option>
+              </select>
+          </div>
+          
+          <!-- <div>
+              <label>ID Destino:</label>
+              <select formControlName="idDestino" required>
+                  <option *ngFor="let destino of listaDeDestino" [value]="destino.idDestino">{{ destino.nombre }}</option>
+              </select>
+          </div> -->
+  
+          <div>
+              <label>ID Tipo de Uso:</label>
+              <select formControlName="idTipoDeUso" required>
+                  <option *ngFor="let tipoUso of listaDeTiposDeUso" [value]="tipoUso.idTipoDeUso">{{ tipoUso.descripcion }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>ID Alergeno:</label>
+              <select formControlName="idAlergeno">
+                  <option *ngFor="let alergeno of listaDeAlergenos" [value]="alergeno.idAlergeno">{{ alergeno.descripcion }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>ID Condición Almacenamiento:</label>
+              <select formControlName="idCondicionAlmacenamiento" required>
+                  <option *ngFor="let condicion of listaDeCondicionesAlmacenamiento" [value]="condicion.idCondicionDeAlmacenamiento">{{ condicion.descripcion }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>ID Vida Útil:</label>
+              <select formControlName="idVidaUtil" required>
+                  <option *ngFor="let vidaUtil of listaDeVidaUtil" [value]="vidaUtil.idVidaUtil">{{ vidaUtil.nombre }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>ID Tipo de Envase:</label>
+              <select formControlName="idTipoDeEnvase" required>
+                  <option *ngFor="let tipoEnvase of listaDeTiposDeEnvase" [value]="tipoEnvase.idTipoDeEnvase">{{ tipoEnvase.descripcion }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>ID Presentación de Envase:</label>
+              <select formControlName="idPresentacionDeEnvase" required>
+                  <option *ngFor="let presentacion of listaDePresentacionesDeEnvase" [value]="presentacion.idPresentacionDeEnvase">{{ presentacion.descripcion }}</option>
+              </select>
+          </div>
+  
+          <div>
+              <label>Peso Promedio:</label>
+              <input type="number" formControlName="pesoPromedio" required />
+          </div>
+  
+          <div>
+              <label>Unidades por Caja:</label>
+              <input type="number" formControlName="unidadesPorCaja" required />
+          </div>
+
+          <div>
+            <label>Dimensiones:</label>
+            <input type="text" formControlName="dimensiones" required />
+          </div>
+  
+          <button type="submit" [disabled]="formularioAspectosGenerales.invalid">Enviar Sección 1</button>
+      </form>
+    </div>
+  
+
+    <div *ngIf="seccionSeleccionada === 'formularioDeEspecificaciones'">
+        <h3> Formulario Especificaciones </h3>
+
+        <form [formGroup]="formularioEspecificaciones" (ngSubmit)="EnviarFormularioEspecificaciones()">
+
+          <div>
+              <label>Nombre:</label>
+              <input formControlName="nombre" required />
+          </div>
+      
+          <div>
+              <label>Grasa Visible:</label>
+              <input formControlName="grasaVisible" />
+          </div>
+      
+          <div>
+              <label>Espesor Cobertura:</label>
+              <input formControlName="espesorCobertura" />
+          </div>
+      
+          <div>
+              <label>Ganglios:</label>
+              <input formControlName="ganglios" />
+          </div>
+      
+          <div>
+              <label>Hematomas:</label>
+              <input formControlName="hematomas" />              
+          </div>
+      
+          <div>
+              <label>Huesos Cartílagos:</label>
+              <input formControlName="huesosCartilagos" />
+          </div>
+      
+          <div>
+              <label>Elementos Extraños:</label>
+              <input formControlName="elementosExtraños" />
+          </div>
+      
+          <div>
+              <label for="idColor">Color:</label>
+              <select formControlName="idColor" id="idColor" required>
+                  <option *ngFor="let color of listaDeColores" [value]="color.idColor">{{ color.descripcion }}</option>
+              </select>
+          </div>
+      
+          <div>
+              <label for="idOlor">Olor:</label>
+              <select formControlName="idOlor" id="idOlor" required>
+                  <option *ngFor="let olor of listaDeOlores" [value]="olor.idOlor">{{ olor.descripcion }}</option>
+              </select>
+          </div>
+      
+          <div>
+              <label for="idPh">Ph:</label>
+              <select formControlName="idPh" id="idPh" required>
+                  <option *ngFor="let ph of listaDePh" [value]="ph.idPh">{{ ph.nombre }}</option>
+              </select>
+          </div>
+      
+          <div>
+              <label>Aerobios Mesofilos Totales:</label>
+              <input formControlName="aerobiosMesofilosTotales" />
+          </div>
+      
+          <div>
+              <label>Enterobacterias:</label>
+              <input formControlName="enterobacterias" />
+              <label>
+                <input type="checkbox" formControlName="enviarEnterobacterias" />
+                Enviar Enterobacterias
+              </label>
+          </div>
+      
+          <div>
+              <label>Stec 0157:</label>
+              <input formControlName="stec0157" />
+              <label>
+                <input type="checkbox" formControlName="enviarStec" />
+                Enviar Stec 0157
+              </label>
+          </div>
+      
+          <div>
+              <label>Stec No 0157:</label>
+              <input formControlName="stecNo0157" />
+              <label>
+                <input type="checkbox" formControlName="enviarNoStec" />
+                Enviar No Stec
+              </label>
+          </div>
+      
+          <div>
+              <label>Salmonella:</label>
+              <input formControlName="salmonella" />
+              <label>
+                <input type="checkbox" formControlName="enviarSalmonella" />
+                Enviar Salmonella
+              </label>
+          </div>
+      
+          <div>
+              <label>Estafilococos:</label>
+              <input formControlName="estafilococos" />
+              <label>
+                  <input type="checkbox" formControlName="enviarEstafilococos" />
+                  Enviar Estafilococos
+              </label>
+          </div>
+      
+          <div>
+              <label>Pseudomonas:</label>
+              <input formControlName="pseudomonas" />
+              <label>
+                <input type="checkbox" formControlName="enviarPseudomonas" />
+                Enviar Pseudomonas
+              </label>
+          </div>
+      
+          <div>
+              <label>Escherichia Coli:</label>
+              <input formControlName="escherichiaColi" />
+              <label>
+                <input type="checkbox" formControlName="enviarEscherichiaColi" />
+                Enviar EscherichiaColi
+              </label>
+          </div>
+      
+          <div>
+              <label>Coliformes Totales:</label>
+              <input formControlName="coliformesTotales" />
+              <label>
+                <input type="checkbox" formControlName="enviarColiformes" />
+                Enviar Coliformes
+              </label>
+          </div>
+      
+          <button type="submit" [disabled]="formularioEspecificaciones.invalid">Enviar Formulario Especificaciones</button>
+      </form>
+      
+      
+      </div>
+    
+</div>
