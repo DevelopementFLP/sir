@@ -1,0 +1,191 @@
+
+<h1 class="tituloDispositivo" style="margin:20px 0px 0px 40px"> Resumen De Cuarteo </h1>
+<div class="flex-container" style="margin:20px 40px 40px 40px" >
+    <div 
+    class="flex-item" 
+    style="width: 180px;"
+    >
+        <p-calendar 
+        [(ngModel)]="fechaDesde"
+        [showIcon]="true" 
+        [showOnFocus]="false" 
+        inputId="buttondisplay" 
+        placeholder="Fecha Desde"/>                
+    </div>
+
+    <div 
+    class="flex-item"
+    style="width: 100px;"
+    *ngIf="fechaDesde != null"
+    >
+        <p-dropdown 
+        [options]="listaDeHorasDesde" 
+        (onClick)="generarListaDesde()"
+        [(ngModel)]="horaDesde" 
+        placeholder="Hora Desde" />
+    </div>
+
+    <div 
+    class="flex-item"
+    style="width: 180px;"
+    *ngIf="fechaDesde != null && horaDesde != null"    
+    >
+        <p-calendar 
+        [(ngModel)]="fechaHasta"
+        [showIcon]="true" 
+        [showOnFocus]="false" 
+        inputId="buttondisplay"
+        placeholder="Fecha Hasta" />    
+    </div>
+
+    <div
+    class="flex-item" 
+    style="width: 100px;"
+    *ngIf="fechaDesde != null && horaDesde != null && fechaHasta != null">
+        <p-dropdown 
+        [options]="listaDeHorasHasta" 
+        (onClick)="generarListaDeHasta()"
+        [(ngModel)]="horaHasta" 
+        placeholder="Hora Hasta" />
+    </div>
+
+    <div class="flex-item" *ngIf="fechaDesde != null && horaDesde != null && fechaHasta != null && horaHasta != null">
+        <p-button 
+        label="Actualizar"
+        icon="pi pi-sync" 
+        severity="secondary"
+        (click)="GetReporteDeMediasProducto(fechaDesde!, fechaHasta!, horaDesde!, horaHasta!)">
+        </p-button>
+    </div>
+
+    <div class="flex-item" *ngIf="responseReporteDeMediasProducto.length > 0">
+        <p-button class="boton-generar-excel" label="Generar Excel" icon="pi pi-arrow-down" (click)="GenerarReporteExel()"/>
+    </div>
+</div>
+
+<p-tabView >
+    <p-tabPanel header="Producto">        
+        <div>
+
+            <p 
+            style="margin-left: 70px;"
+            *ngIf="responseReporteDeMediasProducto.length > 0"
+            >
+            Reporte Desde {{fechaDesdeFormateada}} Hora: {{horaDesde}}  - ->  {{fechaHastaFormateada}} Hora: {{horaHasta}}
+            </p>
+
+            <div class="grid-container" style="margin:20px 40px 40px 40px" >
+
+                <div class="grid-item table-container-producto" >
+                        <p-table
+                            [value]="responseReporteDeMediasProducto"
+                            [paginator]="true"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[10, 20]"
+                            [globalFilterFields]="['estado']"
+                            >
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>
+                                        Producto
+                                        <p-columnFilter
+                                        type="text"
+                                        field="producto"
+                                        placeholder="Buscar"
+                                        >
+                                        </p-columnFilter>
+                                    </th>
+                                    <th>
+                                        Grade
+                                        <p-columnFilter
+                                            type="text"
+                                            field="grade"
+                                            placeholder="Buscar por Grade"
+                                            display="menu">
+                                        </p-columnFilter>
+                                    </th>
+                                    <th>
+                                        Cuartos
+                                    </th>
+                                    <th>
+                                        Peso De Cuartos                      
+                                    </th>            
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-element>
+                                <tr>
+                                    <td>{{element.producto}}</td>
+                                    <td>{{element.grade}}</td>
+                                    <td>{{element.cuartos}}</td>
+                                    <td>{{element.pesoCuartos | number:'1.1-5'}}</td>                      
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                </div>
+                
+                <div class="grid-item ">
+                    <p-card header="Resumen General" class="target">
+                        <p-table styleClass="p-datatable-striped" >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Cuartos Totales:</th>
+                                    <td>{{ sumaDeUnidades | number:'1.0-0' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Peso en KG Total:</th>
+                                    <td>{{ sumaDePesos | number:'1.0-0' }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-card>
+
+                    <p-card header="Cuartos Por Grade" class="target">
+                        <p-table styleClass="p-datatable-striped"         
+                        [value]="resultadoCuartosPorGrade"
+                        [paginator]="true"
+                        [rows]="5"
+                            [rowsPerPageOptions]="[5, 20]"                       
+                            >
+                            
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Grade
+                                            <p-columnFilter
+                                            type="text"
+                                            [field]="'grade'"
+                                            placeholder="Grade"
+                                            >
+                                            </p-columnFilter>
+                                        </th>
+                                        <th>Cuartos</th>
+                                        <th>% Del Total</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-element>
+                                    <tr>                                    
+                                        <td style="text-align: start;">{{ element.grade }}</td>
+                                        <td style="text-align: start;">{{ element.totalCuartos }}</td>
+                                        <td style="text-align: start;">{{ element.porcentaje}}%</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </p-card>
+                    </div>
+
+                    <div class="grid-item seccion-de-relleno">
+                        
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+
+        <p-tabPanel header="Proveedor">
+            <app-component-reporte-faena-producto></app-component-reporte-faena-producto>
+        </p-tabPanel>
+</p-tabView>
+
+
+
+

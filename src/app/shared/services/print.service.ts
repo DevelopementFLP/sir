@@ -31,6 +31,7 @@ import { QamarkDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interf
 import { Comparativo } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/Comparativo.inteface';
 import { ComparativoReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComparativoReporte.interface';
 import { TipoCuotaDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/TipoCuotaDict.interface';
+
 import { CorteLote } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/CorteLote.interface';
 import { ComparativoRend } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/ComparativoRend.interface';
 import { ComparativoRendData } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/ComparativoRendData.interface';
@@ -39,13 +40,18 @@ import { DWSalidaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/inte
 import { DataRendimiento } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/DataRendimiento.interface';
 import { TipoFechaDataAgrupado } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/TipoFechaDataAgrupado.interface';
 
+
 @Injectable({ providedIn: 'root' })
 export class PrintService {
   constructor(
     private kcs: KosherCommonService,
     private deps: DetalleEmbarquePrintService ,
+
+    private ccs: CommonCuotaService
+
     private ccs: CommonCuotaService,
     private crs: CommonService
+
   ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
@@ -66,8 +72,11 @@ export class PrintService {
         return this.printDetalleDeEmbarque(dataToPrint, libro);
       case 8:
         return this.printRendimientosCuota(dataToPrint, libro);
+
+
       case 9:
         return this.printComparativosRendimientos(dataToPrint, libro);
+
       default:
         return [];
     }
@@ -2273,6 +2282,7 @@ export class PrintService {
     return c.filter(c => c.idCuota == id);
   }
 
+
   private printComparativosRendimientos(dataToPrint: PrintModel, libro: Workbook) {
     const dataRendimientos: CorteLote[][] = dataToPrint.data.rendimientos as CorteLote[][];
     const dataComprativo: CorteLote[] = dataToPrint.data.comparativo as CorteLote[];
@@ -2616,4 +2626,5 @@ export class PrintService {
       }
     }
   }
+
 }

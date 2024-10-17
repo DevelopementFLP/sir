@@ -260,7 +260,11 @@ export class ReporteCuotaComponent implements OnInit {
                   return cDate.getTime() === target.getTime() && !c.customer?.includes('CUOTA');
                 }
             );
+
+            const cajas   = this.dwCajas.filter(
+
             const cajas  = this.dwCajas.filter(
+
               c => 
                 {
                   const cDate = new Date(c.fecha);

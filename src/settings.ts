@@ -1,7 +1,11 @@
 
 export const urlAPI: string = "http://localhost:5205/api/";
 
+
+//export const urlAPI: string = "http://192.168.0.107:82/api/";
+
 export const urlAPI: string = "http://192.168.0.107:82/api/";
+
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
@@ -224,6 +228,7 @@ export const urlDWLoteEntrada: string = urlLoteEntrada + "GetDWEntradaAsync";
 export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFechaAsync";
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
+
 // Rendimientos
 export const urlRendimientos: string = urlAPI + "Rendimientos/";
 export const urlCortesPorLoteYFecha: string = urlRendimientos + "GetCortesPorLoteYFecha";
@@ -231,10 +236,29 @@ export const urlConfTipoRendimiento: string = urlRendimientos + "GetConfigTipoRe
 export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
 export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
 
+
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
+
+
+// Ficha Tecnica Productos
+export const urlFichaTecnicaProductos: string = urlAPI + "FtProductos/"
+export const urlGetListaDeProductosFichaTecnica: string = urlFichaTecnicaProductos + "ListaProductoFichaTecnica"
+export const urlGetProductoFiltradoFichaTecnica: string = urlFichaTecnicaProductos + "BuscarProductoFichaTecnica"
+export const urlCrearProductosFichaTecnica: string = urlFichaTecnicaProductos + "CrearProductoFichaTecnica"
+export const urlEditarProductosFichaTecnica: string = urlFichaTecnicaProductos + "EditarProductoFichaTecnica"
+export const urlEliminarProductosFichaTecnica: string = urlFichaTecnicaProductos + "EliminarProductoFichaTecnica"
+
+// Ficha Tecnica Plantillas
+export const urlFichaTecnicaPlantilla: string = urlAPI + "FtPlantillas/"
+export const urlCrearPlantillaAspectosGeneralesFichaTecnica: string = urlFichaTecnicaPlantilla + "CrearAspectoGeneral"
+export const urlCrearPlantillaEspecificacionesFichaTecnica: string = urlFichaTecnicaPlantilla + "CrearEspecificacion"
+export const urlGetResponseAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "ConsultarAspectosGenerales"
+export const urlGetResponseEspecificacionesPlantilla: string = urlFichaTecnicaPlantilla + "ConsultarEspecificaciones"
+
+
 
 // Ficha Tecnica Marcas
 export const urlFichaTecnicaMarca: string = urlAPI + "FtMarca/"
