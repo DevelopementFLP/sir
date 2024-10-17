@@ -1,0 +1,70 @@
+<div>
+    <div class="grid-container" style="margin:20px 40px 40px 40px">
+        <div class="grid-item table-container-producto" >
+            <p-table
+                [value]="responseReporteDeMediasGrade"
+                [paginator]="true"
+                [rows]="10"
+                [rowsPerPageOptions]="[5, 10, 20]"
+                [scrollable]="true"
+                scrollHeight="650px"
+                dataKey="idCaja">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                        Grade
+                            <p-columnFilter
+                                type="text"
+                                field="producto"
+                                placeholder="Buscar por Producto"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                        Medias
+                            <p-columnFilter
+                                type="text"
+                                field="grade"
+                                placeholder="Buscar por Grade"
+                                display="menu">
+                            </p-columnFilter>
+                        </th>
+                        <th>
+                        Peso Medias
+                        </th>          
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-element>
+                    <tr>
+                        <td>{{element.grade}}</td>
+                        <td>{{element.medias}}</td>
+                        <td>{{element.pesoMedias}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <div class="grid-item">
+            <p-card header="Cuartos Totales" class="target">
+                <p-table styleClass="p-datatable-striped" >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Medias Totales:</th>
+                            <td>{{ sumaDeUnidades }}</td>
+                        </tr>
+                        <tr>
+                            <th>Peso en KG Total:</th>
+                            <td>{{ sumaDePesos }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+
+        <div class="grid-item table-container-grade">
+        
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* Distribute space between title and button */
+    align-items: center; /* Align items vertically in the center */
+}
+
+.Botones_Tabla_Dispositivo {
+    background-color: #6c7c65;
+}

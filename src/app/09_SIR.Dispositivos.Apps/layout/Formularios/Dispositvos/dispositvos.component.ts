@@ -1,7 +1,6 @@
-import { Component, Inject, inject, OnInit , AfterViewInit, ViewChild } from '@angular/core';
+import { Component,  OnInit , ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 
-import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -23,7 +22,7 @@ import { DispositivosService } from '../../../Services/DispositivoService.servic
 import { FormatoService } from 'src/app/09_SIR.Dispositivos.Apps/Services/FormatoService.service';
 import { TiposDispositivosService } from 'src/app/09_SIR.Dispositivos.Apps/Services/TiposDispositivos.service';
 import { UbicacionesService } from 'src/app/09_SIR.Dispositivos.Apps/Services/UbicacionesService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 
 
 @Component({

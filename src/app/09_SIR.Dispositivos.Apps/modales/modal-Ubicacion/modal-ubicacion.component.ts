@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { UbicacionDispositivoDTO } from '../../Interfaces/UbicacionDispositivoDTO';
 import { UbicacionesService } from '../../Services/UbicacionesService.service';
-import { UtilidadesService } from '../../Utilidades/UtilidadesService.service';
+import { UtilidadesService } from '../../Utilities/UtilidadesService.service';
 
 
 

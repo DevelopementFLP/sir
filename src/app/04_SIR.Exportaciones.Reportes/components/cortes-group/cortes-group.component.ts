@@ -10,6 +10,8 @@ import { GroupedDataKosher } from '../../types/DataKosherAgrupada.type';
 import { EmbarqueConfig } from '../../Interfaces/EmbarqueConfig.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CodigoPrecioFaltanteComponent } from '../codigo-precio-faltante/codigo-precio-faltante.component';
+import { formatDate } from '@angular/common';
+import { DataKosherAgrupada } from '../../Interfaces/DataKosherAgrupada.interface';
 
 @Component({
   selector: 'cortes-group',
@@ -50,6 +52,10 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
   errorNoCodigo: string[] = [];
   errorNoPrecio: {codigo: string, fecha: Date}[] = [];
+  
+  dataAgrupada: DataKosherAgrupada[] = [];
+  totalPallets: number = 0;
+
 
   constructor(
     private ckcs: KosherCommonService,
@@ -67,22 +73,25 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     this.datosMenudenciasKosher = this.datosKosher.filter(d => isNaN(parseFloat(d.codigoKosher!)));
     this.dataCortes = this.agruparData(this.datosCortesKosher);
     this.dataMenudencias = this.agruparData(this.datosMenudenciasKosher);
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['embarqueData'] && !changes['embarqueData'].isFirstChange()) {
-
       this.actualizarDatosCajas();
+      this.datosKosher = [];
         this.embarqueData.forEach(d => {
           this.setDatosKosher(d);
       });
 
       if(this.errorNoCodigo.length == 0 && this.errorNoPrecio.length == 0) {
+        console.log(this.datosKosher)
+        this.dataAgrupada = this.ckcs.setDatosAgrupados(this.datosKosher);
+        this.totalPallets = this.ckcs.getTotalPalletsByContainer(this.dataAgrupada);
         this.datosCortesKosher = this.datosKosher.filter(d => !isNaN(parseFloat(d.codigoKosher!)));
         this.datosMenudenciasKosher = this.datosKosher.filter(d => isNaN(parseFloat(d.codigoKosher!)));
         this.dataCortes = this.agruparData(this.datosCortesKosher);
         this.dataMenudencias = this.agruparData(this.datosMenudenciasKosher);
-
         this.mostrarReporte = this.datosCortesKosher.length > 0 || this.datosMenudenciasKosher.length > 0;
       } else {
         this.mostrarDialogoErrores();
@@ -103,7 +112,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
   private actualizarDatosCajas(): void {
     if (!this.embarqueData) return;
-
+   
     this.datosCajas = [];
     const containers: string[] = Array.from(new Set(this.embarqueData.map(cc => cc.container)));
     containers.forEach(container => {
@@ -164,8 +173,9 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
         this.datosKosher.push(data);
       }
       else {
-        if(caja.codProducto != null && this.errorNoPrecio.find(e => e.codigo == caja.codProducto && e.fecha == caja.fechaCorrida) == undefined)
+        if(caja.codProducto != null && this.errorNoPrecio.find(e => e.codigo == caja.codProducto && this.sonFechasIguales(e.fecha, caja.fechaCorrida!)) == undefined) {
           this.errorNoPrecio.push({codigo: caja.codProducto, fecha: caja.fechaCorrida!});
+        }
       }
     }
     else {
@@ -173,6 +183,15 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
         this.errorNoCodigo.push(caja.codProducto);
      }
   }
+
+  private sonFechasIguales(fecha_1: Date, fecha_2: Date): boolean {
+    return this.formatearFecha(fecha_1) == this.formatearFecha(fecha_2);
+  }
+
+  private formatearFecha(fecha: Date): string {
+    return formatDate(fecha, "dd-MM-yyyy", "es-UY");
+  }
+
 
   private getConfProductoParaCodigo(codigo: string): ConfProducto | undefined {
     return this.productosKosher.find(p => p.codigoProducto == codigo);
@@ -293,7 +312,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     this.dialogRef.onClose.subscribe((res) => {
       if(res != undefined) {
         this.habilitarReporte.emit(false);
-        this.ckcs.setReset();
+        //this.ckcs.setReset();
       }
     });
   }

@@ -1,15 +1,14 @@
-import { Component,  ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material/dialog';
 
 //Modelos
 import { LecturasDispositivoDTO } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/LecturasDispositivoDTO';
 
 //Servicios
 import { LecturasService } from 'src/app/09_SIR.Dispositivos.Apps/Services/LecturasService.service';
-import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilidades/UtilidadesService.service';
+import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 
 
 @Component({
@@ -26,35 +25,18 @@ export class LecturasDispositivosComponent {
   columnasTablaLecturaExpo: string[] = ['fecha', 'dispositivo', 'ubicacion', 'lectura', 'idCaja'];
 
   //Tipos de Datos
-  dataInicioLecturaDispositivo:LecturasDispositivoDTO[] = [];
-  dataInicioLecturaDispositivoExpo:LecturasDispositivoDTO[] = [];
+  dataInicioLecturaDispositivo: LecturasDispositivoDTO[] = [];
+  dataInicioLecturaDispositivoExpo: LecturasDispositivoDTO[] = [];
 
   //Tabla
   dataListaLecturas = new MatTableDataSource(this.dataInicioLecturaDispositivo);
   dataListaLecturasExpo = new MatTableDataSource(this.dataInicioLecturaDispositivoExpo);
-  @ViewChild(MatPaginator) paginacionTabla! : MatPaginator;
 
 
   constructor(
-    private dialog: MatDialog,
     private _utilidadesServicicio: UtilidadesService,
     private _lecturaDispositivoServices : LecturasService
   ){}
-
-  ngOnInit(): void {
-
-  }
-
-  ngAfterViewInit(): void {
-    this.dataListaLecturas.paginator = this.paginacionTabla;
-    this.dataListaLecturasExpo.paginator = this.paginacionTabla;
-  }
-
-  aplicarFiltroTabla(event: Event){
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataListaLecturas.filter = filterValue.trim().toLocaleLowerCase();
-    this.dataListaLecturasExpo.filter = filterValue.trim().toLocaleLowerCase();
-  }
 
   generarListadoDeCajas(idCaja : string)
   {
