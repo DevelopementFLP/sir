@@ -232,6 +232,7 @@ export class ReporteCuotaComponent implements OnInit {
         this.dwCortes = await lastValueFrom(this.cuotaService.getDWCortes(fechaD, fechaH, lotesStr));
         if(this.dwCortes.length > 0) {
           const ctsCuota = this.dwCortes.filter(c => c.customer?.startsWith('CUOTA'));
+
           const conditions: string[] = Array.from(
             new Set(
               ctsCuota
@@ -259,7 +260,11 @@ export class ReporteCuotaComponent implements OnInit {
                   return cDate.getTime() === target.getTime() && !c.customer?.includes('CUOTA');
                 }
             );
+
             const cajas   = this.dwCajas.filter(
+
+            const cajas  = this.dwCajas.filter(
+
               c => 
                 {
                   const cDate = new Date(c.fecha);

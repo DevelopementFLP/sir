@@ -1,0 +1,111 @@
+<div class="tipo-view__container">
+    <div class="options">
+        <div class="tipo-view__title">
+            Tipo de vista
+        </div>
+        <div class="tipo-view__options">
+            <div class="tipo-view__select">
+                <label>
+                <input type="radio" name="tipoReporte" [(ngModel)]="verAcumulado" [value]="true">
+                Acumulado
+                </label>
+            </div>
+            <div class="tipo-view__select">
+                <label>
+                <input type="radio" name="tipoReporte" [(ngModel)]="verAcumulado" [value]="false">
+                Diario
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="rend-view__container">
+        <div class="tipo-view__title">
+            Ver
+        </div>
+        <div class="tipo-view_check">
+            <div *ngFor="let valor of tiposRendimientosSeleccionados; let i = index; trackBy: trackByIndex" class="check-option">
+            <label>
+              <input type="checkbox" [(ngModel)]="tiposRendimientosSeleccionados[i]" (ngModelChange)="emitirSeleccion()">
+              {{tiposRendmientos[i]}}
+            </label>
+          </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="comparativo__container">    
+    <div class="contenedor">
+        <div class="tipo--container" *ngIf="verAcumulado">
+            <div class="qamark--container">
+                <div *ngFor="let qm of qamarksFiltrados">
+                    <div class="">
+                        <div class="qamark-titulo">
+                            <p class="qm-title">{{qm}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngFor="let tipo of tiposRendmientos; let i = index" class="tipo-rend">
+                <div class="" *ngIf="tiposRendimientosSeleccionados[i]">
+                <div class="tipos-title">
+                    {{tipo}}
+                </div>
+                <div class="tipos-title-data">
+                    <div>Prom</div>
+                    <div>Rend</div>
+                </div>
+                <div class="values--container">
+                    <div *ngFor="let data of dataAgrupada[i]; let idx = index"  [ngClass]="{'tipos-values-par': idx % 2 === 0, 'tipos-values-impar': idx % 2 !== 0}">
+                        <div>
+                            <div class="tipos-values" >
+                                <p *ngIf="data.pesoPromedio > 0">{{data.pesoPromedio | number:'0.2-2'}}</p>
+                                <p *ngIf="data.rendimiento > 0">{{data.rendimiento | percent:'0.2-2'}}</p>
+                                <p *ngIf="data.pesoPromedio == 0" class="no-data">-</p>
+                                <p *ngIf="data.rendimiento == 0" class="no-data">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="tipo--container" *ngIf="!verAcumulado">
+            <div class="qamark--container qamark-rend">
+                <div *ngFor="let qm of qamarksFiltrados">
+                    <div class="">
+                        <div class="qamark-titulo">
+                            <p class="qm-title">{{qm}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngFor="let tipo of rendimientoAgrupado; let i = index">
+                <div class="" *ngIf="tiposRendimientosSeleccionados[i]">
+                    <div class="tipos-title">
+                        {{tipo.tipo}}
+                    </div>
+                    <br>
+                    <hr>
+                    <div class="fechas-container">
+                        <div *ngFor="let r of tipo.data; let i = index" class="rend-ind-container">
+                            <div class="tipo-fecha">{{r.fecha| date:'dd/MM/yyyy'}}</div>
+                            <br>
+                            <div class="tipos-title-data">
+                                <div>Prom</div>
+                                <div>Rend</div>
+                            </div>
+                            <div class="values-rend--container">
+                                <div *ngFor="let t of r.data" class="tipos-values">
+                                    <p *ngIf="t.pesoPromedio > 0">{{t.pesoPromedio | number:'0.2-2'}}</p>
+                                    <p *ngIf="t.rendimiento > 0">{{t.rendimiento | percent:'0.2-2'}}</p>
+                                    <p *ngIf="t.pesoPromedio == 0">-</p>
+                                    <p *ngIf="t.rendimiento == 0">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

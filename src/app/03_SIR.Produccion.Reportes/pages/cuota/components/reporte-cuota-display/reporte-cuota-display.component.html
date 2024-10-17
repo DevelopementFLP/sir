@@ -12,7 +12,11 @@
                 <div *ngFor="let delantero of totalDelanteros" class="entrada--tipoCuarto">
                     <div class="detalle--nombre"></div>
                     <div class="detalle--cuartos">{{delantero.cuartos | number:'0.0'}}</div>
+
                     <div class="detalle--peso">{{delantero.peso | number:'0.2'}}</div>
+
+                    <div class="detalle--peso">{{delantero.peso | number:'0.2-2'}}</div>
+
                     <div class="detalle--peso">&nbsp;</div>
                 </div>
             </div>
@@ -23,7 +27,11 @@
                 <div *ngFor="let trasero of totalTraseros" class="entrada--tipoCuarto">
                     <div class="detalle--nombre"></div>
                     <div class="detalle--cuartos">{{trasero.cuartos | number:'0.0'}}</div>
+
                     <div class="detalle--peso">{{trasero.peso | number:'0.2'}}</div>
+
+                    <div class="detalle--peso">{{trasero.peso | number:'0.2-2'}}</div>
+
                     <div class="detalle--peso">&nbsp;</div>
                 </div>
             </div>
@@ -34,7 +42,11 @@
                 <div class="entrada--tipoCuarto">
                     <div class="detalle--nombre"></div>
                     <div class="detalle--cuartos valor--titulo">{{totalEntradaPorTipo.cuartos| number:'0.0'}}</div>
+
                     <div class="detalle--peso valor--titulo">{{totalEntradaPorTipo.peso| number:'0.2'}}</div>
+
+                    <div class="detalle--peso valor--titulo">{{totalEntradaPorTipo.peso| number:'0.2-2'}}</div>
+
                     <div class="detalle--peso peso__animal valor--titulo">Kg x canal</div>
                 </div>
             </div>
@@ -45,8 +57,13 @@
                 <div class="entrada--tipoCuarto">
                     <div class="detalle--nombre">&nbsp;</div>
                     <div class="detalle--cuartos valor--titulo">{{totalEntradaPorTipo.animales | number:'0.0'}}</div>
+
                     <div class="detalle--peso valor--titulo">{{totalEntradaPorTipo.peso| number:'0.2'}}</div>
                     <div class="detalle--peso peso__animal valor--titulo">{{totalEntradaPorTipo.pesoAnimal | number:'0.1'}}</div>
+
+                    <div class="detalle--peso valor--titulo">{{totalEntradaPorTipo.peso| number:'0.2-2'}}</div>
+                    <div class="detalle--peso peso__animal valor--titulo">{{totalEntradaPorTipo.pesoAnimal | number:'0.1-1'}}</div>
+
                 </div>
             </div>
         </div>
@@ -71,9 +88,15 @@
                 <div class="corte--nombre">{{corte.name}}</div>
                 <div class="corte--piezas">{{corte.piezas | number:'0.0'}}</div>
                 <div class="corte--cajas">{{corte.cajas | number:'0.0'}}</div>
+
                 <div class="corte--peso">{{corte.peso | number:'0.2'}}</div>
                 <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2'}}</div>
                 <div class="corte--rend">{{corte.condition.startsWith('D') ? (corte.peso / pesoDelanteros | percent:'0.2') : (corte.peso / pesoTraseros | percent:'0.2')}}</div>
+
+                <div class="corte--peso">{{corte.peso | number:'0.2-2'}}</div>
+                <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2-2'}}</div>
+                <div class="corte--rend">{{corte.condition.startsWith('D') ? (corte.peso / pesoDelanteros | percent:'0.2-2') : (corte.peso / pesoTraseros | percent:'0.2-2')}}</div>
+
             </div>
             <div class="cortes--total__cuota">
                 <div class="cortes--cuota__line">
@@ -81,9 +104,15 @@
                     <div class="corte--nombre valor--titulo">TOTAL CORTES CUOTA</div>
                     <div class="corte--piezas"></div>
                     <div class="corte--cajas"></div>
+
                     <div class="corte--peso valor--titulo">{{totalPesoCortesCuota | number:'0.2'}}</div>
                     <div class="corte--rend"></div>
                     <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesCuota | percent:'0.2'}}</div>
+
+                    <div class="corte--peso valor--titulo">{{totalPesoCortesCuota | number:'0.2-2'}}</div>
+                    <div class="corte--rend"></div>
+                    <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesCuota | percent:'0.2-2'}}</div>
+
                 </div>
             </div>
         </div>
@@ -103,9 +132,15 @@
                 <div class="corte--nombre">{{corte.name}}</div>
                 <div class="corte--piezas">{{corte.piezas}}</div>
                 <div class="corte--cajas"></div>
+
                 <div class="corte--peso">{{corte.peso | number:'0.2'}}</div>
                 <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2'}}</div>
                 <div class="corte--rend">{{corte.peso / pesoDelanteros | percent:'0.2'}}</div>
+
+                <div class="corte--peso">{{corte.peso | number:'0.2-2'}}</div>
+                <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2-2'}}</div>
+                <div class="corte--rend">{{corte.peso / pesoDelanteros | percent:'0.2-2'}}</div>
+
             </div>
             <div class="divider"></div>
             <div *ngFor="let corte of cortesTraserosNoCuota" class="cortes--nocuota__line">
@@ -113,9 +148,15 @@
                 <div class="corte--nombre">{{corte.name}}</div>
                 <div class="corte--piezas">{{corte.piezas}}</div>
                 <div class="corte--cajas"></div>
+
                 <div class="corte--peso">{{corte.peso | number:'0.2'}}</div>
                 <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2'}}</div>
                 <div class="corte--rend">{{corte.peso / pesoTraseros | percent:'0.2'}}</div>
+
+                <div class="corte--peso">{{corte.peso | number:'0.2-2'}}</div>
+                <div class="corte--pesoxpieza">{{corte.pesoPorPieza | number:'0.2-2'}}</div>
+                <div class="corte--rend">{{corte.peso / pesoTraseros | percent:'0.2-2'}}</div>
+
             </div>
             <div class="divider"></div>
             <div class="cortes--nocuota__line">
@@ -123,18 +164,30 @@
                 <div class="corte--nombre">TRIMMING</div>
                 <div class="corte--piezas"></div>
                 <div class="corte--cajas"></div>
+
                 <div class="corte--peso">{{cortesReporte.trimming[0].peso| number:'0.2'}}</div>
                 <div class="corte--pesoxpieza"></div>
                 <div class="corte--rend">{{cortesReporte.trimming[0].peso / totalEntradaPorTipo.peso | percent:'0.2' }}</div>
+
+                <div class="corte--peso">{{cortesReporte.trimming[0].peso| number:'0.2-2'}}</div>
+                <div class="corte--pesoxpieza"></div>
+                <div class="corte--rend">{{cortesReporte.trimming[0].peso / totalEntradaPorTipo.peso | percent:'0.2-2' }}</div>
+
             </div>
             <div class="cortes--nocuota__line">
                 <div class="corte--codigo"></div>
                 <div class="corte--nombre">MANTA</div>
                 <div class="corte--piezas"></div>
                 <div class="corte--cajas"></div>
+
                 <div class="corte--peso">{{cortesReporte.manta[0].peso| number:'0.2'}}</div>
                 <div class="corte--pesoxpieza"></div>
                 <div class="corte--rend">{{cortesReporte.manta[0].peso / totalEntradaPorTipo.peso | percent:'0.2' }}</div>
+
+                <div class="corte--peso">{{cortesReporte.manta[0].peso| number:'0.2-2'}}</div>
+                <div class="corte--pesoxpieza"></div>
+                <div class="corte--rend">{{cortesReporte.manta[0].peso / totalEntradaPorTipo.peso | percent:'0.2-2' }}</div>
+
             </div>
             <div class="cortes--total__cuota">
                 <div class="cortes--cuota__line">
@@ -142,9 +195,15 @@
                     <div class=""></div>
                     <div class="corte--piezas"></div>
                     <div class="corte--cajas"></div>
+
                     <div class="corte--peso valor--titulo">{{totalPesoCortesNoCuota | number:'0.2'}}</div>
                     <div class="corte--rend"></div>
                     <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesNoCuota | percent:'0.2'}}</div>
+
+                    <div class="corte--peso valor--titulo">{{totalPesoCortesNoCuota | number:'0.2-2'}}</div>
+                    <div class="corte--rend"></div>
+                    <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesNoCuota | percent:'0.2-2'}}</div>
+
                 </div>
             </div>         
         </div>
@@ -156,9 +215,14 @@
                 <div class=""></div>
                 <div class="corte--piezas"></div>
                 <div class="corte--peso valor--titulo">{{totalCajas | number:'0.0'}}</div>
+
                 <div class="corte--peso valor--titulo">{{totalPesoCortes | number:'0.2'}}</div>
                 <div class="corte--rend"></div>
                 <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesTotal | percent:'0.2'}}</div>
+
+                <div class="corte--peso valor--titulo">{{totalPesoCortes | number:'0.2-2'}}</div>
+                <div class="corte--rend"></div>
+                <div class="corte--pesoxpieza valor--titulo">{{rendimientoCortesTotal | percent:'0.2-2'}}</div>
             </div>
         </div>     
     </div>
