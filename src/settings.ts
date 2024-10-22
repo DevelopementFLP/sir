@@ -1,11 +1,7 @@
 
-export const urlAPI: string = "http://localhost:5205/api/";
-
-
-//export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 
 export const urlAPI: string = "http://192.168.0.107:82/api/";
-
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
@@ -208,7 +204,7 @@ export const urlAbasto: string = urlAPI + "LecturasDeAbasto/"
 export const urlGetListaDeLecturas: string = urlAbasto + "getListaDeLecturas"
 export const urlGetLecturaFiltrada: string = urlAbasto + "getLecturaDeQr"
 export const urlInsertarLecturaDeAbasto: string = urlAbasto + "insertarLecturaDeMedia"
-export const urlGetVistaDeLecturasAbasto: string = urlAbasto + "listadoDeAbasto?fechaDelDia"
+export const urlGetStockDeAbasto: string = urlAbasto + "listadoStockDeAbasto"
 export const urlDeleteLecturaDeAbasto: string = urlAbasto + "eliminarLectura"
 
 
@@ -237,11 +233,11 @@ export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
 export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
 
 
+
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
-
 
 // Ficha Tecnica Productos
 export const urlFichaTecnicaProductos: string = urlAPI + "FtProductos/"
@@ -255,6 +251,9 @@ export const urlEliminarProductosFichaTecnica: string = urlFichaTecnicaProductos
 export const urlFichaTecnicaPlantilla: string = urlAPI + "FtPlantillas/"
 export const urlCrearPlantillaAspectosGeneralesFichaTecnica: string = urlFichaTecnicaPlantilla + "CrearAspectoGeneral"
 export const urlCrearPlantillaEspecificacionesFichaTecnica: string = urlFichaTecnicaPlantilla + "CrearEspecificacion"
+export const urlListaAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "ListaAspectosGenerales"
+export const urlListaEspecificacionesPlantilla: string = urlFichaTecnicaPlantilla + "ListaDeEspecificaciones"
+
 export const urlGetResponseAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "ConsultarAspectosGenerales"
 export const urlGetResponseEspecificacionesPlantilla: string = urlFichaTecnicaPlantilla + "ConsultarEspecificaciones"
 

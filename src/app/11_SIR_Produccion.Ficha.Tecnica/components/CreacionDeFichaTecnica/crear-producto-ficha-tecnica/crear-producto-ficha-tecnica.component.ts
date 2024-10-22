@@ -20,7 +20,7 @@ import { FtVidaUtilService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/servi
 import { FtTipoDeAlimentacionService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtTipoDeAlimentacion/FtTipoDeAlimentacion.service';
 import { FtTipoDeEnvaseService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtTipoDeEnvase/FtTipoDeEnvase.service';
 import { FtPresentacionDeEnvaseService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtPresentacionDeEnvase/FtPresentacionDeEnvase.service';
-import { FtProductoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CrearProductoFichaTecnicaServicios/FtProducto/FtProducto.service';
+import { FtProductoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtProducto/FtProducto.service';
 
 import Swal from 'sweetalert2';
 import { SweetAlertGenericosComponent } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/helper/sweet-alert-genericos/sweet-alert-genericos.component';

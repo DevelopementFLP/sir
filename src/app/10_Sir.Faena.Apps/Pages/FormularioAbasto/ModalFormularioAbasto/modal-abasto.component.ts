@@ -129,11 +129,7 @@ export class ModalAbastoComponent {
             }
           }            
         
-
         this._abastoService.createLecturaDeMediaAbastoManual(numeracionManual, ladoDeMedia, this.usuarioLogueado ,fechaFormateada).subscribe({
-
-        this._abastoService.createLecturaDeMediaAbastoManual(numeracionManual, ladoDeMedia, this.usuarioLogueado ,fechaFormateada, this.ordinalInput).subscribe({
-
           next: (data) =>{
             if(data.esCorrecto){
               this._utilidadesServicicio.mostrarAlerta("Lectura Manual Ingresada", "Exito");

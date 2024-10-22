@@ -49,15 +49,8 @@
                             </div>
                             <div *ngFor="let cmp of comparativoPorIdCuota(id, cuotaComparativoReporte)" class="comparativo">
                                 <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
-
                                     <div *ngIf="i % 2 == 0">{{d | number:'0.1'}}</div>
                                     <div *ngIf="i % 2 != 0">{{d | percent:'0.1'}}</div>
-
-                                    <div *ngIf="i % 2 == 0 && d > 0">{{d | number:'0.1-2'}}</div>
-                                    <div *ngIf="i % 2 == 0 && d == 0">-</div>
-                                    <div *ngIf="i % 2 != 0 && d > 0">{{d | percent:'0.1-2'}}</div>
-                                    <div *ngIf="i % 2 != 0 && d == 0">-</div>
-
                                 </div>
                             </div>
                             <br>
@@ -70,15 +63,8 @@
                             </div>
                             <div *ngFor="let cmp of comparativoPorIdCuota(id, noCuotaComparativoReporte)" class="comparativo">
                                 <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
-
                                     <div *ngIf="i % 2 == 0">{{d | number:'0.1'}}</div>
                                     <div *ngIf="i % 2 != 0">{{d | percent:'0.1'}}</div>
-
-                                    <div *ngIf="i % 2 == 0 && d > 0">{{d | number:'0.1-2'}}</div>
-                                    <div *ngIf="i % 2 == 0 && d == 0">-</div>
-                                    <div *ngIf="i % 2 != 0 && d > 0">{{d | percent:'0.1-2'}}</div>
-                                    <div *ngIf="i % 2 != 0 && d == 0">-</div>
-
                                 </div>
                             </div>
                         </div>

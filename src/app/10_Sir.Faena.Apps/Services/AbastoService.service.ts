@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetVistaDeLecturasAbasto, urlGetLecturaFiltrada, urlDeleteLecturaDeAbasto } from 'src/settings';
+import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetLecturaFiltrada, urlDeleteLecturaDeAbasto, urlGetStockDeAbasto } from 'src/settings';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 
 @Injectable({
@@ -30,24 +30,16 @@ export class AbastoService {
   }
 
   public createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string): Observable<ApiResponse> {
-
-  public createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string, peso: number): Observable<ApiResponse> {
-
     let params = new HttpParams()
       .set('lecturaDeAbasto', idMedia)
       .set('operacion', operacion)
       .set('usuarioLogueado', usuarioLogueado)
-
       .set('fechaDeFaena', fechaDeFaena)     
-
-      .set('fechaDeFaena', fechaDeFaena)
-      .set('peso', peso);      
-
       return this.http.get<ApiResponse>(`${urlInsertarLecturaDeAbasto}`, { params });
   }
 
   public GetListarStockAbasto():Observable<ApiResponse>{
-    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}`)
+    return this.http.get<ApiResponse>(`${urlGetStockDeAbasto}`)
   }
 
   public DeleteLecturaDeAbasto(idAnimal: string): Observable<ApiResponse> {

@@ -19,84 +19,118 @@
       <h3>Formulario Aspectos Generales</h3>
   
       <form [formGroup]="formularioAspectosGenerales" (ngSubmit)="EnviarFormularioAspectosGenerales()">
-          <div>
-              <label>Nombre:</label>
-              <input formControlName="nombre" required />
-          </div>
-  
-          <div>
-              <label>ID Marca:</label>
-              <select formControlName="idMarca" required>
-                  <option *ngFor="let marca of listaDeMarcas" [value]="marca.idMarca">{{ marca.nombre }}</option>
-              </select>
-          </div>
-          
-          <!-- <div>
-              <label>ID Destino:</label>
-              <select formControlName="idDestino" required>
-                  <option *ngFor="let destino of listaDeDestino" [value]="destino.idDestino">{{ destino.nombre }}</option>
-              </select>
-          </div> -->
-  
-          <div>
-              <label>ID Tipo de Uso:</label>
-              <select formControlName="idTipoDeUso" required>
-                  <option *ngFor="let tipoUso of listaDeTiposDeUso" [value]="tipoUso.idTipoDeUso">{{ tipoUso.descripcion }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>ID Alergeno:</label>
-              <select formControlName="idAlergeno">
-                  <option *ngFor="let alergeno of listaDeAlergenos" [value]="alergeno.idAlergeno">{{ alergeno.descripcion }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>ID Condición Almacenamiento:</label>
-              <select formControlName="idCondicionAlmacenamiento" required>
-                  <option *ngFor="let condicion of listaDeCondicionesAlmacenamiento" [value]="condicion.idCondicionDeAlmacenamiento">{{ condicion.descripcion }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>ID Vida Útil:</label>
-              <select formControlName="idVidaUtil" required>
-                  <option *ngFor="let vidaUtil of listaDeVidaUtil" [value]="vidaUtil.idVidaUtil">{{ vidaUtil.nombre }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>ID Tipo de Envase:</label>
-              <select formControlName="idTipoDeEnvase" required>
-                  <option *ngFor="let tipoEnvase of listaDeTiposDeEnvase" [value]="tipoEnvase.idTipoDeEnvase">{{ tipoEnvase.descripcion }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>ID Presentación de Envase:</label>
-              <select formControlName="idPresentacionDeEnvase" required>
-                  <option *ngFor="let presentacion of listaDePresentacionesDeEnvase" [value]="presentacion.idPresentacionDeEnvase">{{ presentacion.descripcion }}</option>
-              </select>
-          </div>
-  
-          <div>
-              <label>Peso Promedio:</label>
-              <input type="number" formControlName="pesoPromedio" required />
-          </div>
-  
-          <div>
-              <label>Unidades por Caja:</label>
-              <input type="number" formControlName="unidadesPorCaja" required />
-          </div>
+        <div class="p-field">
+            <label for="nombre">Nombre:</label>
+            <input id="nombre" formControlName="nombre" pInputText required />
+        </div>
 
-          <div>
-            <label>Dimensiones:</label>
-            <input type="text" formControlName="dimensiones" required />
-          </div>
-  
-          <button type="submit" [disabled]="formularioAspectosGenerales.invalid">Enviar Sección 1</button>
-      </form>
+        <div class="p-field">
+            <label for="idMarca">ID Marca:</label>
+            <p-dropdown 
+                id="idMarca" 
+                formControlName="idMarca" 
+                [options]="listaDeMarcas" 
+                [optionLabel]="'nombre'" 
+                [optionValue]="'idMarca'" 
+                placeholder="Seleccione una Marca" 
+                >
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idTipoDeUso">ID Tipo de Uso:</label>
+            <p-dropdown 
+                id="idTipoDeUso" 
+                formControlName="idTipoDeUso" 
+                [options]="listaDeTiposDeUso" 
+                [optionLabel]="'descripcion'" 
+                [optionValue]="'idTipoDeUso'" 
+                placeholder="Seleccione un tipo de uso" 
+                >
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idAlergeno">ID Alergeno:</label>
+            <p-dropdown 
+                id="idAlergeno" 
+                formControlName="idAlergeno" 
+                [options]="listaDeAlergenos" 
+                [optionLabel]="'descripcion'" 
+                [optionValue]="'idAlergeno'" 
+                placeholder="Seleccione un alérgeno">
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idCondicionAlmacenamiento">ID Condición Almacenamiento:</label>
+            <p-dropdown 
+                id="idCondicionAlmacenamiento" 
+                formControlName="idCondicionAlmacenamiento" 
+                [options]="listaDeCondicionesAlmacenamiento" 
+                [optionLabel]="'descripcion'" 
+                [optionValue]="'idCondicionDeAlmacenamiento'" 
+                placeholder="Seleccione una condición" 
+                >
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idVidaUtil">ID Vida Útil:</label>
+            <p-dropdown 
+                id="idVidaUtil" 
+                formControlName="idVidaUtil" 
+                [options]="listaDeVidaUtil" 
+                [optionLabel]="'nombre'" 
+                [optionValue]="'idVidaUtil'" 
+                placeholder="Seleccione vida útil" 
+                >
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idTipoDeEnvase">ID Tipo de Envase:</label>
+            <p-dropdown 
+                id="idTipoDeEnvase" 
+                formControlName="idTipoDeEnvase" 
+                [options]="listaDeTiposDeEnvase" 
+                [optionLabel]="'descripcion'" 
+                [optionValue]="'idTipoDeEnvase'" 
+                placeholder="Seleccione tipo de envase" 
+                >
+            </p-dropdown>
+        </div>
+
+        <div class="p-field">
+            <label for="idPresentacionDeEnvase">ID Presentación de Envase:</label>
+            <p-dropdown 
+                id="idPresentacionDeEnvase" 
+                formControlName="idPresentacionDeEnvase" 
+                [options]="listaDePresentacionesDeEnvase" 
+                [optionLabel]="'descripcion'" 
+                [optionValue]="'idPresentacionDeEnvase'" 
+                placeholder="Seleccione presentación" 
+                >
+            </p-dropdown>
+            </div>
+
+            <div class="p-field">
+                <label for="pesoPromedio">Peso Promedio:</label>
+                <input id="pesoPromedio" type="number" formControlName="pesoPromedio" pInputText required />
+            </div>
+
+            <div class="p-field">
+                <label for="unidadesPorCaja">Unidades por Caja:</label>
+                <input id="unidadesPorCaja" type="number" formControlName="unidadesPorCaja" pInputText required />
+            </div>
+
+            <div class="p-field">
+                <label for="dimensiones">Dimensiones:</label>
+                <input id="dimensiones" type="text" formControlName="dimensiones" pInputText required />
+            </div>
+
+            <button pButton type="submit" label="Enviar Sección 1" [disabled]="formularioAspectosGenerales.invalid"></button>
+        </form>
     </div>
   
 
@@ -105,141 +139,160 @@
 
         <form [formGroup]="formularioEspecificaciones" (ngSubmit)="EnviarFormularioEspecificaciones()">
 
-          <div>
-              <label>Nombre:</label>
-              <input formControlName="nombre" required />
-          </div>
-      
-          <div>
-              <label>Grasa Visible:</label>
-              <input formControlName="grasaVisible" />
-          </div>
-      
-          <div>
-              <label>Espesor Cobertura:</label>
-              <input formControlName="espesorCobertura" />
-          </div>
-      
-          <div>
-              <label>Ganglios:</label>
-              <input formControlName="ganglios" />
-          </div>
-      
-          <div>
-              <label>Hematomas:</label>
-              <input formControlName="hematomas" />              
-          </div>
-      
-          <div>
-              <label>Huesos Cartílagos:</label>
-              <input formControlName="huesosCartilagos" />
-          </div>
-      
-          <div>
-              <label>Elementos Extraños:</label>
-              <input formControlName="elementosExtraños" />
-          </div>
-      
-          <div>
-              <label for="idColor">Color:</label>
-              <select formControlName="idColor" id="idColor" required>
-                  <option *ngFor="let color of listaDeColores" [value]="color.idColor">{{ color.descripcion }}</option>
-              </select>
-          </div>
-      
-          <div>
-              <label for="idOlor">Olor:</label>
-              <select formControlName="idOlor" id="idOlor" required>
-                  <option *ngFor="let olor of listaDeOlores" [value]="olor.idOlor">{{ olor.descripcion }}</option>
-              </select>
-          </div>
-      
-          <div>
-              <label for="idPh">Ph:</label>
-              <select formControlName="idPh" id="idPh" required>
-                  <option *ngFor="let ph of listaDePh" [value]="ph.idPh">{{ ph.nombre }}</option>
-              </select>
-          </div>
-      
-          <div>
-              <label>Aerobios Mesofilos Totales:</label>
-              <input formControlName="aerobiosMesofilosTotales" />
-          </div>
-      
-          <div>
-              <label>Enterobacterias:</label>
-              <input formControlName="enterobacterias" />
-              <label>
-                <input type="checkbox" formControlName="enviarEnterobacterias" />
-                Enviar Enterobacterias
-              </label>
-          </div>
-      
-          <div>
-              <label>Stec 0157:</label>
-              <input formControlName="stec0157" />
-              <label>
-                <input type="checkbox" formControlName="enviarStec" />
-                Enviar Stec 0157
-              </label>
-          </div>
-      
-          <div>
-              <label>Stec No 0157:</label>
-              <input formControlName="stecNo0157" />
-              <label>
-                <input type="checkbox" formControlName="enviarNoStec" />
-                Enviar No Stec
-              </label>
-          </div>
-      
-          <div>
-              <label>Salmonella:</label>
-              <input formControlName="salmonella" />
-              <label>
-                <input type="checkbox" formControlName="enviarSalmonella" />
-                Enviar Salmonella
-              </label>
-          </div>
-      
-          <div>
-              <label>Estafilococos:</label>
-              <input formControlName="estafilococos" />
-              <label>
-                  <input type="checkbox" formControlName="enviarEstafilococos" />
-                  Enviar Estafilococos
-              </label>
-          </div>
-      
-          <div>
-              <label>Pseudomonas:</label>
-              <input formControlName="pseudomonas" />
-              <label>
-                <input type="checkbox" formControlName="enviarPseudomonas" />
-                Enviar Pseudomonas
-              </label>
-          </div>
-      
-          <div>
-              <label>Escherichia Coli:</label>
-              <input formControlName="escherichiaColi" />
-              <label>
-                <input type="checkbox" formControlName="enviarEscherichiaColi" />
-                Enviar EscherichiaColi
-              </label>
-          </div>
-      
-          <div>
-              <label>Coliformes Totales:</label>
-              <input formControlName="coliformesTotales" />
-              <label>
-                <input type="checkbox" formControlName="enviarColiformes" />
-                Enviar Coliformes
-              </label>
-          </div>
-      
-          <button type="submit" [disabled]="formularioEspecificaciones.invalid">Enviar Formulario Especificaciones</button>
-      </form>
+            <div class="p-field">
+                <label for="nombre">Nombre:</label>
+                <input id="nombre" formControlName="nombre" pInputText required />
+            </div>
+        
+            <div class="p-field">
+                <label for="grasaVisible">Grasa Visible:</label>
+                <input id="grasaVisible" formControlName="grasaVisible" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="espesorCobertura">Espesor Cobertura:</label>
+                <input id="espesorCobertura" formControlName="espesorCobertura" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="ganglios">Ganglios:</label>
+                <input id="ganglios" formControlName="ganglios" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="hematomas">Hematomas:</label>
+                <input id="hematomas" formControlName="hematomas" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="huesosCartilagos">Huesos Cartílagos:</label>
+                <input id="huesosCartilagos" formControlName="huesosCartilagos" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="elementosExtraños">Elementos Extraños:</label>
+                <input id="elementosExtraños" formControlName="elementosExtraños" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="idColor">Color:</label>
+                <p-dropdown 
+                    id="idColor" 
+                    formControlName="idColor" 
+                    [options]="listaDeColores" 
+                    [optionLabel]="'descripcion'" 
+                    [optionValue]="'idColor'" 
+                    placeholder="Seleccione un color" 
+                    >
+                </p-dropdown>
+            </div>
+        
+            <div class="p-field">
+                <label for="idOlor">Olor:</label>
+                <p-dropdown 
+                    id="idOlor" 
+                    formControlName="idOlor" 
+                    [options]="listaDeOlores" 
+                    [optionLabel]="'descripcion'" 
+                    [optionValue]="'idOlor'" 
+                    placeholder="Seleccione un olor" 
+                    >
+                </p-dropdown>
+            </div>
+        
+            <div class="p-field">
+                <label for="idPh">Ph:</label>
+                <p-dropdown 
+                    id="idPh" 
+                    formControlName="idPh" 
+                    [options]="listaDePh" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idPh'" 
+                    placeholder="Seleccione un pH" 
+                    >
+                </p-dropdown>
+            </div>
+        
+            <div class="p-field">
+                <label for="aerobiosMesofilosTotales">Aerobios Mesofilos Totales:</label>
+                <input id="aerobiosMesofilosTotales" formControlName="aerobiosMesofilosTotales" pInputText />
+            </div>
+        
+            <div class="p-field">
+                <label for="enterobacterias">Enterobacterias:</label>
+                <input id="enterobacterias" formControlName="enterobacterias" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarEnterobacterias" />
+                    Enviar Enterobacterias
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="stec0157">Stec 0157:</label>
+                <input id="stec0157" formControlName="stec0157" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarStec" />
+                    Enviar Stec 0157
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="stecNo0157">Stec No 0157:</label>
+                <input id="stecNo0157" formControlName="stecNo0157" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarNoStec" />
+                    Enviar No Stec
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="salmonella">Salmonella:</label>
+                <input id="salmonella" formControlName="salmonella" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarSalmonella" />
+                    Enviar Salmonella
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="estafilococos">Estafilococos:</label>
+                <input id="estafilococos" formControlName="estafilococos" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarEstafilococos" />
+                    Enviar Estafilococos
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="pseudomonas">Pseudomonas:</label>
+                <input id="pseudomonas" formControlName="pseudomonas" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarPseudomonas" />
+                    Enviar Pseudomonas
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="escherichiaColi">Escherichia Coli:</label>
+                <input id="escherichiaColi" formControlName="escherichiaColi" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarEscherichiaColi" />
+                    Enviar Escherichia Coli
+                </label>
+            </div>
+        
+            <div class="p-field">
+                <label for="coliformesTotales">Coliformes Totales:</label>
+                <input id="coliformesTotales" formControlName="coliformesTotales" pInputText />
+                <label>
+                    <input type="checkbox" formControlName="enviarColiformes" />
+                    Enviar Coliformes
+                </label>
+            </div>
+        
+            <button pButton type="submit" label="Enviar Formulario Especificaciones" [disabled]="formularioEspecificaciones.invalid"></button>
+        </form>
+        
       
       
       </div>
