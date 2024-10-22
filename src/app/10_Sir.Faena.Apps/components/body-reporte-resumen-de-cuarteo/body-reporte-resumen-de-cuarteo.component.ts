@@ -2,14 +2,13 @@ import { Component, ViewChild } from '@angular/core';
 import { ReporteDeMediasProductosDTO, ReporteDeMediasProveedorDTO } from '../../Interfaces/ReporteDeMediasDTO';
 import { UtilidadesService } from 'src/app/09_SIR.Dispositivos.Apps/Utilities/UtilidadesService.service';
 import { DataFaenaService } from '../../Services/Data-Faena.service';
-//import { ComponenteReporteFaenaProveedorComponent } from '../component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
+import { ComponenteReporteFaenaProveedorComponent } from '../component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
 import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/Helpers/Metodos-Excel-Genericos/metodos-Excel-Genericos.service';
 
 
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { MetodosExcelCuarteoService } from '../../helpers/Metodos-Excel-Cuarteo/metodos-excel-cuarteo.service';
-import { ComponenteReporteFaenaProveedorComponent } from '../component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
 
 @Component({
   selector: 'app-components-body-resumen-de-cuarteo',
