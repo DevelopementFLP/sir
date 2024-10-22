@@ -31,13 +31,21 @@ import { QamarkDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interf
 import { Comparativo } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/Comparativo.inteface';
 import { ComparativoReporte } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/ComparativoReporte.interface';
 import { TipoCuotaDict } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/TipoCuotaDict.interface';
+import { ComparativoRend } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/ComparativoRend.interface';
+import { CorteLote } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/CorteLote.interface';
+import { DWSalidaDTO } from 'src/app/03_SIR.Produccion.Reportes/pages/cuota/interfaces/DWSalidaDTO.interface';
+import { ComparativoRendData } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/ComparativoRendData.interface';
+import { DataRendimiento } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/DataRendimiento.interface';
+import { TipoFechaDataAgrupado } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/TipoFechaDataAgrupado.interface';
+import { CommonService } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/services/common.service';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
   constructor(
     private kcs: KosherCommonService,
     private deps: DetalleEmbarquePrintService ,
-    private ccs: CommonCuotaService
+    private ccs: CommonCuotaService,
+    private crs: CommonService
   ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
@@ -58,6 +66,8 @@ export class PrintService {
         return this.printDetalleDeEmbarque(dataToPrint, libro);
       case 8:
         return this.printRendimientosCuota(dataToPrint, libro);
+        case 9:
+      return this.printComparativosRendimientos(dataToPrint, libro);
       default:
         return [];
     }
@@ -2261,5 +2271,349 @@ export class PrintService {
 
   comparativoPorIdCuota(id: number, c: ComparativoReporte[]): ComparativoReporte[] {
     return c.filter(c => c.idCuota == id);
+  }
+
+  private printComparativosRendimientos(dataToPrint: PrintModel, libro: Workbook) {
+    const dataRendimientos: CorteLote[][] = dataToPrint.data.rendimientos as CorteLote[][];
+    const dataComprativo: CorteLote[] = dataToPrint.data.comparativo as CorteLote[];
+    const fechas: Date[] = dataToPrint.data.fechas as Date[];
+    const nombresRendimientos: string[] = dataToPrint.data.nombresRend as string[];
+    const qamarksDto: QamarkDTO[] = dataToPrint.data.qamarks as QamarkDTO[];
+
+    const fuenteTituloNombre:       Partial<Font>         = { bold: true, size: 12, color: { argb: 'FF1f618d'}};
+    const fuenteTitulo:             Partial<Font>         = { bold: true, size: 12 };
+    const fuenteSubTitulo:          Partial<Font>         = { bold: true, size: 7 };
+    const fuenteTituloCortes:       Partial<Font>         = { bold: true, size: 9 };
+    const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
+    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
+    const alineacionIzquierda:      Partial<Alignment>    = { vertical: 'middle', horizontal: 'left' };
+    const formatoNumeroDecimal:     string                = '#,##0.00';
+    const formatoNumeroMillar:      string                = '#,##0';
+
+    // RENDIMIENTOS
+    nombresRendimientos.forEach((nr, i) => {
+      let fila = 6;
+      let columna = 2;
+
+      const titulo: string    = nr ?? `rendimiento_${i}`;
+      const hoja:   Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 16);
+
+      let rendimientos: DataRendimiento[] = [];
+      fechas.forEach(f => {
+        const entrada = dataRendimientos[i][0].entrada.filter(e => this.crs.sonFechasIguales(e.fecha, f));
+        if(entrada.length > 0) {
+          const cortes  = dataRendimientos[i][0].cortes.filter(c => this.crs.sonFechasIguales(c.fecha, f));
+          let entr = this.crs.agruparEntrada(entrada);
+          let cts = this.crs.agruparCortes(cortes);
+          rendimientos.push({
+            fecha: f,
+            entrada: entr,
+            cortes: cts,
+            totalCuartos: this.crs.cantidadTotalCuartos(entr),
+            pesoCuartos: this.crs.pesoTotalCuartos(entr),
+            totalCortes: this.crs.cantidadTotalCortes(cts),
+            pesoCortes: this.crs.pesoTotalCortes(cts)
+          });
+        }
+      });
+      
+      for(let i = 0; i < rendimientos.length; i++) {
+        fila = 6;
+        const data: DataRendimiento = rendimientos[i];
+        hoja.getRow(fila).getCell(columna).value = "Fecha: " + formatDate(data.fecha, "dd/MM/yyyy", "es-UY");
+        fila += 2;
+        hoja.getRow(fila).getCell(columna).value = "ENTRADA";
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        fila++;
+        hoja.getRow(fila).getCell(columna).value = "Código";
+        hoja.getRow(fila).getCell(columna).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 1).value = "Tipo cuarto";
+        hoja.getRow(fila).getCell(columna + 1).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 4).value = "Cuartos";
+        hoja.getRow(fila).getCell(columna + 4).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 4).alignment = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 5).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 5).value = "Peso";
+        hoja.getRow(fila).getCell(columna + 5).alignment = alineacionDerecha;
+
+        const entrada = data.entrada;
+        entrada.forEach(ent => {
+          fila++;
+          hoja.getRow(fila).getCell(columna).value = ent.code;
+          hoja.getRow(fila).getCell(columna + 1).value = ent.tipoCuarto;
+          hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 4).value = ent.cuartos;
+          hoja.getRow(fila).getCell(columna + 4).alignment = alineacionDerecha;
+          hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(columna + 5).value = ent.peso.toFixed(2);
+          hoja.getRow(fila).getCell(columna + 5).alignment = alineacionDerecha;
+        });
+
+        fila++;
+        hoja.getRow(fila).getCell(columna).value = "TOTAL";
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 4).value = data.totalCuartos;
+        hoja.getRow(fila).getCell(columna + 4).alignment = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 4).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna + 5).value = data.pesoCuartos.toFixed(2);
+        hoja.getRow(fila).getCell(columna + 5).alignment = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 5).font = fuenteTitulo;
+
+        fila += 2;
+
+        hoja.getRow(fila).getCell(columna).value = "CORTES";
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        fila++;
+        hoja.getRow(fila).getCell(columna).value = "Código";
+        hoja.getRow(fila).getCell(columna).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 1).value = "Producto";
+        hoja.getRow(fila).getCell(columna + 1).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 2).value = "Unidades";
+        hoja.getRow(fila).getCell(columna + 2).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 3).value = "Peso";
+        hoja.getRow(fila).getCell(columna + 3).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 4).value = "Peso Prom.";
+        hoja.getRow(fila).getCell(columna + 4).font = fuenteTituloCortes;
+        hoja.getRow(fila).getCell(columna + 5).value = "% Rend.";
+        hoja.getRow(fila).getCell(columna + 5).font = fuenteTituloCortes;
+        hoja.getColumn(columna + 1).width = 35;
+      
+        const cortes = data.cortes;
+        cortes.forEach(cts => {
+          fila++;
+          hoja.getRow(fila).getCell(columna).value = cts.codigo;
+          hoja.getRow(fila).getCell(columna + 1).value = cts.producto;
+          hoja.getRow(fila).getCell(columna + 2).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 2).value = cts.piezas;
+          hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 3).value = cts.peso.toFixed(2);
+          hoja.getRow(fila).getCell(columna + 3).alignment = alineacionDerecha;
+          hoja.getRow(fila).getCell(columna + 4).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 4).value = (cts.peso / cts.piezas).toFixed(2);
+          hoja.getRow(fila).getCell(columna + 4).alignment = alineacionDerecha;
+          hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroMillar;
+          hoja.getRow(fila).getCell(columna + 5).value = (cts.peso / data.pesoCuartos * 100).toFixed(2) + ' %';
+          hoja.getRow(fila).getCell(columna + 5).alignment = alineacionDerecha;
+        });
+
+        fila++;
+        hoja.getRow(fila).getCell(columna).value = 'TOTAL';
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 2).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 2).value = data.totalCortes;
+        hoja.getRow(fila).getCell(columna + 2).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 3).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 3).value = data.pesoCortes.toFixed(2);
+        hoja.getRow(fila).getCell(columna + 3).alignment = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 3).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna + 5).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(columna + 5).value = (data.pesoCortes / data.pesoCuartos * 100).toFixed(2) + ' %';
+        hoja.getRow(fila).getCell(columna + 5).alignment = alineacionDerecha;
+        hoja.getRow(fila).getCell(columna + 5).font = fuenteTitulo;
+        columna += 7;
+      }
+    });
+
+    // COMPARATIVO DIARIO
+    {
+      const titulo: string = 'COMPARATIVO POR FECHA';
+      const hojaComp: Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaComp);
+      this.setTitle(libro, hojaComp, titulo, 'right', 16);
+
+      let qamarks:          number[] = [];
+      let qamarksFiltrados: string[] = []
+      let tiposSeleccionados: boolean[] = dataToPrint.data.tiposSeleccionados;
+      let data: TipoFechaDataAgrupado[] = dataToPrint.data.dataAgrupada;
+      let nombresComprativo: string[] = dataToPrint.data.nombresComparativos;
+            
+      // QAMARKS
+      const len = dataComprativo.length;
+      qamarks = [];
+      for(let i = 0; i < len; i++) {
+        const cortes = dataComprativo[i].cortes;
+        const arrQamark = Array.from(new Set(cortes.map(c => c.marca)));
+        qamarks = qamarks.concat(qamarks, arrQamark);
+      }
+
+      qamarks = Array.from(new Set(qamarks.map(m => m))).sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      // QAMARKS FILTRADOS
+      qamarksFiltrados = [];
+
+      qamarks.forEach(qm => {
+        let q = qamarksDto.find(qma => qma.qamark == qm)?.name;
+        if(q && !q.includes('MANTA') && !q.includes('TRIMM')) qamarksFiltrados.push(q)
+      });
+
+      hojaComp.getColumn(3).width = 1;
+
+      qamarksFiltrados = qamarksFiltrados.sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      let fila: number = 9;
+      let columna: number = 2;
+      qamarksFiltrados.forEach(qm => {
+        hojaComp.getRow(fila).getCell(columna).value  = qm;
+        hojaComp.getRow(fila).getCell(columna).font = fuenteTituloCortes;
+        hojaComp.getRow(fila).getCell(columna).alignment = alineacionDerecha;
+        fila++;
+      });
+
+      columna = 4;
+      
+      tiposSeleccionados.forEach((rend, i) => {
+        if(rend) {
+          fila = 6;
+          let cantFechas = 0;
+          let colInicial = columna;
+          const tipo = nombresComprativo[i];
+          const datos = data.filter(x => x.tipo == tipo);
+          
+          hojaComp.getRow(fila).getCell(columna).value = tipo;
+          fila++;
+
+          for(let i = 0; i < datos[0].data.length; i++) {
+            fila = 7;
+            const fecha = datos[0].data[i].fecha;
+            hojaComp.getRow(fila).getCell(columna).value = fecha;
+            hojaComp.mergeCells(fila, columna, fila, columna + 1);
+            hojaComp.getRow(fila).getCell(columna).alignment = alineacionCentro;
+            hojaComp.getRow(fila + 1).getCell(columna + 1).alignment = alineacionDerecha;
+            hojaComp.getRow(fila + 1).getCell(columna).value = "Peso Prom.";
+            hojaComp.getRow(fila + 1).getCell(columna + 1).value = "% Rend.";
+          
+            fila += 2;
+            datos[0].data[i].data.forEach(d => {
+              hojaComp.getRow(fila).getCell(columna).value = d.pesoPromedio > 0 ? d.pesoPromedio.toFixed(2) : '-';
+              hojaComp.getRow(fila).getCell(columna + 1).value = d.rendimiento > 0 ? (d.rendimiento * 100).toFixed(2) + ' %': '-';
+              hojaComp.getRow(fila).getCell(columna + 1).alignment = alineacionDerecha;
+              fila++;
+            });
+            hojaComp.getColumn(columna + 2).width = 5;
+            columna += 3;
+            cantFechas++;
+          }
+
+          hojaComp.mergeCells(6, colInicial, 6, columna - 2);
+          hojaComp.getRow(6).getCell(colInicial).alignment = alineacionCentro;
+          hojaComp.getRow(6).getCell(colInicial).font = fuenteTituloNombre;
+
+          hojaComp.getColumn(columna - 1).width = 10;
+        }
+      });
+    }
+
+    //COMPARATIVO
+    {
+      const titulo: string = 'COMPARATIVO ACUMULADO';
+      const hojaComp: Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hojaComp);
+      this.setTitle(libro, hojaComp, titulo, 'right', 16);
+
+      let qamarks:          number[] = [];
+      let qamarksFiltrados: string[] = []
+      let comparativoData:  ComparativoRend[] = [];
+      let rendimientos:     ComparativoRendData[] = [];
+      let dataAgrupada:     ComparativoRend[][] = [];
+
+      // QAMARKS
+      const len = dataComprativo.length;
+      qamarks = [];
+      for(let i = 0; i < len; i++) {
+        const cortes = dataComprativo[i].cortes;
+        const arrQamark = Array.from(new Set(cortes.map(c => c.marca)));
+        qamarks = qamarks.concat(qamarks, arrQamark);
+      }
+
+      qamarks = Array.from(new Set(qamarks.map(m => m))).sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      // QAMARKS FILTRADOS
+      qamarksFiltrados = [];
+
+      qamarks.forEach(qm => {
+        let q = qamarksDto.find(qma => qma.qamark == qm)?.name;
+        if(q && !q.includes('MANTA') && !q.includes('TRIMM')) qamarksFiltrados.push(q)
+      });
+
+      hojaComp.getColumn(3).width = 1;
+
+      qamarksFiltrados = qamarksFiltrados.sort((a, b) => {if(a <= b) return -1; return 1;});
+      
+      let fila: number = 8;
+      let columna: number = 2;
+      qamarksFiltrados.forEach(qm => {
+        hojaComp.getRow(fila).getCell(columna).value  = qm;
+        hojaComp.getRow(fila).getCell(columna).font = fuenteTituloCortes;
+        hojaComp.getRow(fila).getCell(columna).alignment = alineacionDerecha;
+        fila++;
+      });
+
+      fila = 6;
+      columna = 4;
+
+      nombresRendimientos.forEach(nm => {
+        hojaComp.mergeCells(fila, columna, fila, columna + 1);
+        hojaComp.getRow(fila).getCell(columna).alignment = alineacionCentro;
+        hojaComp.getRow(fila).getCell(columna).value = nm;
+        hojaComp.getRow(fila).getCell(columna).font = fuenteTituloNombre;
+        hojaComp.getRow(fila + 1).getCell(columna).value = "Peso Prom.";
+        hojaComp.getRow(fila + 1).getCell(columna).font = fuenteSubTitulo;
+        hojaComp.getRow(fila + 1).getCell(columna + 1).value = "% Rend";
+        hojaComp.getRow(fila + 1).getCell(columna + 1).font = fuenteSubTitulo;
+        hojaComp.getRow(fila + 1).getCell(columna + 1).alignment = alineacionDerecha;
+        columna += 3;
+      });
+
+      let comp: ComparativoRend[] = [];
+      rendimientos = [];
+      for(let i = 0; i < len; i++) {
+        const data: CorteLote        = dataComprativo[i];
+        const ent:  LoteEntradaDTO[] = data.entrada;
+        const cts:  DWSalidaDTO[]    = data.cortes;
+  
+        if(ent.length > 0) {          
+          let entr = this.crs.agruparEntrada(ent);
+          let ct   = this.crs.agruparCortes(cts);
+          rendimientos.push({
+            tipo:   data.nombre,
+            cortes:  ct,
+            pesoCuartos:  this.crs.pesoTotalCuartos(entr)
+          });
+        }
+      }
+
+      comp = this.crs.setDataComparativoRendimiento(rendimientos, qamarksDto);
+      
+      comparativoData = comp;
+      nombresRendimientos.forEach(tipo => {
+        let d = comparativoData.filter(c => c.tipo == tipo).sort((a, b) => {
+          if(a.qamark <= b.qamark) return -1;
+          return 1;
+        });
+        dataAgrupada.push(d);      
+      });  
+
+      fila = 8;
+      columna = 4;
+
+      for(let i = 0; i < dataAgrupada.length; i++) {
+        const compData: ComparativoRend[] = dataAgrupada[i];
+        compData.forEach(cd => {
+          hojaComp.getRow(fila).getCell(columna).numFmt     = formatoNumeroDecimal;
+          hojaComp.getRow(fila).getCell(columna).alignment  = alineacionIzquierda;
+          hojaComp.getRow(fila).getCell(columna).value = cd.pesoPromedio > 0 ? cd.pesoPromedio.toFixed(2) : '-';
+          hojaComp.getRow(fila).getCell(columna + 1).value = cd.rendimiento > 0 ? (cd.rendimiento * 100).toFixed(2) + ' %' : '-';
+          hojaComp.getRow(fila).getCell(columna + 1).alignment  = alineacionDerecha;
+          fila++
+        });
+
+        fila = 8;
+        columna += 3;
+      }
+    }
   }
 }
