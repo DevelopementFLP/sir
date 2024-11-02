@@ -14,6 +14,7 @@ import { AddCodigosComponent } from './components/add-codigos/add-codigos.compon
 import { CodigoPrecioFaltanteComponent } from './components/codigo-precio-faltante/codigo-precio-faltante.component';
 import { NuevoPrecioComponent } from './components/nuevo-precio/nuevo-precio.component';
 import { PesoNetoContenedorComponent } from './components/peso-neto-contenedor/peso-neto-contenedor.component';
+import { EditarPrecioComponent } from './components/editar-precio/editar-precio.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { PesoNetoContenedorComponent } from './components/peso-neto-contenedor/p
     CodigoPrecioFaltanteComponent,
     NuevoPrecioComponent,
     PesoNetoContenedorComponent,
+    EditarPrecioComponent,
   ],
   imports: [
     CommonModule,

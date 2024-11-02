@@ -1,0 +1,14 @@
+<div class="precios--container">
+    <h3 class="precios--titulo">Editar precios para <span class="precio--producto">{{ producto }}</span></h3>
+    <form [formGroup]="preciosForm">
+        <div formArrayName="precios" *ngFor="let control of preciosArray.controls; let i = index" class="precio--registro">
+            <label for="precio-{{ i }}"><span class="precios--id">Precio {{ i + 1 }}</span> - <span class="precios--fecha">{{fechas[i] | date:'dd/MM/yyyy'}}</span>&nbsp;</label>
+            <input type="number" min="0" [formControlName]="i" id="precio-{{ i }}" class="precio--value"/>
+        </div>
+        <div class="precio--buttons">
+            <button pButton type="button" icon="pi pi-save" iconPos="left" label="Guardar" (click)="guardar()" class="p-button-sm"></button>
+            <button pButton type="button" icon="pi pi-times" iconPos="left" label="Cancelar" (click)="cerrar()" class="p-button-danger p-button-sm"></button>
+        </div>
+    </form>
+</div>
+  

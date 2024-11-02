@@ -1,0 +1,28 @@
+<div class="data__container">
+    <div class="data__title">
+        <div class="values--text">Customer</div>
+        <div class="values--text">Invoice NO</div>
+        <div class="values--text">Container number</div>
+        <div class="values--text">Pallet number</div>
+        <div class="values--text">Product Code</div>
+        <div class="values--text carton-id">Carton ID</div>
+        <div class="values--text">Weight of the carton</div>
+        <div class="values--text">Production Date</div>
+        <div class="values--text">Expirate Date</div>
+        <div class="values--text">Price</div>
+    </div>
+    <div class="data__values" *ngFor="let reg of datos">
+        <div class="values--v">423203</div>
+        <div class="values--v"></div>
+        <div class="values--v">{{reg.container}}</div>
+        <div class="values--v">{{reg.pallet}}</div>
+        <div class="values--v">{{reg.productcode}}</div>
+        <div class="values--v carton-id">{{reg.boxid}}</div>
+        <div class="values--v">{{reg.netweight | number:'1.2-2'}}</div>
+        <div class="values--v">{{reg.productiondate | date:'dd/MM/yyyy'}}</div>
+        <div class="values--v">{{reg.expiredate | date:'dd/MM/yyyy'}}</div>
+        <div class="values--v">{{reg.precio | currency: 'USD':'symbol':'1.2-2':'en-US'}}</div>
+    </div>
+</div>
+
+<scroll-top />

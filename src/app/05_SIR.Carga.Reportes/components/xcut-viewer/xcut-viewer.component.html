@@ -1,0 +1,34 @@
+<div class="data__values" *ngFor="let reg of datosXCUT.data">
+    <div class="values--v"></div>
+    <div class="values--v">{{reg.contenedor}}</div>
+    <div class="values--v"></div>
+    <div class="values--v">{{reg.idPallet}}</div>
+    <div class="values--v">{{reg.codigoProducto}}</div>
+    <div class="values--v">{{reg.clasificacionKosher}}</div>
+    <div class="values--v">{{reg.codigoKosher}}</div>
+    <div class="values--v">{{reg.markKosher}}</div>
+    <div class="values--v">{{reg.cantidadCajas}}</div>
+    <div class="values--v">{{reg.pesoNeto | number:'1.2-2'}}</div>
+    <div class="values--v">{{reg.pesoBruto | number:'1.2-2'}}</div>
+    <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+    <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+</div>
+<div class="data__total">
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v total-data">{{datosXCUT.cantidadPallet}}</div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v total-data">{{datosXCUT.cantidadCajas | number:'1.0-0'}}</div>
+    <div class="values--v total-data">{{datosXCUT.pesoNeto | number:'1.2-2'}}</div>
+    <div class="values--v total-data">{{datosXCUT.pesoBruto | number:'1.2-2'}}</div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v total-data">{{datosXCUT.precio / 1000 | currency: 'USD':'symbol':'1.2-2':'en-US'}}</div>
+    <div class="values--v total-data">{{(datosXCUT.precio * (datosXCUT.pesoNeto / 1000)) | number:'1.2-2'}}</div>
+</div>

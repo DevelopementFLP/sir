@@ -1,7 +1,6 @@
 <mat-card style="margin:20px 40px 40px 40px">
 
   <mat-card-content>
-
         <!-- Calendario seleccionable -->
     <mat-form-field appearance="fill" style="margin-top: 1rem;">
       <mat-label>Seleccionar Fecha</mat-label>
@@ -11,9 +10,6 @@
     </mat-form-field>
 
     <button *ngIf="fechaSeleccionada" style="margin-bottom: 2rem; margin-top: 2rem; margin-left: 2rem;" mat-raised-button color="primary" (click)="GetListaDeStockDeAbasto()">
-
-    <button style="margin-bottom: 2rem; margin-top: 2rem;" mat-raised-button color="primary" (click)="GetListaDeStockDeAbasto()">
-
       <mat-icon mat-list-icon>autorenew</mat-icon> Actualizar
     </button>
 
@@ -28,15 +24,9 @@
           <mat-divider></mat-divider>
           <mat-list-item>Peso Total En Stock: {{totalDePesos}}  </mat-list-item>                  
           <mat-divider></mat-divider>
-
           <!-- <section class="example-section">
             <mat-checkbox class="example-margin" [(ngModel)]="mostrarStockActual" (change)="stockActualEnCamara()">Stock Disponible</mat-checkbox>
           </section> -->
-
-          <section class="example-section">
-            <mat-checkbox class="example-margin" [(ngModel)]="mostrarStockActual" (change)="stockActualEnCamara()">Stock Disponible</mat-checkbox>
-          </section>
-
         </mat-list>
       </div>
 

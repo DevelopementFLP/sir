@@ -5,6 +5,7 @@ import { FtEspecificacionesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.
 import { FtResponseAspectoGeneralDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/Response/FtResponseAspectosGeneralesDTO';
 import { FtResponseEspecificacionesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/Response/FtResponseDeEspecificacionesDTO';
 import { FtAspectosGeneralesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtAspectosGenerales.service';
+
 import { FtImagenesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtImagenes.service';
 import { FtProductoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtProducto/FtProducto.service';
 
@@ -16,6 +17,11 @@ import { FtDestinosService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/servi
 import { FtDestinoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Destinos/FtDestinoDTO';
 import { FtEspecificacionesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtEspecificaciones.service';
 
+import { FtProductoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtProducto/FtProducto.service';
+
+import Swal from 'sweetalert2';
+
+
 @Component({
   selector: 'component-crear-ficha-tecnica',
   templateUrl: './crear-ficha-tecnica.component.html',
@@ -25,6 +31,7 @@ export class CrearFichaTecnicaComponent {
     
   public contadorDePasadas: number = 0;
   public listaDeProductosParaCargar: string[] = [];
+
   public codigoProducto: string = '';
   public nombreProducto: string = '';
   public calibreDeProducto: string = '';
@@ -46,12 +53,24 @@ export class CrearFichaTecnicaComponent {
   public imagenSeleccionadaAreaEnvaseSecundario2: File | null = null;
   public urlImagenEnvaseSecundario2: string | null = null;
 
+  public codigoProducto: string | null = null;
+  public nombreProducto: string = '';
+  public descripcionDelProducto: string = '';
+
+  public imagenSeleccionadaAreaLogo: string | null = null;
+  public imagenSeleccionadaAreaCorte: string | null = null;
+  public imagenSeleccionadaAreaEnvase: string | null = null;
+  public imagenSeleccionadaAreaEnvaseSecundario: string | null = null;
+  public imagenSeleccionadaAreaEnvaseSecundario2: string | null = null;
+
+
   public listaDeAspectosGeneralesPlantilla: FtAspectosGeneralesPlantillaDTO[] = [];
   public listaDeEspecificacionesPlantilla: FtEspecificacionesPlantillaDTO[] = [];
   public camposDeAspectosGenerales: FtResponseAspectoGeneralDTO[] = []
   public camposDeEspecificaciones: FtResponseEspecificacionesPlantillaDTO[] = []
   public seleccionDeAspectosGenerales: number | null = null;
   public seleccionDeEspecificaciones: number | null = null;
+
 
   public listaDeDestinos: FtDestinoDTO[] = [];
   public seleccionDeDestino: FtDestinoDTO | null = null;
@@ -60,6 +79,15 @@ export class CrearFichaTecnicaComponent {
   //! Campos de la ficha Aspectos Generales
   public producto: string = '';
   public marca: string = '';
+
+  public observacionDelProducto: string = '';
+  public fechaDelDia: string = '';
+
+  //! Campos de la ficha Aspectos Generales
+  public producto: string = '';
+  public marca: string = '';
+  public destino: string = '';
+
   public tipoDeUso: string = '';
   public alergeno: string = '';
   public almacenamiento: string = '';
@@ -72,7 +100,11 @@ export class CrearFichaTecnicaComponent {
 
   //! Campos de Especificaciones
   public nombre: string = '';
+
+
   public idioma: string = '';
+
+
   public grasaVisible: string = '';
   public espesorCobertura: string = '';
   public ganglios: string = '';
@@ -81,7 +113,11 @@ export class CrearFichaTecnicaComponent {
   public elementosExtranos: string = '';
   public color: string = '';
   public olor: string = '';
+
   public ph: string = '';
+
+  public ph: number = 0;
+
   public aerobiosMesofilosTotales: string = '';
   public enterobacterias: string = '';
   public stec0157: string = '';
@@ -92,6 +128,7 @@ export class CrearFichaTecnicaComponent {
   public escherichiaColi: string = '';
   public coliformesTotales: string = '';
 
+
   //! Campos de Plantilla
   public elaboradoPor: string = 'Departamento de Produccion';
   public aprobadoPor: string = 'Jefe de Desosado';
@@ -100,18 +137,24 @@ export class CrearFichaTecnicaComponent {
 
 
 
+
   constructor(
     private _FtAspectosGeneralesService: FtAspectosGeneralesService,
+
     private _FtEspecificacionesService: FtEspecificacionesService,
     private _FtProductoService: FtProductoService,
     private _FtImagenesService: FtImagenesService,
     private _FtFichaTecnicaService: FtFichaTecnicaService,
     private _FtDestinoService: FtDestinosService,
+
+    private _FtProductoService: FtProductoService
+
   ) { }
 
   ngOnInit(): void {
     this.CargarAspectosGenerales();
     this.CargarEspecificaciones();
+
     this.CargarDestinos();
   }
 
@@ -269,6 +312,135 @@ export class CrearFichaTecnicaComponent {
   public DisparadorSelectEspecificaciones(idPlantilla: number): void {
     if (idPlantilla) { 
       this._FtEspecificacionesService.GetCamposDeEspecificaciones(idPlantilla).subscribe(
+
+  }
+
+ private CargarAspectosGenerales(): void {
+  
+    this._FtAspectosGeneralesService.GetListaAspectosGenerales().subscribe(
+      response => {
+        if (response.esCorrecto) {
+          this.listaDeAspectosGeneralesPlantilla = response.resultado; 
+        } else {
+          console.error(response.mensaje); 
+        }
+      },
+      error => {
+        console.error('Error al cargar aspectos generales', error);
+      }
+    );
+  }
+
+  private CargarEspecificaciones(): void {
+  
+    this._FtAspectosGeneralesService.GetListaDeEspecificaciones().subscribe(
+      response => {
+        if (response.esCorrecto) {
+          this.listaDeEspecificacionesPlantilla = response.resultado; 
+        } else {
+          console.error(response.mensaje); 
+        }
+      },
+      error => {
+        console.error('Error al cargar aspectos generales', error); 
+      }
+    );
+  }
+
+  public AgregarCodigo() {
+    if (this.codigoProducto!.trim() !== '') {
+        const codigoProductoRecibido = this.codigoProducto!.trim();
+        // Verifica si el producto ya está en la lista
+        if (!this.listaDeProductosParaCargar.includes(codigoProductoRecibido)) {
+            this.listaDeProductosParaCargar.push(codigoProductoRecibido);
+
+            this.obtenerNombreProducto(codigoProductoRecibido);
+                                   
+            this.codigoProducto = '';
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: 'El código ya ha sido agregado.',
+                icon: 'error'
+            });
+        }
+    } else {
+        Swal.fire({
+            title: 'Error',
+            text: 'Por favor ingrese un código válido.',
+            icon: 'error'
+        });
+    }
+  }
+
+
+  public obtenerNombreProducto(codigoProducto: string): void {
+    this._FtProductoService.GetProductoFiltradoFichaTecnica(codigoProducto).subscribe(
+      response => {
+        if (response.esCorrecto) {    
+          if(this.contadorDePasadas <= 0){
+            this.nombreProducto = response.resultado.nombre || 'Resultado Indefinido';   
+            this.descripcionDelProducto = response.resultado.descripcion || 'Resultado Indefinido'; 
+            this.ObtenerFechaDeHoy();    
+            this.contadorDePasadas++;
+          }             
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje || 'No se encontró el producto.',
+            icon: 'error'
+          });
+          this.contadorDePasadas = 0;
+          this.listaDeProductosParaCargar = [];
+        }
+      },
+      error => {
+        console.error('Error al obtener el producto', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Error al obtener el producto.',
+          icon: 'error'
+        });
+      }
+    );
+  }
+  
+  public DisparadorSelectAspectosGenerales(idPlantilla: number): void {
+    console.log(idPlantilla)
+    if (idPlantilla) { // Asegúrate de que idPlantilla no sea undefined
+      this._FtAspectosGeneralesService.GetCamposDeAspectosGenerales(idPlantilla).subscribe(
+        response => {
+          if (response.esCorrecto) {
+            const datos = response.resultado[0];
+            this.producto = datos.nombreDePlantilla || '';
+            this.marca = datos.marca || '';
+            this.destino = datos.destino || '';
+            this.tipoDeUso = datos.tipoDeUso || '';
+            this.alergeno = datos.alergeno || '';
+            this.almacenamiento = datos.almacenamiento || '';
+            this.vidaUtil = datos.vidaUtil || '';
+            this.tipoDeEnvase = datos.tipoDeEnvase || '';
+            this.presentacionDeEnvase = datos.presentacionDeEnvase || '';
+            this.pesoPromedio = datos.pesoPromedio || 0;
+            this.unidadesPorCaja = datos.unidadesPorCaja || 0;
+            this.dimensiones = datos.dimensiones || '';
+          } else {
+            console.error(response.mensaje);
+          }
+        },
+        error => {
+          console.error('Error al cargar campos de aspectos generales', error);
+        }
+      );
+    } else {
+      console.warn('ID de plantilla no válido'); // Manejo si el ID es null o undefined
+    }
+  }
+
+  public DisparadorSelectEspecificaciones(idPlantilla: number): void {
+    if (idPlantilla) { 
+      this._FtAspectosGeneralesService.GetCamposDeEspecificaciones(idPlantilla).subscribe(
+
         response => {
           if (response.esCorrecto) {
             const datos = response.resultado[0]; 
@@ -282,7 +454,11 @@ export class CrearFichaTecnicaComponent {
             this.elementosExtranos = datos.elementosExtraños || '';
             this.color = datos.color || '';
             this.olor = datos.olor || '';
+
             this.ph = datos.ph || '';
+
+            this.ph = datos.ph || 0;
+
             this.aerobiosMesofilosTotales = datos.aerobiosMesofilosTotales || '';
             this.enterobacterias = datos.enterobacterias || '';
             this.stec0157 = datos.stec0157 || '';
@@ -295,6 +471,7 @@ export class CrearFichaTecnicaComponent {
             
           } else {
 
+
             console.error(response.mensaje);
 
             Swal.fire({
@@ -303,6 +480,9 @@ export class CrearFichaTecnicaComponent {
               icon: 'error',
               confirmButtonText: 'Aceptar'
             });    
+
+            console.error(response.mensaje);
+
           }
         },
         error => {
@@ -313,6 +493,7 @@ export class CrearFichaTecnicaComponent {
       console.warn('ID de plantilla no válido'); 
     }
   }
+
 
   public CrearFichaTecnica(): void {
    
@@ -419,6 +600,7 @@ export class CrearFichaTecnicaComponent {
   }
 
 
+
   public ObtenerFechaDeHoy(): void {
     const hoy = new Date();
     const dia = String(hoy.getDate()).padStart(2, '0'); 
@@ -429,7 +611,11 @@ export class CrearFichaTecnicaComponent {
   }
   
   
+
   public MostrarImagenSeleccionada(event: Event, area: number): void {
+
+  public mostrarImagenSeleccionada(event: Event, area: string): void {
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
         const reader = new FileReader();
@@ -437,6 +623,7 @@ export class CrearFichaTecnicaComponent {
         Array.from(input.files).forEach(file => {
             reader.onload = (e) => {
                 switch (area) {
+
                     case 1:
                         this.urlLogo = e.target?.result as string; 
                         this.imagenSeleccionadaAreaLogo = file;
@@ -456,6 +643,21 @@ export class CrearFichaTecnicaComponent {
                     case 5:
                       this.urlImagenEnvaseSecundario2 = e.target?.result as string; 
                       this.imagenSeleccionadaAreaEnvaseSecundario2 = file;
+
+                    case 'logo':
+                        this.imagenSeleccionadaAreaLogo = e.target?.result as string;
+                        break;
+                    case 'seccion-4':
+                        this.imagenSeleccionadaAreaCorte = e.target?.result as string;
+                        break;
+                    case 'seccion-5':
+                        this.imagenSeleccionadaAreaEnvase = e.target?.result as string;
+                        break;
+                    case 'seccion-7':
+                        this.imagenSeleccionadaAreaEnvaseSecundario = e.target?.result as string;
+                        break;
+                    case 'seccion-7-segunda-imagen':
+                        this.imagenSeleccionadaAreaEnvaseSecundario2 = e.target?.result as string;
                         break;
                     default:
                         console.warn('Área no válida');
@@ -465,6 +667,7 @@ export class CrearFichaTecnicaComponent {
         });
     }
   }
+
 
 
   public BorrarImagen(seccion: number): void {
@@ -597,5 +800,6 @@ export class CrearFichaTecnicaComponent {
     this.fechaDelDia = '';
     this.listaDeProductosParaCargar = [];
   }
+
 }
 

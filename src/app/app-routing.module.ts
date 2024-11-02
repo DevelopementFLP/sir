@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MainPageComponent } from './pages/main-page/main-page.component';
@@ -59,20 +59,13 @@ import { FormularioAbastoComponent } from './10_Sir.Faena.Apps/Pages/FormularioA
 import { LecturasConErrorComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasConError/lecturas-con-error.component';
 import { ReporteDeMediasComponent } from './10_Sir.Faena.Apps/Pages/ReporteResumenDeCuarteo/reporte-resumen-de-cuarteo.component';
 
-
 import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
 import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 import { HomeMantenimientoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-mantenimiento-ficha-tecnica/home-mantenimiento-ficha-tecnica.component';
 import { HomeCrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-crear-ficha-tecnica/home-crear-ficha-tecnica.component';
 import { HomeGenerarFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-generar-ficha-tecnica/home-generar-ficha-tecnica.component';
-
-
-
-import { ConfigPreciosComponent } from './04_SIR.Exportaciones.Reportes/components/config-precios/config-precios.component';
-import { ReporteCuotaComponent } from './03_SIR.Produccion.Reportes/pages/cuota/pages/reporte-cuota/reporte-cuota.component';
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
-import { FichaTecnicaProductoComponent } from './03_SIR.Produccion.Reportes/pages/ficha-tecnica-producto/ficha-tecnica-producto.component';
-import { HomeFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-ficha-tecnica/home-ficha-tecnica.component';
+
 
 
 const routes: Routes = [
@@ -98,9 +91,7 @@ const routes: Routes = [
     { path: 'produccion/controlCortes', component: ControlCortesComponent },
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
     { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
-
     { path: 'produccion/rendimientos', component: RendimientosComponent},
-
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },
@@ -140,14 +131,9 @@ const routes: Routes = [
     { path: 'faena/lecturasAbasto', component: FormularioAbastoComponent},
     { path: 'faena/dashboardAbasto', component: ReporteAbastoComponent},
     {path: 'faena/ReporteDeCuarteo', component: ReporteDeMediasComponent},
-
     {path: 'produccion/GenerarFichaTecnica', component: HomeGenerarFichaTecnicaComponent},
     {path: 'produccion/MantenimientoDeFichaTecnica', component: HomeMantenimientoFichaTecnicaComponent},
     { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent},
-
-
-    {path: 'produccion/fichaTecnica', component: FichaTecnicaProductoComponent},
-    {path: 'faena/MantenimientoDeFichaTecnica', component: HomeFichaTecnicaComponent}
 
   ]},
   { path: 'registro', component: RegistroComponent},

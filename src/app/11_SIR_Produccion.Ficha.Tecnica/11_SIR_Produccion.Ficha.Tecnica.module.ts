@@ -15,7 +15,6 @@ import { TabViewModule } from 'primeng/tabview';
 import { PanelModule } from 'primeng/panel';
 
 
-
 import { HomeMantenimientoFichaTecnicaComponent } from './pages/home-mantenimiento-ficha-tecnica/home-mantenimiento-ficha-tecnica.component';
 import { FtSeccionMarcaComponent } from './components/MantenimientoFichaTecnica/ft-seccion-marca/ft-seccion-marca.component';
 import { FtSeccionCondicionAlmacenamientoComponent } from './components/MantenimientoFichaTecnica/ft-seccion-condicion-almacenamiento/ft-seccion-condicion-almacenamiento.component';
@@ -36,7 +35,6 @@ import { SweetAlertGenericosComponent } from './helper/sweet-alert-genericos/swe
 import { CrearPlantillaFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/crear-plantilla-ficha-tecnica/crear-plantilla-ficha-tecnica.component';
 import { CrearFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/crear-ficha-tecnica/crear-ficha-tecnica.component';
 import { FtSeccionDestinoComponent } from './components/MantenimientoFichaTecnica/ft-seccion-destino/ft-seccion-destino.component';
-=======
 import { HomeFichaTecnicaComponent } from './pages/home-ficha-tecnica/home-ficha-tecnica.component';
 import { FtSeccionMarcaComponent } from './components/ft-seccion-marca/ft-seccion-marca.component';
 import { FtSeccionCondicionAlmacenamientoComponent } from './components/ft-seccion-condicion-almacenamiento/ft-seccion-condicion-almacenamiento.component';
@@ -50,16 +48,11 @@ import { FtSeccionAlimentacionComponent } from './components/ft-seccion-alimenta
 import { FtSeccionTipoDeEnvaseComponent } from './components/ft-seccion-tipo-de-envase/ft-seccion-tipo-de-envase.component';
 import { FtSeccionTipoPresentacionDeEnvaseComponent } from './components/ft-seccion-presentacion-de-envase/ft-seccion-tipo-presentacion-de-envase.component';
 
-
 import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
-
       HomeMantenimientoFichaTecnicaComponent,
-
-      HomeFichaTecnicaComponent,
-
       FtSeccionMarcaComponent,
       FtSeccionCondicionAlmacenamientoComponent,
       FtSeccionColorComponent,
@@ -70,7 +63,6 @@ import { ButtonModule } from 'primeng/button';
       FtSeccionVidaUtilComponent,
       FtSeccionAlimentacionComponent,
       FtSeccionTipoDeEnvaseComponent,
-
       FtSeccionTipoPresentacionDeEnvaseComponent,
       FichaTecnicaProductoComponent,
       CrearProductoFichaTecnicaComponent,
@@ -81,7 +73,6 @@ import { ButtonModule } from 'primeng/button';
       CrearFichaTecnicaComponent,
       FtSeccionDestinoComponent,
       CrearFichaTecnicaComponent     
-
       FtSeccionTipoPresentacionDeEnvaseComponent     
 
   ],

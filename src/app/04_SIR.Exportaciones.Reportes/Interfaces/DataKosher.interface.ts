@@ -6,7 +6,7 @@ export interface DataKosher {
     codigoKosher?:          string;
     pesoNeto?:              number;
     pesoBruto?:             number;
-    fechaCorrida?:          Date;
+    fechaCorrida?:          string;
     fechaVencimiento1?:     Date;
     especie?:               string;
     precioTonelada:         number;

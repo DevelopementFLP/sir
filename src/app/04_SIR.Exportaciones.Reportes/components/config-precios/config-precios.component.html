@@ -5,27 +5,43 @@
             <hr>
         </div>
         <p-tabView #tabView>
-            <p-tabPanel header="Reporte" *ngIf="esUsuarioExpo || esDetalle()">
+            <p-tabPanel header="Selección" *ngIf="esUsuarioExpo || esDetalle()">
                 <div class="container__selection">
-                    <input 
-                        #txtIdCarga
-                        pInputText 
-                        [(ngModel)]="idCargaString" 
-                        (keydown.enter)="filterContainersByIdCarga()" 
-                        (blur)="filterContainersByIdCarga()"
-                        placeholder="Identificadores de carga" 
-                    />
-                    <p-multiSelect 
-                        #multiselect
-                        [options]="containersOptions" optionLabel="label" *ngIf="mostrarSeleccionContenedores"
-                        placeholder="Seleccione los contenedores" display="chip" [showClear]="true"
-                        [virtualScroll]="true" [virtualScrollItemSize]="42" [(ngModel)]="selectedContainers"
-                        [showToggleAll]="false" (onClear)="clear()" [displaySelectedLabel]="true"
-                        emptyMessage="No hay resultados" />
-                    <button *ngIf="selectedContainers != null && selectedContainers.length > 0"
-                        (click)="getDataByContainers()" pButton type="button" label="Buscar" icon="pi pi-search"
-                        class="p-button-sm btn-buscar">
-                    </button>
+                    <div class="main_container">
+                        <div class="fechas__container">
+                            <div>
+                                <label for="fechaDesde">Fecha de carga:&nbsp;</label>
+                                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+                            </div>
+                            <button pButton type="button" name="btnReporte" label="Buscar" class="p-button-sm" icon="pi pi-check" (click)="buscarDatos()"></button>
+                        </div>
+                        <div class="selection">
+                            <label for="cargaSelect" class="selection--title">Selecciona contenedor(es):</label>
+                            <div class="custom-select">
+                                <div class="select-box" (click)="toggleDropdown()">
+                                    <span *ngIf="selectedCargas?.length">{{ selectedCargas.length }} seleccionados</span>
+                                    <span *ngIf="!selectedCargas?.length">Nada seleccionado</span>
+                                </div>
+                                <div *ngIf="dropdownOpen" class="select-options">
+                                    <div 
+                                        *ngFor="let carga of datosContenedores" 
+                                        class="select-option" 
+                                        [class.selected]="selectedCargas.includes(carga.id_Carga)" 
+                                        (click)="toggleSelection(carga.id_Carga)"
+                                    >
+                                        <div class="cargaid">
+                                            <div>{{ carga.container }}</div>
+                                            <div>({{ carga.id_Carga }})</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="main--btn">
+                            <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
+                        </div>
+                    </div>
                 </div>
                 <br>
                 <div class="message__container" *ngIf="mostrarNoIdCarga">
@@ -262,7 +278,8 @@
                             <td>
                                 <div class="flex align-items-center justify-content-center gap-2">
                                     <button
-                                        pTooltip="Editar {{codigo.codigoProducto}}" 
+                                        pTooltip="Editar {{codigo.codigoProducto}}"
+                                        tooltipPosition="left"
                                         *ngIf="!editing" 
                                         pButton 
                                         pRipple 
@@ -274,6 +291,7 @@
                                     </button>
                                     <button 
                                         pTooltip="Confirmar edición de {{codigo.codigoProducto}}"
+                                        tooltipPosition="left"
                                         *ngIf="editing" 
                                         pButton 
                                         pRipple 
@@ -284,7 +302,8 @@
                                         class="p-button-rounded p-button-text p-button-success mr-2">
                                     </button>
                                     <button
-                                        pTooltip="Cancelar edición de {{codigo.codigoProducto}}" 
+                                        pTooltip="Cancelar edición de {{codigo.codigoProducto}}"
+                                        tooltipPosition="left"
                                         *ngIf="editing" 
                                         pButton pRipple 
                                         type="button" 
@@ -299,7 +318,8 @@
                     </ng-template>
                 </p-table>
             </p-tabPanel>
-            <p-tabPanel header="Precios (Por fecha de faena)" class="panel-precios" *ngIf="esUsuarioCarga || esPrecios()">
+            <p-tabPanel header="Precios" class="panel-precios" *ngIf="esUsuarioCarga || esPrecios()">
+                <div *ngIf="!productoSeleccionado">
                 <div class="admin__precios">
                     <button (click)="adminPrecios()" pButton type="button" label="Administrar listas de precios completas"
                         icon="pi pi-cog" class="p-button-sm btn-admin">
@@ -308,96 +328,63 @@
                         icon="pi pi-plus" class="p-button-sm p-button-secondary btn-admin">
                     </button>
                 </div>
-                <p-table
-                    #dt2
-                    *ngIf="codigoPrecios!.length > 0" 
-                    [globalFilterFields]="['codigo']"
-                    [scrollable]="true"
-                    scrollHeight="500px"
-                    [value]="codigoPrecios!"
-                    (onSort)="onSort($event)"
-                    styleClass="p-datatable-striped"
-                    editMode="row"
-                    dataKey="codigo">
-                    <ng-template pTemplate="caption">
-                        <div class="flex">
-                            <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar código" />
-                        </div>
-                    </ng-template>
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th
-                                pSortableColumn="codigo"
-                                pFrozenColumn
-                                style="width: 10%;">Código
-                                <p-sortIcon field="codigo" />
-                            </th>
-                            <th
-                            style="width: 150px;"
-                            *ngFor="let fecha of fechasPrecios; let i=index"
-                            [pSortableColumn]="fechaIndex(i)">
-                                {{fecha | date:"dd/MM/yyyy"}} ({{getTipoMonedaPorFecha(fecha)}})
-                                <p-sortIcon [field]="fechaIndex(i)" />
-                            </th>
-                            <th></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-CP let-editing="editing" let-ri="rowIndex">
-                        <tr [pEditableRow]="CP" class="fila-codigo">
-                            <td style="font-weight: bold;">{{CP.codigo}}</td>
-                            <td *ngFor="let pr of CP.precios; let i = index">
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <input 
-                                            pInputText
-                                            type="text"
-                                            [(ngModel)]="CP.precios[i]"
-                                        />
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{pr | number:'0.0'}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td  pFrozenColumn>
-                                <div class="flex align-items-center justify-content-center gap-2">
-                                    <button
-                                        pTooltip="Editar precios de {{CP.codigo}}" 
-                                        *ngIf="!editing" 
-                                        pButton 
-                                        pRipple 
-                                        type="button" 
-                                        pInitEditableRow 
-                                        icon="pi pi-pencil" 
-                                        (click)="onPrecioRowEditing(CP)" 
-                                        class="p-button-rounded p-button-text">
-                                    </button>
-                                    <button 
-                                        pTooltip="Confirmar edición de {{CP.codigo}}"
-                                        *ngIf="editing" 
-                                        pButton 
-                                        pRipple 
-                                        type="button" 
-                                        pSaveEditableRow 
-                                        icon="pi pi-check" 
-                                        (click)="onPrecioRowEditSave(CP)" 
-                                        class="p-button-rounded p-button-text p-button-success mr-2">
-                                    </button>
-                                    <button
-                                        pTooltip="Cancelar edición de {{CP.codigo}}" 
-                                        *ngIf="editing" 
-                                        pButton pRipple 
-                                        type="button" 
-                                        pCancelEditableRow 
-                                        icon="pi pi-times" 
-                                        (click)="onPrecioRowEditCancel(CP, ri)" 
-                                        class="p-button-rounded p-button-text p-button-danger">
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                <div class="precios--filter">
+                    <input 
+                        type="text" 
+                        placeholder="Filtrar por código" 
+                        [(ngModel)]="codigoFiltro" 
+                        (ngModelChange)="filtrarProductos()"
+                        class="filter--code"
+                    />
+                    <label>
+                        <input 
+                          type="checkbox" 
+                          [(ngModel)]="filtroConPrecioCero" 
+                          (change)="filtrarProductos()" 
+                        />
+                        Ver solo productos con precio cero
+                      </label>
+                </div>
+                <div class="precios--table__container">
+                    <table class="precios--table">
+                        <thead>
+                            <tr>
+                                <th>Código Producto</th>
+                                <th *ngFor="let fecha of fechasUnicas">{{ fecha | date:'dd/MM/yyyy' }}</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let producto of productosFiltrados; let i = index" [ngClass]="{'fondo-claro': i % 2 !== 0}">
+                              <th>{{ producto }}</th>
+                              <td *ngFor="let precio of matrizPrecios[productos.indexOf(producto)]" class="precio">
+                                {{ precio.toFixed(2) }}
+                              </td>
+                              <td>
+                                <button
+                                pTooltip="Editar precios de {{producto}}" 
+                                pButton 
+                                pRipple 
+                                type="button" 
+                                icon="pi pi-pencil" 
+                                (click)="editarPrecio(producto)" 
+                                class="p-button-rounded p-button-text">
+                            </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>
+            </div>
+                <div>
+                    <editar-precio *ngIf="productoSeleccionado"
+                        [producto]="productoSeleccionado"
+                        [precios]="preciosSeleccionados"
+                        [fechas]="fechasUnicas"
+                        (preciosActualizados)="onPreciosActualizados($event)"
+                        (cerrarEdicion)="onCerrarEdicion()"
+                    />
+                </div>
             </p-tabPanel>
         </p-tabView>
     </div>

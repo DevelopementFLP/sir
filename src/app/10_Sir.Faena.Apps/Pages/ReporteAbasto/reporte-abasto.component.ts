@@ -21,9 +21,7 @@ import { saveAs } from 'file-saver';
 export class ReporteAbastoComponent {
 
   public fechaDelDia: Date | null = null;
-
   public fechaSeleccionada: Date | null = null;
-
   public totalDePesos: number | null = null;
   public totalLecturas: number | null = null;
   public totalRegistrosSinEtiqueta: number | null = null;
@@ -68,12 +66,8 @@ export class ReporteAbastoComponent {
             this.dataListaDeLecturasAbasto.data = data.resultado;
             this.dataOriginalSinFiltros = data.resultado;
 
-
             console.log(data.resultado)
             this.sumarPesosPorLinea();           
-
-            this.stockActualEnCamara();           
-
             this.totalLecturas = data.resultado.length;
 
           } else {
@@ -86,7 +80,6 @@ export class ReporteAbastoComponent {
         }
       });    
     }    
-
 
     // public stockActualEnCamara() {
     //   if (this.mostrarStockActual) {
@@ -108,28 +101,6 @@ export class ReporteAbastoComponent {
     //   }
     //   this.sumarPesosPorLinea();
     // }
-
-    public stockActualEnCamara() {
-      if (this.mostrarStockActual) {
-        
-        // filtro 2 tablas con las entradas y salidas
-        const entradas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Entrada"));
-        const salidas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Salida"));
-
-        // me quedo con los id de las salidas
-        const idDeSalidas = new Set(salidas.map(item => item.idAnimal));
-    
-        // filtro las entradas que no tienen salidas por los ID
-        const entradasSinSalida = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
-    
-        this.dataListaDeLecturasAbasto.data = entradasSinSalida;
-      } else {
-        // Restablece los datos originales si el checkbox está desmarcado
-        this.dataListaDeLecturasAbasto.data = [...this.dataOriginalSinFiltros];
-      }
-      this.sumarPesosPorLinea();
-    }
-
 
     public sumarPesosPorLinea(): void {
         let totalPesos = 0;
@@ -198,9 +169,7 @@ public async exportarAExcel(): Promise<void> {
     // Filtrar y agregar datos a las hojas correspondientes
     const listaTotal = this.dataListaDeLecturasAbasto.data;
 
-
     const fechaSeleccionadaStr = this.fechaSeleccionada ? this.fechaSeleccionada.toISOString().split('T')[0] : null;
-
     const entradas = listaTotal.filter(item => item.operacion.includes('Entrada'));
     const salidas = listaTotal.filter(item => item.operacion.includes('Salida'));
 
@@ -208,7 +177,6 @@ public async exportarAExcel(): Promise<void> {
     const idDeSalidas = new Set(salidas.map(item => item.idAnimal));    
     // filtro las entradas que no tienen salidas por los ID
     const stockActual = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
-
 
     const entradasConFecha = entradas.filter(item => item.fechaDeRegistro === fechaSeleccionadaStr);
     const salidasConFecha = salidas.filter(item => item.fechaDeRegistro === fechaSeleccionadaStr);
@@ -230,11 +198,7 @@ public async exportarAExcel(): Promise<void> {
     });
 
     // Agregar datos a la hoja de Entradas
-
     entradasConFecha.forEach((item, rowIndex) => {
-
-    entradas.forEach((item, rowIndex) => {
-
       const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
       row.forEach((value, colIndex) => {
         WorksheetEntradas.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
@@ -242,11 +206,7 @@ public async exportarAExcel(): Promise<void> {
     });
 
     // Agregar datos a la hoja de Salidas
-
     salidasConFecha.forEach((item, rowIndex) => {
-
-    salidas.forEach((item, rowIndex) => {
-
       const row = this.customHeaders.map(header => item[this.columnMapping[header] as keyof ListaDeLecturasDTO] || '');
       row.forEach((value, colIndex) => {
         WorksheetSalidas.getCell(startRow + 1 + rowIndex, startColumn + colIndex).value = value;
@@ -261,19 +221,11 @@ public async exportarAExcel(): Promise<void> {
     if(stockActual.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorClasificacion", "K6", worksheetStockActual, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(stockActual))
     }
-
     if(entradasConFecha.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "K6", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradasConFecha))
     }
     if(salidasConFecha.length > 0){
       this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "K6", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidasConFecha))      
-
-    if(entradas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorEntradas", "K6", WorksheetEntradas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(entradas))
-    }
-    if(salidas.length > 0){
-      this._metodosDeExcelService.CreatTablasDeContenido("sumaDePesosPorSalidas", "K6", WorksheetSalidas, "Clasificacion", "Suma de Pesos", this.SumaDePesosPorClasificacion(salidas))      
-
     }
     
     //Estilos de Encabezados

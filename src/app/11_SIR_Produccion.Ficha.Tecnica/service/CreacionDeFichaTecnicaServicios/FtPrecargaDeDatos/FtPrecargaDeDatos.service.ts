@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { FtTipoDeUsoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/TipoDeUso/FtTipoDeUsoDTO';
 import { FtAlergenosDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Alergenos/FtAlergenosDTO';
 import { FtCondicionDeAlmacenamientoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/CondicionDeAlmacenamiento/FtCondicionAlmacenamientoDTO';
@@ -21,10 +22,16 @@ import { FtMarcaService } from '../../MantenimientoFichaTecnicaServicios/FtMarca
 import { FtMarcaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Marcas/FtMarcaDTO';
 
 
+
+import { FtMarcaService } from '../../MantenimientoFichaTecnicaServicios/FtMarcas/FtMarcaService.service';
+import { FtMarcaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Marcas/FtMarcaDTO';
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class FtPrecargaDeDatosService {
+
   public listaDeMarcas: FtMarcaDTO[] = [];
   public listaDeTiposDeUso: FtTipoDeUsoDTO[] = [];
   public listaDeAlergenos: FtAlergenosDTO[] = [];
@@ -65,16 +72,33 @@ export class FtPrecargaDeDatosService {
     this.CargarPh();
   }
 
+
+  public listaDeMarcas: FtMarcaDTO[] = [];
+
+  constructor(
+    private _FtMarcasService: FtMarcaService,
+  ) { }
+
+
   public CargarMarcas(){
     this._FtMarcasService.GetListaDeMarcasFichaTecnica().subscribe({
       next: (response) => {
+
           this.listaDeMarcas = response.resultado
+
+          this.listaDeMarcas = response.resultado.map((ph: FtMarcaDTO) => ({
+              idMarca: ph.idMarca, 
+              nombre: ph.descripcion 
+          }));
+          console.log(response)
+
       },
       error: (error) => {
           console.error('Error al obtener las Marcas', error);
       }
     });
   }
+
 
   public CargarTiposDeUso(): void {
     this._FtTipoUsoService.GetListaDeTiposDeUsoFichaTecnica().subscribe({
@@ -174,4 +198,5 @@ export class FtPrecargaDeDatosService {
       }
     });
   }
+
 }

@@ -8,6 +8,9 @@ export const urlAPI: string = "http://localhost:5205/api/";
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
+
+
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -121,6 +124,9 @@ export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProd
 export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
 export const urlGetPrecioToneladaCodigoFechaAsync: string = urlExportaciones + "GetPrecioToneladaCodigoFechaAsync";
 export const urlUpdateCodigoPreciosAsync: string = urlExportaciones + "UpdateCodigoPreciosAsync";
+export const urlGetConfiguracionProductosKosher: string = urlExportaciones + "GetConfiguracionProductoKosherAsync";
+export const urlGetPrimeraFechaPreciosAsync: string = urlExportaciones + "GetPrimeraFechaPreciosAsync";
+export const urlGetIdMonedaParaFecha: string = urlExportaciones + "GetIdMonedaParaFechaAsync";
 
 // Stock Cajas
 export const urlStockCajas: string = urlAPI + "StockCajas/";
@@ -229,12 +235,23 @@ export const urlDWLoteEntrada: string = urlLoteEntrada + "GetDWEntradaAsync";
 export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFechaAsync";
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
+
+
+// Rendimientos
+export const urlRendimientos: string = urlAPI + "Rendimientos/";
+export const urlCortesPorLoteYFecha: string = urlRendimientos + "GetCortesPorLoteYFecha";
+export const urlConfTipoRendimiento: string = urlRendimientos + "GetConfigTipoRendimiento";
+export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
+export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
+
+
+
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
 
-// Ficha Tecnica
+
 export const urlFichaTecnica: string = urlAPI + "FtFichaTecnica/"
 export const urlCrearFichaTecnica: string = urlFichaTecnica + "CrearFichaTecnica"
 export const urlBuscarFichaTecnica: string = urlFichaTecnica + "BuscarFichaTecnica"
@@ -243,6 +260,7 @@ export const urlBuscarFichaTecnica: string = urlFichaTecnica + "BuscarFichaTecni
 export const urlFichaTecnicaImagenes: string = urlAPI + "FtImagenes/"
 export const urlCrearImagenesFichaTecnica: string = urlFichaTecnicaImagenes + "CrearImagenFichaTecnica"
 export const urlBuscarImagenFichaTecnica: string = urlFichaTecnicaImagenes + "BuscarImagenesPorProducto"
+
 
 // Ficha Tecnica Productos
 export const urlFichaTecnicaProductos: string = urlAPI + "FtProductos/"
@@ -260,9 +278,14 @@ export const urlBuscarPlantillaDeAspectosGenerales: string = urlFichaTecnicaPlan
 export const urlEditarAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "EditarAspectoGeneral"
 
 export const urlCrearPlantillaEspecificacionesFichaTecnica: string = urlFichaTecnicaPlantilla + "CrearEspecificacion"
+
 export const urlListaEspecificacionesPlantilla: string = urlFichaTecnicaPlantilla + "ListaDeEspecificaciones"
 export const urlBuscarPlantillaDeEspecificaciones: string = urlFichaTecnicaPlantilla + "BuscarPlantillaEspecificaciones"
 export const urlEditarPlantillaDeEspecificaciones: string = urlFichaTecnicaPlantilla + "EditarEspecificaciones"
+
+
+export const urlListaAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "ListaAspectosGenerales"
+export const urlListaEspecificacionesPlantilla: string = urlFichaTecnicaPlantilla + "ListaDeEspecificaciones"
 
 
 export const urlGetResponseAspectosGeneralesPlantilla: string = urlFichaTecnicaPlantilla + "ConsultarAspectosGenerales"

@@ -17,9 +17,11 @@ p{
 h1, h2, h3{
     margin: 0 !important;
     font-size: 15px; 
+
     text-align: center;
     font: small-caps 150%/200% serif; 
     color: white;
+
 }
 
 
@@ -28,8 +30,14 @@ h1, h2, h3{
     height: 1123px; /* Alto A4 */
     padding: 1rem;
     background-color: white; /* Fondo blanco para el formulario */
+
     overflow: auto; 
     font-size: 11px;     
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: auto; /* Para permitir el desplazamiento si es necesario */
+    font-size: 11px; 
+
 }
 
 /* Encabezados */
@@ -42,12 +50,17 @@ h1, h2, h3{
 
 .grid-encabezado-seccion-1,
 .grid-encabezado-seccion-2,
+
 .grid-encabezado-seccion-3,
 .grid-encabezado-seccion-4 {
+
+.grid-encabezado-seccion-3 {
+
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
+
     margin-bottom: 0.2rem;
 }
 
@@ -68,19 +81,33 @@ h1, h2, h3{
     transition: border-color 0.3s; 
 }
 
+.grid-encabezado-seccion-1 input,
+.grid-encabezado-seccion-2 p-dropdown,
+.grid-encabezado-seccion-3 p-dropdown {
+    flex-grow: 1;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
 .grid-encabezado-seccion-1 h2,
 .grid-encabezado-seccion-2 h2,
+
 .grid-encabezado-seccion-3 h2 
 .grid-encabezado-seccion-4 h2 {
+
+.grid-encabezado-seccion-3 h2 {
     font-size: 1rem; 
     margin: 0;
 }
+
 
 .boton-borrar {
     background: none; /* Sin fondo */
     border: none; /* Sin borde */
     color: #ff0000; 
 }
+
 
 .grid-items-seccion{
     border: 1px solid black;
@@ -95,7 +122,6 @@ h1, h2, h3{
     background-color: #f9f9f9; /* Fondo del botón */
     text-align: center;
 }
-
 
 .boton-de-carga-de-imagen input {
     display: none; /* Oculta el input */
@@ -115,14 +141,28 @@ h1, h2, h3{
     grid-template-columns: 20% auto auto 20%;
     margin: 0 auto;     
     text-align: center;
+
 }
+
+    padding: 0.5rem;
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+
 
 .caj-1{
     grid-column: 1;
     grid-row: 1 / 5;
+
     display: flex;
     justify-content: center; 
     align-items: center; 
+
+    font-weight: bold;
+    font-style: italic;
+
 }
 
 .caj-2{
@@ -141,6 +181,8 @@ h1, h2, h3{
     justify-content: center; 
     align-items: center; 
 }
+
+
 
 .caj-3 img{
     max-width: 100%;
@@ -324,7 +366,11 @@ h1, h2, h3{
 .grid-container-imagenes-sec-4 {
     display: grid;
     /* grid-template-columns: auto auto auto;  */
+
     
+
+    padding: 0.5rem;
+
 }
 
 .grid-item-imagenes-sec-4{
@@ -360,7 +406,8 @@ h1, h2, h3{
 .grid-container-imagenes-sec-5 {
     display: grid;
     /* grid-template-columns: repeat(3, 1fr);  */
-    
+    padding: 0.5rem;
+
 }
 
 .grid-item-imagenes-sec-5{
@@ -401,7 +448,7 @@ h1, h2, h3{
 .grid-container-seccion-7{
     display: grid;
     grid-template-columns: 50% auto auto;    
-    
+    padding: 0.5rem;
     text-align: start;
 }
 
@@ -508,9 +555,11 @@ h1, h2, h3{
     grid-column: 2 / 4;
 }
 
+
 .caj-9-sec-7 input {
     width: 100%;
 }
+
 
 
  /* SECCION 8 */

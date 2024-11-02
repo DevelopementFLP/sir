@@ -30,19 +30,11 @@ export class AbastoService {
   }
 
   public createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string): Observable<ApiResponse> {
-
-  public createLecturaDeMediaAbastoManual(idMedia: string, operacion: string, usuarioLogueado: string , fechaDeFaena: string, peso: number): Observable<ApiResponse> {
-
     let params = new HttpParams()
       .set('lecturaDeAbasto', idMedia)
       .set('operacion', operacion)
       .set('usuarioLogueado', usuarioLogueado)
-
       .set('fechaDeFaena', fechaDeFaena)     
-
-      .set('fechaDeFaena', fechaDeFaena)
-      .set('peso', peso);      
-
       return this.http.get<ApiResponse>(`${urlInsertarLecturaDeAbasto}`, { params });
   }
 
