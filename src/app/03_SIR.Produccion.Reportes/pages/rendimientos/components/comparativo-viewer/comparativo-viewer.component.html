@@ -46,13 +46,13 @@
                 </div>
             </div>
             <div *ngFor="let tipo of tiposRendmientos; let i = index" class="tipo-rend">
-                <div class="" *ngIf="tiposRendimientosSeleccionados[i]">
+                <div class="tipo__cont" *ngIf="tiposRendimientosSeleccionados[i]">
                 <div class="tipos-title">
                     {{tipo}}
                 </div>
                 <div class="tipos-title-data">
-                    <div>Prom</div>
-                    <div>Rend</div>
+                    <div>Prom (kg)</div>
+                    <div>Rend (%)</div>
                 </div>
                 <div class="values--container">
                     <div *ngFor="let data of dataAgrupada[i]; let idx = index"  [ngClass]="{'tipos-values-par': idx % 2 === 0, 'tipos-values-impar': idx % 2 !== 0}">
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div *ngFor="let tipo of rendimientoAgrupado; let i = index">
-                <div class="" *ngIf="tiposRendimientosSeleccionados[i]">
+                <div class="tipo__cont__fecha" *ngIf="tiposRendimientosSeleccionados[i]">
                     <div class="tipos-title">
                         {{tipo.tipo}}
                     </div>
@@ -91,8 +91,8 @@
                             <div class="tipo-fecha">{{r.fecha| date:'dd/MM/yyyy'}}</div>
                             <br>
                             <div class="tipos-title-data">
-                                <div>Prom</div>
-                                <div>Rend</div>
+                                <div>Prom (kg)</div>
+                                <div>Rend (%)</div>
                             </div>
                             <div class="values-rend--container">
                                 <div *ngFor="let t of r.data" class="tipos-values">

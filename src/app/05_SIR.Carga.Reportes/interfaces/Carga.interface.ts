@@ -1,5 +1,3 @@
-import { Contenedor } from "./Contenedor.interface";
-
 export interface Carga {
     exportdate:     Date;
     container:      string;
@@ -11,4 +9,6 @@ export interface Carga {
     productiondate: Date;
     expiredate:     Date;
     finalizada:     boolean;
+    id_pallet:      number;
+    id_carga:       number;
 }

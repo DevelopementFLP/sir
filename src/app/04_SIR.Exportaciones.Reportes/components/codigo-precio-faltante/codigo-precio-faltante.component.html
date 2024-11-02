@@ -13,8 +13,7 @@
             <p-tabPanel header="Precios faltantes" *ngIf="noCodigosPrecios.length > 0" class="tabview--body">
                 <br>
                 <div class="faltantes--mensaje">
-                    <h3>Los siguientes códigos no están en ninguna lista de precios para las fechas de producción de
-                        esta carga.</h3>
+                    <h3>Faltan precios para los siguientes códigos y fechas</h3>
                 </div>
                 <div *ngFor="let codigo of noCodigosPrecios">
                     <p><b>{{codigo.codigo }}</b>: <i>{{codigo.fecha | date:'dd-MM-yyyy'}}</i></p>

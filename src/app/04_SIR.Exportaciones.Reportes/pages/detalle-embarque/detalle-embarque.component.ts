@@ -5,7 +5,7 @@ import { EmbarqueConfig } from '../../Interfaces/EmbarqueConfig.interface';
 import { ConfirmationService } from 'primeng/api';
 import { CargaKosherService } from '../../services/carga-kosher.service';
 import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
-import { BehaviorSubject, firstValueFrom, lastValueFrom, Subscription } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
 import { CargaDTO } from '../../Interfaces/CargaDTO.interface';
 import { KosherCommonService } from '../../services/kosher-common.service';
 import { ConfPreciosDTO } from '../../Interfaces/ConfPreciosDTO.interface';
@@ -14,6 +14,7 @@ import { DWContainer } from '../../Interfaces/DWContainer.interface';
 import { DatoCargaExpo } from '../../Interfaces/DatoCargaExpo.interface';
 import { PesoBrutoContenedor } from '../../Interfaces/PesoBrutoContenedor.interface';
 import { AjustePesoNetoService } from '../../services/ajuste-peso-neto.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-embarque',
@@ -90,7 +91,7 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
         'Datos de embarque', 
         this.errorIcon,
         true,
-        "Sí, lo haré después",
+        "Sí, lo configuraré después",
         "No, configurar ahora"
       )
       .then(async () => {
@@ -172,7 +173,7 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
         especie: undefined,
         exportDate: new Date(caja.exportdate),
         extCodeInnova: undefined,
-        fechaCorrida: new Date(caja.productiondate),
+        fechaCorrida: this.formatearFecha(new Date(caja.productiondate)),
         fechaVencimiento_1: new Date(caja.expiredate),
         fechaVencimiento_2: undefined,
         id_Carga: caja.id_Carga,
@@ -187,13 +188,19 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
     });
 
     return cajasCarga;
-  }
-
-    
-
+  }  
   //#endregion
 
   //#region Comunes
+  private formatearFecha(fecha: Date): string {
+    let f = new Date(fecha);
+    return formatDate(
+      f.setHours(f.getHours() + 3),
+      'yyyy-MM-dd',
+      'es-UY'
+    );
+  }
+
   habilitar($event: boolean) {  
     this.habilitarReporte = $event;
     if(!this.habilitarReporte) {

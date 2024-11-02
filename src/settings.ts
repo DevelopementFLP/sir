@@ -1,7 +1,7 @@
 
-// export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 
-export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
@@ -116,6 +116,9 @@ export const urlDeleteConfProductos: string = urlExportaciones + "DeleteConfProd
 export const urlGetNombreProductoAsync: string = urlExportaciones + "GetNombreProductoAsync";
 export const urlGetPrecioToneladaCodigoFechaAsync: string = urlExportaciones + "GetPrecioToneladaCodigoFechaAsync";
 export const urlUpdateCodigoPreciosAsync: string = urlExportaciones + "UpdateCodigoPreciosAsync";
+export const urlGetConfiguracionProductosKosher: string = urlExportaciones + "GetConfiguracionProductoKosherAsync";
+export const urlGetPrimeraFechaPreciosAsync: string = urlExportaciones + "GetPrimeraFechaPreciosAsync";
+export const urlGetIdMonedaParaFecha: string = urlExportaciones + "GetIdMonedaParaFechaAsync";
 
 // Stock Cajas
 export const urlStockCajas: string = urlAPI + "StockCajas/";

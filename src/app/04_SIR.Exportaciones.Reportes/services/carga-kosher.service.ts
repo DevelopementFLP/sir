@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { gecosCarga, urlDeleteConfProductos, urlDeleteFechaPrecios, urlGetCajasCarga, urlGetConfProductos, urlGetContainers, urlGetDataByContainer, urlGetFechas, urlGetNombreProductoAsync, urlGetPrecios, urlGetPreciosPorFechas, urlGetPrecioToneladaCodigoFechaAsync, urlGetTiposMoneda, urlInsertarPrecios, urlInsertConfProductos, urlProductosCarga, urlUpdateCodigoPreciosAsync, urlUpdateConfProductos } from 'src/settings';
+import { map, Observable } from 'rxjs';
+import { gecosCarga, urlDeleteConfProductos, urlDeleteFechaPrecios, urlGetCajasCarga, urlGetConfiguracionProductosKosher, urlGetConfProductos, urlGetContainers, urlGetDataByContainer, urlGetFechas, urlGetIdMonedaParaFecha, urlGetNombreProductoAsync, urlGetPrecios, urlGetPreciosPorFechas, urlGetPrecioToneladaCodigoFechaAsync, urlGetPrimeraFechaPreciosAsync, urlGetTiposMoneda, urlInsertarPrecios, urlInsertConfProductos, urlProductosCarga, urlUpdateCodigoPreciosAsync, urlUpdateConfProductos } from 'src/settings';
 import { DWContainer } from '../Interfaces/DWContainer.interface';
 import { ConfMoneda } from '../Interfaces/ConfMoneda.interface';
 import { ConfPreciosDTO } from '../Interfaces/ConfPreciosDTO.interface';
@@ -12,6 +12,7 @@ import { ConfProducto } from '../Interfaces/ConfProducto.interface';
 import { CodigoFechaPrecio } from '../Interfaces/CodigoFechaPrecio.interface';
 import { DatoCargaExpo } from '../Interfaces/DatoCargaExpo.interface';
 import { formatDate } from '@angular/common';
+import { ConfiguracionProductoKosher } from 'src/app/05_SIR.Carga.Reportes/interfaces/ConfiguracionProductoKosher.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,17 @@ export class CargaKosherService {
     return this.http.get<Date[]>(urlGetFechas);
   }
 
+  getPrimeraFechaPrecios(fecha: string): Observable<string> {
+    return this.http.get(`${urlGetPrimeraFechaPreciosAsync}?fecha=${fecha}`, {responseType: 'text'});
+  }
+
+  getIdMonedaParaFecha(fecha: string): Observable<number> {
+    return this.http.get(`${urlGetIdMonedaParaFecha}?fecha=${fecha}`, { responseType: 'text' })
+        .pipe(
+            map(response => Number(response))
+        );
+  }
+
   getCajasCarga(idCarga: number[], containerList: string): Observable<DWCajaCarga[]> {
     return this.http.get<DWCajaCarga[]>(`${urlGetCajasCarga}?idsCarga=${idCarga}&containerList=${containerList}`);
   }
@@ -75,12 +87,14 @@ export class CargaKosherService {
   getProductosCarga(fechaExpo: Date): Observable<DatoCargaExpo[]> {
     const fechaExpoStr: string = formatDate(fechaExpo, "yyyy-MM-dd", "es-UY");
     const urlCargaExpo: string = urlProductosCarga.replace("fd", fechaExpoStr).replace("fh", fechaExpoStr);
-    console.log(urlProductosCarga)
-    console.log(urlCargaExpo)
     return this.http.get<DatoCargaExpo[]>(urlCargaExpo);
   }
 
   //#region ConfProductos
+  getConfiguracionProductosKosher(): Observable<ConfiguracionProductoKosher[]> {
+    return this.http.get<ConfiguracionProductoKosher[]>(urlGetConfiguracionProductosKosher);
+  }
+
   getNombreProducto(codigo: string): Observable<string[]> {
     return this.http.get<string[]>(`${urlGetNombreProductoAsync}?codigo=${codigo}`);
   }

@@ -1,0 +1,32 @@
+<div class="data__values" *ngFor="let reg of datosXFCL.data">
+    <div class="values--v"></div>
+    <div class="values--v">{{datosXFCL.contenedor}}</div>
+    <div class="values--v"></div>
+    <div class="values--v">{{reg.idPallet}}</div>
+    <div class="values--v">{{reg.codigoProducto}}</div>
+    <div class="values--v">{{reg.clasificacionKosher}}</div>
+    <div class="values--v">{{reg.codigoKosher}}</div>
+    <div class="values--v">{{reg.markKosher}}</div>
+    <div class="values--v">{{reg.cantidadCajas}}</div>
+    <div class="values--v">{{reg.pesoNeto | number:'1.2-2'}}</div>
+    <div class="values--v">{{reg.pesoBruto | number:'1.2-2'}}</div>
+    <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+    <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+    <div class="values--v">{{reg.precio | currency: 'USD':'symbol':'1.2-2':'en-US'}}</div>
+</div>
+<div class="data__values">
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v total-data">{{datosXFCL.cantidadPallets}}</div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v total-data">{{datosXFCL.cantidadCajas | number:'1.0-0'}}</div>
+    <div class="values--v total-data">{{datosXFCL.pesoNeto | number:'1.2-2'}}</div>
+    <div class="values--v total-data">{{datosXFCL.pesoBruto | number:'1.2-2'}}</div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+    <div class="values--v"></div>
+</div>
