@@ -110,7 +110,7 @@
 }
 
 .rend-ind-container {
-    width: 150px;
+    width: 100%;
 }
 
 .values-rend--container {
@@ -135,3 +135,11 @@
 .tipos-values-impar {
     background-color: #c0c0c0;
 } */
+
+.tipo__cont {
+    width: 100%;
+}
+
+.tipo__cont__fecha {
+    width: 200px;
+}

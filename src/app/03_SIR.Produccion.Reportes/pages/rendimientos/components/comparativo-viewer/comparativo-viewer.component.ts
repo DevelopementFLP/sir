@@ -71,7 +71,6 @@ export class ComparativoViewerComponent implements OnInit {
     this.setComparativoData();
     this.setDataPorFechaYTipo();
     this.rendimientoAgrupado = this.agruparRendimientoPorTipo(this.rendimientoPorFecha);
-    
     this.emitirRendimientoAgrupado();
     this.emitirNombresRendimientos();
   }
@@ -266,7 +265,7 @@ export class ComparativoViewerComponent implements OnInit {
         });
       }
     }
-
+    
     comp = this.cmnSrvc.setDataComparativoRendimiento(this.rendimientos, this.qamarksDto);    
     this.comparativoData = comp;
     this.agruparDataComprativo(this.comparativoData);    

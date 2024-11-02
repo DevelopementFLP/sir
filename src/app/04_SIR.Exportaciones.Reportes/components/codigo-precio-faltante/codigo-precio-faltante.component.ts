@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PrecioFaltante } from 'src/app/05_SIR.Carga.Reportes/interfaces/PrecioFaltante.interface';
 
 @Component({
   selector: 'app-codigo-precio-faltante',
@@ -10,7 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 export class CodigoPrecioFaltanteComponent implements OnInit {
 
   noCodigos: string[] = [];
-  noCodigosPrecios: {codigo: string, fecha: Date}[] = [];
+  noCodigosPrecios: PrecioFaltante[] = [];
   txtBotonCopia: string = "Copiar al portapapeles";
 
   constructor (

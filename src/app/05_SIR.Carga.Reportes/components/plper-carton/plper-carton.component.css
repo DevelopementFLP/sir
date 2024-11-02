@@ -1,0 +1,43 @@
+* {
+    font-family: sans-serif;
+  }
+  .data__container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+  }
+  
+  .data__title {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      background-color: #d5dbdb;
+      color: #1c2833;
+      font-weight: 600;
+      padding:  0.2rem 0;
+    font-size: 0.9rem
+  }
+  
+  .values--text,
+  .values--v
+  {
+    flex: 1;
+  }
+  
+  .carton-id {
+    flex: 2;
+  }
+  
+  .data__values {
+    display: flex;
+      flex-direction: row;
+      width: 100%;
+  }
+  
+  .values--v {
+    font-size: 0.8rem
+  }
+  
+  .data__values:nth-child(odd) {
+    background-color: #ebf5fb;
+  }

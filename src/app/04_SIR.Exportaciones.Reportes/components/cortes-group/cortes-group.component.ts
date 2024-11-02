@@ -32,7 +32,6 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
   @Input() codigosPrecios!: ConfPreciosDTO[];
   @Input() productosKosher!: ConfProducto[];
   @Input() dataConfig!: EmbarqueConfig;
-
   @Output() habilitarReporte = new EventEmitter<boolean>();
 
   dialogRef!: DynamicDialogRef;
@@ -51,11 +50,12 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
   nombreReporte: string = 'DETALLE DE EMBARQUE';
 
   errorNoCodigo: string[] = [];
-  errorNoPrecio: {codigo: string, fecha: Date}[] = [];
+  errorNoPrecio: {codigo: string, fecha: string}[] = [];
   
   dataAgrupada: DataKosherAgrupada[] = [];
   totalPallets: number = 0;
 
+  fechasPrecios: string[] = [];
 
   constructor(
     private ckcs: KosherCommonService,
@@ -68,11 +68,13 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     this.subscription = this.ckcs.confProductos$.subscribe(data => {
       this.productosKosher = data;
     });
-    
+        
     this.datosCortesKosher = this.datosKosher.filter(d => !isNaN(parseFloat(d.codigoKosher!)));
     this.datosMenudenciasKosher = this.datosKosher.filter(d => isNaN(parseFloat(d.codigoKosher!)));
     this.dataCortes = this.agruparData(this.datosCortesKosher);
     this.dataMenudencias = this.agruparData(this.datosMenudenciasKosher);
+
+    this.setListasPrecios();
 
   }
 
@@ -85,7 +87,6 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
       });
 
       if(this.errorNoCodigo.length == 0 && this.errorNoPrecio.length == 0) {
-        console.log(this.datosKosher)
         this.dataAgrupada = this.ckcs.setDatosAgrupados(this.datosKosher);
         this.totalPallets = this.ckcs.getTotalPalletsByContainer(this.dataAgrupada);
         this.datosCortesKosher = this.datosKosher.filter(d => !isNaN(parseFloat(d.codigoKosher!)));
@@ -135,8 +136,8 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     return 0;
   }
   
-  private getPrecio(idPallet: number, codProducto: string, fechaProduccion: Date): number {
-    let precioData = this.datosPrecios.find(d => d.idPallet == idPallet && d.fechaProduccion == fechaProduccion && d.codigo == codProducto);
+  private getPrecio(idPallet: number, codProducto: string, fechaProduccion: string): number {
+    let precioData = this.datosPrecios.find(d => d.idPallet == idPallet && this.formatearFecha(d.fechaProduccion) == fechaProduccion && d.codigo == codProducto);
     if(precioData)
       return precioData.precio
 
@@ -145,10 +146,11 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
   private setDatosKosher(caja: DWCajaCarga): void {
     const codKosher: ConfProducto | undefined = this.getConfProductoParaCodigo(caja.codProducto);
-    const precioFecha: ConfPreciosDTO | null = this.getPrecioParaFecha(caja.codProducto, caja.fechaCorrida!);
+    const precioFecha: string | undefined = this.getPrecioParaFecha(caja.codProducto, caja.fechaCorrida!);
+    const precioTonelada = this.getPrecioTonelada(caja.codProducto, precioFecha!);
 
     if(codKosher) {
-      if(precioFecha != null)
+      if(precioFecha != undefined && precioTonelada > 0)
         {
         let data: DataKosher | undefined = undefined;
         data = {
@@ -156,13 +158,13 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
           mercaderia: this.tipoMercaderia(codKosher.codigoKosher!),
           container: caja.container,
           idLargo: caja.idLargo,
-          idMoneda: precioFecha.id_Moneda,
-          precioTonelada: precioFecha.precio_Tonelada,
+          idMoneda: 0,
+          precioTonelada: precioTonelada,
           idPallet: caja.id_Pallet!,
           clasificacionKosher: codKosher.clasificacionKosher,
           codigoKosher: codKosher.codigoKosher,
           especie: codKosher.especie,
-          fechaCorrida: caja.fechaCorrida,
+          fechaCorrida: this.formatearFecha(new Date(caja.fechaCorrida!)),
           fechaVencimiento1: caja.fechaVencimiento_1,
           markKosher: codKosher.markKosher,
           pesoBruto: caja.pesoBruto,
@@ -172,8 +174,8 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 
         this.datosKosher.push(data);
       }
-      else {
-        if(caja.codProducto != null && this.errorNoPrecio.find(e => e.codigo == caja.codProducto && this.sonFechasIguales(e.fecha, caja.fechaCorrida!)) == undefined) {
+      else {        
+        if(caja.codProducto != null && this.errorNoPrecio.find(e => e.codigo == caja.codProducto && e.fecha == caja.fechaCorrida!) == undefined) {
           this.errorNoPrecio.push({codigo: caja.codProducto, fecha: caja.fechaCorrida!});
         }
       }
@@ -184,14 +186,22 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
      }
   }
 
-  private sonFechasIguales(fecha_1: Date, fecha_2: Date): boolean {
-    return this.formatearFecha(fecha_1) == this.formatearFecha(fecha_2);
+  getPrecioTonelada(codigo: string, fecha: string): number {
+    const precioData = this.codigosPrecios.find(
+      c => c.codigo_Producto === codigo && this.formatearFecha(c.fecha_Produccion) === fecha
+    );
+  
+    return precioData ? precioData.precio_Tonelada : 0;
   }
-
+  
   private formatearFecha(fecha: Date): string {
-    return formatDate(fecha, "dd-MM-yyyy", "es-UY");
+    let f = new Date(fecha);
+    return formatDate(
+      f.setHours(f.getHours() + 3),
+      'yyyy-MM-dd',
+      'es-UY'
+    );
   }
-
 
   private getConfProductoParaCodigo(codigo: string): ConfProducto | undefined {
     return this.productosKosher.find(p => p.codigoProducto == codigo);
@@ -201,18 +211,33 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     return isNaN(parseInt(codigo)) ? codigo : "CORTES";
   }
 
-  private getPrecioParaFecha(codProducto: string, fechaProduccion: Date): ConfPreciosDTO | null {
-    const precios: ConfPreciosDTO[] = this.codigosPrecios.filter(p => p.codigo_Producto === codProducto);
-    let fechaPrecio: ConfPreciosDTO | null = null;
-
-    if(precios) {
-      fechaPrecio = this.getFechaAnteriorMasCercana(precios, fechaProduccion);
-    }
+  private getPrecioParaFecha(codProducto: string, fechaProduccion: string): string | undefined {
+    let fechaPrecio: string | undefined = undefined;
+    
+    fechaPrecio = this.fechaAnteriorMasCercana(fechaProduccion);
+    
 
     return fechaPrecio;
   }
 
-  private getFechaAnteriorMasCercana(precios: ConfPreciosDTO[], fechaObjetivo: Date): ConfPreciosDTO | null {
+  private fechaAnteriorMasCercana(fecha: string): string | undefined {
+    const fechasPrecios = Array.from(new Set(this.codigosPrecios.map(l => l.fecha_Produccion)));
+    const fechaEncontrada = fechasPrecios.reverse().find(f => this.esFechaMasGrande(fecha, this.formatearFecha(f)));
+    
+    return fechaEncontrada ? this.formatearFecha(fechaEncontrada) : undefined;
+  }
+
+  private esFechaMasGrande(fecha1: string, fecha2: string): boolean {
+    return new Date(fecha1) >= new Date(fecha2);
+  }
+
+  private setListasPrecios(): void {
+    this.fechasPrecios =
+      Array.from(new Set(this.codigosPrecios!.map((p) => this.formatearFecha(p.fecha_Produccion)))) ??
+      undefined;
+  }
+
+  private getFechaAnteriorMasCercana(precios: ConfPreciosDTO[], fechaObjetivo: string): ConfPreciosDTO | null {
     const objetivo = new Date(fechaObjetivo).getTime();
     let fechaMasCercanaObject: ConfPreciosDTO | null = null;
     let tiempoMasCercanoDiff = Infinity;
