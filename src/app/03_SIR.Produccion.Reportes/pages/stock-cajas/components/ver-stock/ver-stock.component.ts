@@ -405,7 +405,7 @@ export class VerStockComponent implements OnInit, OnDestroy {
         this.nueva_cantidad=$event;
       
        
-      if($event != 0){
+      if($event != -1){
         // Es porque dió cancelar al botón de popUp
   
         try {

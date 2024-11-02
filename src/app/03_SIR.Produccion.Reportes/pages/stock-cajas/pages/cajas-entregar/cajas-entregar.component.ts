@@ -12,6 +12,7 @@ import { PedidoRecibido } from '../../interfaces/PedidoRecibido.interface';
 import { Stock } from '../../interfaces/Stock.interface';
 import { Router } from '@angular/router';
 import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
+import { OrdenArmado } from '../../interfaces/OrdenArmado.interface';
 
 @Component({
   selector: 'app-cajas-entregar',
@@ -53,6 +54,7 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
   isWorking: boolean = false;
   mensaje: string ="";
   
+  ordenArmado: OrdenArmado[] | undefined = [];
   
   async ngOnInit(): Promise<void> {
 
@@ -83,7 +85,8 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
     await this.getOrdenesEntregaAsync();
     await this.getStockCajasAsync();
     await this.GetPedidosPadreAsync();
-    this.llenarArrayCajas();
+    this.llenarArrayCajas();    
+   
   }
 
   async GetPedidosAsync(): Promise<void> {
@@ -175,10 +178,7 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
       console.error(error)
     }
   }
-
-
-
-
+  
   // async getTamanoCajasAsync(): Promise<void> {
   //   try {
   //     this.tamanos_cajas = await lastValueFrom(this.stockService.getTamanoCajasAsync());

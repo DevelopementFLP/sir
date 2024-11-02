@@ -36,7 +36,7 @@
                 <th class=""><div class="columna">Tipo</div></th>
                 <th class=""><div class="columna">Cantidad Solicitada</div></th>
                 <th class=""><div class="columna">Saldo</div></th>
-                <th class=""><div class="columna">Cantidad Disponible</div></th>
+                <!-- <th class=""><div class="columna">Cantidad Disponible</div></th> -->
                 <th class=""><div class="columna">Acción</div></th>
             </tr>
         </ng-template>
@@ -52,7 +52,7 @@
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.tipo}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.cantidadArmar}}</div></td>   
                 <td class=""[ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.cantidadArmar - pedido.cantidadArmado}}</div></td>
-                <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{getCantidadCajasStock(pedido.idCaja)}}</div></td>
+                <!-- <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{getCantidadCajasStock(pedido.idCaja)}}</div></td> -->
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)">
                     <div class="container_btn_confirmar">
 

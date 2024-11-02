@@ -1,3 +1,5 @@
+
+
 /* Estilos para el popup */
 
 .titulo_cantidad {
@@ -265,6 +267,9 @@
     background-color: #f57c00; /* Color naranja más claro al pasar el ratón */
   }
 
+
+
+
   /* .btnX{
     background-image: "./../../../../../../assets/images/imagesStockCajas/lapiz.png";
   } */
@@ -301,3 +306,33 @@
     font-size: 2rem;
     /* margin-right: 2rem; */
   }
+
+
+
+
+  
+
+.dialog {
+  display: none; /* Ocultar el diálogo por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+.dialog-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.dialog button {
+  margin: 10px;
+  
+}
