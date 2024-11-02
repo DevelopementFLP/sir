@@ -1,9 +1,9 @@
 export interface FtAspectosGeneralesPlantillaDTO {
   idPlantilla: number;
-  seccionDePlantilla: string;
+  seccionDePlantilla?: string;
   nombre: string;
+  nombreDeProducto: string;
   idMarca: number;
-  idDestino: number;
   idTipoDeUso: number;
   idAlergeno: number;
   idCondicionAlmacenamiento: number;

@@ -27,15 +27,16 @@ import { FtSeccionVidaUtilComponent } from './components/MantenimientoFichaTecni
 import { FtSeccionAlimentacionComponent } from './components/MantenimientoFichaTecnica/ft-seccion-alimentacion/ft-seccion-alimentacion.component';
 import { FtSeccionTipoDeEnvaseComponent } from './components/MantenimientoFichaTecnica/ft-seccion-tipo-de-envase/ft-seccion-tipo-de-envase.component';
 import { FtSeccionTipoPresentacionDeEnvaseComponent } from './components/MantenimientoFichaTecnica/ft-seccion-presentacion-de-envase/ft-seccion-tipo-presentacion-de-envase.component';
-import { FichaTecnicaProductoComponent } from './components/GenerarFichaTecnica/generar-tecnica-producto/generar-tecnica-producto.component';
+import { FichaTecnicaProductoComponent } from './components/GenerarFichaTecnica/generar-ficha-tecnica-producto.component';
 import { CrearProductoFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/crear-producto-ficha-tecnica/crear-producto-ficha-tecnica.component';
 import { HomeCrearProductoFichaTecnicaComponent } from './pages/home-crear-ficha-tecnica/home-crear-ficha-tecnica.component';
 import { HomeGenerarFichaTecnicaComponent } from './pages/home-generar-ficha-tecnica/home-generar-ficha-tecnica.component';
 import { SweetAlertGenericosComponent } from './helper/sweet-alert-genericos/sweet-alert-genericos.component';
 import { CrearPlantillaFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/crear-plantilla-ficha-tecnica/crear-plantilla-ficha-tecnica.component';
 import { CrearFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/crear-ficha-tecnica/crear-ficha-tecnica.component';
+import { FtSeccionDestinoComponent } from './components/MantenimientoFichaTecnica/ft-seccion-destino/ft-seccion-destino.component';
 
-
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { CrearFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/
       SweetAlertGenericosComponent,
       CrearPlantillaFichaTecnicaComponent,
       CrearFichaTecnicaComponent,
+      FtSeccionDestinoComponent,
   ],
   exports:[
     
@@ -74,7 +76,8 @@ import { CrearFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/
     PaginatorModule,
     CardModule,
     TabViewModule,
-    PanelModule
+    PanelModule,
+    ButtonModule
   ]
 })
 export class ProduccionFichaTecnicaModule { }

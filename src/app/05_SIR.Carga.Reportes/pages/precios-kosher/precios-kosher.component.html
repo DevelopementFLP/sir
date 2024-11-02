@@ -1,71 +1,57 @@
-<div class="container-fluid packing">
-    <div class="row fs-3 text">Packing List</div>
-    <hr>
-
-    <div class="row">
-    <div class="col-6">
-        <div class="row mt-3">
-            <div class="col-4">
-                <div class="row opciones">
-                    <div class="lead"><p>Fecha desde:</p></div>
-                    <div>
-                            <p-calendar 
-                                [(ngModel)]="fechaDesde" 
-                                dateFormat="dd/mm/yy"
-                                [showIcon]="true"
-                            />
-                    </div>
-                </div>
-            </div>
+<div class="packing__container">
+    <div class="container--title">Packing List Israel</div>
+    <div class="fechas__container">
+        <div>
+            <label for="fechaDesde">Fecha de carga:&nbsp;</label>
+            <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
         </div>
-
-        <div class="row mt-3">
-            <div class="col-4">
-                <div class="row opciones">
-                    <div class="lead"><p>Fecha hasta:</p></div>
-                    <div>
-                        <p-calendar 
-                        [(ngModel)]="fechaHasta" 
-                        dateFormat="dd/mm/yy"
-                        [showIcon]="true"
-                    />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <div class="row mt-3">
-        <div class="col-4">
-            <div class="row opciones">
-                <div class="lead"><p>Clientes:</p></div>
-                <div class="">
-                    <p-dropdown class="p-especie" [options]="clientes" [(ngModel)]="clientesSeleccionados" optionLabel="name"></p-dropdown>
-                </div>
-            </div>
-        </div>
+        <button pButton type="button" name="btnReporte" label="Buscar" class="p-button-sm" icon="pi pi-check" (click)="buscarDatos()"></button>
     </div>
-
-    <div class="row mt-3">
-        <div class="col-4">
-            <div class="row opciones">
-                <div class="lead"><p>Contenedores:</p></div>
-                <div class="">
-                    <p-dropdown class="p-especie" [options]="contenedores" [(ngModel)]="contenedoresSeleccionados" optionLabel="name"></p-dropdown>
+    <div class="container__selection" *ngIf="datosContenedores.length > 0">
+        <p-tabView>
+            <p-tabPanel header="Selección de contenedores">
+                <div class="selection">
+                    <label for="cargaSelect" class="selection--title">Selecciona contenedor(es):</label>
+                    <div class="custom-select">
+                        <div class="select-box" (click)="toggleDropdown()">
+                            <span *ngIf="selectedCargas?.length">{{ selectedCargas.length }} seleccionados</span>
+                            <span *ngIf="!selectedCargas?.length">Nada seleccionado</span>
+                        </div>
+                        <div *ngIf="dropdownOpen" class="select-options">
+                            <div 
+                                *ngFor="let carga of datosContenedores" 
+                                class="select-option" 
+                                [class.selected]="selectedCargas.includes(carga.id_Carga)" 
+                                (click)="toggleSelection(carga.id_Carga)"
+                            >
+                                <div class="cargaid">
+                                    <div>{{ carga.container }}</div>
+                                    <div>({{ carga.id_Carga }})</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-4">
-            <p-button label="Hacer informe" styleClass="p-button-rounded"></p-button>
-        </div>
+                <div class="main--btn">
+                    <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="X FCL" *ngIf="mostrarReporte"><x-fcl [datos]="datosCajasPrecio" /></p-tabPanel>
+            <p-tabPanel header="X CUT" *ngIf="mostrarReporte"><x-cut [datos]="datosCajasPrecio" /></p-tabPanel>
+            <p-tabPanel header="PL Per Pallet" *ngIf="mostrarReporte"><pl-per-pallet [datos]="datosCajasPrecio" /></p-tabPanel>
+            <p-tabPanel header="PL Per Carton" *ngIf="mostrarReporte"><pl-per-carton [datos]="datosCajasPrecio" /></p-tabPanel>
+        </p-tabView>
     </div>
 </div>
 
-    <div class="col-6">
-        Acá va el reporte
-    </div>
+<sir-exportacion *ngIf="mostrarReporte" 
+    [excel]="true"
+    [nombreArchivo]="nombreReporte"
+    [idReporte]="idReporte"
+    [dataPrint]="{registros: datosCajasPrecio}"
+/>
 
-    </div>
-</div>
+<p-confirmDialog 
+    key="mensajeDialog" 
+    rejectButtonStyleClass="p-button-outlined" />

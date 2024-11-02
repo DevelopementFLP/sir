@@ -24,7 +24,7 @@
                     <input *ngIf="presentacionSeleccionada?.idPresentacionDeEnvase === element.idPresentacionDeEnvase" [(ngModel)]="presentacionSeleccionada!.nombre" />
                     <span *ngIf="presentacionSeleccionada?.idPresentacionDeEnvase !== element.idPresentacionDeEnvase">{{element.nombre}}</span>
                 </td>
-                <td>
+                <td class="descripcion">
                     <input *ngIf="presentacionSeleccionada?.idPresentacionDeEnvase === element.idPresentacionDeEnvase" [(ngModel)]="presentacionSeleccionada!.descripcion" />
                     <span *ngIf="presentacionSeleccionada?.idPresentacionDeEnvase !== element.idPresentacionDeEnvase">{{element.descripcion}}</span>
                 </td>

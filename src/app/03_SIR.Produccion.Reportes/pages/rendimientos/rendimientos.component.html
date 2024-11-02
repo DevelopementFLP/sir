@@ -11,7 +11,7 @@
             </div>
             <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
         </div>
-        <p-tabView *ngIf="dataCortes.length > 0">
+        <p-tabView *ngIf="dataCortes.length > 0; else noData">
             <p-tabPanel *ngFor="let id of idsRendimientos; let i = index" [header]="nombresRends[i]" class="rendimientos__display">
                 <rendimiento-viewer [data]="data[i]" [fechas]="fechasReporte" />
             </p-tabPanel>
@@ -26,8 +26,14 @@
                 />
             </p-tabPanel>
         </p-tabView>
+        <ng-template #noData>
+            <div class="no__data">
+                <div>No hay información de rendimientos para el rango de fechas seleccionado.</div>
+            </div>
+        </ng-template>
     </p-tabPanel>
 </p-tabView>
+
 
 <sir-exportacion 
     *ngIf="dataCortes.length > 0"

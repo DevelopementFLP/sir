@@ -1,0 +1,43 @@
+*{
+    font-family: sans-serif;
+  }
+  .data__container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+  }
+  
+  .data__title {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      background-color: #d5f5e3;
+      font-weight: 500;
+      padding:  0.2rem ;
+      font-size: 0.9rem
+  }
+  
+  .values--text,
+  .values--v
+  {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .xcut {
+    margin-bottom: 1rem;
+  }
+
+  .total-data {
+    color: #2980b9;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .data__values {
+    display: flex;
+      flex-direction: row;
+      width: 100%;
+      padding: 0 0.2rem;
+  }

@@ -38,6 +38,12 @@ import { ComparativoRendData } from 'src/app/03_SIR.Produccion.Reportes/pages/re
 import { DataRendimiento } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/DataRendimiento.interface';
 import { TipoFechaDataAgrupado } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/interfaces/TipoFechaDataAgrupado.interface';
 import { CommonService } from 'src/app/03_SIR.Produccion.Reportes/pages/rendimientos/services/common.service';
+import { RegistroConPrecio } from '../../05_SIR.Carga.Reportes/interfaces/RegistroConPrecio.interface';
+import { CargaService } from 'src/app/05_SIR.Carga.Reportes/services/carga-service.service';
+import { XFCL } from 'src/app/05_SIR.Carga.Reportes/interfaces/XFCL.interface';
+import { TotalData } from 'src/app/05_SIR.Carga.Reportes/interfaces/TotalData.interface';
+import { PrecioData } from 'src/app/05_SIR.Carga.Reportes/interfaces/PrecioData.interface';
+import { PLPallet } from 'src/app/05_SIR.Carga.Reportes/interfaces/PLPallet.interface';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -45,7 +51,8 @@ export class PrintService {
     private kcs: KosherCommonService,
     private deps: DetalleEmbarquePrintService ,
     private ccs: CommonCuotaService,
-    private crs: CommonService
+    private crs: CommonService,
+    private cargaService: CargaService
   ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
@@ -66,8 +73,10 @@ export class PrintService {
         return this.printDetalleDeEmbarque(dataToPrint, libro);
       case 8:
         return this.printRendimientosCuota(dataToPrint, libro);
-        case 9:
-      return this.printComparativosRendimientos(dataToPrint, libro);
+      case 9:
+        return this.printComparativosRendimientos(dataToPrint, libro);
+      case 10:
+        return this.printPackingList(dataToPrint, libro);
       default:
         return [];
     }
@@ -2615,5 +2624,318 @@ export class PrintService {
         columna += 3;
       }
     }
+  }
+
+  private printPackingList(dataToPrint: PrintModel, libro: Workbook): void {
+    const data: RegistroConPrecio[] = dataToPrint.data.registros as RegistroConPrecio[];
+    const totalGeneral: TotalData = this.cargaService.getTotalData(data);
+    const xfclData: XFCL[] = this.cargaService.setDataXFCL(data);
+    const cantidadContenedores: number = xfclData.length;
+    const idsPallets: number[] = this.cargaService.getIdsPallets(data);
+    const registrosPallet: PLPallet[] = this.cargaService.setDataRegistrosPallet(idsPallets, data);
+    const propiedades: string[] = ['SHIPMENT NO.', 'SHIP ON VESSEL', 'SHIPPING MARK', 'SHIPPING DATE', 'CONTAINERS'];
+    const titulosX: string[] = ['Vessel', 'No. Container', 'Invoice', 'Pallets no.', 'Code F.L.P.S.', 'S/C', 'Product', 'Mark', 'Box ID', 'Net weight', 'Gross weight', 'Produciton Date', 'Expire Date', 'Price code'];
+
+    const fuenteTitulo:             Partial<Font>         = { bold: true, size: 10 };
+    const fuenteSubtotal:           Partial<Font>         = { bold: true, size: 14, color: {argb: 'FFFFFFFF'} };
+    const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
+    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
+    const alineacionIzquierda:      Partial<Alignment>    = { vertical: 'middle', horizontal: 'left' };
+    const formatoNumeroDecimal:     string                = '#,##0.00';
+    const formatoNumeroMillar:      string                = '#,##0';
+
+    const fondoTituloX: Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFCCFFCC' }, bgColor: { argb: '00000000' }};
+    const fondoTotalX:  Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0070C0' }, bgColor: { argb: '00000000' }};
+    
+    // XFCL
+    {
+      const titulo: string    = 'X FCL';
+      const hoja:   Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 16);
+
+      let fila = 6;
+      let columna = 2;
+      
+      for(let i = 0; i < propiedades.length; i++) {
+        hoja.getRow(fila++).getCell(columna).value = `${propiedades[i]}:`;
+      }
+      fila--;
+      hoja.getRow(fila++).getCell(columna + 1).value = `${cantidadContenedores}`;
+
+
+      xfclData.forEach((xfcl, i) => {
+        this.configurarCeldaTitulo(hoja, fila, columna++, `${i + 1}`, alineacionCentro, fuenteTitulo, fondoTituloX); 
+        
+        titulosX.forEach(titulo => {
+          this.configurarCeldaTitulo(hoja, fila, columna++, `${titulo}`, alineacionCentro, fuenteTitulo, fondoTituloX);
+        });
+
+        columna = 4;
+        fila++;
+
+        xfcl.data.forEach(reg => {
+          const celdas = [
+            { columna: columna, valor: reg.contenedor, formato: null },
+            { columna: columna + 2, valor: reg.idPallet, formato: null },
+            { columna: columna + 3, valor: reg.codigoProducto, formato: null },
+            { columna: columna + 4, valor: reg.clasificacionKosher, formato: null },
+            { columna: columna + 5, valor: reg.codigoKosher, formato: null },
+            { columna: columna + 6, valor: reg.markKosher, formato: null },
+            { columna: columna + 7, valor: reg.cantidadCajas, formato: formatoNumeroMillar },
+            { columna: columna + 8, valor: reg.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
+            { columna: columna + 9, valor: reg.pesoBruto.toFixed(2), formato: formatoNumeroDecimal },
+            { columna: columna + 10, valor: reg.fechaProduccion, formato: null },
+            { columna: columna + 11, valor: this.formatearFecha(reg.fechaExpiracion), formato: null },
+            { columna: columna + 12, valor: reg.precio.toFixed(2), formato: formatoNumeroDecimal }
+          ];
+        
+          celdas.forEach(({ columna, valor, formato }) => {
+            const celda = hoja.getRow(fila).getCell(columna);
+            celda.alignment = alineacionCentro;
+            celda.value = valor;
+            if (formato) celda.numFmt = formato;
+          });
+        
+          fila++;
+        });
+        
+
+        const configuracionesCeldas = [
+          { columna: 6, valor: xfcl.cantidadPallets, formato: formatoNumeroMillar },
+          { columna: 11, valor: xfcl.cantidadCajas, formato: formatoNumeroMillar },
+          { columna: 12, valor: xfcl.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
+          { columna: 13, valor: xfcl.pesoBruto.toFixed(2), formato: formatoNumeroDecimal }
+        ];
+        
+        configuracionesCeldas.forEach(({ columna, valor, formato }) => {
+          const celda = hoja.getRow(fila).getCell(columna);
+          celda.alignment = alineacionCentro;
+          celda.font = fuenteSubtotal;
+          celda.fill = fondoTotalX;
+          celda.numFmt = formato;
+          celda.value = valor;
+        });
+        
+        columna = 2;
+        fila++;
+      });
+
+      fila++;
+
+      const celdas = [
+        { columna: 6, valor: totalGeneral.cantidadPallets, formato: formatoNumeroMillar },
+        { columna: 11, valor: totalGeneral.cantidadCajas, formato: formatoNumeroMillar },
+        { columna: 12, valor: totalGeneral.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
+        { columna: 13, valor: totalGeneral.pesoBruto.toFixed(2), formato: formatoNumeroDecimal }
+      ];
+      
+      celdas.forEach(({ columna, valor, formato }) => {
+        const celda = hoja.getRow(fila).getCell(columna);
+        celda.alignment = alineacionCentro;
+        celda.font = fuenteSubtotal;
+        celda.fill = fondoTotalX;
+        celda.numFmt = formato;
+        celda.value = valor;
+      });
+      
+      const columnWidths = [null, null, 15, 10, 20, 10, 12, 12, 6, 8, 15, 15, 15, 15, 15, 15];
+      columnWidths.forEach((width, index) => {
+        if (width) hoja.getColumn(index).width = width;
+      });
+
+    }
+    
+    // XCUT
+    {
+      const fuenteSubTotalXCUT: Partial<Font> = { bold: true, size: 14, color: { argb: 'FF1f618d'}};
+      const titulo: string    = 'X CUT';
+      const hoja:   Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 17);
+
+      let fila = 6;
+      let columna = 2;
+      
+      for(let i = 0; i < propiedades.length; i++) {
+        hoja.getRow(fila++).getCell(columna).value = `${propiedades[i]}:`;
+      }
+      fila--;
+      hoja.getRow(fila++).getCell(columna + 1).value = `${cantidadContenedores}`;
+
+      const dataXCUT: PrecioData[] = this.cargaService.setDataXCUT(registrosPallet);
+      
+      this.configurarCeldaTitulo(hoja, fila, columna++, '', alineacionCentro, fuenteTitulo, fondoTituloX); 
+        
+      titulosX.forEach(titulo => {
+        this.configurarCeldaTitulo(hoja, fila, columna++, `${titulo}`, alineacionCentro, fuenteTitulo, fondoTituloX);
+      });
+
+      columna = 4;
+      fila++
+
+      dataXCUT.forEach(xcut => {
+        xcut.data.forEach(reg => {
+          const valores = [
+            { col: columna, val: reg.contenedor },
+            { col: columna + 2, val: reg.idPallet },
+            { col: columna + 3, val: reg.codigoProducto },
+            { col: columna + 4, val: reg.clasificacionKosher },
+            { col: columna + 5, val: reg.codigoKosher },
+            { col: columna + 6, val: reg.markKosher },
+            { col: columna + 7, val: reg.cantidadCajas },
+            { col: columna + 8, val: reg.pesoNeto },
+            { col: columna + 9, val: reg.pesoBruto },
+            { col: columna + 10, val: reg.fechaProduccion },
+            { col: columna + 11, val: this.formatearFecha(reg.fechaExpiracion) },
+            { col: columna + 12, val: reg.precio }
+          ];
+      
+          valores.forEach(({ col, val }) => this.configurarCelda(hoja, fila, col, val, alineacionCentro));
+          fila++;
+        });
+      
+        // Subtotales de xcut
+        const subtotales = [
+          { col: 6, val: xcut.cantidadPallet },
+          { col: 11, val: xcut.cantidadCajas },
+          { col: 12, val: xcut.pesoNeto },
+          { col: 13, val: xcut.pesoBruto },
+          { col: 16, val: xcut.precio },
+          { col: 17, val: xcut.precio * xcut.pesoNeto }
+        ];
+      
+        subtotales.forEach(({ col, val }) => this.configurarCelda(hoja, fila, col, val, alineacionCentro, fuenteSubTotalXCUT));
+      
+        columna = 4;
+        fila += 2;
+      });
+
+      fila++;
+      this.configurarCeldaTitulo(hoja, fila, 6, totalGeneral.cantidadPallets, alineacionCentro, fuenteSubtotal, fondoTotalX);
+      this.configurarCeldaTitulo(hoja, fila, 11, totalGeneral.cantidadCajas, alineacionCentro, fuenteSubtotal, fondoTotalX);
+      this.configurarCeldaTitulo(hoja, fila, 12, totalGeneral.pesoNeto, alineacionCentro, fuenteSubtotal, fondoTotalX);
+      this.configurarCeldaTitulo(hoja, fila, 13, totalGeneral.pesoBruto, alineacionCentro, fuenteSubtotal, fondoTotalX);
+      this.configurarCeldaTitulo(hoja, fila, 17, this.cargaService.sumarPreciosPorPeso(dataXCUT), alineacionCentro, fuenteSubtotal, fondoTotalX);
+
+      const columnWidths = [null, null, 15, 10, 20, 10, 12, 12, 6, 8, 15, 15, 15, 15, 15, 15, 10, 15];
+      columnWidths.forEach((width, index) => {
+        if (width) hoja.getColumn(index).width = width;
+      });
+    }
+
+    // PL Per Pallet
+    {
+      const titulo: string    = 'PL Per Pallet';
+      const hoja:   Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 17);
+      
+      const titulosPallet:  string [] = ['SIF', 'Vessel name', 'B/L No.', 'Container No.', 'Loading date', 'Pallet No.', 'Product', 'Mark', 'S/C', 'No. of cartons', 'Net weight', 'Production date', 'Expire date', 'F.L.P.S. Code', 'Price', 'Shipping mark'];
+      const fuenteTitulo:   Partial<Font> = { bold: true, size: 10, color: {argb: 'FFFFFF00'} };
+      const fondoTituloX:   Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFC65911' }, bgColor: { argb: '00000000' }};
+
+      let fila = 6;
+      let columna = 2;
+
+      for(let j = 0; j < titulosPallet.length; j++) {
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna).fill = fondoTituloX;
+        hoja.getRow(fila).getCell(columna++).value = `${titulosPallet[j]}`;
+      }
+      
+      fila++;
+      columna = 5;
+
+      registrosPallet.forEach(reg => {
+        this.configurarCelda(hoja, fila, columna, reg.contenedor, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 2, reg.idPallet, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 3, reg.codigoKosher, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 4, reg.markKosher, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 5, reg.clasificacionKosher, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 6, reg.cantidadCajas, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 7, reg.pesoNeto, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 8, reg.fechaProduccion, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 9, this.formatearFecha(reg.fechaExpiracion), alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 10, reg.codigoProducto, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 11, reg.precio, alineacionCentro);
+    
+        fila++; 
+        columna = 5;
+    });
+
+    const columnWidths = [null, null, 10, 12, 10, 20, 12, 12, 6, 8, 15, 15, 15, 15, 15, 15, 10, 15];
+      columnWidths.forEach((width, index) => {
+        if (width) hoja.getColumn(index).width = width;
+      });
+    }
+
+    // PL Per Carton
+    {
+      const titulo: string    = 'PL Per Carton';
+      const hoja:   Worksheet = libro.addWorksheet(titulo);
+      this.setLogo(libro, hoja);
+      this.setTitle(libro, hoja, titulo, 'right', 11);
+
+      const titulosCarton: string[] = ['Customer', 'Invoice no.', 'Container no.', 'Pallet no.', 'Product code', 'Carton ID', 'Weight of the carton', 'Production date', 'Expire date', 'Precio']
+      const fuenteTitulo: Partial<Font> = { bold: true, size: 10, color: {argb: 'FF000000'} };
+      const fondoTituloX: Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' }, bgColor: { argb: '00000000' }};
+
+      let columna = 2;
+      let fila = 6;
+
+      for(let j = 0; j < titulosCarton.length; j++) {
+        hoja.getRow(fila).getCell(columna).font = fuenteTitulo;
+        hoja.getRow(fila).getCell(columna).fill = fondoTituloX;
+        hoja.getRow(fila).getCell(columna++).value = `${titulosCarton[j]}`;
+      }
+
+      columna = 2;
+      fila++;
+
+      data.forEach(reg => {
+        hoja.getRow(fila).getCell(columna++).value = '423203';
+        columna++;
+        hoja.getRow(fila).getCell(columna++).value = reg.container;
+        hoja.getRow(fila).getCell(columna++).value = reg.pallet;
+        hoja.getRow(fila).getCell(columna++).value = reg.productcode;
+        hoja.getRow(fila).getCell(columna++).value = reg.boxid;
+        hoja.getRow(fila).getCell(columna++).value = reg.netweight;
+        hoja.getRow(fila).getCell(columna++).value = reg.productiondate;
+        hoja.getRow(fila).getCell(columna++).value = this.formatearFecha(reg.expiredate);
+        hoja.getRow(fila).getCell(columna++).value = reg.precio;
+        fila++;
+        columna = 2;
+      });
+
+      const columnWidths = [null, null, 10, 10, 20, 10, 12, 32, 10, 12, 12, 12];
+      columnWidths.forEach((width, index) => {
+        if (width) hoja.getColumn(index).width = width;
+      });
+    }
+  }
+
+  private configurarCelda(hoja: Worksheet, fila: number, columna: number, valor: any, alignment: Partial<Alignment>, font: Partial<Font> | null = null) {
+    const celda = hoja.getRow(fila).getCell(columna);
+    celda.alignment = alignment;
+    if (font) celda.font = font;
+    celda.value = valor;
+  }
+
+  private configurarCeldaTitulo(hoja: Worksheet, fila: number, columna: number, valor: any, alineacion: Partial<Alignment>, fuenteTitulo: Partial<Font>, fondoTitulo: Fill) {
+    const celda = hoja.getRow(fila).getCell(columna);
+    celda.value = valor;
+    celda.alignment = alineacion;
+    celda.font = fuenteTitulo;
+    celda.fill = fondoTitulo;
+  }
+
+  private formatearFecha(fecha: string): string {
+    let f = new Date(fecha);
+    return formatDate(
+      f.setHours(f.getHours() + 3),
+      'yyyy-MM-dd',
+      'es-UY'
+    );
   }
 }

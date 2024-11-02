@@ -4,9 +4,9 @@ import { CargaDTO } from '../../Interfaces/CargaDTO.interface';
 import { CargaKosherService } from '../../services/carga-kosher.service';
 import { CommonService } from 'src/app/shared/services/common.service';
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   OnDestroy,
   OnInit,
   Output,
@@ -40,6 +40,8 @@ import { CodigoFechaPrecio } from '../../Interfaces/CodigoFechaPrecio.interface'
 import { NuevoPrecioComponent } from '../nuevo-precio/nuevo-precio.component';
 import { PesoBrutoContenedor } from '../../Interfaces/PesoBrutoContenedor.interface';
 import { PesoNetoContenedorComponent } from '../peso-neto-contenedor/peso-neto-contenedor.component';
+import { DatoCargaExpo } from '../../Interfaces/DatoCargaExpo.interface';
+import { ConfPrecios } from '../../Interfaces/ConfPrecios.interface';
 
 interface ContainerOptions {
   label: string;
@@ -147,11 +149,14 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   pesosContenedores: PesoBrutoContenedor[] = [];
   pesosDialogRef!: DynamicDialogRef;
   pesosCargador: boolean = false;
+
+  idUsuario: number = 0;
+  isDialogOpen: boolean = false;
   //#endregion
 
   //#region constructor
   constructor(
-    private cargaKosherSrv: CargaKosherService,
+    private cargaService: CargaKosherService,
     private dialogService: DialogService,
     private cs: CommonService,
     private ckcs: KosherCommonService,
@@ -162,11 +167,15 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#region onInit
   async ngOnInit(): Promise<void> {
     this.checkUser();
-    await this.getContainers();
-    await this.mapContainerOptions();
-    await this.getTiposMoneda();
-    await this.getConfProductos();
-    await this.getCodigosConPrecio();
+    this.resetearFechas();
+    
+    await Promise.all([
+      this.getContainers(),
+      this.mapContainerOptions(),
+      this.getTiposMoneda(),
+      this.getConfProductos(),
+      this.getCodigosConPrecio()
+    ]);
 
     this.mustReset = this.ckcs.reset$.subscribe(() => {
       this.procederConReporte(false);
@@ -176,6 +185,8 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       this.iconoButtonConfirmar = 'pi pi-question';
       this.mostrarPrecioYCodigos = true;
     });
+
+    this.prepararData();
   }
   //#endregion
 
@@ -192,19 +203,20 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
         this.esUsuarioExpo = false;
       }
       id = usuario.id_usuario.toString();
+      this.idUsuario = usuario.id_usuario;
     }
   }
 
   //#region onDestroy
   ngOnDestroy(): void {
-    this.destroyDialog(this.addCodigosRef);
+    this.destroyDialog(this.adminPreciosRef);
     this.destroyDialog(this.addCodigosRef);
     this.destroyDialog(this.nuevoPrecioRef);
     this.destroyDialog(this.pesosDialogRef);
   }
 
   private destroyDialog(dialog: DynamicDialogRef): void {
-    if(dialog) {
+    if (dialog) {
       dialog.close();
       dialog.destroy();
     }
@@ -212,14 +224,14 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Obtener datos de contenedores
-  filterContainersByIdCarga(): void {    
+  filterContainersByIdCarga(): void {
     this.idCarga = [];
     this.containers = this.cs.deepCopy(this.containersOriginal);
     if (this.idCargaString != '') {
       var idCargaStringCopy = this.idCargaString;
       idCargaStringCopy = idCargaStringCopy.replaceAll(' ', '');
       const ids = idCargaStringCopy.split(',');
-      ids.forEach((id) => {  
+      ids.forEach((id) => {
         if (this.cs.isNumber(id)) this.idCarga.push(parseInt(id));
       });
       this.containers = this.containers?.filter((c) =>
@@ -237,7 +249,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   private async getContainers(): Promise<void> {
-    this.containers = await lastValueFrom(this.cargaKosherSrv.getContainers());
+    this.containers = await lastValueFrom(this.cargaService.getContainers());
     this.containersOriginal = this.cs.deepCopy(this.containers);
   }
 
@@ -253,7 +265,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   private async getTiposMoneda(): Promise<void> {
     try {
       this.tiposMoneda = await lastValueFrom(
-        this.cargaKosherSrv.getTiposMoneda()
+        this.cargaService.getTiposMoneda()
       );
     } catch (error) {
       console.error(error);
@@ -264,7 +276,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#region Obtener fechas de listas de precios
   private async getFechasListasPrecios(): Promise<void> {
     this.fechas = await lastValueFrom(
-      this.cargaKosherSrv.getFechasListasPrecios()
+      this.cargaService.getFechasListasPrecios()
     );
   }
   //#endregion
@@ -272,7 +284,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#region Filtrar datos por contenedor
   async getDataByContainers(): Promise<void> {
     this.dataContainers = await lastValueFrom(
-      this.cargaKosherSrv.getDataByContainer(
+      this.cargaService.getDataByContainer(
         this.idCarga,
         this.setContainersQuery()
       )
@@ -285,7 +297,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
         contenedores: this.setContainersQuery(),
       };
       this.getDatosCarga.emit(datosCarga);
-      
+
       this.mostrarConfiguracionPesoBruto(datosCarga);
     }
   }
@@ -293,17 +305,18 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   private mostrarConfiguracionPesoBruto(datosCarga: CargaDTO): void {
     this.pesosDialogRef = this.dialogService.open(PesoNetoContenedorComponent, {
       data: {
-        contenedores: datosCarga.contenedores
+        contenedores: datosCarga.contenedores,
       },
       header: 'Peso bruto por contenedor',
       width: '50vw',
       closable: true,
       closeOnEscape: false,
-      dismissableMask: false
+      dismissableMask: false,
     });
 
     this.pesosDialogRef.onClose.subscribe((res) => {
-      if(res != undefined) {
+      this.isDialogOpen = false;
+      if (res != undefined) {
         this.pesosContenedores = res;
         this.todoListo(this.pesosContenedores);
       }
@@ -317,74 +330,17 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     return containers;
   }
 
-  private getRangoFechasProduccion(): void {
-    var fechasE: FechasExtremos = {
-      fechaMinima: this.datosCajas?.reduce(
-        (min, d) => (d.fechaCorrida! <= min! ? d.fechaCorrida! : min),
-        this.datosCajas[0].fechaCorrida
-      )!,
-      fechaMaxima: this.datosCajas?.reduce(
-        (max, d) => (d.fechaCorrida! >= max! ? d.fechaCorrida! : max),
-        this.datosCajas[0].fechaCorrida
-      )!,
-    };
-
-    this.rangoFechas = fechasE;
-
-    this.mensajeFechaCarga = [
-      {
-        severity: 'success',
-        summary: 'Fecha de carga:',
-        detail: `${formatDate(
-          this.dataContainers![0].exportdate,
-          'dd/MM/yyyy',
-          'es-UY'
-        )}`,
-      },
-    ];
-    this.mensajeRangoFechas = [
-      {
-        severity: 'success',
-        summary: 'Fechas de producción:',
-        detail: `<span class="fecha__title">Primera:</span> ${formatDate(
-          fechasE.fechaMinima,
-          'dd/MM/yyyy',
-          'es-UY'
-        )}  -  <span class="fecha__title">Última:</span> ${formatDate(
-          fechasE.fechaMaxima,
-          'dd/MM/yyyy',
-          'es-UY'
-        )}`,
-      },
-    ];
-  }
-
   private async getCodigosConPrecio(): Promise<void> {
-    // await this.getFechasListasPrecios();
-    // const f: Date[] = this.buscarListasDePreciosPorProduccion();
-    // if(f.length > 0) {
-    //   const fMin = formatDate(f[0], "yyyy-MM-dd", "es-UY");
-    //   var fMax: string;
-    //   if(f[f.length - 1] > this.rangoFechas.fechaMaxima) fMax = fMin;
-    //   else fMax = formatDate(f[f.length - 1], "yyyy-MM-dd", "es-UY ");
-
-    //this.precios = await lastValueFrom(this.cargaKosherSrv.getPreciosPorFecha(fMin, fMax));
-    this.precios = await lastValueFrom(this.cargaKosherSrv.getPrecios());
+    this.precios = await lastValueFrom(this.cargaService.getPrecios());
     this.setListasPrecios();
     this.getCodigos();
     this.setCodigoPrecios();
-    //}
   }
 
   private setListasPrecios(): void {
     this.fechasPrecios =
       Array.from(new Set(this.precios!.map((p) => p.fecha_Produccion))) ??
       undefined;
-    // if(this.fechasPrecios) {
-    //   this.fechasPrecios.forEach(fecha => {
-    //     this.listasPrecios!.push(this.precios?.filter(p => p.fecha_Produccion == fecha)!)
-    //   });
-    // }
   }
 
   private getCodigos(): void {
@@ -431,6 +387,15 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     return 0;
   }
 
+  getIdMonedaPorFecha(fecha: Date): number {
+    var pr = this.precios?.find((p) => p.fecha_Produccion == fecha);
+    if (pr) {
+      var mnd = this.tiposMoneda?.find((m) => m.id == pr?.id_Moneda);
+      if (mnd) return mnd.id;
+    }
+    return 0;
+  }
+
   getTipoMonedaPorFecha(fecha: Date): string {
     var pr = this.precios?.find((p) => p.fecha_Produccion == fecha);
     if (pr) {
@@ -450,11 +415,12 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       header: 'Administrar listas de precios',
       width: '50vw',
       closable: true,
-      closeOnEscape: true,
-      dismissableMask: true,
+      closeOnEscape: false,
+      dismissableMask: false,
     });
 
     this.adminPreciosRef.onClose.subscribe(async (result: any) => {
+      this.isDialogOpen = false;
       if (result !== undefined) {
         try {
           await this.getCodigosConPrecio();
@@ -469,50 +435,22 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   addPrecio(): void {
     this.nuevoPrecioRef = this.dialogService.open(NuevoPrecioComponent, {
       data: {
-        monedas: this.tiposMoneda
+        monedas: this.tiposMoneda,
       },
       header: 'Agregar precios y códigos',
       width: '80vw',
       height: '70vh',
       closable: true,
       closeOnEscape: false,
-      dismissableMask: false
+      dismissableMask: false,
     });
 
     this.nuevoPrecioRef.onClose.subscribe(async (result: any) => {
-      if(result != undefined) {
-        //TODO: Actualizar las listas de precios
+      this.isDialogOpen = false;
+      if (result != undefined) {
         await this.getCodigosConPrecio();
       }
     });
-  }
-
-  private buscarListasDePreciosPorProduccion(): Date[] {
-    if (this.fechas.length === 0) return [];
-
-    var fechas: Date[] = [];
-    var fechasAux: Date[] = [];
-
-    const fechasMinimas: Date[] = this.fechas.filter(
-      (f) => f <= this.rangoFechas.fechaMinima
-    );
-    const fechasMaximas: Date[] = this.fechas.filter(
-      (f) => f >= this.rangoFechas.fechaMinima
-    );
-
-    if (fechasMinimas.length > 0)
-      fechasAux.push(fechasMinimas[fechasMinimas.length - 1]);
-    // if(fechasMaximas.length > 0)
-    //   fechasAux .push(fechasMaximas[fechasMaximas.length - 1]);
-
-    fechas = Array.from(new Set([...fechasAux, ...fechasMaximas])).sort(
-      (a, b) => {
-        if (a <= b) return -1;
-        return 1;
-      }
-    );
-
-    return fechas;
   }
   //#endregion
 
@@ -523,11 +461,11 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   esDetalle(): boolean {
-    return this.getUrl().includes("exportaciones/detalleEmbarque");
+    return this.getUrl().includes('exportaciones/detalleEmbarque');
   }
 
   esPrecios(): boolean {
-    return this.getUrl().includes("carga/configuracionPreciosKosher");
+    return this.getUrl().includes('carga/configuracionPreciosKosher');
   }
 
   clear(): void {
@@ -549,7 +487,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   todoListo(pesosContenedores: PesoBrutoContenedor[]): void {
-    if(pesosContenedores.length > 0) {
+    if (pesosContenedores.length > 0) {
       this.procederConReporte(true);
       this.pesosContenedoresEmmiter.emit(pesosContenedores);
       this.getCodigosPrecio.emit(this.precios);
@@ -603,7 +541,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   private async getConfProductos(): Promise<void> {
-    await lastValueFrom(this.cargaKosherSrv.getConfProductos())
+    await lastValueFrom(this.cargaService.getConfProductos())
       .then((result) => {
         this.confProductos = result;
         this.confProductos = this.eliminarDuplicados(
@@ -658,14 +596,13 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       width: '90vw',
       height: '80vh',
       closable: true,
-      closeOnEscape: true,
-      dismissableMask: true,
+      closeOnEscape: false,
+      dismissableMask: false,
     });
 
     this.addCodigosRef.onClose.subscribe(async (result: any) => {
-      //if(result != undefined) {
+      this.isDialogOpen = false;
       await this.getConfProductos();
-      //}
     });
   }
   //#endregion
@@ -686,21 +623,17 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   async guardarCambios(): Promise<void> {
-    if (Object.keys(this.codigosClonados).length > 0) {
-      try {
-        const codigosActualizar: ConfProducto[] = Object.values(
-          this.codigosClonados
-        );
-        await lastValueFrom(
-          this.cargaKosherSrv.updateConfProductos(codigosActualizar)
-        );
-        await this.getConfProductos();
-        this.isEditing = false;
-      } catch (error) {
-        console.log(error);
-      }
+    if (Object.keys(this.codigosClonados).length === 0) return;
+    const codigosActualizar: ConfProducto[] = Object.values(this.codigosClonados);
+    try {
+      await lastValueFrom(this.cargaService.updateConfProductos(codigosActualizar));
+      await this.getConfProductos();
+      this.isEditing = false;
+    } catch (error) {
+      console.error("Error al actualizar los productos:", error);
     }
   }
+  
 
   cancelarCambios(): void {
     for (let producto in this.codigosClonados) {
@@ -732,97 +665,6 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
 
     return null;
   }
-
-  // Editar precios
-  onPrecioRowEditing(codigoPr: CodigoPrecio): void {
-    this.codigosPreciosClonados[codigoPr.codigo as string] = { ...codigoPr };
-  }
-
-  async onPrecioRowEditSave(codigoPr: CodigoPrecio): Promise<void> {
-    delete this.codigosPreciosClonados[codigoPr.codigo];
-    this.codigosPreciosClonados[codigoPr.codigo as string] = { ...codigoPr };
-    this.isPrecioEditing = true;
-    await this.guardarCambiosCodigosPrecios();
-  }
-
-  onPrecioRowEditCancel(codigoPr: CodigoPrecio, index: number): void {
-    this.deleteCodigoPrecio(codigoPr, index);
-  }
-
-  deleteCodigoPrecio(codigoPr: CodigoPrecio, index: number): void {
-    this.codigoPrecios![index] = this.codigosPreciosClonados[codigoPr.codigo];
-    delete this.codigosPreciosClonados[codigoPr.codigo];
-  }
-
-  async guardarCambiosCodigosPrecios(): Promise<void> {
-    const codigos: string[] = Object.keys(this.codigosPreciosClonados);
-    if (codigos.length > 0) {
-        try {
-            const actualizacionesPrecios: Promise<void>[] = [];
-
-            for (const codigo of codigos) {
-                const actualizacionPromesa = (async () => {
-                    const actualizarPrecios: CodigoFechaPrecio[] = [];
-
-                    var ind: number = 0;
-                    const precios: number[] = this.codigosPreciosClonados[codigo].precios;
-
-                    for (const fecha of this.fechasPrecios!) {
-                        const precioTonelada = await lastValueFrom(this.cargaKosherSrv.getPrecioToneladaCodigoFecha(codigo, fecha));
-               
-                        if (precioTonelada != 0) {
-                            actualizarPrecios.push({ codigo, fechaProduccion: fecha, precio: precios[ind++] });
-                        } else {
-                          //TODO: INSERTAR NUEVO PRECIO
-                        }
-                    }
-
-                    if (actualizarPrecios.length > 0) {
-                        await lastValueFrom(this.cargaKosherSrv.updateCodigoPrecio(actualizarPrecios));
-                    }
-                })();
-
-                actualizacionesPrecios.push(actualizacionPromesa);
-            }
-            await Promise.all(actualizacionesPrecios);
-
-            this.getCodigos();
-            this.setCodigoPrecios();
-            this.cancelarCambiosCodigoPrecio();
-            this.codigoPreciosOriginal = this.cs.deepCopy(this.codigoPrecios);
-            this.isPrecioEditing = false;
-        } catch (error) {
-            console.error('Error al guardar cambios de códigos de precios:', error);
-        }
-    }
-}
-
-
-  private buscarPrecioCodigo(codigo: string): CodigoPrecio | null {
-    if (this.codigosPreciosClonados.hasOwnProperty(codigo.toString()))
-      return this.codigosPreciosClonados[codigo];
-
-    return null;
-  }
-
-  cancelarCambiosCodigoPrecio(): void {
-    for (let codigo in this.codigosPreciosClonados) {
-      const cod = this.buscarPrecioCodigo(codigo);
-      if (cod) {
-        const i =
-          this.codigoPrecios?.indexOf(
-            this.codigoPrecios.find(
-              (c) => c.codigo == cod.codigo
-            )!
-          ) ?? -1;
-        if (i >= 0) {
-          this.deleteCodigoPrecio(cod, i);
-        }
-      }
-    }
-    this.codigoPrecios = this.cs.deepCopy(this.codigoPreciosOriginal);
-    this.isPrecioEditing = false;
-  }
   //#endregion
 
   //#region SortTable
@@ -841,7 +683,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     if (field && field.startsWith('precios_')) {
       const index = this.extractIndexFromField(field);
 
-      const sortedArray =[...this.codigoPrecios!].sort((a, b) => {
+      const sortedArray = [...this.codigoPrecios!].sort((a, b) => {
         const val1 = a.precios[index];
         const val2 = b.precios[index];
 
@@ -853,7 +695,6 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       });
 
       this.codigoPrecios = sortedArray;
-      //this.cdr.detectChanges();
     }
   }
 
@@ -864,11 +705,233 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
 
   //#region Search
   @ViewChild('dt2') table!: Table;
- 
+
   onGlobalFilter(event: Event) {
     const input = event.target as HTMLInputElement;
-    const value = input?.value ?? '';  // Usa `??` para proporcionar un valor predeterminado
+    const value = input?.value ?? '';
     this.table.filterGlobal(value, 'contains');
   }
   //#endregion
+
+  //#region NUEVO
+  dropdownOpen: boolean = false;
+  selectedCargas: number[] = [];
+  datosContenedores: ContainerDTO[] = [];
+  fechaDesde!: Date;
+  fechaDesdeStr!: string;
+  hoy: Date = new Date();
+  hoyStr: string = this.formatearFecha(this.hoy);
+  datosCarga: DatoCargaExpo[] = [];
+  datosCargaReporte: DatoCargaExpo[] = [];
+  datoCargaDto!:    CargaDTO;
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  toggleSelection(cargaId: number) {
+    const index = this.selectedCargas.indexOf(cargaId);
+    if (index > -1) {
+      this.selectedCargas.splice(index, 1);
+    } else {
+      this.selectedCargas.push(cargaId);
+    }
+  }
+
+  protected async hacerReporte(): Promise<void> {
+    this.datosCargaReporte = this.filtrarDatosPorContenedoresSeleccionados();
+
+    if (this.datosCargaReporte.length > 0) {
+      this.datosCargaReporte.forEach((d) => {
+        d.productiondate = this.formatearFecha(new Date(d.productiondate));
+      });
+
+      this.mostrarPrecios = true;
+      if (this.mostrarPrecios) {
+        await this.getCodigosConPrecio();
+       
+        this.datoCargaDto = this.setDatosCarga();
+        this.getDatosCarga.emit(this.datoCargaDto);
+
+        this.mostrarConfiguracionPesoBruto(this.datoCargaDto);
+      }
+    }
+  }
+
+  mostrarSeleccion: boolean = false;
+
+  protected async buscarDatos(): Promise<void> {
+    this.resetearDatos();
+    this.fechaDesde = this.ajustarFecha(new Date(this.fechaDesdeStr));
+    this.datosCarga = await lastValueFrom(
+      this.cargaService.getProductosCarga(this.fechaDesde)
+    );
+   
+    this.mostrarPrecios = this.datosCarga.length > 0;
+    
+    this.obtenerIdsCargaYNombresContenedores();
+  }
+
+  protected onCambioFecha(): void {}
+  private formatearFecha(fecha: Date): string {
+    let f = new Date(fecha);
+    return formatDate(f.setHours(f.getHours() + 3), 'yyyy-MM-dd', 'es-UY');
+  }
+
+  private resetearFechas(): void {
+    this.fechaDesde = new Date();
+    this.fechaDesdeStr = this.formatearFecha(this.fechaDesde);
+  }
+
+  private resetearDatos(): void {
+    this.datosCarga             = [];
+    this.datosCargaReporte      = [];
+    this.selectedCargas         = [];
+    this.mostrarSeleccion = false;
+  }
+
+  private ajustarFecha(fecha: Date): Date {
+    return new Date(fecha.setDate(fecha.getDate() + 1));
+  }
+
+  private obtenerIdsCargaYNombresContenedores(): void {
+    const idsCarga = Array.from(
+      new Set(this.datosCarga.map((d) => d.id_Carga))
+    ).sort((a, b) => a - b);
+    this.datosContenedores = idsCarga
+      .map((id) => ({
+        id_Carga: id,
+        container:
+          this.datosCarga.find((dc) => dc.id_Carga === id)?.container || '',
+      }))
+      .filter((c) => c.container)
+      .sort((a, b) => a.container.localeCompare(b.container));
+  }
+
+  private filtrarDatosPorContenedoresSeleccionados(): DatoCargaExpo[] {
+    return this.datosCarga.filter((d) =>
+      this.selectedCargas.includes(d.id_Carga)
+    );
+  }
+
+  private setDatosCarga(): CargaDTO {
+    const contenedores = this.datosContenedores
+      .filter(d => this.selectedCargas.includes(d.id_Carga))
+      .map(d => d.container)
+      .join(',');
+    
+    return { idCarga: this.selectedCargas, contenedores };
+  }
+  //#endregion
+
+
+  //#region PRECIOS NUEVO FORMATO
+  productos: string[] = [];
+  fechasUnicas: Date[] = [];
+  matrizPrecios: number[][] = [];
+  codigoFiltro: string = '';
+  filtroConPrecioCero: boolean = false;
+  productosFiltrados: string[] = [];
+  productoSeleccionado: string | null = null;
+  preciosSeleccionados: number[] = [];
+
+  private prepararData(): void {
+    const fechasUnicasSet = new Set<Date>();
+    const productosSet = new Set<string>();
+    
+    this.precios?.forEach(p => {
+      fechasUnicasSet.add(p.fecha_Produccion);
+      productosSet.add(p.codigo_Producto);
+    });
+
+    //* Obtener fechas únicas
+    this.fechasUnicas = Array.from(fechasUnicasSet).sort((a, b) => +a - +b);
+    
+    //* Obtener productos únicos
+    this.productos = Array.from(productosSet);
+
+    //* Inicializa la matriz de precios
+    this.matrizPrecios = Array.from({length: this.productos.length}, () => Array(this.fechasUnicas.length).fill(0));
+
+    //* Llenar la matriz de precios
+    this.precios?.forEach(p => {
+      const productoIndex = this.productos.indexOf(p.codigo_Producto);
+      const fechaIndex = this.fechasUnicas.indexOf(p.fecha_Produccion);
+      if(productoIndex !== -1 && fechaIndex != -1)
+        this.matrizPrecios[productoIndex][fechaIndex] = p.precio_Tonelada;
+    });
+
+    //* Inicializar productos filtrados
+    this.productosFiltrados = this.productos;
+  }
+
+  protected filtrarProductos() {
+    this.productosFiltrados = this.productos.filter((producto) => {
+      const precios = this.matrizPrecios[this.productos.indexOf(producto)];
+      const tienePrecioCero = precios.some(precio => precio === 0);
+      const cumpleFiltroCodigo = producto.includes(this.codigoFiltro);
+      const cumpleFiltroPrecioCero = this.filtroConPrecioCero ? tienePrecioCero : true;
+  
+      return cumpleFiltroCodigo && cumpleFiltroPrecioCero;
+    });
+  }
+
+  protected editarPrecio(producto: string): void {
+    const index = this.productos.indexOf(producto);
+    if(index !== -1) {
+      this.productoSeleccionado = producto;
+      this.preciosSeleccionados = this.matrizPrecios[index];
+    }
+  }
+
+  protected async onPreciosActualizados(event: { producto: string; preciosViejos: number[]; preciosNuevos: number[] }): Promise<void> {
+    const index = this.productos.indexOf(event.producto);
+  
+    if (index !== -1) {
+      this.matrizPrecios[index] = event.preciosNuevos;
+  
+      const editar: CodigoFechaPrecio[] = [];
+      const insertar: ConfPrecios[] = [];
+  
+      this.fechasUnicas.forEach((fecha, i) => {
+        const [precioViejo, precioNuevo] = [event.preciosViejos[i], event.preciosNuevos[i]];
+  
+        if (precioViejo === 0 && precioNuevo !== 0) {
+          insertar.push({
+            codigo_Producto: event.producto,
+            fecha_Produccion: fecha,
+            fecha_Registro: new Date(),
+            id_Moneda: this.getIdMonedaPorFecha(fecha),
+            id_Usuario: this.idUsuario,
+            precio_Tonelada: precioNuevo
+          });
+        } 
+        else if (precioViejo !== 0 && precioNuevo !== precioViejo) {
+          editar.push({
+            codigo: event.producto,
+            fechaProduccion: fecha,
+            precio: precioNuevo
+          });
+        }
+      });
+  
+      await Promise.all([
+        lastValueFrom(this.cargaService.updateCodigoPrecio(editar)),
+        lastValueFrom(this.cargaService.insertarListaPrecios(insertar))
+      ]);
+    }
+
+    this.cerrarEdicion();
+  }
+
+  private cerrarEdicion() {
+    this.productoSeleccionado = null;
+    this.preciosSeleccionados = [];
+  }
+
+  protected onCerrarEdicion(): void {
+    this.cerrarEdicion();
+  }
+  //#endregion
+  
 }

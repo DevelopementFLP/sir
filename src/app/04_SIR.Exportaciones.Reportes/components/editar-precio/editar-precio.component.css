@@ -1,0 +1,42 @@
+.precios--container {
+    width: 25%;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid gray;
+    box-shadow: 2px 2px gray;
+    border-radius: 4px;
+}
+
+.precio--producto {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.precios--id {
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.precios--fecha {
+    font-weight: 600;
+    color: #2e4053;
+}
+
+.precio--registro {
+    margin-bottom: 0.5rem;
+}
+
+.precio--buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+    border-top: solid 1px #aeb6bf;
+    padding-top: 0.5rem;
+}
+
+input[type="number"].precio--value {
+    text-align: center;
+    width: 150px;
+ }
+ 

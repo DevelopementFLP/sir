@@ -19,9 +19,10 @@ export class AjustePesoNetoService {
     pesosBrutos.forEach(pB => {
       const contenedor: string = pB.contenedor;
       const pesoBruto: number = pB.pesoBruto;
-
+      
       var datosAModificar: DatoCargaExpo[] = data.filter(d => d.container == contenedor);
       const pesoNeto: number = this.sumaPesoNetoContenedor(datosAModificar);
+      
       const pallets: number[] = this.numerosPallets(datosAModificar);
       const pesoPromedioCarton: number = this.obtenerPesoPromedioCarton(pesoBruto, pesoNeto, pallets.length, datosAModificar.length);
       
@@ -61,7 +62,6 @@ export class AjustePesoNetoService {
         res.push(d);
       });
     });
-  
     return res;
   }
 

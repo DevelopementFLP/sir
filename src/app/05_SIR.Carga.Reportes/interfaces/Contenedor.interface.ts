@@ -1,3 +1,4 @@
 export interface Contenedor {
-    idContenedor: string
+    idContenedor:   string
+    pesoBruto:      number;
 }

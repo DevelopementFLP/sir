@@ -1,0 +1,40 @@
+<div class="data__container">
+    <div class="data__title">
+        <div class="values--text">SIF</div>
+        <div class="values--text">Vessel name</div>
+        <div class="values--text">B/L No.</div>
+        <div class="values--text data">Container</div>
+        <div class="values--text">Invoice No.</div>
+        <div class="values--text">Loading date</div>
+        <div class="values--text">Pallet No.</div>
+        <div class="values--text">Product</div>
+        <div class="values--text">Mark</div>
+        <div class="values--text">S/C</div>
+        <div class="values--text">No. of cartons</div>
+        <div class="values--text">Net weight</div>
+        <div class="values--text">Prod date</div>
+        <div class="values--text">Expire date</div>
+        <div class="values--text data">LAS product code</div>
+        <div class="values--text">Price</div>
+        <div class="values--text">Shipping mark</div>
+    </div>
+    <div class="data__values" *ngFor="let reg of registrosPallet">
+        <div class="values--v"></div>
+        <div class="values--v"></div>
+        <div class="values--v"></div>
+        <div class="values--v data">{{reg.contenedor}}</div>
+        <div class="values--v"></div>
+        <div class="values--v"></div>
+        <div class="values--v">{{reg.idPallet}}</div>
+        <div class="values--v">{{reg.codigoKosher}}</div>
+        <div class="values--v">{{reg.markKosher}}</div>
+        <div class="values--v">{{reg.clasificacionKosher}}</div>
+        <div class="values--v">{{reg.cantidadCajas}}</div>
+        <div class="values--v">{{reg.pesoNeto | number:'1.2-2'}}</div>
+        <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+        <div class="values--v">{{reg.fechaProduccion | date:'dd/MM/yyyy'}}</div>
+        <div class="values--v data">{{reg.codigoProducto}}</div>
+        <div class="values--v">{{reg.precio | currency: 'USD':'symbol':'1.2-2':'en-US'}}</div>
+        <div class="values--v"></div>
+    </div>
+</div>

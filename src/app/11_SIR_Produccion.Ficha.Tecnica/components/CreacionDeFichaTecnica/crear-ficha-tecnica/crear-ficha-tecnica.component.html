@@ -5,10 +5,10 @@
         <div class="grid-container-encabezados">
             <div class="grid-encabezado-seccion-1">
                 <input [(ngModel)]="codigoProducto" placeholder="Ingrese el código del producto" />
-                <p-button (click)="AgregarCodigo()">Agregar</p-button>
+                <p-button (click)="AgregarCodigo()">Agregar Producto</p-button>
             </div>
 
-            <div class="grid-encabezado-seccion-2">
+            <div class="grid-encabezado-seccion-2" *ngIf="listaDeProductosParaCargar.length > 0">
                 <p-dropdown 
                     [(ngModel)]="seleccionDeAspectosGenerales" 
                     [options]="listaDeAspectosGeneralesPlantilla" 
@@ -17,9 +17,17 @@
                     (onChange)="DisparadorSelectAspectosGenerales($event.value.idPlantilla)">
                 </p-dropdown>
             </div>
+
+            <div class="grid-encabezado-seccion-3" *ngIf="seleccionDeAspectosGenerales">
+                <p-dropdown 
+                    [(ngModel)]="seleccionDeDestino" 
+                    [options]="listaDeDestinos" 
+                    optionLabel="nombre" 
+                    placeholder="Seleccione un Destino">
+                </p-dropdown>
+            </div>
             
-            <!-- *ngIf="seleccionDeAspectosGenerales" -->
-            <div class="grid-encabezado-seccion-3">
+            <div class="grid-encabezado-seccion-4" *ngIf="seleccionDeDestino">
                 <p-dropdown 
                     [(ngModel)]="seleccionDeEspecificaciones" 
                     [options]="listaDeEspecificacionesPlantilla" 
@@ -27,13 +35,11 @@
                     placeholder="Seleccione una especificación"
                     (onChange)="DisparadorSelectEspecificaciones($event.value.idPlantilla)">
                 </p-dropdown>
-            </div>
-            
+            </div>            
         </div>
     
     <!-- SECCION 1 -->
 
-    <!-- *ngIf="listaDeProductosParaCargar.length > 0" -->
         <div class="grid-container-seccion-1" >
             <div class="grid-items-seccion caj-1">
                 <img src="assets/images/logos/logo_ficha_tecnica_1.png">            
@@ -44,12 +50,18 @@
             </div>
 
             <div class="grid-items-seccion caj-3">
-                <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaLogo">
-                    <input type="file" (change)="mostrarImagenSeleccionada($event, 'logo')" accept="image/*">
-                    <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
+                <label class="boton-de-carga-de-imagen" *ngIf="!urlLogo">
+                    <input type="file" (change)="MostrarImagenSeleccionada($event, 1)" accept="image/*">
+                    <i class="pi pi-upload"></i>
                 </label>
-                <img class="boton-de-carga-de-imagen" *ngIf="imagenSeleccionadaAreaLogo" [src]="imagenSeleccionadaAreaLogo" alt="Imagen" />
+                <div *ngIf="urlLogo">
+                    <img class="boton-de-carga-de-imagen" [src]="urlLogo" alt="Imagen" style="max-width: 300px; max-height: 300px;" />
+                    <button (click)="BorrarImagen(1)" aria-label="Eliminar imagen" class="boton-borrar">
+                        <i class="pi pi-trash"></i> 
+                    </button>
+                </div>
             </div>
+            
 
             <div class="grid-items-seccion caj-4">
                 <p>RUTA 36 km 26.100  - CANELONES - URUGUAY</p>            
@@ -110,382 +122,380 @@
         </div>
 
         <!-- SECCION 3 -->
+        <div *ngIf="seleccionDeAspectosGenerales">
+            <div >
+                <div class="grid-container-seccion-3" >
+                    <div class="grid-items-seccion caj-1-sec-3">
+                        <h1>ASPECTOS GENERALES / GENERAL DATA</h1>
+                    </div> 
 
-        <div class="grid-container-seccion-3" *ngIf="seleccionDeAspectosGenerales">
-            <div class="grid-items-seccion caj-1-sec-3">
-                <h1>ASPECTOS GENERALES / GENERAL DATA</h1>
-            </div> 
+                    <div class="grid-items-seccion caj-2-sec-3">
+                        <p>Marca / Brand</p>
+                    </div>  
 
-            <div class="grid-items-seccion caj-2-sec-3">
-                <p>Marca / Brand</p>
-            </div>  
-
-            <div class="grid-items-seccion caj-8-sec-3">
-                <p> {{ marca }}</p>
-            </div>  
-
-
-            <div class="grid-items-seccion caj-3-sec-3">
-                <p>Destino / Destination</p>
-            </div> 
-
-            <div class="grid-items-seccion caj-9-sec-3">
-                <p> {{ destino }}</p>
-            </div>  
+                    <div class="grid-items-seccion caj-8-sec-3">
+                        <p> {{ marca }}</p>
+                    </div>  
 
 
-            <div class="grid-items-seccion caj-4-sec-3">
-                <p>Uso previsto / Expected use</p>
-            </div> 
+                    <div class="grid-items-seccion caj-3-sec-3">
+                        <p>Destino / Destination</p>
+                    </div> 
 
-            <div class="grid-items-seccion caj-10-sec-3">
-                <p> {{ tipoDeUso }}</p>
-            </div> 
-
-
-            <div class="grid-items-seccion caj-5-sec-3">
-                <p>Alérgenos / Allergens</p>
-            </div> 
-
-            <div class="grid-items-seccion caj-11-sec-3">
-                <p> {{ alergeno }}</p>
-            </div>  
+                    <div class="grid-items-seccion caj-9-sec-3">
+                        <p> {{ seleccionDeDestino?.nombre }}</p>
+                    </div>  
 
 
-            <div class="grid-items-seccion caj-6-sec-3">
-                <p>Condiciones de almacenamiento / Storage conditions</p>
-            </div> 
+                    <div class="grid-items-seccion caj-4-sec-3">
+                        <p>Uso previsto / Expected use</p>
+                    </div> 
 
-            <div class="grid-items-seccion caj-12-sec-3">
-                <p> {{ almacenamiento }}</p>
-            </div>  
+                    <div class="grid-items-seccion caj-10-sec-3">
+                        <p> {{ tipoDeUso }}</p>
+                    </div> 
 
 
-            <div class="grid-items-seccion caj-7-sec-3">
-                <p>Vida útil / Shelf life</p>
-            </div> 
-            
-            <div class="grid-items-seccion caj-13-sec-3">
-                <p> {{ vidaUtil }}</p>
-            </div>  
+                    <div class="grid-items-seccion caj-5-sec-3">
+                        <p>Alérgenos / Allergens</p>
+                    </div> 
+
+                    <div class="grid-items-seccion caj-11-sec-3">
+                        <p> {{ alergeno }}</p>
+                    </div>  
+
+
+                    <div class="grid-items-seccion caj-6-sec-3">
+                        <p>Condiciones de almacenamiento / Storage conditions</p>
+                    </div> 
+
+                    <div class="grid-items-seccion caj-12-sec-3">
+                        <p> {{ almacenamiento }}</p>
+                    </div>  
+
+
+                    <div class="grid-items-seccion caj-7-sec-3">
+                        <p>Vida útil / Shelf life</p>
+                    </div> 
+                    
+                    <div class="grid-items-seccion caj-13-sec-3">
+                        <p> {{ vidaUtil }}</p>
+                    </div>  
+                </div>
+            </div>
+
+             <!-- SECCION 4 -->
+
+            <div class="grid-container-seccion-4" >
+                <div class="grid-items-seccion caj-1-sec-4">
+                    <h1>CORTE / CUT</h1>
+                </div>
+            </div>
+
+            <div class="grid-container-imagenes-sec-4" >
+
+                <div class="grid-item-imagenes-sec-4">
+                    <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaCorte">
+                        <input type="file" (change)="MostrarImagenSeleccionada($event, 2)" accept="image/*">
+                        <i class="pi pi-upload"></i>
+                    </label>
+                    <div *ngIf="urlImagenCorte" class="imagen-con-boton">
+                        <img [src]="urlImagenCorte" alt="Imagen" />
+                        <button (click)="BorrarImagen(2)" aria-label="Eliminar imagen" class="boton-borrar">
+                            <i class="pi pi-trash"></i>
+                        </button>
+                    </div>
+                </div>        
+            </div>
+
+            <!-- SECCION 5 -->
+
+            <div class="grid-container-seccion-5" >
+                <div class="grid-items-seccion caj-1-sec-5">
+                    <h1>ENVASE / PACKING</h1>
+                </div>
+                <div class="grid-items-seccion caj-2-sec-5">
+                    <p>Envase primario con etiqueta interna / Primary packing with internal label</p>
+                </div>
+            </div>
+
+            <div class="grid-container-imagenes-sec-5" >
+
+                <div class="grid-item-imagenes-sec-5">
+                    <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaEnvase">
+                        <input type="file" (change)="MostrarImagenSeleccionada($event, 3)" accept="image/*">
+                        <i class="pi pi-upload"></i>
+                    </label>
+                    <div *ngIf="urlImagenEnvase" class="imagen-con-boton">
+                        <img [src]="urlImagenEnvase" alt="Imagen" />
+                        <button (click)="BorrarImagen(3)" aria-label="Eliminar imagen" class="boton-borrar">
+                            <i class="pi pi-trash"></i>
+                        </button>
+                    </div>
+                </div>        
+            </div>
+
+            <!-- SECCION 6 -->
+         
+            <div class="grid-container-seccion-6" >
+                <div class="grid-items-seccion caj-1-sec-6">
+                    <p>Tipo / Type</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-2-sec-6">
+                    <p> {{ tipoDeEnvase }}</p>
+                </div>
+
+                <div class="grid-items-seccion caj-3-sec-6">
+                    <p>Presentación / Presentation</p>
+                </div>
+
+                <div class="grid-items-seccion caj-4-sec-6">
+                    <p> {{ presentacionDeEnvase }} </p>
+                </div>
+            </div>
+
+             <!-- SECCION 7 -->
+
+            <div class="grid-container-seccion-7" >
+                <div class="grid-items-seccion caj-1-sec-7">
+                    <h1>ENVASE SECUNDARIO / SECUNDARY PACKING</h1>
+                </div>
+                
+                <div class="grid-items-seccion caj-2-sec-7">
+                    <p>Peso Promedio / Avg. Weight</p>
+                </div>
+
+                <div class="grid-items-seccion caj-5-sec-7">
+                    <p> {{ pesoPromedio }}</p>
+                </div>
+
+
+                <div class="grid-items-seccion caj-3-sec-7" >
+                    <p>Unidades por caja / Pieces in the box</p>
+                </div>
+
+                <div class="grid-items-seccion caj-6-sec-7">
+                    <p> {{ unidadesPorCaja }}</p>
+                </div>
+
+
+                <div class="grid-items-seccion caj-4-sec-7">
+                    <p>Dimensiones / Dimensions (cm)</p>
+                </div>
+
+                <div class="grid-items-seccion caj-7-sec-7">
+                    <p> {{ dimensiones }}</p>
+                </div>      
+
+                <div class="grid-item-imagen-1-sec-7">
+                    <label class="boton-de-carga-de-imagen" *ngIf="!urlImagenEnvaseSecundario">
+                        <input type="file" (change)="MostrarImagenSeleccionada($event, 4)" accept="image/*">
+                        <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
+                    </label>
+                    <div *ngIf="urlImagenEnvaseSecundario" class="imagen-con-boton">
+                        <img [src]="urlImagenEnvaseSecundario" alt="Imagen" />
+                        <button (click)="BorrarImagen(4)" aria-label="Eliminar imagen" class="boton-borrar">
+                            <i class="pi pi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid-item-imagen-4-sec-7">
+                    <label class="boton-de-carga-de-imagen" *ngIf="!urlImagenEnvaseSecundario2">
+                        <input type="file" (change)="MostrarImagenSeleccionada($event, 5)" accept="image/*">
+                        <i class="pi pi-upload"></i>
+                    </label>
+                    <div *ngIf="urlImagenEnvaseSecundario2" class="imagen-con-boton">
+                        <img [src]="urlImagenEnvaseSecundario2" alt="Imagen" />
+                        <button (click)="BorrarImagen(5)" aria-label="Eliminar imagen" class="boton-borrar">
+                            <i class="pi pi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                
+                <div class="grid-items-seccion caj-8-sec-7">
+                    <p>Idioma / Language</p>
+                </div>
+
+                <div class="grid-items-seccion caj-9-sec-7">
+                    <input type="text" [(ngModel)]="idioma" placeholder="Introduzca Los idiomas"/>
+                </div>
+                
+            </div>
         </div>
+        
+        
 
-        <!-- SECCION 4 -->
+        <div *ngIf="seleccionDeEspecificaciones">
 
-        <!-- *ngIf="seleccionDeAspectosGenerales" -->
-        <div class="grid-container-seccion-4" >
-            <div class="grid-items-seccion caj-1-sec-4">
-                <h1>CORTE / CUT</h1>
-            </div>
-        </div>
-
-        <!-- *ngIf="seleccionDeAspectosGenerales" -->
-        <div class="grid-container-imagenes-sec-4" >
-            <div class="grid-item-imagenes-sec-4">
-                <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaCorte">
-                    <input type="file" (change)="mostrarImagenSeleccionada($event, 'seccion-4')" accept="image/*">
-                    <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
-                </label>
-                <img class="boton-de-carga-de-imagen" *ngIf="imagenSeleccionadaAreaCorte" [src]="imagenSeleccionadaAreaCorte" alt="Imagen" />
-                <!-- <img src= "assets/images/FichaTecnica/foto_sec_1.png" /> -->
-            </div>
-            <!-- <div class="grid-item-imagenes-sec-4">
-                <img src= "assets/images/FichaTecnica/foto_sec_2.png" />
-            </div>
-            <div class="grid-item-imagenes-sec-4">
-                <img src= "assets/images/FichaTecnica/foto_sec_3.png" />
-            </div>   -->
-        </div>
-
-        <!-- SECCION 5 -->
-
-        <!-- *ngIf="seleccionDeAspectosGenerales" -->
-        <div class="grid-container-seccion-5" >
-            <div class="grid-items-seccion caj-1-sec-5">
-                <h1>ENVASE / PACKING</h1>
-            </div>
-            <div class="grid-items-seccion caj-2-sec-5">
-                <p>Envase primario con etiqueta interna / Primary packing with internal label</p>
-            </div>
-        </div>
-
-        <!-- *ngIf="seleccionDeAspectosGenerales" -->
-        <div class="grid-container-imagenes-sec-5" >
-            <div class="grid-item-imagenes-sec-5">
-                <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaEnvase">
-                    <input type="file" (change)="mostrarImagenSeleccionada($event, 'seccion-5')" accept="image/*">
-                    <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
-                </label>
-                <img class="boton-de-carga-de-imagen" *ngIf="imagenSeleccionadaAreaEnvase" [src]="imagenSeleccionadaAreaEnvase" alt="Imagen" />
-                <!-- <img src= "assets/images/FichaTecnica/foto1.png" /> -->
-            </div>
-            <!-- <div class="grid-item-imagenes-sec-5">
-                <img src= "assets/images/FichaTecnica/foto2.png" />
-            </div>
-            <div class="grid-item-imagenes-sec-5">
-                <img src= "assets/images/FichaTecnica/foto3.png" />
-            </div>   -->
-        </div>
-
-
-        <!-- SECCION 6 -->
-
-        <div class="grid-container-seccion-6" *ngIf="seleccionDeAspectosGenerales">
-            <div class="grid-items-seccion caj-1-sec-6">
-                <p>Tipo / Type</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-2-sec-6">
-                <p> {{ tipoDeEnvase }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-3-sec-6">
-                <p>Presentación / Presentation</p>
-            </div>
-
-            <div class="grid-items-seccion caj-4-sec-6">
-                <p> {{ presentacionDeEnvase }} </p>
-            </div>
-        </div>
-
-        <!-- SECCION 7 -->
-        <!-- *ngIf="seleccionDeAspectosGenerales" -->
-        <div class="grid-container-seccion-7" >
-            <div class="grid-items-seccion caj-1-sec-7">
-                <p>Envase secundario / Secondary packing</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-2-sec-7">
-                <p>Peso Promedio / Avg. Weight</p>
-            </div>
-
-            <div class="grid-items-seccion caj-5-sec-7">
-                <p> {{ pesoPromedio }}</p>
-            </div>
-
-
-            <div class="grid-items-seccion caj-3-sec-7" >
-                <p>Unidades por caja / Pieces in the box</p>
-            </div>
-
-            <div class="grid-items-seccion caj-6-sec-7">
-                <p> {{ unidadesPorCaja }}</p>
-            </div>
-
-
-            <div class="grid-items-seccion caj-4-sec-7">
-                <p>Dimensiones / Dimensions (cm)</p>
-            </div>
-
-            <div class="grid-items-seccion caj-7-sec-7">
-                <p> {{ dimensiones }}</p>
-            </div>      
-
-            <div class="grid-item-imagen-1-sec-7">
-                <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaEnvaseSecundario">
-                    <input type="file" (change)="mostrarImagenSeleccionada($event, 'seccion-7')" accept="image/*">
-                    <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
-                </label>
-                <img class="boton-de-carga-de-imagen" *ngIf="imagenSeleccionadaAreaEnvaseSecundario" [src]="imagenSeleccionadaAreaEnvaseSecundario" alt="Imagen" />
-                <!-- <img src= "assets/images/FichaTecnica/foto_sec_2_1.png" /> -->
-            </div>
-
-            <!-- <div class="grid-item-imagen-2-sec-7">
-                <img src= "assets/images/FichaTecnica/foto_sec_2_2.png" />
-            </div>
-
-            <div class="grid-item-imagen-3-sec-7">
-                <img src= "assets/images/FichaTecnica/foto_sec_2_3.png" />
-            </div>   -->
-
-            <div class="grid-item-imagen-4-sec-7">
-                <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaEnvaseSecundario2">
-                    <input type="file" (change)="mostrarImagenSeleccionada($event, 'seccion-7-segunda-imagen')" accept="image/*">
-                    <i class="pi pi-upload"></i> <!-- Icono de PrimeNG (puedes usar uno diferente) -->
-                </label>
-                <img class="boton-de-carga-de-imagen" *ngIf="imagenSeleccionadaAreaEnvaseSecundario2" [src]="imagenSeleccionadaAreaEnvaseSecundario2" alt="Imagen" />
-                <!-- <img src= "assets/images/FichaTecnica/foto_sec_2_4.png" /> -->
-            </div>  
-            
-            <div class="grid-items-seccion caj-8-sec-7">
-                <p>Idioma / Language</p>
-            </div>
-
-            <div class="grid-items-seccion caj-9-sec-7">
-                <p>Datos Pendientes 4</p>
-            </div>
-            
-        </div>
-
-        <!-- SECCION 8 -->
-
-        <div class="grid-container-seccion-8" *ngIf="seleccionDeEspecificaciones">
-            <div class="grid-items-seccion caj-1-sec-8">
-                <p>ESPECIFICACIONES / SPECIFICATION</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-2-sec-8">
-                <p>Especificaciones de corte - Cut specifications</p>
-            </div>
-
-            <div class="grid-items-seccion caj-3-sec-8">
-                <p>Parámetros microbiológicos - Microbiological parameters</p>
-            </div>
-
-            <div class="grid-items-seccion caj-4-sec-8">
-                <p>Grasa visible/Visible fat</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-1-sec-8">
-                <p> {{ grasaVisible }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-5-sec-8">
-                <p>Espesor cobertura/coverage thickness</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-2-sec-8">
-                <p> {{ espesorCobertura }}</p>
-            </div>
-            
-
-            <div class="grid-items-seccion caj-6-sec-8">
-                <p>Ganglios/Node</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-3-sec-8">
-                <p> {{ ganglios }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-7-sec-8">
-                <p>Hematomas</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-4-sec-8">
-                <p>{{ hematomas}}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-8-sec-8">
-                <p>Huesos y cartilagos/Bones and cartilage</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-5-sec-8">
-                <p>{{huesosCartilagos}}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-9-sec-8">
-                <p>Elementos extraños/Foreig element</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-6-sec-8">
-                <p> {{ elementosExtranos }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-10-sec-8">
-                <p>Color/Color</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-datos-7-sec-8">
-                <p>{{ color }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-11-sec-8">
-                <p>Olor/odor</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-8-sec-8">
-                <p>{{ olor }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-12-sec-8">
-                <p>pH</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-9-sec-8">
-                <p>{{ ph }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-13-sec-8">
-                <p>Aerobios mesófilos totales (ufc/g)/ Mesophilic Total (cfu/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-10-sec-8">
-                <p>{{ aerobiosMesofilosTotales }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-14-sec-8" *ngIf="enterobacterias !== 'no aplica'">
-                <p>Enterobacterias (ufc/g)/ Enterobacterias (cfu/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-11-sec-8" *ngIf="enterobacterias !== 'no aplica'">
-                <p>{{ enterobacterias }}</p>
-            </div>
-
-            <div class="grid-items-seccion caj-15-sec-8" *ngIf="stec0157 !== 'no aplica'">
-                <p>STEC O157:H7 (en/in 375g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-12-sec-8" *ngIf="stec0157 !== 'no aplica'">
-                <p>{{ stec0157 }}</p>
-            </div>
-            
-            
-            <div class="grid-items-seccion caj-16-sec-8" *ngIf="stecNo0157 !== 'no aplica'">
-                <p>STEC no O157:H7 (en/in 375g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-13-sec-8" *ngIf="stecNo0157 !== 'no aplica'">
-                <p>{{ stecNo0157 }}</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-17-sec-8" *ngIf="salmonella !== 'no aplica'">
-                <p>Salmonella (en/in 25g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-14-sec-8" *ngIf="salmonella !== 'no aplica'">
-                <p>{{ salmonella }}</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-18-sec-8" *ngIf="estafilococos !== 'no aplica'">
-                <p>Estafilococos (ufc/g)/Staphylococcus(cfu/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-15-sec-8" *ngIf="estafilococos !== 'no aplica'">
-                <p>{{ estafilococos }}</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-19-sec-8" *ngIf="coliformesTotales !== 'no aplica'">
-                <p>Coliformes totales (UFC/g)/Total coliforms (CFU/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-16-sec-8" *ngIf="coliformesTotales !== 'no aplica'">
-                <p>{{ coliformesTotales }}</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-20-sec-8" *ngIf="pseudomonas !== 'no aplica'">
-                <p>Pseudomonas (UFC/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-17-sec-8" *ngIf="pseudomonas !== 'no aplica'">
-                <p>{{ pseudomonas }}</p>
-            </div>
-            
-            <div class="grid-items-seccion caj-21-sec-8" *ngIf="escherichiaColi !== 'no aplica'">
-                <p>Escherichia Coli (UFC/g)</p>
-            </div>
-            <div class="grid-items-seccion caj-datos-18-sec-8" *ngIf="escherichiaColi !== 'no aplica'">
-                <p>{{ escherichiaColi }}</p>
+            <!-- SECCION 8 -->
+            <div class="grid-container-seccion-8">
+                <div class="grid-items-seccion caj-1-sec-8">
+                    <p>ESPECIFICACIONES / SPECIFICATION</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-2-sec-8">
+                    <p>Especificaciones de corte - Cut specifications</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-3-sec-8">
+                    <p>Parámetros microbiológicos - Microbiological parameters</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-4-sec-8">
+                    <p>Grasa visible/Visible fat</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-1-sec-8">
+                    <p> {{ grasaVisible }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-5-sec-8">
+                    <p>Espesor cobertura/coverage thickness</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-2-sec-8">
+                    <p> {{ espesorCobertura }}</p>
+                </div>
+                
+    
+                <div class="grid-items-seccion caj-6-sec-8">
+                    <p>Ganglios/Node</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-3-sec-8">
+                    <p> {{ ganglios }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-7-sec-8">
+                    <p>Hematomas</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-4-sec-8">
+                    <p>{{ hematomas}}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-8-sec-8">
+                    <p>Huesos y cartilagos/Bones and cartilage</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-5-sec-8">
+                    <p>{{huesosCartilagos}}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-9-sec-8">
+                    <p>Elementos extraños/Foreig element</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-6-sec-8">
+                    <p> {{ elementosExtranos }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-10-sec-8">
+                    <p>Color/Color</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-datos-7-sec-8">
+                    <p>{{ color }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-11-sec-8">
+                    <p>Olor/odor</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-8-sec-8">
+                    <p>{{ olor }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-12-sec-8">
+                    <p>pH</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-9-sec-8">
+                    <p>{{ ph }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-13-sec-8">
+                    <p>Aerobios mesófilos totales (ufc/g)/ Mesophilic Total (cfu/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-10-sec-8">
+                    <p>{{ aerobiosMesofilosTotales }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-14-sec-8" *ngIf="enterobacterias !== 'NO APLICA'">
+                    <p>Enterobacterias (ufc/g)/ Enterobacterias (cfu/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-11-sec-8" *ngIf="enterobacterias !== 'NO APLICA'">
+                    <p>{{ enterobacterias }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-15-sec-8" *ngIf="stec0157 !== 'NO APLICA'">
+                    <p>STEC O157:H7 (en/in 375g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-12-sec-8" *ngIf="stec0157 !== 'NO APLICA'">
+                    <p>{{ stec0157 }}</p>
+                </div>
+    
+                <div class="grid-items-seccion caj-16-sec-8" *ngIf="stecNo0157 !== 'NO APLICA'">
+                    <p>STEC no O157:H7 (en/in 375g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-13-sec-8" *ngIf="stecNo0157 !== 'NO APLICA'">
+                    <p>{{ stecNo0157 }}</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-17-sec-8" *ngIf="salmonella !== 'NO APLICA'">
+                    <p>Salmonella (en/in 25g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-14-sec-8" *ngIf="salmonella !== 'NO APLICA'">
+                    <p>{{ salmonella }}</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-18-sec-8" *ngIf="estafilococos !== 'NO APLICA'">
+                    <p>Estafilococos (ufc/g)/Staphylococcus(cfu/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-15-sec-8" *ngIf="estafilococos !== 'NO APLICA'">
+                    <p>{{ estafilococos }}</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-19-sec-8" *ngIf="coliformesTotales !== 'NO APLICA'">
+                    <p>Coliformes totales (UFC/g)/Total coliforms (CFU/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-16-sec-8" *ngIf="coliformesTotales !== 'NO APLICA'">
+                    <p>{{ coliformesTotales }}</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-20-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
+                    <p>Pseudomonas (UFC/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-17-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
+                    <p>{{ pseudomonas }}</p>
+                </div>
+                
+                <div class="grid-items-seccion caj-21-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
+                    <p>Escherichia Coli (UFC/g)</p>
+                </div>
+                <div class="grid-items-seccion caj-datos-18-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
+                    <p>{{ escherichiaColi }}</p>
+                </div>
             </div>
 
         </div>
         
-
-
         <!-- SECCION 9 -->
-        <div class="grid-container-seccion-9" *ngIf="seleccionDeAspectosGenerales">
+        <div class="grid-container-seccion-9">
             <div class="grid-items-seccion caj-1-sec-9">
                 <p>Observaciones / Observations</p>
             </div>
             <div class="grid-items-seccion caj-5-sec-9">
-                <p> {{ observacionDelProducto }} </p>
+                <input type="text" [(ngModel)]="observacionDelProducto" class="observacion-input" />
             </div>
             
             <div class="grid-items-seccion caj-2-sec-9">
                 <p>Elaborado por :</p>
             </div>
             <div class="grid-items-seccion caj-6-sec-9">
-                <p>Datos pendientes 2 </p>
+                <input type="text" [(ngModel)]="elaboradoPor" style="width: 180px;" />
             </div>
 
             <div class="grid-items-seccion caj-3-sec-9">
                 <p>Aprobado por :</p>
             </div>
             <div class="grid-items-seccion caj-7-sec-9">
-                <p>Datos pendientes 3 </p>
+                <input type="text" [(ngModel)]="aprobadoPor" />
             </div>
 
             <div class="grid-items-seccion caj-4-sec-9">
@@ -495,6 +505,10 @@
                 <p> {{ fechaDelDia }} </p>
             </div>
 
+        </div>
+
+        <div class="grid-container-seccion-10" style="margin-top: 1rem;">            
+            <p-button (click)="CrearFichaTecnica()">Crear Ficha Tecnica</p-button>
         </div>
     </div>
   

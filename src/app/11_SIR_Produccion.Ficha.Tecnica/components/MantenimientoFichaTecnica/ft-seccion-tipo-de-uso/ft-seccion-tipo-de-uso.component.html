@@ -24,8 +24,8 @@
                     <input *ngIf="tipoDeUsoSeleccionado?.idTipoDeUso === element.idTipoDeUso" [(ngModel)]="tipoDeUsoSeleccionado!.nombre" />
                     <span *ngIf="tipoDeUsoSeleccionado?.idTipoDeUso !== element.idTipoDeUso">{{element.nombre}}</span>
                 </td>
-                <td>
-                    <input *ngIf="tipoDeUsoSeleccionado?.idTipoDeUso === element.idTipoDeUso" [(ngModel)]="tipoDeUsoSeleccionado!.descripcion" />
+                <td class="descripcion">
+                    <textarea *ngIf="tipoDeUsoSeleccionado?.idTipoDeUso === element.idTipoDeUso" [(ngModel)]="tipoDeUsoSeleccionado!.descripcion"></textarea>
                     <span *ngIf="tipoDeUsoSeleccionado?.idTipoDeUso !== element.idTipoDeUso">{{element.descripcion}}</span>
                 </td>
                 <td>

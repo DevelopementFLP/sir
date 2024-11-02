@@ -13,7 +13,7 @@ export interface DWCajaCarga {
     codigoKosher?: string;
     pesoNeto?: number;
     pesoBruto?: number;
-    fechaCorrida?: Date;
+    fechaCorrida?: string;
     fechaVencimiento_1?: Date;
     fechaVencimiento_2?: Date;
     especie?: string;
