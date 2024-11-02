@@ -1,0 +1,18 @@
+.fechas__container {
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px gray;
+    display: flex;
+    gap: 1%;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.rendimientos__display {
+    display: flex;
+    flex-direction: row;
+    max-width: 1800px;
+    overflow-x: scroll;
+}

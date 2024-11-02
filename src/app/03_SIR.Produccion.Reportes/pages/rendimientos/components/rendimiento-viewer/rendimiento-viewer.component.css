@@ -1,0 +1,72 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.entrada__titulo,
+.entrada__data,
+.entrada__total,
+.cortes__titulo,
+.cortes__data,
+.cortes__total {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.8rem;
+}
+
+.entrada__titulo,
+.cortes__titulo {
+    font-weight: 700;
+}
+
+.entrada__data,
+.cortes__data {
+    line-height: 0.5;
+}
+
+.rendimientos__display {
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}
+
+.display--ind {
+    width: 650px;
+    min-width: 650px;
+}
+
+.display--entrada,
+.display--cortes {
+    width: 100%;
+    max-width: 100%;
+}
+
+.titulo--value,
+.data--value,
+.total--value {
+    flex: 1;
+}
+
+.titulo--value.tipo-cuarto,
+.data--value.tipo-cuarto,
+.total--value.tipo-cuarto {
+    flex: 3;
+}
+
+.value-value,
+.v-cte {
+    text-align: right;
+}
+
+.v-total {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #1f618d;
+}
+
+.v-producto {
+    flex: 4;
+}
+
+.v-uni {
+    text-align: left;
+}

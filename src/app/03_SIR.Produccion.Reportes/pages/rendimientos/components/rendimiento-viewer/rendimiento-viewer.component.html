@@ -1,0 +1,59 @@
+<div class="rendimientos__display">
+<div *ngFor="let rend of rendimientos" class="display--ind">
+    <div><b>Fecha:</b> {{rend.fecha | date:'dd-MM-yyyy'}}</div>
+    <hr>
+    <div class="display--entrada">
+        <div>
+            <p><b>ENTRADA</b></p>
+            <div class="entrada__titulo">
+                <p class="titulo--value">Código</p>
+                <p class="titulo--value tipo-cuarto">Tipo cuarto</p>
+                <p class="titulo--value value-value">Cuartos</p>
+                <p class="titulo--value value-value">Peso</p>
+            </div>
+        </div>
+        <div *ngFor="let ent of rend.entrada" class="entrada__data">
+            <p class="data--value">{{ent.code}}</p>
+            <p class="data--value tipo-cuarto">{{ent.tipoCuarto}}</p>
+            <p class="data--value value-value">{{ent.cuartos | number:'0.0'}}</p>
+            <p class="data--value value-value">{{ent.peso | number:'0.2-2'}}</p>
+        </div>
+        <div class="entrada__total">
+            <p class="total--value tipo-cuarto"><b>TOTAL</b></p>
+            <p class="total--value"></p>
+            <p class="total--value value-value v-total">{{rend.totalCuartos | number:'0.0'}}</p>
+            <p class="total--value value-value v-total">{{rend.pesoCuartos | number:'0.2-2'}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="display--cortes">
+        <p><b>CORTES</b></p>
+        <div class="cortes__titulo">
+            <p class="titulo--value">Código</p>
+            <p class="titulo--value v-producto">Producto</p>
+            <p class="titulo--value v-cte v-uni">Unidades</p>
+            <p class="titulo--value v-cte">Peso</p>
+            <p class="titulo--value v-cte">Prom.</p>
+            <p class="titulo--value v-cte">% Rend</p>
+        </div>
+        <div *ngFor="let ct of rend.cortes" class="cortes__data">
+            <p class="data--value">{{ct.codigo}}</p>
+            <p class="data--value v-producto">{{ct.producto}}</p>
+            <p class="data--value v-cte v-uni">{{ct.piezas | number:'0.0'}}</p>
+            <p class="data--value v-cte">{{ct.peso | number:'0.2-2'}}</p>
+            <p class="data--value v-cte">{{ct.peso / ct.piezas | number:'0.2-2'}}</p>
+            <p class="data--value v-cte">{{ (rend.pesoCuartos > 0 ? (ct.peso / rend.pesoCuartos) : 0) | percent:'0.2-2' }}
+            </p>
+
+        </div>
+        <div class="cortes__total">
+            <p class="total--value v-producto"><b>TOTAL</b></p>
+            <p class="total--value"></p>
+            <p class="total--value v-cte v-total v-uni">{{rend.totalCortes | number:'0.0'}}</p>
+            <p class="total--value v-cte v-total">{{rend.pesoCortes | number:'0.2-2'}}</p>
+            <p class="total--value v-cte"></p>
+            <p class="total--value v-cte v-total">{{ (rend.pesoCuartos > 0 ? (rend.pesoCortes / rend.pesoCuartos) : 0) | percent:'0.2-2' }}</p>
+        </div>
+    </div>
+</div>
+</div>

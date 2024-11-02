@@ -1,0 +1,48 @@
+<p-tabView>
+    <p-tabPanel header="Rendimientos">
+        <div class="fechas__container">
+            <div>
+                <label for="fechaDesde">Desde:</label>
+                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+            </div>
+            <div>
+                <label for="fechaHasta">Hasta:</label>
+                <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+            </div>
+            <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
+        </div>
+        <p-tabView *ngIf="dataCortes.length > 0">
+            <p-tabPanel *ngFor="let id of idsRendimientos; let i = index" [header]="nombresRends[i]" class="rendimientos__display">
+                <rendimiento-viewer [data]="data[i]" [fechas]="fechasReporte" />
+            </p-tabPanel>
+            <p-tabPanel header="COMPARATIVO">
+                <comparativo-viewer
+                    [data]="dataCortes"  
+                    [qamarksDto]="qamarks" 
+                    [fechas]="fechasReporte"
+                    (emitirTiposRendimientos)="recibirTiposRendimientos($event)"
+                    (emitirRendimientosAgrupados)="recibirRendimientosAgrupados($event)"
+                    (emitirNombreTipos)="recibirNombresRendimientos($event)"
+                />
+            </p-tabPanel>
+        </p-tabView>
+    </p-tabPanel>
+</p-tabView>
+
+<sir-exportacion 
+    *ngIf="dataCortes.length > 0"
+    [excel]="true"
+    [nombreArchivo]="nombreReporte"
+    [idReporte]="idReporte"
+    [dataPrint]="{
+        rendimientos: data,
+        comparativo: dataCortes,
+        fechas: fechasReporte,
+        nombresRend: nombresRends,
+        idsRend: idsRendimientos,
+        qamarks: qamarks,
+        tiposSeleccionados: tiposRendimientosSeleccionados,
+        dataAgrupada:  rendimientosAgrupados,
+        nombresComparativos: nombresRendimientosComparativos
+    }"
+/>
