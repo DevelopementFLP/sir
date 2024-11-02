@@ -20,18 +20,22 @@ export class FtProductoService {
     return this.http.get<ApiResponse>(`${urlGetProductoFiltradoFichaTecnica}`, { params });
   }
 
+
   public CrearProducto(modelo: FtProductoDTO): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${urlCrearProductosFichaTecnica}`, modelo);
   }
 
+
   public EditarProducto(modelo: FtProductoDTO): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(`${urlEditarProductosFichaTecnica}`, modelo);
   }
+
 
   public EliminarProducto(codigoProducto: string): Observable<ApiResponse> {
     let params = new HttpParams()
     .set('codigoProducto', codigoProducto)
     return this.http.delete<ApiResponse>(`${urlEliminarProductosFichaTecnica}`, { params });
   }
+
 
 }

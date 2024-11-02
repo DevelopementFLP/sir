@@ -1,5 +1,10 @@
 export interface FtProductoDTO {
     idProducto: number;
+
+    codigoProducto: string;
+    nombre: string;
+    nombreDeProductoParaFicha: string;
+    calibre: string;
     nombre: string;
     descripcion: string;
     codigo: string;
@@ -16,4 +21,5 @@ export interface FtProductoDTO {
     idAlimentacion: number;
     idTipoDeEnvase: number;
     idPresentacionDeEnvase: number;
+
 }
