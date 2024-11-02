@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetVistaDeLecturasAbasto, urlGetLecturaFiltrada, urlDeleteLecturaDeAbasto } from 'src/settings';
+import { urlInsertarLecturaDeAbasto, urlGetListaDeLecturas, urlGetLecturaFiltrada, urlDeleteLecturaDeAbasto, urlGetStockDeAbasto } from 'src/settings';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 
 @Injectable({
@@ -39,7 +39,7 @@ export class AbastoService {
   }
 
   public GetListarStockAbasto():Observable<ApiResponse>{
-    return this.http.get<ApiResponse>(`${urlGetVistaDeLecturasAbasto}`)
+    return this.http.get<ApiResponse>(`${urlGetStockDeAbasto}`)
   }
 
   public DeleteLecturaDeAbasto(idAnimal: string): Observable<ApiResponse> {

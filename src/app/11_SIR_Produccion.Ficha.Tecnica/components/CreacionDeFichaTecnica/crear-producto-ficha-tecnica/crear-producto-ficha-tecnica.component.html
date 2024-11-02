@@ -1,244 +1,69 @@
 <div class="contenedor-de-pagina">
-
-   
-
     <div class="seccion-titulo">
-        <h1>Crear Producto Para Ficha Técnica</h1>
+      <h1>Crear Producto Para Ficha Técnica</h1>
     </div>
-
+  
     <div class="seccion-formulario">
-
-        <div class="p-field" *ngIf="mostrarBuscadorDeCodigos; else mostrarBuscador">
-            <label for="prod_buscar">Buscar Producto</label>
-            <input 
-                id="prod_buscar" 
-                type="text" 
-                [(ngModel)]="productoBuscado" 
-                name="productoBuscado" 
-                placeholder="Ingrese el ID del producto">
-            <button pButton type="button" label="Buscar" (click)="BuscarProducto()"></button>
+      <div class="p-field">
+        <label for="prod_buscar">Buscar Producto</label>
+        <input 
+            id="prod_buscar" 
+            type="text" 
+            [(ngModel)]="productoBuscado" 
+            name="productoBuscado" 
+            placeholder="Ingrese el ID del producto">
+        <button pButton type="button" label="Buscar" (click)="BuscarProducto()"></button>
+      </div>
+  
+      <form #productoForm="ngForm" *ngIf="productoEncontrado">
+        <div class="p-field">
+          <label for="prod_codigo">Código de Producto</label>
+          <input 
+              id="prod_codigo" 
+              type="text" 
+              [(ngModel)]="codigoProducto" 
+              name="codigoProducto" 
+              required 
+              [disabled]="true"> 
         </div>
-        
-        <ng-template #mostrarBuscador>
-            <button pButton type="button" label="Volver" (click)="MostrarBuscador()"></button>
-        </ng-template>
-
-        <form (ngSubmit)="EnviarFormulario()" #productoForm="ngForm" *ngIf="productoEncontrado || mostrarFormularioDeCreacion">
-                        
-            <div class="p-field" *ngIf="mostrarFormularioDeCreacion">
-                <h2>Crear Nuevo Producto</h2>
-
-                <label for="codigo_producto">Código del Producto</label>
-                <input 
-                    id="codigo_producto" 
-                    type="text" 
-                    [(ngModel)]="codigoProducto" 
-                    name="codigoProducto" 
-                    placeholder="Ingrese el código del producto" 
-                    required
-                    >
-                    <button pButton type="button" label="Agregar" (click)="AgregarCodigo()"></button>
-            </div>
-
-            <div *ngIf="listaDeProductosAIngresar.length > 0">
-                <h3>Códigos Agregados:</h3>
-                <ul>
-                    <li *ngFor="let codigo of listaDeProductosAIngresar">{{ codigo }}</li>
-                </ul>
-            </div>
-
-            <div class="p-field" *ngIf="!mostrarFormularioDeCreacion">
-                <label for="prod_codigo">Codigo de Producto</label>
-                <input 
-                    id="prod_codigo" 
-                    type="text" 
-                    [(ngModel)]="codigoProducto" 
-                    name="codigoProducto" 
-                    required>
-            </div>
-
-
-            <div class="p-field">
-                <label for="prod_nombre">Nombre</label>
-                <input 
-                    id="prod_nombre" 
-                    type="text" 
-                    [(ngModel)]="nombreProducto" 
-                    name="nombreProducto" 
-                    placeholder="Ingrese el nombre del producto" 
-                    required>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_nombre">Descripcion</label>
-                <input 
-                    id="prod_descripcion" 
-                    type="text" 
-                    [(ngModel)]="descripcionProducto" 
-                    name="descripcionProducto" 
-                    placeholder="Ingrese una descripcion" 
-                    required>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_nombre">Peso Promedio</label>
-                <input 
-                    id="prod_peso_promedio" 
-                    type="number" 
-                    [(ngModel)]="pesoPromedioProducto" 
-                    name="pesoPromedioProducto" 
-                    placeholder="Ingrese un peso Promedio" 
-                    required>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_observacion">Observacion</label>
-                <input 
-                    id="prod_observacion" 
-                    type="text" 
-                    [(ngModel)]="observacionProducto" 
-                    name="observacionProducto" 
-                    placeholder="Ingrese una Observacion" 
-                    required>
-            </div>
-            
-            <div class="p-field">
-                <label for="prod_marca">Marca</label>
-                <p-dropdown
-                    id="prod_marca" 
-                    [options]="marca" 
-                    [(ngModel)]="marcaSeleccionada" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="marcaSeleccionada"
-                    placeholder="Seleccione una Marca">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_color">Color</label>
-                <p-dropdown
-                    id="prod_color" 
-                    [options]="colores" 
-                    [(ngModel)]="colorSeleccionado" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="colorSeleccionado"
-                    placeholder="Seleccione un color">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_tipo_de_uso">Tipo de Uso</label>
-                <p-dropdown 
-                    id="prod_tipo_de_uso" 
-                    [options]="tiposUso" 
-                    [(ngModel)]="tipoUsoSeleccionado" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="tipoUsoSeleccionado"
-                    placeholder="Seleccione un tipo de uso">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_olor">Olor</label>
-                <p-dropdown 
-                    id="prod_olor" 
-                    [options]="olores" 
-                    [(ngModel)]="olorSeleccionado" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="olorSeleccionado"
-                    placeholder="Seleccione un olor">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_ph">pH</label>
-                <p-dropdown 
-                    id="prod_ph" 
-                    [options]="ph" 
-                    [(ngModel)]="phSeleccionado" 
-                    [optionLabel]="'nombre'"
-                    [optionValue]="'id'"
-                    name="phSeleccionado"
-                    placeholder="Seleccione un pH">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_alergenos">Alergenos</label>
-                <p-dropdown 
-                    id="prod_alergenos" 
-                    [options]="alergenos" 
-                    [(ngModel)]="alergenoSeleccionado" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="alergenoSeleccionado"
-                    placeholder="Seleccione un alérgeno">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_vida_util">Vida Util</label>
-                <p-dropdown 
-                    id="prod_vida_util" 
-                    [options]="vidasUtil" 
-                    [(ngModel)]="vidaUtilSeleccionada" 
-                    [optionLabel]="'nombre'"
-                    [optionValue]="'id'"
-                    name="vidaUtilSeleccionada"
-                    placeholder="Seleccione vida útil">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_alimentacion">Alimentacion</label>
-                <p-dropdown 
-                    id="prod_alimentacion" 
-                    [options]="alimentaciones" 
-                    [(ngModel)]="alimentacionSeleccionada" 
-                    [optionLabel]="'tipo'"
-                    [optionValue]="'id'"
-                    name="alimentacionSeleccionada"
-                    placeholder="Seleccione alimentación">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_tipo_de_envase">Tipo de Envase</label>
-                <p-dropdown 
-                    id="prod_tipo_de_envase" 
-                    [options]="tiposEnvase" 
-                    [(ngModel)]="tipoEnvaseSeleccionado" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="tipoEnvaseSeleccionado"
-                    placeholder="Seleccione tipo de envase">
-                </p-dropdown>
-            </div>
-
-            <div class="p-field">
-                <label for="prod_presentacion_de_envase">Presentacion del Envase</label>
-                <p-dropdown 
-                    id="prod_presentacion_de_envase" 
-                    [options]="presentacionesEnvase" 
-                    [(ngModel)]="presentacionEnvaseSeleccionada" 
-                    [optionLabel]="'descripcion'"
-                    [optionValue]="'id'"
-                    name="presentacionEnvaseSeleccionada"
-                    placeholder="Seleccione presentación del envase">
-                </p-dropdown>
-            </div>
-
-            <button pButton type="submit" label="Ingresar" icon="pi pi-check" *ngIf="!productoEncontrado"></button>
-            <button pButton type="submit" label="Actualizar" icon="pi pi-pencil" *ngIf="productoEncontrado" (click)="ActualizarProducto()"></button>
-            <button pButton type="submit" label="Eliminar" icon="pi pi-eraser" *ngIf="productoEncontrado" (click)="EliminarProducto()" ></button>
-            <button pButton type="button" label="Limpiar" icon="pi pi-refresh" *ngIf="!productoEncontrado" (click)="LimpiarFormulario()"></button>
-        </form>
-
-
-        <app-sweet-alert-genericos></app-sweet-alert-genericos>
+  
+        <div class="p-field">
+          <label for="prod_nombre">Nombre</label>
+          <input 
+              id="prod_nombre" 
+              type="text" 
+              [(ngModel)]="nombreProducto" 
+              name="nombreProducto" 
+              placeholder="Ingrese el nombre del producto" 
+              required>
+        </div>
+  
+        <div class="p-field">
+          <label for="prod_descripcion">Descripción</label>
+          <input 
+              id="prod_descripcion" 
+              type="text" 
+              [(ngModel)]="descripcionProducto" 
+              name="descripcionProducto" 
+              placeholder="Ingrese una descripción" 
+              required>
+        </div>
+  
+        <div class="p-field">
+          <label for="prod_calibre">Calibre</label>
+          <input 
+              id="prod_calibre" 
+              type="text" 
+              [(ngModel)]="calibreProducto" 
+              name="calibreProducto" 
+              placeholder="Ingrese un Calibre" 
+              required>
+        </div>
+  
+        <button pButton type="button" label="Actualizar" icon="pi pi-pencil" (click)="ActualizarProducto()"></button>
+      </form>
+  
+      <app-sweet-alert-genericos></app-sweet-alert-genericos>
     </div>
-</div>
+  </div>
+  

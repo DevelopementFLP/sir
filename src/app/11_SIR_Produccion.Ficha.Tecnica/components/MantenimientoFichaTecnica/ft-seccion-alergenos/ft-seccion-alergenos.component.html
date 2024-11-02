@@ -19,7 +19,7 @@
 
         <ng-template pTemplate="body" let-element>
             <tr>
-                <td>{{element.idAlergenos}}</td>
+                <td>{{element.idAlergeno}}</td>
                 <td>
                     <input *ngIf="alergenosSeleccionados?.idAlergeno === element.idAlergenos" [(ngModel)]="alergenosSeleccionados!.nombre" />
                     <span *ngIf="alergenosSeleccionados?.idAlergeno !== element.idAlergenos">{{element.nombre}}</span>

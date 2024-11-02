@@ -59,7 +59,7 @@ export class ReporteAbastoComponent {
   }
 
   public GetListaDeStockDeAbasto() {
-      
+
       this._lecturaDeMediaService.GetListarStockAbasto().subscribe({
         next: (data) => {
           if (data.esCorrecto && data.resultado.length > 0) {
@@ -71,7 +71,7 @@ export class ReporteAbastoComponent {
             this.totalLecturas = data.resultado.length;
 
           } else {
-            this._utilidadesServicicio.mostrarAlerta("No se encontraron ","Datos")
+            this._utilidadesServicicio.mostrarAlerta("No se encontraron Datos","Error")
           }
         },
         error: (e) => {
