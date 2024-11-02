@@ -41,7 +41,7 @@ export class BodyReporteMediasComponent {
   }
   public generarListaDeHasta(): void {
     this.listaDeHorasHasta = [];
-    for (let i = 4; i <= 12; i += 2) {
+    for (let i = 0; i < 8; i += 2) {
       this.listaDeHorasHasta.push(i.toString().padStart(2, '0'));
     }
   }
