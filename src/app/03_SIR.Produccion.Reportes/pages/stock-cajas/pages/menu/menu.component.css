@@ -21,6 +21,15 @@
 
   }
 
+
+  .menu_titulo{
+    display: flex;
+    justify-content: center;
+    font-size: 3rem;
+    align-self: center;
+    margin-bottom: 2rem;
+  }
+
   .btn_menu{
     /* margin-top: 10rem; */
     display: flex;
@@ -37,6 +46,22 @@
     justify-content: center;
   }
 
+
+  .menu_Crear_Pedido{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    column-gap: 2rem;
+  }
+  .pedidos_recibidos{
+    border-color: none;
+    background-color:#1a5276;
+  }
+  
+  .entregador{
+    /* background-color: #81523F; */
+    background-color: #117864;
+  }
 
   @media (max-width: 768px) {
   
