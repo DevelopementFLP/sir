@@ -38,6 +38,8 @@ import { SplitterModule } from 'primeng/splitter';
 import { RendimientosComponent } from "./pages/rendimientos/rendimientos.component";
 import { RendimientoViewerComponent } from "./pages/rendimientos/components/rendimiento-viewer/rendimiento-viewer.component";
 import { ComparativoViewerComponent } from "./pages/rendimientos/components/comparativo-viewer/comparativo-viewer.component";
+import { ComparativoCodigosComponent } from './components/comparativo-codigos/comparativo-codigos.component';
+import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
 
 
 
@@ -76,7 +78,9 @@ import { ComparativoViewerComponent } from "./pages/rendimientos/components/comp
         ReporteCuotaDisplayComponent,
         RendimientosComponent,
         RendimientoViewerComponent,
-        ComparativoViewerComponent
+        ComparativoViewerComponent,
+        ComparativoCodigosComponent,
+        NuevoGrupoComponent
     ],
     exports: [
         MainPageComponent
