@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfTipoRendimiento } from './interfaces/ConfTipoRendimiento.interface';
 import { RendimientosService } from './services/rendimientos.service';
-import { lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { LotePorTipo } from './interfaces/LotePorTipo.interface';
 import { CorteLote } from './interfaces/CorteLote.interface';
 import { TipoLote } from './interfaces/TipoLote.interface';
@@ -11,6 +11,8 @@ import { LoteEntradaDTO } from '../cuota/interfaces/LoteEntradaDTO.interface';
 import { formatDate } from '@angular/common';
 import { QamarkDTO } from '../cuota/interfaces/QamarkDTO.interface';
 import { TipoFechaDataAgrupado } from './interfaces/TipoFechaDataAgrupado.interface';
+import { GrupoComparativo } from '../../interfaces/GrupoComparativo.interface';
+import { ComparativoCodigosService } from '../../services/comparativo-codigos.service';
 
 @Component({
   selector: 'app-rendimientos',
@@ -28,6 +30,8 @@ export class RendimientosComponent implements OnInit {
   fechaHasta!:        Date;
   fechaHastaStr!:     string;
   fechasReporte!:     Date[];
+
+  fechasReporteStr:   string[] = [];
 
   tiposRendimientos:  ConfTipoRendimiento[] = [];
   lotesPorTipo:       LotePorTipo[]         = [];
@@ -50,8 +54,23 @@ export class RendimientosComponent implements OnInit {
 
   constructor(
     private rendSrvc:   RendimientosService,
-    private cuotaSrvc:  CuotaService
+    private cuotaSrvc:  CuotaService,
+    private comparativoService: ComparativoCodigosService
   ) {}
+
+  get dataPrint() {    
+    return {
+        rendimientos: this.data,
+        comparativo: this.dataCortes,
+        fechas: this.fechasReporte,
+        nombresRend: this.nombresRends,
+        idsRend: this.idsRendimientos,
+        qamarks: this.qamarks,
+        tiposSeleccionados: this.tiposRendimientosSeleccionados,
+        dataAgrupada:  this.rendimientosAgrupados,
+        nombresComparativos: this.nombresRendimientosComparativos
+    }
+  }
 
   recibirTiposRendimientos(tipos: boolean[]) {
     this.tiposRendimientosSeleccionados = tipos;
@@ -148,14 +167,17 @@ export class RendimientosComponent implements OnInit {
 
   private setListaFechas(): void {
     this.fechasReporte  = [];
+    this.fechasReporteStr = [];
+
     const fechaInicio   = new Date(this.fechaDesdeStr);
     const fechaFin      = new Date(this.fechaHastaStr);
 
     let fechaActual = new Date(fechaInicio);
     while (fechaActual <= fechaFin) {
       this.fechasReporte.push(new Date(fechaActual));
+      this.fechasReporteStr.push(this.formatearFecha(new Date(fechaActual)));
       fechaActual.setDate(fechaActual.getDate() + 1);
-    }  
+    }    
   }
 
   private resetearFechas(): void {
@@ -189,5 +211,13 @@ export class RendimientosComponent implements OnInit {
     await this.setDataCortes();
     await this.setIdsNombresRendimientos();
     await this.setDataRendimientos();    
+  }
+
+  protected actualizarQamarksComparativoCodigos(qamarks: string[]): void {
+    this.comparativoService.actualizarQamarksComparativoCodigos(qamarks);
+  }
+
+  protected actualizarGruposComparativoCodigos(grupos: GrupoComparativo[]): void {
+    this.comparativoService.actualizarGruposComparativoCodigos(grupos);
   }
 }
