@@ -38,8 +38,8 @@ import { FormularioAbastoComponent } from './Pages/FormularioAbasto/formulario-a
 import { ModalAbastoComponent } from './Pages/FormularioAbasto/ModalFormularioAbasto/modal-abasto.component';
 import { ReporteDeMediasComponent } from './Pages/ReporteResumenDeCuarteo/reporte-resumen-de-cuarteo.component';
 
-import { ComponenteReporteFaenaProveedorComponent } from './Components/component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
-import { BodyReporteMediasComponent } from './Components/body-reporte-resumen-de-cuarteo/body-reporte-resumen-de-cuarteo.component';
+import { ComponenteReporteFaenaProveedorComponent } from './components/component-reporte-resumen-cuarteo-proveedor/component-reporte-resumen-cuarteo-proveedor.component';
+import { BodyReporteMediasComponent } from './components/body-reporte-resumen-de-cuarteo/body-reporte-resumen-de-cuarteo.component';
 
 @NgModule({
   declarations: [
