@@ -46,8 +46,6 @@ export class BodyReporteMediasComponent {
     }
   }
 
-
-
   @ViewChild(ComponenteReporteFaenaProveedorComponent) _conexionConComponenteProveedor! : ComponenteReporteFaenaProveedorComponent;
 
   constructor(
@@ -57,8 +55,6 @@ export class BodyReporteMediasComponent {
     private _metodosDeExcelCuarteoServicio: MetodosExcelCuarteoService
   ){
   }
-
-
 
   public GetReporteDeMediasProducto(fechaDesde: Date, fechaHasta: Date, horaDesde: number, horaHasta: number) {
     if(fechaDesde != null && fechaHasta != null){      
