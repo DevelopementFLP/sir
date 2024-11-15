@@ -267,7 +267,12 @@
         
             <div class="p-field">
                 <label for="aerobiosMesofilosTotales">Aerobios Mesofilos Totales:</label>
-                <input id="aerobiosMesofilosTotales" formControlName="aerobiosMesofilosTotales" pInputText />
+                <div class="checkbox-container">
+                    <input id="aerobiosMesofilosTotales" formControlName="aerobiosMesofilosTotales" pInputText />
+                    <label>
+                        <input type="checkbox" formControlName="enviarAerobiosMesofilosTotales" />
+                    </label>
+                </div>
             </div>
         
             <div class="p-field">
@@ -281,7 +286,7 @@
             </div>
         
             <div class="p-field">
-                <label for="stec0157">Stec 0157:</label>
+                <label for="stec0157">STEC O157:H7:</label>
                 <div class="checkbox-container">
                     <input id="stec0157" formControlName="stec0157" pInputText />
                     <label>
@@ -292,7 +297,7 @@
             
         
             <div class="p-field">
-                <label for="stecNo0157">Stec No 0157:</label>
+                <label for="stecNo0157">STEC no O157:H7:</label>
                 <div class="checkbox-container">
                     <input id="stecNo0157" formControlName="stecNo0157" pInputText />
                     <label>
@@ -313,7 +318,7 @@
             </div>
             
             <div class="p-field">
-                <label for="estafilococos">Estafilococos:</label>
+                <label for="estafilococos">Estafilococos (ufc/g):</label>
                 <div class="checkbox-container">
                     <input id="estafilococos" formControlName="estafilococos" pInputText />
                     <label>

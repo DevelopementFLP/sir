@@ -1,14 +1,11 @@
 
-export const urlAPI: string = "http://localhost:5205/api/";
+//export const urlAPI: string = "http://localhost:5205/api/";
 
 
 //export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 //TESTING 
-//export const urlAPI: string = "http://192.168.0.107:90/api/";
-
-
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -245,7 +242,6 @@ export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
 export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
 
 
-
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
@@ -373,3 +369,6 @@ export const urlCrearPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaP
 export const urlEditarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EditarPresentacionDeEnvaseFichaTecnica";
 export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EliminarPresentacionDeEnvaseFichaTecnica";
 
+// Control de Calidad
+export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
+export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";
