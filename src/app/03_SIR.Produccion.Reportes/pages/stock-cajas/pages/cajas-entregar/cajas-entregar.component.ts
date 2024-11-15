@@ -12,6 +12,7 @@ import { PedidoRecibido } from '../../interfaces/PedidoRecibido.interface';
 import { Stock } from '../../interfaces/Stock.interface';
 import { Router } from '@angular/router';
 import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
+import { OrdenArmado } from '../../interfaces/OrdenArmado.interface';
 
 @Component({
   selector: 'app-cajas-entregar',
@@ -53,6 +54,7 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
   isWorking: boolean = false;
   mensaje: string ="";
   
+  ordenArmado: OrdenArmado[] | undefined = [];
   
   async ngOnInit(): Promise<void> {
 
@@ -83,7 +85,8 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
     await this.getOrdenesEntregaAsync();
     await this.getStockCajasAsync();
     await this.GetPedidosPadreAsync();
-    this.llenarArrayCajas();
+    this.llenarArrayCajas();    
+   
   }
 
   async GetPedidosAsync(): Promise<void> {
@@ -175,10 +178,7 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
       console.error(error)
     }
   }
-
-
-
-
+  
   // async getTamanoCajasAsync(): Promise<void> {
   //   try {
   //     this.tamanos_cajas = await lastValueFrom(this.stockService.getTamanoCajasAsync());
@@ -406,7 +406,9 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
 
      
       if($event> saldo){
+       
         this.mensaje = "El saldo necesario es de "+saldo+" cajas, ingrese una cantidad igual o menor a la cantidad necesaria";
+        console.log(this.mensaje);
         // alert("El saldo necesario es de "+saldo+" cajas, ingrese una cantidad igual o menor a la cantidad necesaria");
         this.openDialog();
         return;
@@ -420,7 +422,9 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
 
       let stock: number = this.getCantidadCajasStock(this.idCaja);
       if(stock < $event){
+        
         this.mensaje ="Su Stock no alcanza para la entrega, su stock es de: "+ stock+" ingrese una cantidad disponible";
+        console.log(this.mensaje);
         // alert("Su Stock no alcanza para la entrega, su stock es de: "+ stock+" ingrese una cantidad disponible");
         this.openDialog();
         return;
@@ -528,7 +532,7 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
 
 
     openDialog(): void {
-      const dialog = document.getElementById('confirmDialogPedidoCaja');
+      const dialog = document.getElementById('confirmDialogPedidoCajaa');
       if (dialog) {
         dialog.style.display = 'flex'; // Muestra el diálogo
         
@@ -537,8 +541,14 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
     
     closeDialog(): void {
       const dialog = document.getElementById('confirmDialogPedidoCaja');
+      const dialog2 = document.getElementById('confirmDialogPedidoCajaa');
+      
       if (dialog) {
         dialog.style.display = 'none'; // Oculta el diálogo
+        
+      }
+      if (dialog2) {
+        dialog2.style.display = 'none'; // Oculta el diálogo
         
       }
     }

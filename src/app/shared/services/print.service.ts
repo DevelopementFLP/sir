@@ -44,6 +44,9 @@ import { XFCL } from 'src/app/05_SIR.Carga.Reportes/interfaces/XFCL.interface';
 import { TotalData } from 'src/app/05_SIR.Carga.Reportes/interfaces/TotalData.interface';
 import { PrecioData } from 'src/app/05_SIR.Carga.Reportes/interfaces/PrecioData.interface';
 import { PLPallet } from 'src/app/05_SIR.Carga.Reportes/interfaces/PLPallet.interface';
+import { GrupoComparativo } from 'src/app/03_SIR.Produccion.Reportes/interfaces/GrupoComparativo.interface';
+import { ComparativoCodigosService } from 'src/app/03_SIR.Produccion.Reportes/services/comparativo-codigos.service';
+import { filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PrintService {
@@ -52,7 +55,8 @@ export class PrintService {
     private deps: DetalleEmbarquePrintService ,
     private ccs: CommonCuotaService,
     private crs: CommonService,
-    private cargaService: CargaService
+    private cargaService: CargaService,
+    private comparativoCodigoService: ComparativoCodigosService
   ) {}
 
   printExcel(idReporte: number, dataToPrint: PrintModel, libro: Workbook) {
@@ -2624,6 +2628,67 @@ export class PrintService {
         columna += 3;
       }
     }
+
+    //COMPARATIVO POR CODIGOS
+    {
+      const qamarksComprativo = this.comparativoCodigoService.getQamarksEnGrupos();
+      const gruposComparativo = this.comparativoCodigoService.getGruposComparativo();
+      
+      if(qamarksComprativo.length > 0 && gruposComparativo.length > 0) 
+        this.printComparativoPorCodigos(qamarksComprativo, gruposComparativo, libro);
+    }
+  }
+
+  private printComparativoPorCodigos(qamarks: string[], grupos: GrupoComparativo[], libro: Workbook) {
+    const titulo: string = 'COMPARATIVO POR CÓDIGOS';
+    const hojaComp: Worksheet = libro.addWorksheet(titulo);
+    this.setLogo(libro, hojaComp);
+    this.setTitle(libro, hojaComp, titulo, 'right', 16);
+
+    const detallesTitulos = ['Código', 'Producto', 'Peso', 'Rend'];
+
+    let filaTitulos = 6;
+    let filaQamark = 7;
+    let columnaQamark = 2;
+    let filaTituloGrupo = 6;
+
+    hojaComp.getRow(filaTitulos).getCell(2).value = 'Corte';
+    hojaComp.getRow(filaTitulos).getCell(3).value = 'Detalles';
+    
+    qamarks.forEach(qm => {
+      let columnaTituloGrupo = 4;
+      let filaASumarQamark = 0;
+
+      hojaComp.getRow(filaQamark).getCell(columnaQamark).value = qm;
+      
+      let filaDetalleTitulo = filaQamark;
+      let columnaDetalleTitulo = 3;
+
+      // detallesTitulos.forEach((titulo, i) => {
+      //   hojaComp.getRow(filaDetalleTitulo + i).getCell(columnaDetalleTitulo).value = titulo;
+      // });
+
+      grupos.forEach(grupo => {
+        hojaComp.getRow(filaTituloGrupo).getCell(columnaTituloGrupo).value = grupo.nombre;
+        const productosPorGrupo = grupo.productos.filter(producto => producto.qamark === qm);
+        filaASumarQamark = Math.max(filaASumarQamark, productosPorGrupo.length > 1 ? (productosPorGrupo.length - 1) * 4 : 0);
+        let filaDetalleProducto = filaQamark;
+        productosPorGrupo.forEach(prod => {
+          hojaComp.getRow(filaDetalleTitulo).getCell(columnaDetalleTitulo).value = detallesTitulos[0];
+          hojaComp.getRow(filaDetalleTitulo + 1).getCell(columnaDetalleTitulo).value = detallesTitulos[1];
+          hojaComp.getRow(filaDetalleTitulo + 2).getCell(columnaDetalleTitulo).value = detallesTitulos[2];
+          hojaComp.getRow(filaDetalleTitulo + 3).getCell(columnaDetalleTitulo).value = detallesTitulos[3];
+          hojaComp.getRow(filaDetalleProducto).getCell(columnaTituloGrupo).value = prod.codigo;
+          hojaComp.getRow(filaDetalleProducto + 1).getCell(columnaTituloGrupo).value = prod.nombre;
+          hojaComp.getRow(filaDetalleProducto + 2).getCell(columnaTituloGrupo).value = prod.pesoPromedio;
+          hojaComp.getRow(filaDetalleProducto + 3).getCell(columnaTituloGrupo).value = prod.rendimiento;
+          filaDetalleProducto += 4;
+          filaDetalleTitulo += 4;
+        });
+        columnaTituloGrupo += 1;
+      });
+      filaQamark += 4 + filaASumarQamark;
+    });
   }
 
   private printPackingList(dataToPrint: PrintModel, libro: Workbook): void {
@@ -2639,8 +2704,6 @@ export class PrintService {
     const fuenteTitulo:             Partial<Font>         = { bold: true, size: 10 };
     const fuenteSubtotal:           Partial<Font>         = { bold: true, size: 14, color: {argb: 'FFFFFFFF'} };
     const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
-    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
-    const alineacionIzquierda:      Partial<Alignment>    = { vertical: 'middle', horizontal: 'left' };
     const formatoNumeroDecimal:     string                = '#,##0.00';
     const formatoNumeroMillar:      string                = '#,##0';
 

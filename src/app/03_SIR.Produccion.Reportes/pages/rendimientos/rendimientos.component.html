@@ -25,6 +25,16 @@
                     (emitirNombreTipos)="recibirNombresRendimientos($event)"
                 />
             </p-tabPanel>
+            <!-- <p-tabPanel header="COMPARATIVO POR CÓDIGOS">
+                <comparativo-codigos
+                    [lotesActivos]="lotesActivos"
+                    [rangoFechas]="fechasReporteStr"
+                    [tiposRendimientos]="tiposRendimientos"
+                    [qamarks]="qamarks"
+                    (qamarksChange)="actualizarQamarksComparativoCodigos($event)"
+                    (gruposChange)="actualizarGruposComparativoCodigos($event)" 
+                />
+            </p-tabPanel> -->
         </p-tabView>
         <ng-template #noData>
             <div class="no__data">
@@ -40,15 +50,5 @@
     [excel]="true"
     [nombreArchivo]="nombreReporte"
     [idReporte]="idReporte"
-    [dataPrint]="{
-        rendimientos: data,
-        comparativo: dataCortes,
-        fechas: fechasReporte,
-        nombresRend: nombresRends,
-        idsRend: idsRendimientos,
-        qamarks: qamarks,
-        tiposSeleccionados: tiposRendimientosSeleccionados,
-        dataAgrupada:  rendimientosAgrupados,
-        nombresComparativos: nombresRendimientosComparativos
-    }"
+    [dataPrint]="dataPrint"
 />
