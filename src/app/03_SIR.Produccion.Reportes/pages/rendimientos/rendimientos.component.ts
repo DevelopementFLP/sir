@@ -92,7 +92,7 @@ export class RendimientosComponent implements OnInit {
     await this.setLotesActivos();
     await this.setQamarks();
 
-    this.nombreReporte = `Rendimientos desosado marel del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`;
+    this.nombreReporte = `Rendimientos desosado marel del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`;        
   }
 
   private async setLotesActivos(): Promise<void> {
@@ -210,7 +210,7 @@ export class RendimientosComponent implements OnInit {
     await this.setCortes();
     await this.setDataCortes();
     await this.setIdsNombresRendimientos();
-    await this.setDataRendimientos();    
+    await this.setDataRendimientos(); 
   }
 
   protected actualizarQamarksComparativoCodigos(qamarks: string[]): void {

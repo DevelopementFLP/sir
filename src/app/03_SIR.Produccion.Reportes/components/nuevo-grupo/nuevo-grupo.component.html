@@ -1,4 +1,4 @@
-<div class="main__container">
+<div escapeKey (escapePressed)="handleEscape()" class="main__container">
     <div class="selection__container">
         <div class="searcher__container">
             <div class="name__input">
@@ -30,7 +30,7 @@
                         type="button" 
                         icon="pi pi-trash" 
                         class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only"
-                        (click)="eliminarTodoSeleccionado()"
+                        (click)="confirmarEliminacion($event, 0)"
                         ></button>
             <div class="product__list">
                 <div class="list__title">Productos agregados</div>
@@ -46,7 +46,7 @@
                             type="button" 
                             icon="pi pi-trash" 
                             class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only"
-                            (click)="eliminarProducto(i)"
+                            (click)="confirmarEliminacion($event, 1, i)"
                             ></button>
                         </div>
                     </div>
@@ -79,3 +79,5 @@
         </div>
     </div>
 </div>
+
+<p-confirmDialog />

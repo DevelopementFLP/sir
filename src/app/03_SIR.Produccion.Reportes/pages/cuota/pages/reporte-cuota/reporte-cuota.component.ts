@@ -23,6 +23,8 @@ import { ReporteCuota } from '../../interfaces/ReporteCuota.interface';
 import { SalidaDTO } from '../../interfaces/SalidaDTO.interface';
 import { TipoCuotaDict } from '../../interfaces/TipoCuotaDict.interface';
 import { TipoLote } from '../../../rendimientos/interfaces/TipoLote.interface';
+import { ComparativoCodigosService } from 'src/app/03_SIR.Produccion.Reportes/services/comparativo-codigos.service';
+import { GrupoComparativo } from 'src/app/03_SIR.Produccion.Reportes/interfaces/GrupoComparativo.interface';
 
 @Component({
   selector: 'app-reporte-cuota',
@@ -70,13 +72,14 @@ export class ReporteCuotaComponent implements OnInit {
 
   constructor(
     private cuotaService: CuotaService,
-    private ccs:          CommonCuotaService
+    private ccs:          CommonCuotaService,
+    private comparativoService: ComparativoCodigosService
   ) {}
   
   async ngOnInit(): Promise<void> {
     this.resetearFechas();
     this.resetearValores();
-    this.nombreReporte = `Rendimientos cuota del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`;
+    this.nombreReporte = `Rendimientos cuota del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`; 
   }
 
   private setDataComparativo(): void {
@@ -408,5 +411,12 @@ export class ReporteCuotaComponent implements OnInit {
      return loteEntrada; 
   }
 
+  protected actualizarQamarksComparativoCodigos(qamarks: string[]): void {
+    this.comparativoService.actualizarQamarksComparativoCodigos(qamarks);
+  }
+
+  protected actualizarGruposComparativoCodigos(grupos: GrupoComparativo[]): void {
+    this.comparativoService.actualizarGruposComparativoCodigos(grupos);
+  }
 }
  

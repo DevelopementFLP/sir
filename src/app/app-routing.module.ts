@@ -66,6 +66,7 @@ import { HomeCrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Fich
 import { HomeGenerarFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-generar-ficha-tecnica/home-generar-ficha-tecnica.component';
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 import { PaginaPrincipalIncidentesComponent } from './12_SIR_Produccion.ControlDeCalidad/pages/pagina-principal-incidentes/pagina-principal-incidentes.component';
+import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pages/comparativo-codigos-page/comparativo-codigos-page.component';
 
 
 
@@ -93,6 +94,7 @@ const routes: Routes = [
     { path: 'produccion/controlCuartos', component: ControlCuartosComponent },
     { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
     { path: 'produccion/rendimientos', component: RendimientosComponent},
+    { path: 'produccion/comparativoCodigos', component: ComparativoCodigosPageComponent },
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },
