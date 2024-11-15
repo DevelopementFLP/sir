@@ -103,7 +103,9 @@ export class CrearPlantillaFichaTecnicaComponent {
       idColor: [null, Validators.required], 
       idOlor: [null, Validators.required],
       idPh: [null, Validators.required], 
-      aerobiosMesofilosTotales: ['Inicio/Start <5,0x10⁴   Fin/end <1,0x10⁷', Validators.required], 
+
+      aerobiosMesofilosTotales: ['Inicio/Start <5,0x10⁴   Fin/end <1,0x10⁷'], 
+      enviarAerobiosMesofilosTotales: [true], 
 
       enterobacterias: ['<1x10³'], 
       enviarEnterobacterias: [true], 
@@ -245,7 +247,7 @@ export class CrearPlantillaFichaTecnicaComponent {
           idColor: this.formularioEspecificaciones.value.idColor,
           idOlor: this.formularioEspecificaciones.value.idOlor,
           idPh: this.formularioEspecificaciones.value.idPh,
-          aerobiosMesofilosTotales: this.formularioEspecificaciones.value.aerobiosMesofilosTotales,
+          aerobiosMesofilosTotales: this.formularioEspecificaciones.value.enviarAerobiosMesofilosTotales ? this.formularioEspecificaciones.value.aerobiosMesofilosTotales : 'NO APLICA',
           enterobacterias: this.formularioEspecificaciones.value.enviarEnterobacterias ? this.formularioEspecificaciones.value.enterobacterias : 'NO APLICA',
           stec0157: this.formularioEspecificaciones.value.enviarStec ? this.formularioEspecificaciones.value.stec0157 : 'NO APLICA',
           stecNo0157: this.formularioEspecificaciones.value.enviarNoStec ? this.formularioEspecificaciones.value.stecNo0157 : 'NO APLICA',

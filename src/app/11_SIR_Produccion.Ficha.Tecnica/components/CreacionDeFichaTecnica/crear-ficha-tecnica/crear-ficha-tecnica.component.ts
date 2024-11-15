@@ -30,7 +30,6 @@ export class CrearFichaTecnicaComponent {
   public calibreDeProducto: string = '';
   public descripcionDelProducto: string = '';
 
-
   public imagenSeleccionadaAreaLogo: File | null = null;
   public urlLogo: string | null = null;
   
@@ -98,8 +97,6 @@ export class CrearFichaTecnicaComponent {
   public observacionDelProducto: string = '';
   public fechaDelDia: string = '';
 
-
-
   constructor(
     private _FtAspectosGeneralesService: FtAspectosGeneralesService,
     private _FtEspecificacionesService: FtEspecificacionesService,
@@ -119,9 +116,31 @@ export class CrearFichaTecnicaComponent {
     if (this.codigoProducto!.trim() !== '') {
         const codigoProductoRecibido = this.codigoProducto!.trim();
 
-        this.ObtenerNombreProducto(codigoProductoRecibido);
-        this.codigoProducto = '';
-        
+        this._FtFichaTecnicaService.BuscarFichaTecnica(codigoProductoRecibido).subscribe(
+            response => {
+                if (response.esCorrecto && response.resultado) {
+                    // Si el producto ya tiene una ficha técnica asociada, mostramos la alerta
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este código de producto ya está asociado a una ficha técnica.',
+                        icon: 'error'
+                    });
+                    this.codigoProducto = ''; 
+                    return;
+                } else {
+                    this.ObtenerNombreProducto(codigoProductoRecibido); 
+                }
+            },
+            error => {
+                console.error('Error al buscar ficha técnica', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al verificar el código de producto.',
+                    icon: 'error'
+                });
+                this.codigoProducto = ''; 
+            }
+        );
     } else {
         Swal.fire({
             title: 'Error',
@@ -151,11 +170,11 @@ export class CrearFichaTecnicaComponent {
                   this.codigoProducto = '';
               }
 
-                // Asignar otros valores
                 this.nombreProducto = response.resultado.nombre || 'Resultado Indefinido';   
                 this.descripcionDelProducto = response.resultado.nombreDeProductoParaFicha || 'Resultado Indefinido'; 
                 this.ObtenerFechaDeHoy();    
                 this.contadorDePasadas++;
+                this.codigoProducto = '';
             } else {
                 Swal.fire({
                     title: 'Error',
@@ -164,6 +183,7 @@ export class CrearFichaTecnicaComponent {
                 });
                 this.contadorDePasadas = 0;
                 this.listaDeProductosParaCargar = [];
+                this.codigoProducto = '';
             }
         },
         error => {
@@ -175,6 +195,7 @@ export class CrearFichaTecnicaComponent {
             });
             this.contadorDePasadas = 0;
             this.listaDeProductosParaCargar = [];
+            this.codigoProducto = '';
         }
     );
   }
@@ -344,7 +365,7 @@ export class CrearFichaTecnicaComponent {
         return;
     }
 
-    const codigosDeProducto = this.listaDeProductosParaCargar.join('- ');
+    const codigosDeProducto = this.listaDeProductosParaCargar.join(' - ');
 
     const fichaTecnica: FtFichaTecnicaDTO = {
         // Identificación
@@ -377,7 +398,7 @@ export class CrearFichaTecnicaComponent {
         elementosExtranos: this.elementosExtranos || '',
         color: this.color || '',                
         olor: this.olor || '',                  
-        ph: this.ph ? String(this.ph) : '',                      
+        ph: this.ph || '',                      
         aerobiosMesofilosTotales: this.aerobiosMesofilosTotales || '',
         enterobacterias: this.enterobacterias || '',
         stec0157: this.stec0157 || '',
@@ -498,7 +519,6 @@ export class CrearFichaTecnicaComponent {
 
   public CrearImagenFichaTecnica(): void {
 
-    // Verifica si hay imágenes seleccionadas
     const imagenesPorSeccion = [
       { seccion: 1, imagen: this.imagenSeleccionadaAreaLogo },
       { seccion: 2, imagen: this.imagenSeleccionadaAreaCorte },

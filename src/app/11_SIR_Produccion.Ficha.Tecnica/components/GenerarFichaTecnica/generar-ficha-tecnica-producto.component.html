@@ -379,10 +379,10 @@
                             <p>{{ ph }}</p>
                         </div>
 
-                        <div class="grid-items-seccion caj-13-sec-8">
+                        <div class="grid-items-seccion caj-13-sec-8" *ngIf="aerobiosMesofilosTotales !== 'NO APLICA'">
                             <p>Aerobios mesófilos totales (ufc/g)/ Mesophilic Total (cfu/g)</p>
                         </div>
-                        <div class="grid-items-seccion caj-datos-10-sec-8">
+                        <div class="grid-items-seccion caj-datos-10-sec-8" *ngIf="aerobiosMesofilosTotales !== 'NO APLICA'">
                             <p>{{ aerobiosMesofilosTotales }}</p>
                         </div>
 

@@ -65,6 +65,7 @@ import { HomeMantenimientoFichaTecnicaComponent } from './11_SIR_Produccion.Fich
 import { HomeCrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-crear-ficha-tecnica/home-crear-ficha-tecnica.component';
 import { HomeGenerarFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-generar-ficha-tecnica/home-generar-ficha-tecnica.component';
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
+import { PaginaPrincipalIncidentesComponent } from './12_SIR_Produccion.ControlDeCalidad/pages/pagina-principal-incidentes/pagina-principal-incidentes.component';
 
 
 
@@ -134,7 +135,7 @@ const routes: Routes = [
     {path: 'produccion/GenerarFichaTecnica', component: HomeGenerarFichaTecnicaComponent},
     {path: 'produccion/MantenimientoDeFichaTecnica', component: HomeMantenimientoFichaTecnicaComponent},
     { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent},
-
+    { path: 'produccion/VisualizarIncidentes', component: PaginaPrincipalIncidentesComponent},
   ]},
   { path: 'registro', component: RegistroComponent},
   { path: 'resetearContraseña', component: ResetPasswordComponent},
