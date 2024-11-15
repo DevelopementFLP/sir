@@ -1,0 +1,42 @@
+<div class="comparativo__container">
+    <div class="comparativo__header">
+        <div class="comparativo__title">
+            <h1>Comparativo por códigos</h1>
+        </div>
+        <hr>
+        <div class="fechas__container">
+            <div>
+                <label for="fechaDesde">Desde:</label>
+                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+            </div>
+            <div>
+                <label for="fechaHasta">Hasta:</label>
+                <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+            </div>
+            <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="setInformacion()"></button>
+        </div>
+    </div>
+    <div class="comparativo__viewer" *ngIf="mostrarSeleccionGrupos">
+        <comparativo-codigos 
+            [lotesActivos]="lotesActivosAgrupados"
+            [rangoFechas]="fechasReporteString"
+            [qamarks]="qamarksAgrupados"
+            [tiposRendimientos]="tiposRendimientosAgrupados"
+            (qamarksChange)="actualizarQamarksComparativoCodigos($event)"
+            (gruposChange)="actualizarGruposComparativoCodigos($event)"
+        />
+    </div>
+</div>
+
+<sir-exportacion
+    *ngIf="mostrarSeleccionGrupos && grupos.length"
+    [excel]="true"
+    [nombreArchivo]="nombreReporte"
+    [idReporte]="idReporte"
+    [dataPrint]="{}"
+/>
+
+<div class="no__mostrar">
+    <app-rendimientos />
+    <app-reporte-cuota />
+</div>

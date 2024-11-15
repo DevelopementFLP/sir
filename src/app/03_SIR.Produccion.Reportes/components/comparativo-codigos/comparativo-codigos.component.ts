@@ -2,20 +2,22 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { ComparativoCodigosService } from '../../services/comparativo-codigos.service';
+import { ConfirmationService } from 'primeng/api';
 import { ConfTipoCuotaDTO } from '../../pages/cuota/interfaces/ConfTipoCuotaDTO.interface';
 import { ConfTipoRendimiento } from '../../pages/rendimientos/interfaces/ConfTipoRendimiento.interface';
+import { GrupoAgrupadoQamark } from '../../interfaces/GrupoAgrupadoQamark.interface';
 import { GrupoComparativo } from '../../interfaces/GrupoComparativo.interface';
+import { MensajeAlerta } from '../../interfaces/MensajeAlerta.interface';
 import { NuevoGrupoComponent } from '../nuevo-grupo/nuevo-grupo.component';
 import { ProductoData } from '../../interfaces/ProductoData.interface';
 import { QamarkDTO } from '../../pages/cuota/interfaces/QamarkDTO.interface';
 import { TipoLote } from '../../pages/rendimientos/interfaces/TipoLote.interface';
-import { GrupoAgrupadoQamark } from '../../interfaces/GrupoAgrupadoQamark.interface';
 
 @Component({
   selector: 'comparativo-codigos',
   templateUrl: './comparativo-codigos.component.html',
   styleUrls: ['./comparativo-codigos.component.css'],
-  providers: [ DialogService ]
+  providers: [ DialogService, ConfirmationService ]
 })
 export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy{
 
@@ -31,12 +33,19 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
   grupos: GrupoComparativo[] = [];
   nuevoGrupoDialog!: DynamicDialogRef;
 
+  qamarkRowspans: { [key: string]: number } = {};
   editando: boolean = false;
+
+  mensajesAlerta: MensajeAlerta[] = [];
 
   @Output() qamarksChange = new EventEmitter<string[]>();
   @Output() gruposChange = new EventEmitter<GrupoComparativo[]>();
 
-  constructor (private dialog: DialogService, private comparativoService: ComparativoCodigosService) {}
+  constructor (
+    private dialog: DialogService, 
+    private comparativoService: ComparativoCodigosService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.setDatos();
@@ -51,7 +60,8 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
   }
 
   private async setDatos(): Promise<void> {    
-    this.productosData = await this.comparativoService.setProductoData(this.rangoFechas, this.lotesActivos, this.tiposRendimientos, this.qamarks);    
+    this.productosData = await this.comparativoService.setProductoData(this.rangoFechas, this.lotesActivos, this.tiposRendimientos, this.qamarks);
+    this.mensajesAlerta = this.setMensajesAlerta();    
   }
 
   protected abrirDialogoNuevoGrupo(grupo: GrupoComparativo | undefined) : void {
@@ -84,14 +94,13 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
       this.setDataAMostrar();
       this.emitirCambiosComparativoCodigo();
     });
-  
   }
 
   private agregarNuevoGrupo(nombre: string, productos: ProductoData[]): void {
     this.grupos.push({
       id: this.grupos.length + 1,
       nombre: nombre,
-      productos: productos
+      productos: productos.sort((a, b) => a.codigo.localeCompare(b.codigo))
     });
   }
 
@@ -99,7 +108,7 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
     const grupo: GrupoComparativo | undefined = this.grupos.find(gr => gr.id === idGrupo);
     if(grupo != undefined) {
       grupo.nombre = nombre;
-      grupo.productos = productos;
+      grupo.productos = productos.sort((a, b) => a.codigo.localeCompare(b.codigo));
     }
   }
 
@@ -110,7 +119,7 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
     }
   }
 
-  protected borrarGrupos(): void {
+  private borrarGrupos(): void {
     this.grupos = [];
     this.qamarksEnGrupos = [];
     this.emitirCambiosComparativoCodigo();
@@ -118,13 +127,14 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
 
   private setDataAMostrar(): void {
     this.qamarksEnGrupos = this.comparativoService.qamarksEnGrupos(this.grupos);
+    this.calcularRowSpanPorQamark();    
   }
 
-  buscarProductosPorQamark(productos: ProductoData[], qamark: string): ProductoData[] {
+  protected buscarProductosPorQamark(productos: ProductoData[], qamark: string): ProductoData[] {
     return productos.filter(producto => producto.qamark === qamark);
   }
 
-  protected eliminarGrupo(indice: number): void {
+  private eliminarGrupo(indice: number): void {
     this.grupos.splice(indice, 1);
     this.setDataAMostrar();
     this.emitirCambiosComparativoCodigo();
@@ -132,6 +142,73 @@ export class ComparativoCodigosComponent implements OnInit, OnChanges, OnDestroy
 
   protected editarGrupo(indice: number): void {
     this.abrirDialogoNuevoGrupo(this.grupos[indice]);
+  }
+
+  private maxProductosPorQamark(qamark: string): number {
+    let maximoProductos = 0;
+
+    this.grupos.forEach(grupo => {
+      const cantidadProductosConQamark = this.buscarProductosPorQamark(grupo.productos, qamark).length;
+
+      if(cantidadProductosConQamark > maximoProductos) {
+        maximoProductos = cantidadProductosConQamark;
+      }
+    });
+
+    return maximoProductos;
+  }
+
+  private calcularRowSpanPorQamark(): void {
+    this.grupos.forEach(grupo => {
+      grupo.productos.forEach(producto => {
+        const qamark = producto.qamark;
+        if (qamark) {
+          this.qamarkRowspans[qamark] = this.maxProductosPorQamark(qamark);
+        }
+      });
+    });
+  }
+
+  protected confirmarEliminacion(event: Event, indiceMensajes: number, indice?: number): void {
+    const mensajeOriginal = this.mensajesAlerta[indiceMensajes].mensaje;
+    
+    let mensajeReemplazado = mensajeOriginal; 
+    console.log(indice != undefined);
+    
+    if(indice != undefined) mensajeReemplazado = mensajeOriginal.replace('@grupo', this.grupos[indice].nombre);
+
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: mensajeReemplazado,
+      header: this.mensajesAlerta[indiceMensajes].header,
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: "p-button-text",
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        this.mensajesAlerta[indiceMensajes].accion?.(indice)
+      },
+      reject: () => {}
+    })
+  }
+
+  private setMensajesAlerta(): MensajeAlerta[] {
+    return [
+      {
+        header: 'Eliminar todo',
+        mensaje: '¿Estás seguro de eliminar todos los grupos?',
+        accion: () => this.borrarGrupos()
+      },
+      {
+        header: 'Eliminar grupo',
+        mensaje: "¿Estás seguro de eliminar el grupo '@grupo'?",
+        accion: (indice?: number) => {
+          if (indice !== undefined) {
+              this.eliminarGrupo(indice);
+          }
+        } 
+      }
+    ];
   }
 
   emitirCambiosComparativoCodigo(): void {

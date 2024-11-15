@@ -1,5 +1,10 @@
-<p-tabView>
-    <p-tabPanel header="Rendimientos">
+<div class="main__container">
+    <div class="comparativo__title">
+        <h1>Rendimientos</h1>
+    </div>
+<hr class="divider__hr">
+<div>
+    <div>
         <div class="fechas__container">
             <div>
                 <label for="fechaDesde">Desde:</label>
@@ -25,7 +30,7 @@
                     (emitirNombreTipos)="recibirNombresRendimientos($event)"
                 />
             </p-tabPanel>
-            <!-- <p-tabPanel header="COMPARATIVO POR CÓDIGOS">
+            <p-tabPanel header="COMPARATIVO POR CÓDIGOS">
                 <comparativo-codigos
                     [lotesActivos]="lotesActivos"
                     [rangoFechas]="fechasReporteStr"
@@ -34,15 +39,16 @@
                     (qamarksChange)="actualizarQamarksComparativoCodigos($event)"
                     (gruposChange)="actualizarGruposComparativoCodigos($event)" 
                 />
-            </p-tabPanel> -->
+            </p-tabPanel>
         </p-tabView>
         <ng-template #noData>
             <div class="no__data">
                 <div>No hay información de rendimientos para el rango de fechas seleccionado.</div>
             </div>
         </ng-template>
-    </p-tabPanel>
-</p-tabView>
+    </div>
+</div>
+</div>
 
 
 <sir-exportacion 

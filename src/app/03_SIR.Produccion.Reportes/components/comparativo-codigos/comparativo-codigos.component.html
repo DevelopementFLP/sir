@@ -17,7 +17,7 @@
             label="Borrar todo" 
             class="p-button-sm p-button-danger" 
             icon="pi pi-trash"
-            (click)="borrarGrupos()">
+            (click)="confirmarEliminacion($event, 0)">
         </button>
     </div>
     <div class="grupos" *ngIf="grupos.length > 0">
@@ -44,7 +44,7 @@
                         pButton 
                         type="button" 
                         icon="pi pi-trash" 
-                        class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only" (click)="eliminarGrupo(i)">
+                        class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only" (click)="confirmarEliminacion($event, 1, i)">
                     </button>
                     </div>
                     </th>
@@ -53,27 +53,37 @@
             <tbody class="table__body">
                 <tr *ngFor="let qamark of qamarksEnGrupos; let i = index" [ngClass]="{'fila-impar': i % 2 !== 0}">
                     <td>{{qamark}}</td>
-                    <td class="detalles">
-                        <div class="centered-content">
+                    <td class="">
+                        <div class="centered-content" *ngFor="let i of [].constructor(qamarkRowspans[qamark])">
                             <div>Código</div>
                             <div>Producto</div>
                             <div>Peso</div>
                             <div>Rend</div>
                         </div>
                     </td>
-                    <td *ngFor="let grupo of grupos" class="detalles">
-                        <ng-container *ngIf="buscarProductosPorQamark(grupo.productos, qamark).length; else noProducto" class="ngcontainer">
+                    <td *ngFor="let grupo of grupos" class="">
+                        <ng-container *ngIf="buscarProductosPorQamark(grupo.productos, qamark).length; else noProducto" class="">
                             <div *ngFor="let producto of buscarProductosPorQamark(grupo.productos, qamark)" class="centered-content values">
                                 <div>{{producto.codigo}}</div>
                                 <div>{{producto.nombre}}</div>
                                 <div>{{producto.pesoPromedio | number:'0.2-2'}}</div>
                                 <div>{{producto.rendimiento | percent:'0.2-2'}}</div>
                             </div>
+                            <div *ngFor="let i of [].constructor(qamarkRowspans[qamark] - buscarProductosPorQamark(grupo.productos, qamark).length)" class="centered-content values">
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                            </div>
                         </ng-container>
-                        <ng-template #noProducto><span class="no-data">-</span></ng-template>
-                    </td>
+                        <ng-template #noProducto>
+                            <span>-</span>
+                        </ng-template>
+                    </td>                 
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<p-confirmDialog />

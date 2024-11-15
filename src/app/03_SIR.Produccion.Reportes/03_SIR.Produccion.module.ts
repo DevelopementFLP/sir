@@ -40,6 +40,8 @@ import { RendimientoViewerComponent } from "./pages/rendimientos/components/rend
 import { ComparativoViewerComponent } from "./pages/rendimientos/components/comparativo-viewer/comparativo-viewer.component";
 import { ComparativoCodigosComponent } from './components/comparativo-codigos/comparativo-codigos.component';
 import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
+import { ComparativoCodigosPageComponent } from './pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { EscapeKeyDirective } from './directives/escape-key.directive';
 
 
 
@@ -80,7 +82,9 @@ import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.compon
         RendimientoViewerComponent,
         ComparativoViewerComponent,
         ComparativoCodigosComponent,
-        NuevoGrupoComponent
+        NuevoGrupoComponent,
+        ComparativoCodigosPageComponent,
+        EscapeKeyDirective
     ],
     exports: [
         MainPageComponent

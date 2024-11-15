@@ -1,89 +1,98 @@
-<p-tabView>
-    <p-tabPanel header="Reporte cuotas">
-        <div class="fechas__container">
-            <div>
-                <label for="fechaDesde">Desde:</label>
-                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+<div class="main__container">
+    <div class="comparativo__title">
+        <h1>Producciones Cuota</h1>
+    </div>
+    <hr class="divider">
+    <div>
+        <div>
+            <div class="fechas__container">
+                <div>
+                    <label for="fechaDesde">Desde:</label>
+                    <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr"
+                        (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+                </div>
+                <div>
+                    <label for="fechaHasta">Hasta:</label>
+                    <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr"
+                        (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+                </div>
+                <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check"
+                    (click)="hacerReporte()"></button>
             </div>
-            <div>
-                <label for="fechaHasta">Hasta:</label>
-                <input type="date" name="fechaHasta" id="fechaHasta" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
-            </div>
-            <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>
-        </div>
-        <div class="reporte__container" *ngIf="reporteCuotaData.length > 0; else noData">
-            <p-tabView>
-                <p-tabPanel *ngFor="let id of idsReportes" [header]="nombresReportes[id]">
-                    <div class="reporte__display">
-                        <reporte-cuota-display *ngFor="let repo of reportes[id]" [reporte]="repo" class="reporte"/>
-                    </div>
-                </p-tabPanel>
-                <p-tabPanel header="COMPARATIVO">
-                    <div class="comparativo__container">
-                        <div>
-                            <div class="comparativo__qamark">
-                                <div class="comparativo__titulo">CORTE CUOTA</div>
-                                <div>&nbsp;</div>
-                                <div *ngFor="let qm of qamarksCuota">
-                                    <div>{{nombreQamark(qm)}}</div>
+            <div class="reporte__container" *ngIf="reporteCuotaData.length > 0; else noData">
+                <p-tabView>
+                    <p-tabPanel *ngFor="let id of idsReportes" [header]="nombresReportes[id]">
+                        <div class="reporte__display">
+                            <reporte-cuota-display *ngFor="let repo of reportes[id]" [reporte]="repo" class="reporte" />
+                        </div>
+                    </p-tabPanel>
+                    <p-tabPanel header="COMPARATIVO">
+                        <div class="comparativo__container">
+                            <div>
+                                <div class="comparativo__qamark">
+                                    <div class="comparativo__titulo">CORTE CUOTA</div>
+                                    <div>&nbsp;</div>
+                                    <div *ngFor="let qm of qamarksCuota">
+                                        <div>{{nombreQamark(qm)}}</div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="divider"></div>
+                                <br>
+                                <div class="comparativo__qamark">
+                                    <div class="comparativo__titulo">CORTE SIN DESTINO CUOTA</div>
+                                    <div>&nbsp;</div>
+                                    <div *ngFor="let qm of qamarksNoCuota">
+                                        <div>{{nombreQamark(qm)}}</div>
+                                    </div>
                                 </div>
                             </div>
-                            <br>
-                            <div class="divider"></div>
-                            <br>
-                            <div class="comparativo__qamark">
-                                <div class="comparativo__titulo">CORTE SIN DESTINO CUOTA</div>
-                                <div>&nbsp;</div>
-                                <div *ngFor="let qm of qamarksNoCuota">
-                                    <div>{{nombreQamark(qm)}}</div>
+                            <div *ngFor="let id of idsReportes" class="comparativo__reportes">
+                                <div class="comparativo__titulo reporte__titulo">
+                                    <div>{{nombresReportes[id]}}</div>
+                                </div>
+                                <div class="titulo__prom">
+                                    <div>Kg Prom.</div>
+                                    <div>Rend. Prom.</div>
+                                </div>
+                                <div *ngFor="let cmp of comparativoPorIdCuota(id, cuotaComparativoReporte)"
+                                    class="comparativo">
+                                    <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
+                                        <div *ngIf="i % 2 == 0">{{d | number:'0.1-1'}}</div>
+                                        <div *ngIf="i % 2 != 0">{{d | percent:'0.1-1'}}</div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="divider"></div>
+                                <br>
+                                <br>
+                                <div class="titulo__prom">
+                                    <div>Kg Prom.</div>
+                                    <div>Rend. Prom.</div>
+                                </div>
+                                <div *ngFor="let cmp of comparativoPorIdCuota(id, noCuotaComparativoReporte)"
+                                    class="comparativo">
+                                    <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
+                                        <div *ngIf="i % 2 == 0">{{d | number:'0.1-1'}}</div>
+                                        <div *ngIf="i % 2 != 0">{{d | percent:'0.1-1'}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div *ngFor="let id of idsReportes" class="comparativo__reportes">
-                            <div class="comparativo__titulo reporte__titulo">
-                                <div>{{nombresReportes[id]}}</div>
-                            </div>
-                            <div class="titulo__prom">
-                                <div>Kg Prom.</div>
-                                <div>Rend. Prom.</div>
-                            </div>
-                            <div *ngFor="let cmp of comparativoPorIdCuota(id, cuotaComparativoReporte)" class="comparativo">
-                                <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
-                                    <div *ngIf="i % 2 == 0">{{d | number:'0.1-1'}}</div>
-                                    <div *ngIf="i % 2 != 0">{{d | percent:'0.1-1'}}</div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="divider"></div>
-                            <br>
-                            <br>
-                            <div class="titulo__prom">
-                                <div>Kg Prom.</div>
-                                <div>Rend. Prom.</div>
-                            </div>
-                            <div *ngFor="let cmp of comparativoPorIdCuota(id, noCuotaComparativoReporte)" class="comparativo">
-                                <div *ngFor="let d of cmp.datos; let i = index" class="comparativo__datos">
-                                    <div *ngIf="i % 2 == 0">{{d | number:'0.1-1'}}</div>
-                                    <div *ngIf="i % 2 != 0">{{d | percent:'0.1-1'}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </p-tabPanel>
-                <!-- <p-tabPanel header="COMPARATIVO POR CÓDIGOS">
-                    <comparativo-codigos 
-                        [lotesActivos]="tiposLote"
-                        [rangoFechas]="fechasReporteStr"
-                        [qamarks]="qamarks"
-                        [tiposRendimientos]="tiposCuota"
-                    />
-                </p-tabPanel> -->
-            </p-tabView>
+                    </p-tabPanel>
+                    <p-tabPanel header="COMPARATIVO POR CÓDIGOS">
+                        <comparativo-codigos [lotesActivos]="tiposLote" [rangoFechas]="fechasReporteStr"
+                            [qamarks]="qamarks" [tiposRendimientos]="tiposCuota"
+                            (qamarksChange)="actualizarQamarksComparativoCodigos($event)"
+                            (gruposChange)="actualizarGruposComparativoCodigos($event)" />
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
         </div>
-    </p-tabPanel>
-    
-    <p-tabPanel header="Configuración" *ngIf="false"></p-tabPanel>
-</p-tabView>
+
+        <p-tabPanel header="Configuración" *ngIf="false"></p-tabPanel>
+    </div>
+</div>
 
 <ng-template #noData>
     <div class="no__data" *ngIf="ist">
@@ -93,15 +102,11 @@
 
 <scroll-top />
 
-<sir-exportacion
-    *ngIf="reporteCuotaData.length > 0"
-    [excel]="true"
-    [idReporte]="idReporte"
-    [nombreArchivo]="nombreReporte"
-    [dataPrint]="{
+<sir-exportacion *ngIf="reporteCuotaData.length > 0" [excel]="true" [idReporte]="idReporte"
+    [nombreArchivo]="nombreReporte" [dataPrint]="{
         reporteCuotaData:reporteCuotaData,
         idsReporte: idsReportes,
         tiposCuota: tiposCuota,
         qamarks: qamarks,
         reportes: reportes
-    }"/>
+    }" />

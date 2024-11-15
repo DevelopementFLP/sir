@@ -81,6 +81,8 @@ export class PrintService {
         return this.printComparativosRendimientos(dataToPrint, libro);
       case 10:
         return this.printPackingList(dataToPrint, libro);
+      case 11:
+        return this.printLibroComparativoPorCodigos(dataToPrint, libro)
       default:
         return [];
     }
@@ -2280,6 +2282,15 @@ export class PrintService {
       columna += 3;
     });
     hojaComp.getColumn(2).width = 30;
+
+     //COMPARATIVO POR CODIGOS
+     {
+      const qamarksComprativo = this.comparativoCodigoService.getQamarksEnGrupos();
+      const gruposComparativo = this.comparativoCodigoService.getGruposComparativo();
+      
+      if(qamarksComprativo.length > 0 && gruposComparativo.length > 0) 
+        this.printComparativoPorCodigos(qamarksComprativo, gruposComparativo, libro);
+    }
   }
 
   comparativoPorIdCuota(id: number, c: ComparativoReporte[]): ComparativoReporte[] {
@@ -2647,48 +2658,89 @@ export class PrintService {
 
     const detallesTitulos = ['Código', 'Producto', 'Peso', 'Rend'];
 
+    const fuenteTitulo:             Partial<Font>         = { bold: true, size: 12 };
+    const fuenteDetalles:           Partial<Font>         = { italic: true, size: 11 };
+    const fuenteTituloCortes:       Partial<Font>         = { bold: true, size: 12, color: { argb: 'FF284F79'}};
+    const fuenteTituloGrupos:       Partial<Font>         = { bold: true, size: 12, color: { argb: 'FFAF610D'}};
+    const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
+    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
+    const formatoNumeroDecimal:     string                = '#,##0.00';
+
     let filaTitulos = 6;
     let filaQamark = 7;
     let columnaQamark = 2;
     let filaTituloGrupo = 6;
 
     hojaComp.getRow(filaTitulos).getCell(2).value = 'Corte';
+    hojaComp.getRow(filaTitulos).getCell(2).font = fuenteTitulo;
+    hojaComp.getRow(filaTitulos).getCell(2).alignment = alineacionCentro;
     hojaComp.getRow(filaTitulos).getCell(3).value = 'Detalles';
+    hojaComp.getRow(filaTitulos).getCell(3).font = fuenteTitulo;
+    hojaComp.getRow(filaTitulos).getCell(3).alignment = alineacionCentro;
     
+    hojaComp.getColumn(2).width = 20;
+    hojaComp.getColumn(3).width = 12;
+
     qamarks.forEach(qm => {
       let columnaTituloGrupo = 4;
       let filaASumarQamark = 0;
+      let filaInicialRangoQamark = filaQamark;
 
       hojaComp.getRow(filaQamark).getCell(columnaQamark).value = qm;
-      
-      let filaDetalleTitulo = filaQamark;
+      hojaComp.getRow(filaQamark).getCell(columnaQamark).font = fuenteTituloCortes;
+
       let columnaDetalleTitulo = 3;
-
-      // detallesTitulos.forEach((titulo, i) => {
-      //   hojaComp.getRow(filaDetalleTitulo + i).getCell(columnaDetalleTitulo).value = titulo;
-      // });
-
+      
       grupos.forEach(grupo => {
         hojaComp.getRow(filaTituloGrupo).getCell(columnaTituloGrupo).value = grupo.nombre;
-        const productosPorGrupo = grupo.productos.filter(producto => producto.qamark === qm);
-        filaASumarQamark = Math.max(filaASumarQamark, productosPorGrupo.length > 1 ? (productosPorGrupo.length - 1) * 4 : 0);
+        hojaComp.getRow(filaTituloGrupo).getCell(columnaTituloGrupo).font = fuenteTituloGrupos;
+        hojaComp.getRow(filaTituloGrupo).getCell(columnaTituloGrupo).alignment = alineacionCentro;
+        const productosPorGrupo = grupo.productos.filter(producto => producto.qamark === qm); console.log(productosPorGrupo, grupo);
+        
+        filaASumarQamark = Math.max(filaASumarQamark, productosPorGrupo.length > 1 ? (productosPorGrupo.length - 1) * 5 : 0);
+        let filaDetalleTitulo = filaQamark;
         let filaDetalleProducto = filaQamark;
         productosPorGrupo.forEach(prod => {
           hojaComp.getRow(filaDetalleTitulo).getCell(columnaDetalleTitulo).value = detallesTitulos[0];
+          hojaComp.getRow(filaDetalleTitulo).getCell(columnaDetalleTitulo).font = fuenteDetalles;
+          hojaComp.getRow(filaDetalleTitulo).getCell(columnaDetalleTitulo).alignment = alineacionDerecha;
           hojaComp.getRow(filaDetalleTitulo + 1).getCell(columnaDetalleTitulo).value = detallesTitulos[1];
+          hojaComp.getRow(filaDetalleTitulo + 1).getCell(columnaDetalleTitulo).font = fuenteDetalles;
+          hojaComp.getRow(filaDetalleTitulo + 1).getCell(columnaDetalleTitulo).alignment = alineacionDerecha;
           hojaComp.getRow(filaDetalleTitulo + 2).getCell(columnaDetalleTitulo).value = detallesTitulos[2];
+          hojaComp.getRow(filaDetalleTitulo + 2).getCell(columnaDetalleTitulo).font = fuenteDetalles;
+          hojaComp.getRow(filaDetalleTitulo + 2).getCell(columnaDetalleTitulo).alignment = alineacionDerecha;
           hojaComp.getRow(filaDetalleTitulo + 3).getCell(columnaDetalleTitulo).value = detallesTitulos[3];
+          hojaComp.getRow(filaDetalleTitulo + 3).getCell(columnaDetalleTitulo).font = fuenteDetalles;
+          hojaComp.getRow(filaDetalleTitulo + 3).getCell(columnaDetalleTitulo).alignment = alineacionDerecha;
           hojaComp.getRow(filaDetalleProducto).getCell(columnaTituloGrupo).value = prod.codigo;
+          hojaComp.getRow(filaDetalleProducto).getCell(columnaTituloGrupo).alignment = alineacionDerecha;
           hojaComp.getRow(filaDetalleProducto + 1).getCell(columnaTituloGrupo).value = prod.nombre;
-          hojaComp.getRow(filaDetalleProducto + 2).getCell(columnaTituloGrupo).value = prod.pesoPromedio;
-          hojaComp.getRow(filaDetalleProducto + 3).getCell(columnaTituloGrupo).value = prod.rendimiento;
-          filaDetalleProducto += 4;
-          filaDetalleTitulo += 4;
+          hojaComp.getRow(filaDetalleProducto + 1).getCell(columnaTituloGrupo).alignment = alineacionDerecha;
+          hojaComp.getRow(filaDetalleProducto + 2).getCell(columnaTituloGrupo).numFmt = formatoNumeroDecimal;
+          hojaComp.getRow(filaDetalleProducto + 2).getCell(columnaTituloGrupo).value = prod.pesoPromedio.toFixed(2);
+          hojaComp.getRow(filaDetalleProducto + 2).getCell(columnaTituloGrupo).alignment = alineacionDerecha;
+          hojaComp.getRow(filaDetalleProducto + 3).getCell(columnaTituloGrupo).numFmt = formatoNumeroDecimal;
+          hojaComp.getRow(filaDetalleProducto + 3).getCell(columnaTituloGrupo).value = (prod.rendimiento * 100).toFixed(2) + ' %';
+          hojaComp.getRow(filaDetalleProducto + 3).getCell(columnaTituloGrupo).alignment = alineacionDerecha;
+          filaDetalleProducto += 5;
+          filaDetalleTitulo += 5;
         });
+        hojaComp.getColumn(columnaTituloGrupo).width = 40;
         columnaTituloGrupo += 1;
       });
-      filaQamark += 4 + filaASumarQamark;
+      filaQamark += 5 + filaASumarQamark;
+      hojaComp.mergeCells(filaInicialRangoQamark, 2, filaQamark - 2, 2);
+      hojaComp.getRow(filaInicialRangoQamark).getCell(2).alignment = alineacionCentro;
     });
+  }
+
+  private printLibroComparativoPorCodigos(dataToPrint: PrintModel, libro: Workbook) {
+    const qamarksComprativo = this.comparativoCodigoService.getQamarksEnGrupos();
+    const gruposComparativo = this.comparativoCodigoService.getGruposComparativo();
+
+    if(qamarksComprativo.length > 0 && gruposComparativo.length > 0) 
+      this.printComparativoPorCodigos(qamarksComprativo, gruposComparativo, libro);
   }
 
   private printPackingList(dataToPrint: PrintModel, libro: Workbook): void {

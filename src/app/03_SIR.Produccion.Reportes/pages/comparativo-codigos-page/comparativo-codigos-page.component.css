@@ -1,8 +1,8 @@
-* {
-    padding: 0;
+.no__mostrar {
+    display: none;
 }
 
-.main__container {
+.comparativo__container {
     width: 100%;
     position: relative;
     padding: 1rem;
@@ -18,21 +18,4 @@
     gap: 1%;
     margin-bottom: 1rem;
     padding: 1rem;
-}
-
-.rendimientos__display {
-    display: flex;
-    flex-direction: row;
-    max-width: 1800px;
-    overflow-x: scroll;
-}
-
-.divider {
-    margin: 0;
-    margin-bottom: 0.5rem;
-}
-
-.divider__hr {
-    margin: 0;
-    margin-bottom: 0.5rem;
 }
