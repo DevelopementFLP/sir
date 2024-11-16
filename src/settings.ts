@@ -2,7 +2,6 @@
 
 export const urlAPI: string = "http://localhost:5205/api/";
 
-export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 //TESTING 
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
