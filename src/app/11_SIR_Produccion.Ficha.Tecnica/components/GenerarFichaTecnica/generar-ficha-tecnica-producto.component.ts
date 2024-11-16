@@ -68,6 +68,7 @@ export class FichaTecnicaProductoComponent {
   public pseudomonas: string = '';
   public escherichiaColi: string = '';
   public coliformesTotales: string = '';
+  public coliformesFecales: string = '';
 
   //! Campos de Plantilla
   public observacionDelProducto: string = '';
@@ -136,6 +137,7 @@ export class FichaTecnicaProductoComponent {
                     this.pseudomonas = fichaTecnica.pseudomonas;
                     this.escherichiaColi = fichaTecnica.escherichiaColi;
                     this.coliformesTotales = fichaTecnica.coliformesTotales;
+                    this.coliformesFecales = fichaTecnica.coliformesFecales;
     
                     // Campos de Plantilla
                     this.observacionDelProducto = fichaTecnica.observacion || '';

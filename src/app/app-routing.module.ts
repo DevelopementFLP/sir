@@ -66,6 +66,11 @@ import { HomeCrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Fich
 import { HomeGenerarFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/pages/home-generar-ficha-tecnica/home-generar-ficha-tecnica.component';
 import { RendimientosComponent } from './03_SIR.Produccion.Reportes/pages/rendimientos/rendimientos.component';
 import { PaginaPrincipalIncidentesComponent } from './12_SIR_Produccion.ControlDeCalidad/pages/pagina-principal-incidentes/pagina-principal-incidentes.component';
+
+import { CrearFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-ficha-tecnica/crear-ficha-tecnica.component';
+import { CrearPlantillaFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-plantilla-ficha-tecnica/crear-plantilla-ficha-tecnica.component';
+import { CrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-producto-ficha-tecnica/crear-producto-ficha-tecnica.component';
+import { LisaDeFichasTecnicasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDeFichasTecnicas/lisa-de-fichas-tecnicas.component';
 import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pages/comparativo-codigos-page/comparativo-codigos-page.component';
 
 
@@ -136,7 +141,15 @@ const routes: Routes = [
     {path: 'faena/ReporteDeCuarteo', component: ReporteDeMediasComponent},
     {path: 'produccion/GenerarFichaTecnica', component: HomeGenerarFichaTecnicaComponent},
     {path: 'produccion/MantenimientoDeFichaTecnica', component: HomeMantenimientoFichaTecnicaComponent},
-    { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent},
+
+    { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent, children: [
+      { path: 'listaDeFichasTecnicas', component: LisaDeFichasTecnicasComponent },
+      { path: 'crearFichaTecnica', component: CrearFichaTecnicaComponent },
+      { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
+      { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
+      { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent }
+    ]},
+
     { path: 'produccion/VisualizarIncidentes', component: PaginaPrincipalIncidentesComponent},
   ]},
   { path: 'registro', component: RegistroComponent},

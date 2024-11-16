@@ -1,0 +1,195 @@
+<div class="grid-container" *ngIf="ficha">
+
+    <!-- Sección de Datos del Producto -->
+    <div class="grid-container-seccion">
+        
+        <div class="grid-items caj-2">
+            <p>Código / Code</p>
+            <input [(ngModel)]="codigoProducto" (ngModelChange)="VerificarCambios()" class="input-field" disabled>
+        </div>
+
+        <!-- Campos de entrada de datos del producto -->
+        <div class="grid-items caj-1">
+            <p>Nombre / Name</p>
+            <input [(ngModel)]="nombreProducto" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-3">
+            <p>Descripción / Description</p>
+            <textarea [(ngModel)]="descripcionDelProducto" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
+        </div>
+
+        <div class="grid-items caj-3">
+            <p>Destino / Destination</p>
+            <textarea [(ngModel)]="destino" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
+        </div>
+
+        <div class="grid-items caj-4">
+            <p>Marca / Brand</p>
+            <input [(ngModel)]="marca" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-5">
+            <p>Tipo de Uso / Usage Type</p>
+            <input [(ngModel)]="tipoDeUso" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-6">
+            <p>Alergeno / Allergen</p>
+            <input [(ngModel)]="alergeno" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-7">
+            <p>Almacenamiento / Storage</p>
+            <input [(ngModel)]="almacenamiento" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-8">
+            <p>Vida útil / Shelf Life</p>
+            <input [(ngModel)]="vidaUtil" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-9">
+            <p>Tipo de Envase / Packaging Type</p>
+            <input [(ngModel)]="tipoDeEnvase" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-10">
+            <p>Presentación de Envase / Packaging Presentation</p>
+            <input [(ngModel)]="presentacionDeEnvase" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-11">
+            <p>Peso Promedio / Average Weight</p>
+            <input type="number" [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-12">
+            <p>Unidades por Caja / Units per Box</p>
+            <input type="number" [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-13">
+            <p>Dimensiones / Dimensions</p>
+            <input [(ngModel)]="dimensiones" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <!-- Campos adicionales -->
+        <div class="grid-items caj-14">
+            <p>Grasa Visible / Visible Fat</p>
+            <input [(ngModel)]="grasaVisible" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-15">
+            <p>Espesor Cobertura / Coating Thickness</p>
+            <input [(ngModel)]="espesorCobertura" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-16">
+            <p>Ganglios / Lymph Nodes</p>
+            <input [(ngModel)]="ganglios" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-17">
+            <p>Hematomas / Bruises</p>
+            <input [(ngModel)]="hematomas" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-18">
+            <p>Huesos y Cartílagos / Bones & Cartilage</p>
+            <input [(ngModel)]="huesosCartilagos" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-19">
+            <p>Idioma / Language</p>
+            <input [(ngModel)]="idioma" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-20">
+            <p>Elementos Extraños / Foreign Elements</p>
+            <input [(ngModel)]="elementosExtranos" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-21">
+            <p>Color / Color</p>
+            <input [(ngModel)]="color" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-22">
+            <p>Olor / Smell</p>
+            <input [(ngModel)]="olor" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-23">
+            <p>pH</p>
+            <input [(ngModel)]="ph" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <!-- Microbiológicos -->
+        <div class="grid-items caj-24">
+            <p>Aerobios Mesófilos Totales / Total Mesophilic Aerobes</p>
+            <input [(ngModel)]="aerobiosMesofilosTotales" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-25">
+            <p>Enterobacterias / Enterobacteria</p>
+            <input [(ngModel)]="enterobacterias" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-26">
+            <p>STEC 0157</p>
+            <input [(ngModel)]="stec0157" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-27">
+            <p>STEC No 0157</p>
+            <input [(ngModel)]="stecNo0157" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-28">
+            <p>Salmonella</p>
+            <input [(ngModel)]="salmonella" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-29">
+            <p>Estafilococos / Staphylococci</p>
+            <input [(ngModel)]="estafilococos" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-30">
+            <p>Pseudomonas</p>
+            <input [(ngModel)]="pseudomonas" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-31">
+            <p>Escherichia Coli</p>
+            <input [(ngModel)]="escherichiaColi" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-32">
+            <p>Coliformes Totales / Total Coliforms</p>
+            <input [(ngModel)]="coliformesTotales" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+
+        <div class="grid-items caj-33">
+            <p>Coliformes Fecales / Fecal Coliforms</p>
+            <input [(ngModel)]="coliformesFecales" (ngModelChange)="VerificarCambios()" class="input-field" required>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 9: Observaciones -->
+    <div class="grid-container-seccion-9">
+        <div class="grid-items caj-1">
+            <p>Observación / Observation</p>
+        </div>
+        <div class="grid-items caj-5">
+            <textarea [(ngModel)]="observacionDelProducto" (ngModelChange)="VerificarCambios()" class="input-field"></textarea>
+        </div>
+    </div>
+
+    <!-- Botón de guardar cambios -->
+    <div class="grid-items">
+        <button [disabled]="!seModificoAlgunCampo" (click)="EditarFichaTecnica()" class="btn-editar">Guardar Cambios</button>
+    </div>
+
+</div>
