@@ -40,6 +40,7 @@ export interface FtFichaTecnicaDTO {
     pseudomonas?: string; 
     escherichiaColi?: string; 
     coliformesTotales?: string; 
+    coliformesFecales?: string; 
 
     observacion?: string;
     elaboradoPor?: string;

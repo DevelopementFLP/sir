@@ -398,8 +398,7 @@
                         </div>
                         <div class="grid-items-seccion caj-datos-12-sec-8" *ngIf="stec0157 !== 'NO APLICA'">
                             <p>{{ stec0157 }}</p>
-                        </div>
-                        
+                        </div>                        
                         
                         <div class="grid-items-seccion caj-16-sec-8" *ngIf="stecNo0157 !== 'NO APLICA'">
                             <p>STEC no O157:H7 (en/in 375g)</p>
@@ -428,18 +427,25 @@
                         <div class="grid-items-seccion caj-datos-16-sec-8" *ngIf="coliformesTotales !== 'NO APLICA'">
                             <p>{{ coliformesTotales }}</p>
                         </div>
+
+                        <div class="grid-items-seccion caj-20-sec-8" *ngIf="coliformesTotales !== 'NO APLICA'">
+                            <p>Coliformes fecales (ufc/g)/Fecal coliforms (cfu/g)</p>
+                        </div>
+                        <div class="grid-items-seccion caj-datos-17-sec-8" *ngIf="coliformesTotales !== 'NO APLICA'">
+                            <p>{{ coliformesFecales }}</p>
+                        </div>
                         
-                        <div class="grid-items-seccion caj-20-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
+                        <div class="grid-items-seccion caj-21-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
                             <p>Pseudomonas (UFC/g)</p>
                         </div>
-                        <div class="grid-items-seccion caj-datos-17-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
+                        <div class="grid-items-seccion caj-datos-18-sec-8" *ngIf="pseudomonas !== 'NO APLICA'">
                             <p>{{ pseudomonas }}</p>
                         </div>
                         
-                        <div class="grid-items-seccion caj-21-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
+                        <div class="grid-items-seccion caj-22-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
                             <p>Escherichia Coli (UFC/g)</p>
                         </div>
-                        <div class="grid-items-seccion caj-datos-18-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
+                        <div class="grid-items-seccion caj-datos-19-sec-8" *ngIf="escherichiaColi !== 'NO APLICA'">
                             <p>{{ escherichiaColi }}</p>
                         </div>
 

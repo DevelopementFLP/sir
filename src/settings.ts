@@ -1,11 +1,11 @@
 
-//export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 
 
 //export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 //TESTING 
-export const urlAPI: string = "http://192.168.0.107:90/api/";
+//export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -247,10 +247,13 @@ export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
 
-
+//Ficha tecnica
 export const urlFichaTecnica: string = urlAPI + "FtFichaTecnica/"
 export const urlCrearFichaTecnica: string = urlFichaTecnica + "CrearFichaTecnica"
 export const urlBuscarFichaTecnica: string = urlFichaTecnica + "BuscarFichaTecnica"
+export const urlListaDeFichasTecnicas: string = urlFichaTecnica + "ListaDeFichasTecnicas"
+export const urlEditarFichaTecnica: string = urlFichaTecnica + "EditarFichaTecnica"
+export const urlEliminarFichaTecnica: string = urlFichaTecnica + "EliminarFichaTecnica"
 
 // Ficha Tecnica Imagenes
 export const urlFichaTecnicaImagenes: string = urlAPI + "FtImagenes/"
