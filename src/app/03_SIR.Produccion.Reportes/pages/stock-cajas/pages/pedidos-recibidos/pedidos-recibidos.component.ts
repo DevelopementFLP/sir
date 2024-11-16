@@ -417,14 +417,14 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
       let saldo: number = cajas_Solicitadas - cajas_Armadas;
  
       // Para que no inserte una cantidad mayor a la que se necesita
-      if($event > saldo){
-        this.mensaje = "Faltan " +saldo +" cajas ingrese una cantidad igual o menor"
-        // alert("Faltan " +saldo +" cajas ingrese una cantidad igual o menor");
-        this.openDialog();
-        return;
+      // if($event > saldo){
+      //   this.mensaje = "Faltan " +saldo +" cajas ingrese una cantidad igual o menor"
+      //   // alert("Faltan " +saldo +" cajas ingrese una cantidad igual o menor");
+      //   this.openDialog();
+      //   return;
 
 
-      }
+      // }
 
     
 

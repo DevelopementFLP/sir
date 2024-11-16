@@ -1,0 +1,89 @@
+<div class="main__container">
+    <div class="botonera">
+        <button 
+            pButton 
+            type="button" 
+            name="btnReporte" 
+            label="Agregar grupo de productos" 
+            class="btn__ok p-button-sm p-button-secondary" 
+            icon="pi pi-plus"
+            (click)="abrirDialogoNuevoGrupo(undefined)">
+        </button>
+        <button 
+            *ngIf="grupos.length > 0"   
+            pButton     
+            type="button" 
+            name="btnReporte" 
+            label="Borrar todo" 
+            class="p-button-sm p-button-danger" 
+            icon="pi pi-trash"
+            (click)="confirmarEliminacion($event, 0)">
+        </button>
+    </div>
+    <div class="grupos" *ngIf="grupos.length > 0">
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                  <th>Corte</th>
+                  <th>Detalles</th>
+                  <th *ngFor="let grupo of grupos; let i = index" class="grupo-header">
+                    <div class="header-content">
+                    <span>Grupo {{ i + 1 }}: ({{ grupo.nombre }})</span>
+                    <button
+                        pTooltip="Editar '{{grupo.nombre}}'"
+                        tooltipPosition="bottom" 
+                        pButton 
+                        type="button" 
+                        icon="pi pi-pencil" 
+                        class="p-button-sm p-element p-ripple p-button-rounded p-button-warning p-button-text p-button p-component p-button-icon-only" (click)="editarGrupo(i)">
+                    </button>
+                    <button
+                        pTooltip="Eliminar '{{grupo.nombre}}'"
+                        tooltipPosition="bottom" 
+                        pButton 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only" (click)="confirmarEliminacion($event, 1, i)">
+                    </button>
+                    </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table__body">
+                <tr *ngFor="let qamark of qamarksEnGrupos; let i = index" [ngClass]="{'fila-impar': i % 2 !== 0}">
+                    <td>{{qamark}}</td>
+                    <td class="">
+                        <div class="centered-content" *ngFor="let i of [].constructor(qamarkRowspans[qamark])">
+                            <div>Código</div>
+                            <div>Producto</div>
+                            <div>Peso</div>
+                            <div>Rend</div>
+                        </div>
+                    </td>
+                    <td *ngFor="let grupo of grupos" class="">
+                        <ng-container *ngIf="buscarProductosPorQamark(grupo.productos, qamark).length; else noProducto" class="">
+                            <div *ngFor="let producto of buscarProductosPorQamark(grupo.productos, qamark)" class="centered-content values">
+                                <div>{{producto.codigo}}</div>
+                                <div>{{producto.nombre}}</div>
+                                <div>{{producto.pesoPromedio | number:'0.2-2'}}</div>
+                                <div>{{producto.rendimiento | percent:'0.2-2'}}</div>
+                            </div>
+                            <div *ngFor="let i of [].constructor(qamarkRowspans[qamark] - buscarProductosPorQamark(grupo.productos, qamark).length)" class="centered-content values">
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                                <div>&nbsp;</div>
+                            </div>
+                        </ng-container>
+                        <ng-template #noProducto>
+                            <span>-</span>
+                        </ng-template>
+                    </td>                 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p-confirmDialog />

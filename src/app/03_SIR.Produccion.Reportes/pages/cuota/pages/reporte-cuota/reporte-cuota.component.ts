@@ -9,7 +9,10 @@ import { ComparativoReporte } from '../../interfaces/ComparativoReporte.interfac
 import { ConfReporteCuotaDTO } from '../../interfaces/ConfReporteCuotaDTO.interface';
 import { ConfTipoCuotaDTO } from '../../interfaces/ConfTipoCuotaDTO.interface';
 import { CuotaService } from '../../services/cuota.service';
+import { DWCaja } from '../../interfaces/DWCaja.interface';
 import { DWCajaSalidaDTO } from '../../interfaces/DWCajaSalidaDTO.interface';
+import { DWCorte } from '../../interfaces/DWCorte.interface';
+import { DWEntrada } from '../../interfaces/DWEntrada.interface';
 import { DWSalidaDTO } from '../../interfaces/DWSalidaDTO.interface';
 import { LoteDTO } from '../../interfaces/LoteDTO.interface';
 import { LoteEntradaDTO } from '../../interfaces/LoteEntradaDTO.interface';
@@ -19,6 +22,9 @@ import { QamarkDTO } from '../../interfaces/QamarkDTO.interface';
 import { ReporteCuota } from '../../interfaces/ReporteCuota.interface';
 import { SalidaDTO } from '../../interfaces/SalidaDTO.interface';
 import { TipoCuotaDict } from '../../interfaces/TipoCuotaDict.interface';
+import { TipoLote } from '../../../rendimientos/interfaces/TipoLote.interface';
+import { ComparativoCodigosService } from 'src/app/03_SIR.Produccion.Reportes/services/comparativo-codigos.service';
+import { GrupoComparativo } from 'src/app/03_SIR.Produccion.Reportes/interfaces/GrupoComparativo.interface';
 
 @Component({
   selector: 'app-reporte-cuota',
@@ -58,26 +64,29 @@ export class ReporteCuotaComponent implements OnInit {
   idReporte:                  number                = 8;
   ist:                        boolean               = false;
 
-  // DW
-  dwCajas:        DWCajaSalidaDTO[] = [];
-  dwCortes:       DWSalidaDTO[]     = [];
-  dwLotesEntrada: LoteEntradaDTO[]  = [];
+  tiposLote: TipoLote[] = [];
+  fechasReporteStr: string[] = [];
 
   hoy: Date = new Date();
   hoyStr: string = this.formatearFecha(this.hoy);
 
   constructor(
     private cuotaService: CuotaService,
-    private ccs:          CommonCuotaService
+    private ccs:          CommonCuotaService,
+    private comparativoService: ComparativoCodigosService
   ) {}
   
   async ngOnInit(): Promise<void> {
     this.resetearFechas();
     this.resetearValores();
-    this.nombreReporte = `Rendimientos cuota del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`;
+    this.nombreReporte = `Rendimientos cuota del ${this.fechaDesdeStr} al ${this.fechaHastaStr}`; 
   }
 
   private setDataComparativo(): void {
+    this.cuotaComparativoReporte = [];
+    this.noCuotaComparativoReporte = [];
+    this.qamarksCuota = [];
+    this.qamarksNoCuota = [];
     this.comparativoData          = this.ccs.getComparativoData(this.idsReportes, this.reportes);
     this.qamarksUnicos            = this.ccs.getQamarksUnicos(this.comparativoData, this.qamarks);
     this.comparativoDataFiltrada  = this.ccs.agruparDataComparativo(this.comparativoData, this.idsReportes);
@@ -85,30 +94,17 @@ export class ReporteCuotaComponent implements OnInit {
     this.comparativoNoCuota       = this.comparativoDataFiltrada.filter(cdf => cdf.tipo == 'NO CUOTA');
 
     this.comparativoCuota
-    .sort((a, b) => {
-      if(a.conditon <= b.conditon) return -1;
-      return 1;
-    })
-    .sort((a, b) => {
-      if(a.qamark <= b.qamark) return -1;
-      return 1
-    });
+    .sort((a, b) => a.conditon <= b.conditon ? -1 : 1)
+    .sort((a, b) => a.qamark <= b.qamark ? -1 : 1);
     
     this.comparativoNoCuota
-    .sort((a, b) => {
-      if(a.conditon <= b.conditon) return -1;
-      return 1;
-    })
-    .sort((a, b) => {
-      if(a.qamark <= b.qamark) return -1;
-      return 1
-    });
+    .sort((a, b) => a.conditon <= b.conditon ? -1 : 1)
+    .sort((a, b) => a.qamark <= b.qamark ? -1 : 1);
 
     this.cuotaComparativoReporte = this.ccs.formatearDatosComparativo(this.comparativoCuota, this.qamarksUnicos, this.idsReportes);
     this.noCuotaComparativoReporte = this.ccs.formatearDatosComparativo(this.comparativoNoCuota, this.qamarksUnicos, this.idsReportes);
-     
     this.qamarksCuota   = Array.from(new Set(this.cuotaComparativoReporte.map(c => c.qamark)));
-    this.qamarksNoCuota = Array.from(new Set(this.noCuotaComparativoReporte.map(c => c.qamark)));
+    this.qamarksNoCuota = Array.from(new Set(this.noCuotaComparativoReporte.map(c => c.qamark)));    
   }
 
   onCambioFecha(): void {
@@ -127,6 +123,7 @@ export class ReporteCuotaComponent implements OnInit {
     this.tiposCuota       = [];
     this.reportes         = {};
     this.nombresReportes  = {};
+    this.tiposLote        = [];
   }
 
   private resetearFechas(): void {
@@ -162,6 +159,7 @@ export class ReporteCuotaComponent implements OnInit {
     );
   }
 
+
   async hacerReporte(): Promise<void> {
     this.ist = true;
     this.resetearValores();
@@ -171,16 +169,36 @@ export class ReporteCuotaComponent implements OnInit {
     await this.setReporteCuotaDatos();
     this.getIdsReportes();
     this.setDataComparativo();
+    this.tiposLote = this.setTiposLote();
+  }
+
+  private setTiposLote(): TipoLote[] {  
+    let tipoLote: TipoLote[] = [];
+    this.lotesTipo.forEach(lote => {
+      lote.lotes.forEach(lt => {
+        tipoLote.push({
+          idTipo: lote.id,
+          lote: lt
+        });
+      });
+    });        
+    return tipoLote;
   }
 
   private setListaFechas(): void {
-    this.fechasReporte  = [];
-    const fechaInicio   = new Date(this.fechaDesdeStr);
-    const fechaFin      = new Date(this.fechaHastaStr);
+    this.fechasReporte    = [];
+    this.fechasReporteStr = [];
+
+    const fechaInicio = new Date(this.fechaDesdeStr);
+    const fechaFin    = new Date(this.fechaHastaStr);
+
+    fechaInicio.setUTCHours(0, 0, 0, 0);
+    fechaFin.setUTCHours(0, 0, 0, 0);
 
     let fechaActual = new Date(fechaInicio);
     while (fechaActual <= fechaFin) {
       this.fechasReporte.push(new Date(fechaActual));
+      this.fechasReporteStr.push(this.formatearFecha(new Date(fechaActual)));
       fechaActual.setDate(fechaActual.getDate() + 1);
     }
   }
@@ -211,27 +229,33 @@ export class ReporteCuotaComponent implements OnInit {
   }
 
   private async setReporteCuotaDatos(): Promise<void> {
+    let dwCajas:        DWCajaSalidaDTO[] = [];
+    let dwCortes:       DWSalidaDTO[]     = [];
+    let dwLotesEntrada: LoteEntradaDTO[]  = [];
+
+    let cajasT: DWCaja[] = [];
+    
+    const ultimaFechaReporte = this.formatearFecha(this.fechasReporte[this.fechasReporte.length - 1]);
+    if(this.hoyStr == ultimaFechaReporte) await lastValueFrom(this.cuotaService.execInsertarDatosDW());
+    
     this.reporteCuotaData = [];
     this.idsReportes      = [];
     
-    const ultimaFechaReporte = this.formatearFecha(this.fechasReporte[this.fechasReporte.length - 1]);
+    let fechaD = this.fechasReporteStr[0]; 
+    let fechaH = this.fechasReporteStr[this.fechasReporteStr.length - 1];
 
-    if(this.hoyStr == ultimaFechaReporte) {
-      await lastValueFrom(this.cuotaService.execInsertarDatosDW());
-    }
+    dwCajas = await lastValueFrom(this.cuotaService.getDWCajasLotes(fechaD, fechaH, 'CUOTA'));      
+    cajasT = this.parsearCajas(dwCajas);
     
-
-    let fechaD = this.formatearFecha(this.fechasReporte[0]);
-    let fechaH = this.formatearFecha(this.fechasReporte[this.fechasReporte.length - 1]);
-
     for (const lt of this.lotesTipo) {
-      const shnameCuota = this.tiposCuota.find(t => t.id == lt.id)?.shname;
+      const shnameCuota = this.tiposCuota.find(t => t.id === lt.id)?.shname;
       const lotesStr  = this.lotesToSting(lt.lotes);
-      this.dwCajas = await lastValueFrom(this.cuotaService.getDWCajasLotes(fechaD, fechaH, 'CUOTA'));
-      if(this.dwCajas.length > 0) {
-        this.dwCortes = await lastValueFrom(this.cuotaService.getDWCortes(fechaD, fechaH, lotesStr));
-        if(this.dwCortes.length > 0) {
-          const ctsCuota = this.dwCortes.filter(c => c.customer?.startsWith('CUOTA'));
+    
+      if(cajasT.length > 0) {
+        dwCortes = await lastValueFrom(this.cuotaService.getDWCortes(fechaD, fechaH, lotesStr));
+        if(dwCortes.length > 0) {
+          const cortesT: DWCorte[] = this.parsearCortes(dwCortes);
+          const ctsCuota = cortesT.filter(c => c.customer?.startsWith('CUOTA'));
           const conditions: string[] = Array.from(
             new Set(
               ctsCuota
@@ -239,34 +263,14 @@ export class ReporteCuotaComponent implements OnInit {
                 .map(c => c.condition)
             )
           );
-          this.dwLotesEntrada = await lastValueFrom(this.cuotaService.getDWELotesEntrada(fechaD, fechaH, lotesStr));
-          this.fechasReporte.forEach(fecha => {
-            const target: Date = new Date(fecha);
-            target.setHours(-3);
-            const entrada = this.dwLotesEntrada.filter(
-              c => 
-                {
-                  const cDate = new Date(c.fecha);
-                  cDate.setHours(-3);
-                  return cDate.getTime() === target.getTime();
-                }
-            );
-            const cortes  = this.dwCortes.filter(
-              c => 
-                {
-                  const cDate = new Date(c.fecha);
-                  cDate.setHours(-3);
-                  return cDate.getTime() === target.getTime() && !c.customer?.includes('CUOTA');
-                }
-            );
-            const cajas   = this.dwCajas.filter(
-              c => 
-                {
-                  const cDate = new Date(c.fecha);
-                  cDate.setHours(-3);
-                  return cDate.getTime() === target.getTime() && conditions.includes(c.condition!);
-                }
-            );
+
+          dwLotesEntrada = await lastValueFrom(this.cuotaService.getDWELotesEntrada(fechaD, fechaH, lotesStr));
+          let entradaT: DWEntrada[] = this.parsearEntrada(dwLotesEntrada);
+
+          this.fechasReporteStr.forEach(fecha => {
+            const entrada = entradaT.filter(e => e.fecha === fecha);        
+            const cortes  = cortesT.filter(c => c.fecha === fecha && !c.customer?.includes('CUOTA'));
+            const cajas = cajasT.filter(c => c.fecha === fecha && conditions.includes(c.condition!));
 
             let productos: SalidaDTO[] = [];
 
@@ -302,8 +306,8 @@ export class ReporteCuotaComponent implements OnInit {
             
             const repoCta: ReporteCuota = {
               id:       lt.id,
-              fecha:    this.formatearFecha(fecha),
-              entrada:  entrada,
+              fecha:    fecha,
+              entrada:  this.mapEntrada(entrada),
               cortes:   productos,
             };
 
@@ -314,26 +318,20 @@ export class ReporteCuotaComponent implements OnInit {
           });
         }
       }
-    }
-
+    }    
     this.setNombresReportes();
     this.agruparReportesPorId();
   }
 
   private getIdsReportes(): void {
-    this.idsReportes = Array.from(
-      new Set(this.reporteCuotaData.map(rcd => rcd.id))
-    ).sort((a, b) => {
-      if (a <= b) return -1;
-      return 1;
-    });
+    this.idsReportes = Array.from(new Set(this.reporteCuotaData.map(rcd => rcd.id))).sort((a, b) => a - b);
   }
 
   getNombrePorId(id: number): string {
     return this.tiposCuota.find((tp) => tp.id === id)?.nombre!;
   }
 
-  filtrarReportesPorId(id: number): ReporteCuota[] {    
+  filtrarReportesPorId(id: number): ReporteCuota[] {        
     return this.reporteCuotaData.filter(rcd => rcd.id === id);
   }
 
@@ -341,7 +339,7 @@ export class ReporteCuotaComponent implements OnInit {
     this.getIdsReportes();
     this.idsReportes.forEach(id => {
       this.reportes[id] = this.filtrarReportesPorId(id);
-    });
+    });    
   }
 
   private setNombresReportes(): void {
@@ -358,6 +356,67 @@ export class ReporteCuotaComponent implements OnInit {
     return c.filter(c => c.idCuota == id);
   }
 
+  private parsearEntrada(entrada: LoteEntradaDTO[]): DWEntrada[] {
+    let dwEntrada: DWEntrada[] = entrada.map(item => ({
+     fecha: formatDate(item.fecha, 'yyyy-MM-dd', 'es-UY'),
+     code: item.code,
+     cuartos: item.cuartos,
+     lote: item.lote,
+     peso: item.peso,
+     tipoCuarto: item.tipoCuarto
+    }));
+    return dwEntrada;
+  }
+
+  private parsearCajas(cajas: DWCajaSalidaDTO[]): DWCaja[] {
+    let dwCajas: DWCaja[] = cajas.map(caja => ({
+      fecha: formatDate(caja.fecha, 'yyyy-MM-dd', 'es-UY'),
+      condition: caja.condition,
+      code: caja.code,
+      producto: caja.producto,
+      customercode: caja.customercode,
+      qamark: caja.qamark,
+      piezas: caja.piezas,
+      cajas: caja.cajas,
+      peso: caja.peso
+    }));
+    return dwCajas;
+  }
   
+  private parsearCortes(cortes: DWSalidaDTO[]): DWCorte[] {
+    let dwCortes: DWCorte[] = cortes.map(corte => ({
+      fecha: formatDate(corte.fecha, 'yyyy-MM-dd','es-UY'),
+      codigo: corte.codigo,
+      condition: corte.condition,
+      lote: corte.lote,
+      marca: corte.marca,
+      material: corte.material,
+      peso: corte.peso,
+      piezas: corte.piezas,
+      producto: corte.producto,
+      customer: corte.customer
+    }));
+    return dwCortes;
+  }
+
+  private mapEntrada(entrada: DWEntrada[]): LoteEntradaDTO[] {
+    let loteEntrada: LoteEntradaDTO[] = entrada.map(item => ({
+      fecha: new Date(item.fecha),
+      code: item.code,
+      cuartos: item.cuartos,
+      lote: item.lote,
+      peso: item.peso,
+      tipoCuarto: item.tipoCuarto
+     }));
+     return loteEntrada; 
+  }
+
+  protected actualizarQamarksComparativoCodigos(qamarks: string[]): void {
+    this.comparativoService.actualizarQamarksComparativoCodigos(qamarks);
+  }
+
+  protected actualizarGruposComparativoCodigos(grupos: GrupoComparativo[]): void {
+    this.comparativoService.actualizarGruposComparativoCodigos(grupos);
+  }
 }
  
