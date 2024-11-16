@@ -12,7 +12,6 @@ import { formatDate } from '@angular/common';
 import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
 import { PedidoPadreMostrar } from '../../interfaces/PedidoPadreMostrar.interface';
 
-
 @Component({
   selector: 'app-pedidos-activos',
   templateUrl: './pedidos-activos.component.html',
@@ -645,6 +644,22 @@ if(this.pedidosActualizar){
     return idpedido?.length ?? 0;
   }
 
+  getCantidadEntregados(idPedidoPadre: number): number {
 
+    const pedidos2 = this.pedidos;
+    const idpedido = pedidos2?.filter(t => t.id_Pedido_Padre == idPedidoPadre);
 
+    let cantidadEntregadosTotal = 0;
+    let cantidadSolicitadaTotal = 0;
+
+  idpedido!.forEach(p => {
+    const cantidadFaltan = this.pedidosMostrar?.find(t => t.idPedido === p.id_Pedido);
+    cantidadSolicitadaTotal = cantidadSolicitadaTotal + p.stock_Pedido;
+    cantidadEntregadosTotal = cantidadEntregadosTotal + cantidadFaltan!.cantidadEntregados;
+  });
+    // let TotalPorcentaje = Math.round((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal)
+    let TotalPorcentaje = ((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal).toFixed(2);
+    return Number(TotalPorcentaje);   
+  }
+  
 }
