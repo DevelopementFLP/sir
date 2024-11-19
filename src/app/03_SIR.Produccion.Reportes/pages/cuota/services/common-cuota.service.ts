@@ -403,4 +403,19 @@ export class CommonCuotaService {
   getComparativoPorIdCuoat(id: number, cmp: Comparativo[]): Comparativo[] {
     return cmp.filter((c) => c.idCuota === id);
   }
+
+  combinarProductosIguales(data: SalidaDTO[]): SalidaDTO[] {
+    const result: { [key: string]: SalidaDTO } = {};
+
+  data.forEach(item => {
+    if (result[item.code]) {
+      result[item.code].peso += item.peso;
+      result[item.code].piezas += item.piezas;
+    } else {
+      result[item.code] = { ...item };
+    }
+  });
+
+    return Object.values(result);
+  }
 }
