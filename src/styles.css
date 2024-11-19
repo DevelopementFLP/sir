@@ -149,3 +149,15 @@ input.ng-tns-c59-4.p-inputtext.p-component.ng-star-inserted {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.pb-pedidos-activos30 .p-progressbar-value.p-progressbar-value-animate.ng-star-inserted{
+      background-color: rgb(196, 6, 6) !important;
+    
+    }
+.pb-pedidos-activos70 .p-progressbar-value.p-progressbar-value-animate.ng-star-inserted{
+      background-color: rgb(233, 154, 7) !important;
+    }
+.pb-pedidos-activos99 .p-progressbar-value.p-progressbar-value-animate.ng-star-inserted{
+      background-color: rgb(10, 168, 31) !important;
+    }
+  

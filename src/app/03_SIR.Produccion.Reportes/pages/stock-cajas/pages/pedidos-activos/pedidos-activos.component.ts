@@ -15,7 +15,7 @@ import { PedidoPadreMostrar } from '../../interfaces/PedidoPadreMostrar.interfac
 @Component({
   selector: 'app-pedidos-activos',
   templateUrl: './pedidos-activos.component.html',
-  styleUrls: ['./pedidos-activos.component.css']
+  styleUrls: ['./pedidos-activos.component.css'],
 })
 export class PedidosActivosComponent implements OnInit, OnDestroy {
 
@@ -659,7 +659,9 @@ if(this.pedidosActualizar){
   });
     // let TotalPorcentaje = Math.round((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal)
     let TotalPorcentaje = ((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal).toFixed(2);
-    return Number(TotalPorcentaje);   
-  }
   
+    return Number(TotalPorcentaje);
+  
+  }
+
 }
