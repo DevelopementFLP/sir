@@ -149,3 +149,9 @@ input.ng-tns-c59-4.p-inputtext.p-component.ng-star-inserted {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.animales-dia__grafico p-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}

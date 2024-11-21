@@ -1,7 +1,8 @@
-
+// PRODUCCIÓN
 export const urlAPI: string = "http://192.168.0.107:82/api/";
-// export const urlAPI: string = "http://localhost:5205/api/";
 
+// DESARROLLO
+// export const urlAPI: string = "http://localhost:5205/api/";
 
 //TESTING 
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
@@ -232,13 +233,17 @@ export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFecha
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
 
-
 // Rendimientos
 export const urlRendimientos: string = urlAPI + "Rendimientos/";
 export const urlCortesPorLoteYFecha: string = urlRendimientos + "GetCortesPorLoteYFecha";
 export const urlConfTipoRendimiento: string = urlRendimientos + "GetConfigTipoRendimiento";
 export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
 export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
+
+
+// Dashboard pantalla principal
+export const urlAnimalesFaenados: string = urlAPI + "AnimalesFaenados/GetAnimalesFaenadosAsync";
+export const urlAnimalesGradeYear: string = urlAPI + "AnimalesGradeYear/GetAnimalesGradeYearAsync";
 
 
 // Reporte de medias Faena
