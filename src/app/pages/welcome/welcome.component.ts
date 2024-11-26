@@ -143,8 +143,8 @@ export class WelcomeComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private setAGData(): void {
-    this.dataAgrupada = this.getAnimalesSuma(this.animalesGradeYear);
+  private setAGData(animales: AnimalesGradeYear[]): void {
+    this.dataAgrupada = this.getAnimalesSuma(animales);
     this.aGData = {
       labels: Array.from(new Set(this.animalesGradeYear.map(a => a.grade))),
       datasets: [
@@ -177,7 +177,7 @@ private getAnimalesSuma(data: AnimalesGradeYear[]): number[] {
   private setDataDisplay(): void {
     this.setDataSetGrafico();
     this.setAFData();
-    this.setAGData();
+    this.setAGData(this.animalesGradeYear);
   }
 
   private setAnimalesMesData(): void {
@@ -276,7 +276,7 @@ private getAnimalesSuma(data: AnimalesGradeYear[]): number[] {
         grade: item.grade,
         animales: item.animales
       }));
-    this.setAGData();    
+    this.setAGData(animalesGradeFiltrados);    
   }
 
   addLegendClickListener(chartInstance: any) {
