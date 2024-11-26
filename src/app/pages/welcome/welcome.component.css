@@ -18,7 +18,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    opacity: 0.1;
+    opacity: 0.2;
     padding: 1rem;
     background-image: url('../../../assets/images/flp/home-img-flp.jpg');
     background-repeat: no-repeat;
@@ -106,7 +106,7 @@ h1 {
     width: 70%;
     height: 100%;
     padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 5px;
     margin-bottom: 1rem;
 }

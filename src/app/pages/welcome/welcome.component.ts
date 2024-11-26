@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AnimalesFaenadosDay } from './interfaces/AnimalesFaenadosDay.interface';
 import { AnimalesGradeYear } from './interfaces/AnimalesGradeYear.interface';
 import { DashboardService } from './services/dashboard.service';
@@ -6,16 +6,22 @@ import { lastValueFrom } from 'rxjs';
 import { AnimalesMes } from './interfaces/AnimalesMes.interface';
 import { DataSetGrafico } from './interfaces/DataSetGrafico.interface';
 import { AnimalesMesAnio } from './interfaces/AnimalesMesAnio.interface';
+import { GroupedData } from './interfaces/GroupedData.interface';
+import { UIChart } from 'primeng/chart';
+import { CommonService } from 'src/app/shared/services/common.service';
 
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
   styleUrls: ['css/animate.css', './welcome.component.css', 'css/mediaquery_maxh690_maxw870.css', 'css/mediaquery_maxw1160.css', 'css/mediaquery_minw871_maxw1550.css']
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild('chartFD', {static: false}) chartFD!: UIChart;
 
   anioActual: number = new Date().getFullYear();
   anios: number[] = [];
+  aniosSeleccionados: number[] = [];
 
   documentStyle!: CSSStyleDeclaration;
   textColor!: string;
@@ -29,6 +35,9 @@ export class WelcomeComponent implements OnInit {
   totalAnimalesFaenados: number = 0;
   totalAnimalesGrade: number = 0;
 
+  animalesGradeAgrupado:  Record<number, GroupedData> = {};
+  dataAgrupadaShow: {grade: string, animales: number}[]= [];
+
   aFOptions: any;
   aFData: any;
   aGOptions: any;
@@ -37,8 +46,10 @@ export class WelcomeComponent implements OnInit {
   dataSets: DataSetGrafico[] = [];
 
   coloresGrafico: string[] = ['#AF6E23', '#f1c40f'];
+
+  dataAgrupada: number[] = [];
   
-  constructor(private dashService: DashboardService) {}
+  constructor(private dashService: DashboardService, private commonService: CommonService) {}
 
   mostrarContenido: boolean = false;
   
@@ -46,13 +57,22 @@ export class WelcomeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.setData();
     this.setOptions(); 
-    this.totalAnimalesGrade = this.sumarTotalAnimalesGrade(this.animalesGradeYear);
-    this.anios = Array.from(new Set(this.animalesFaenados.map(a => new Date(a.slday).getFullYear()))).sort((a, b) => a - b);  
+    this.anios = Array.from(new Set(this.animalesFaenados.map(a => new Date(a.slday).getFullYear()))).sort((a, b) => a - b);
+    this.aniosSeleccionados = this.anios;  
+    this.totalAnimalesGrade = this.sumarTotalAnimalesGrade(this.animalesGradeYear);    
     this.setAnimalesMesData();
     this.setDataDisplay();
-    this.mostrarContenido = true;
+    setTimeout(() => {
+      this.mostrarContenido = true;
+    }, 0);  
   }
 
+  ngAfterViewChecked(): void {
+      if (this.chartFD && this.chartFD.chart) {
+      const chartInstance = this.chartFD.chart; 
+      this.addLegendClickListener(chartInstance);
+    }
+  }
 
   private async setData(): Promise<void> {
     try {
@@ -63,13 +83,18 @@ export class WelcomeComponent implements OnInit {
   
       this.animalesFaenados = animalesFaenados;
       this.animalesGradeYear = animalesGradeYear;
+      this.animalesGradeAgrupado = this.groupByGradeId(this.animalesGradeYear);
+      this.dataAgrupadaShow = Object.values(this.animalesGradeAgrupado).map(item => ({
+        grade: item.grade,
+        animales: item.animales
+      }));   
     } catch (error) {
       console.error('Error al cargar los datos:', error);
     }
   }
 
   get mitadIndex(): number {
-    return Math.ceil(this.animalesGradeYear.length / 2);
+    return Math.ceil(this.dataAgrupadaShow.length / 2);
   }
 
   private setOptions(): void {
@@ -119,19 +144,35 @@ export class WelcomeComponent implements OnInit {
   }
 
   private setAGData(): void {
+    this.dataAgrupada = this.getAnimalesSuma(this.animalesGradeYear);
     this.aGData = {
-      labels: this.animalesGradeYear.map(a => a.grade),
+      labels: Array.from(new Set(this.animalesGradeYear.map(a => a.grade))),
       datasets: [
         {
           label: `Porcentaje grade`,
-          data: this.animalesGradeYear.map(a => (a.animales / this.totalAnimalesGrade) * 100),
+          data: this.dataAgrupada.map(a => (a / this.totalAnimalesGrade) * 100),
           backgroundColor: '#fbeee6',
           borderColor: '#e67e22',
           borderWidth: 1
         }
       ]
-    }   
+    }
   }
+
+  private groupByGradeId(data: AnimalesGradeYear[]): Record<number, GroupedData> {
+    return data.reduce((acc, { gradeId, grade, animales }) => {
+        if (!acc[gradeId]) {
+            acc[gradeId] = { grade, animales: 0 };
+        }
+        acc[gradeId].animales += animales;
+        return acc;
+    }, {} as Record<number, GroupedData>);
+}
+
+private getAnimalesSuma(data: AnimalesGradeYear[]): number[] {
+  const groupedData = this.groupByGradeId(data); 
+  return Object.values(groupedData).map(item => item.animales);
+}
 
   private setDataDisplay(): void {
     this.setDataSetGrafico();
@@ -146,7 +187,7 @@ export class WelcomeComponent implements OnInit {
 
   private setAnimalesMesAnio(): AnimalesMesAnio[] {
     let animales: AnimalesMesAnio[] = [];
-    this.anios.forEach(anio => {
+    this.aniosSeleccionados.forEach(anio => {
     animales.push({
       anio: anio,
       animales: this.setAnimalesMes(anio)
@@ -173,15 +214,19 @@ export class WelcomeComponent implements OnInit {
   }
 
   private sumarTotalAnimales(animales: AnimalesFaenadosDay[]): number {
-    return animales.reduce((acc, item) => acc + item.animalesFaenados, 0);
+    return animales
+      .filter(a => this.aniosSeleccionados.includes(new Date(a.slday).getFullYear()))
+      .reduce((acc, item) => acc + item.animalesFaenados, 0);
   }
 
   private sumarTotalAnimalesGrade(animalesGradeYear: AnimalesGradeYear[]): number {
-    return animalesGradeYear.reduce((acc, item) => acc + item.animales, 0);
+    return animalesGradeYear
+    .filter(a => this.aniosSeleccionados.includes(a.year))  
+    .reduce((acc, item) => acc + item.animales, 0);
   }
 
   private setDataSetGrafico(): void {
-    this.anios.forEach((anio, i) => {
+    this.aniosSeleccionados.forEach((anio, i) => {
       const animalesPorAnio = this.animalesMesAnio.find(a => a.anio === anio);
       this.dataSets.push({
         label: `${anio}`,
@@ -197,5 +242,57 @@ export class WelcomeComponent implements OnInit {
     return Array.from(
       new Set(this.animalesMesAnio.flatMap((item) => item.animales.map((a) => a.mes)))
     );
+  }
+
+  onDataSelectHandler(event: any) {
+    const hidden = event.hidden;
+    const anio = parseInt(event.legendText);
+    this.filtrarDataDisplay(hidden, anio);
+  }
+
+  private filtrarDataDisplay(hidden: boolean, anio: number): void {
+    const copiaAnimalesFaenados = this.commonService.deepCopy(this.animalesFaenados);
+    const copiaAnimalesGrade = this.commonService.deepCopy(this.animalesGradeYear);
+
+    let animalesFaenadosFiltrados = [];
+    let animalesGradeFiltrados = [];
+
+    if(hidden) {
+      this.aniosSeleccionados.splice(this.aniosSeleccionados.indexOf(anio), 1).sort((a, b) => a - b); 
+      animalesFaenadosFiltrados = copiaAnimalesFaenados.filter(a => new Date(a.slday).getFullYear() != anio);
+      animalesGradeFiltrados = copiaAnimalesGrade.filter(a => a.year != anio);
+    }else 
+    {
+      this.aniosSeleccionados.push(anio);
+      this.aniosSeleccionados = this.aniosSeleccionados.sort((a, b) => a - b);
+      animalesFaenadosFiltrados = copiaAnimalesFaenados.filter(a => this.aniosSeleccionados.includes(new Date(a.slday).getFullYear()));
+      animalesGradeFiltrados = copiaAnimalesGrade.filter(a => this.aniosSeleccionados.includes(a.year));
+    }
+
+    this.totalAnimalesFaenados = this.sumarTotalAnimales(animalesFaenadosFiltrados);
+    this.totalAnimalesGrade = this.sumarTotalAnimalesGrade(animalesGradeFiltrados);
+    this.animalesGradeAgrupado = this.groupByGradeId(animalesGradeFiltrados);
+      this.dataAgrupadaShow = Object.values(this.animalesGradeAgrupado).map(item => ({
+        grade: item.grade,
+        animales: item.animales
+      }));
+    this.setAGData();    
+  }
+
+  addLegendClickListener(chartInstance: any) {
+    chartInstance.options.plugins.legend.onClick = (e: any, legendItem: any, legend: any) => {
+      const index = legendItem.datasetIndex;
+      const meta = chartInstance.getDatasetMeta(index);
+      const legendText = legendItem.text;
+      
+      meta.hidden = meta.hidden === null ? !chartInstance.data.datasets[index].hidden : null;
+      chartInstance.update(); 
+
+      this.onDataSelectHandler({
+        datasetIndex: index,
+        hidden: meta.hidden,
+        legendText: legendText
+      });
+    };
   }
 }
