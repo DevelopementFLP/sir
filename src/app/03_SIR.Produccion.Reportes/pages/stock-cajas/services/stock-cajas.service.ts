@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Tipo } from '../interfaces/Tipo.interface';
-import { urlDeletePedido, urlGetCajas, urlGetDisenos, urlGetOrdenesArmado, urlGetPedidos, urlGetPedidosPadre, urlGetStockCajas, urlGetTamanoCajas, urlGetTiposCajas, urlInsertOrdenArmado, urlInsertOrdenEntrega, urlInsertPedido, urlInsertPedidoPadre, urlUpdateOrdenArmadoCajasArmadas, urlUpdateOrdenEntregaCajasEntregadas, urlUpdatePedido, urlUpdatePedidoPadre, urlUpdatePrioridadPedido, urlUpdateStock, urlgetOrdenesEntrega } from 'src/settings';
+import { urlDeletePedido, urlGetCajas, urlGetDisenos, urlGetOrdenesArmado, urlGetPedidos, urlGetPedidosPadre, urlGetStockCajas, urlGetTamanoCajas, urlGetTiposCajas, urlInsertOrdenArmado, urlInsertOrdenEntrega, urlInsertPedido, urlInsertPedidoPadre, urlUpdateOrdenArmado, urlUpdateOrdenArmadoCajasArmadas, urlUpdateOrdenEntregaCajasEntregadas, urlUpdateOrdenEntrega, urlUpdatePedido, urlUpdatePedidoPadre, urlUpdatePrioridadPedido, urlUpdateStock, urlgetOrdenesEntrega } from 'src/settings';
 import { Tamano } from '../interfaces/Tamano.interface';
 import { Stock } from '../interfaces/Stock.interface';
 import { Pedido } from '../interfaces/Pedido.interface';
@@ -92,10 +92,18 @@ UpdateOrdenArmadoCajasArmadasAsync(orden: OrdenArmado[]): Observable<OrdenArmado
 
   return this.http.put<OrdenArmado[]>(urlUpdateOrdenArmadoCajasArmadas,orden);
 }
+UpdateOrdenArmadoAsync(orden: OrdenArmado[]): Observable<OrdenArmado[]> {
 
-UpdateOrdenEntregaAsync(orden: OrdenEntrega[]): Observable<OrdenEntrega[]> {
+  return this.http.put<OrdenArmado[]>(urlUpdateOrdenArmado,orden);
+}
+
+UpdateOrdenEntregaCajasEntregadasAsync(orden: OrdenEntrega[]): Observable<OrdenEntrega[]> {
 
   return this.http.put<OrdenEntrega[]>(urlUpdateOrdenEntregaCajasEntregadas,orden);
+}
+UpdateOrdenEntregaAsync(orden: OrdenEntrega[]): Observable<OrdenEntrega[]> {
+
+  return this.http.put<OrdenEntrega[]>(urlUpdateOrdenEntrega,orden);
 }
 
 UpdatePedidoAsync(pedido: Pedido[]): Observable<Pedido[]> {

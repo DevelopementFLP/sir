@@ -120,8 +120,9 @@
 <div class="popUpVerPedido" *ngIf="mostrarPopUp">
 
     <div class="botones_popup">
-        <button class="btn_guardarCambios" (click)="guardarCambiosPedido()" [disabled]="habilitadoGuardarCambiosPedido">Guardar Cambios</button>
-        <button type="button" class="btnCerrarPopUp" (click)="cerrarPopUpVerPedidos()">X</button>
+        <button class="btn_guardarCambioss btn_editarPedido" [routerLink] = "['../editarPedido',idPedidoPadreVer]">Editar Pedido</button>
+        <button class="btn_guardarCambios btn_derecha" (click)="guardarCambiosPedido()" [disabled]="habilitadoGuardarCambiosPedido">Guardar Cambios</button>
+        <button type="button" class="btnCerrarPopUp " (click)="cerrarPopUpVerPedidos()">X</button>
     </div>
 
  

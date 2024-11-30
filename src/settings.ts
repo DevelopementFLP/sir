@@ -4,7 +4,10 @@
 
 
 
-export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
+
+// Testing Pedido Cajas
+export const urlAPI: string = "http://192.168.0.107:98/api/";
 
 //TESTING 
 // export const urlAPI: string = "http://192.168.0.107:90/api/";
@@ -148,7 +151,7 @@ export const urlUpdatePedidoPadre: string = urlStockCajas + "UpdatePedidoPadreAs
 export const urlUpdateOrdenArmadoCajasArmadas: string = urlStockCajas + "UpdateOrdenArmadoCajasArmadasAsync";
 export const urlUpdateOrdenArmado: string = urlStockCajas + "UpdateOrdenArmadoAsync";
 export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "UpdateOrdenEntregaCajasEntregadasAsync";
-export const urlUpdateOrdenentrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
+export const urlUpdateOrdenEntrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
 export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
 export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
 
