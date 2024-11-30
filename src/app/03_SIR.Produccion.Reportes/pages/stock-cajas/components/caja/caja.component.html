@@ -4,10 +4,10 @@
 
     <div class="contenedor_fecha">
         
- 
-          
+
+
             <div class="fechaInputTitulo">
-                Fecha Producción:
+               Fecha Producción:
                 <input type="date" [disabled] ="fechaActiva" class="fecha" id="fecha" name="fecha" [(ngModel)]="fechaFiltrada" [attr.min] = "minFecha">
             </div>
                 
@@ -18,14 +18,14 @@
                             
                             <div class="stockOProduccion">
                                 <button class="hoyStock" [ngClass]="{ 'activo': stockOProduccion=='1'  } " (click)="activarFecha()">Stock</button>
-                                <button class="hoyStock" [ngClass]="{ 'activo': stockOProduccion=='0'  } " (click)="SetParaHoy()">Hoy</button>
+                                <button class="hoyStock"  [ngClass]="{ 'activo': stockOProduccion=='0'  } " (click)="SetParaHoy()">Hoy</button>
                             </div>
                         </div>
 
 
                         <div class="fechaInputTitulo">
                             Prioridad Pedido:
-                            <input type="number" [(ngModel)]="prioridadPedidoPadre" class="txt_Prioridad" (keyup)="validarNumero($event)">
+                            <input type="number" [disabled]="prioridadActiva" [(ngModel)]="prioridadPedidoPadre" class="txt_Prioridad" (keyup)="validarNumero($event)">
                         </div>
 
                         <div class="contenedorStock">
@@ -34,10 +34,10 @@
                             <div class="container_BotonesPrioridad">
                                 
 
-                                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(1)">
+                                    <button [disabled]="prioridadActiva" class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(1)">
                                         <img src="./../../../../../../assets/images/imagesStockCajas/subir.png">
                                     </button>
-                                    <button class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(-1)">
+                                    <button [disabled]="prioridadActiva" class="btn_CambiarPrioridad" (click)="cambiarPrioridadPadre(-1)">
                                         
                                         <img src="./../../../../../../assets/images/imagesStockCajas/flecha_bajar.png">
                                     </button>

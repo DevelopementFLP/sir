@@ -1,3 +1,5 @@
+
+
 .titulo_consultar_stock{
     display: flex;
     justify-content: center;
@@ -202,7 +204,14 @@ width: min-content;
   top: 2rem;
   right: 2rem;
   z-index: 999999;
+  display: flex;
+  width: 100%;
 }
+
+.btn_derecha{
+  margin-left: auto
+}
+
 
 .btnCerrarPopUp{
 background-color: red;
@@ -212,6 +221,11 @@ font-size: 2rem;
 .btn_guardarCambios{
   font-size: 2rem;
   margin-right: 2rem;
+}
+.btn_editarPedido{
+  margin-left: 4rem;
+  background-color: #3498db;
+  font-size: 2rem;
 }
 
 .container_btn_GuardarCambiosPopUp{
@@ -231,10 +245,7 @@ font-size: 2rem;
 }
 
 
-
-
 /* Dialogo Si o No */
-/* your-component.component.css */
 .dialog {
   display: none; /* Ocultar el diálogo por defecto */
   position: fixed;
@@ -261,3 +272,18 @@ font-size: 2rem;
 .activoFecha{
   background-color: #ff6347
 }
+
+.entregado{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+
+
+/* .mi-barra-progreso {
+  --p-progress-bar-fill-color: red;
+  background:#5472d4;
+} */
+

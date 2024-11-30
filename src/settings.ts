@@ -146,7 +146,7 @@ export const urlUpdatePedidoPadre: string = urlStockCajas + "UpdatePedidoPadreAs
 export const urlUpdateOrdenArmadoCajasArmadas: string = urlStockCajas + "UpdateOrdenArmadoCajasArmadasAsync";
 export const urlUpdateOrdenArmado: string = urlStockCajas + "UpdateOrdenArmadoAsync";
 export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "UpdateOrdenEntregaCajasEntregadasAsync";
-export const urlUpdateOrdenentrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
+export const urlUpdateOrdenEntrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
 export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
 export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
 
