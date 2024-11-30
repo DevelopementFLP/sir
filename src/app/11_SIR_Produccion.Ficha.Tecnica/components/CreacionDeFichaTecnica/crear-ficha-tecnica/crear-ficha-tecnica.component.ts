@@ -90,6 +90,7 @@ export class CrearFichaTecnicaComponent {
   public pseudomonas: string = '';
   public escherichiaColi: string = '';
   public coliformesTotales: string = '';
+  public coliformesFecales: string = '';
 
   //! Campos de Plantilla
   public elaboradoPor: string = 'Departamento de Produccion';
@@ -313,6 +314,7 @@ export class CrearFichaTecnicaComponent {
             this.pseudomonas = datos.pseudomonas || '';
             this.escherichiaColi = datos.escherichiaColi || '';
             this.coliformesTotales = datos.coliformesTotales || '';
+            this.coliformesFecales = datos.coliformesFecales || '';
             
           } else {
 
@@ -408,6 +410,7 @@ export class CrearFichaTecnicaComponent {
         pseudomonas: this.pseudomonas || '',
         escherichiaColi: this.escherichiaColi || '',
         coliformesTotales: this.coliformesTotales || '',
+        coliformesFecales: this.coliformesFecales || '',
 
         observacion: this.observacionDelProducto || '',
         elaboradoPor: this.elaboradoPor || '', 
@@ -611,6 +614,7 @@ export class CrearFichaTecnicaComponent {
     this.pseudomonas = '';
     this.escherichiaColi = '';
     this.coliformesTotales = '';
+    this.coliformesFecales = '';
     this.elaboradoPor = 'Departamento de Produccion';
     this.aprobadoPor = 'Jefe de Desosado';
     this.observacionDelProducto = '';

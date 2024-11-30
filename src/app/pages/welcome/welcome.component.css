@@ -1,13 +1,10 @@
-@import "../../../../node_modules/primeflex/primeflex.min.css";
-
 @font-face {
     font-family: 'sackers';
     src: url('../../../fonts/SackersGothicStd-Heavy.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
-  }
+}
   
-
 .logo {
     height: 700px;
     width: 80%;
@@ -21,7 +18,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    opacity: 0.3;
+    opacity: 0.2;
     padding: 1rem;
     background-image: url('../../../assets/images/flp/home-img-flp.jpg');
     background-repeat: no-repeat;
@@ -86,23 +83,100 @@ h1 {
     justify-content: center; 
     align-items: center;     
   }
-  
 
-  /*medias queries*/
-  @media (max-height:690px) or (max-width:870px)  {
-    .imagen__3,
-    .imagen__2 {
-        display: none;
-    }
+.grafico__container {
+    width: 100% !important;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+}
+ 
+.grafico__graficos {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
 
-    .imagen__1 {
-        height: 100%;
-        z-index: 100;
-    }
-  }
+.grafico__wrapper {
+    width: 70%;
+    height: 100%;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
 
-  @media (max-width:1160px) {
-    h1 {
-        font-size: 30px;
-    }
-  }
+.grafico {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    height: 55%;
+}
+
+.grafico__data,
+.grafico__data--display {
+    width: 100%;
+    height: 100%;
+}
+
+.grafico__data--display,
+.data__titulo {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.data__titulo {
+    gap: 20px;
+}
+
+.titulo__text {
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.titulo__value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.grafico__data--display {
+    gap: 25px;
+}
+
+.data__clasificacion {
+    width: 50%;
+    gap: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: -60px;
+}
+
+.grade {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-variant: tabular-nums;
+}
+
+.grade__anual {
+    display: none;
+}
+
+.clasificacion__container {
+    width: 50%;
+}
