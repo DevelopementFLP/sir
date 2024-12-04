@@ -1,3 +1,9 @@
+.main__container {
+    width: 100%;
+    position: relative;
+    padding: 1rem;
+}
+
 .fechas__container {
     align-items: center;
     background-color: white;

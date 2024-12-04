@@ -38,6 +38,10 @@ import { SplitterModule } from 'primeng/splitter';
 import { RendimientosComponent } from "./pages/rendimientos/rendimientos.component";
 import { RendimientoViewerComponent } from "./pages/rendimientos/components/rendimiento-viewer/rendimiento-viewer.component";
 import { ComparativoViewerComponent } from "./pages/rendimientos/components/comparativo-viewer/comparativo-viewer.component";
+import { ComparativoCodigosComponent } from './components/comparativo-codigos/comparativo-codigos.component';
+import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
+import { ComparativoCodigosPageComponent } from './pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { EscapeKeyDirective } from './directives/escape-key.directive';
 
 
 
@@ -76,7 +80,11 @@ import { ComparativoViewerComponent } from "./pages/rendimientos/components/comp
         ReporteCuotaDisplayComponent,
         RendimientosComponent,
         RendimientoViewerComponent,
-        ComparativoViewerComponent
+        ComparativoViewerComponent,
+        ComparativoCodigosComponent,
+        NuevoGrupoComponent,
+        ComparativoCodigosPageComponent,
+        EscapeKeyDirective
     ],
     exports: [
         MainPageComponent

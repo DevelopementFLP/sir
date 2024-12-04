@@ -43,6 +43,7 @@
                 <th><div class="columna">N° Pedido</div></th>
                 <th><div class="columna">Prioridad Pedido</div></th>
                 <th><div class="columna">Items</div></th>
+                <th><div class="columna">% Entregados</div></th>
                 <th><div class="columna">Subir/Bajar Prioridad</div></th>
             </tr>
         </ng-template>
@@ -53,6 +54,7 @@
                 <td><div class="valor">{{pedido.id_Pedido_Padre}} </div></td>
                 <td><div class="valor">{{pedido.prioridad_Pedido_Padre}}</div></td>
                 <td><div class="valor">{{getItems(pedido.id_Pedido_Padre)}}</div></td>
+                <td><div class="valor">{{getCantidadEntregados(pedido.id_Pedido_Padre)+' %'}}</div></td>
                 <td class="">
                     <div class="container_botones_prioridad valor">
 

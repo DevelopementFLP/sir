@@ -1,0 +1,67 @@
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.grid-container-panel{
+  display: grid;
+  grid-template-columns: 40% auto;
+  border: 1px solid #ddd;
+}
+
+.grid-item-panel-1{
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item-panel-2 {
+  display: grid; 
+  grid-template-columns: auto auto; 
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: black;
+  color: red; 
+  font-weight: bold; 
+  align-items: center; 
+}
+
+.grid-item-panel-titulo {
+  display: flex; /* Activar Flexbox para la alineación */
+  align-items: center; /* Alinear verticalmente el contenido */
+}
+
+.secuencial {
+  font-size: 16px; /* Tamaño de fuente para "Sec:" */
+  margin-right: 5px; /* Espacio entre "Sec:" y el párrafo */
+}
+
+.codigo {
+  font-size: 80px; /* Tamaño de fuente más grande para "Seccion" */
+  margin: 0; /* Eliminar margen del párrafo */
+}
+
+.inputLecturaDeMedia{
+  width: 100%;
+}
+
+.claseDePrimerColumna{
+  background-color: #e0f7fa; 
+  font-weight: bold; 
+}
+
+
+.mostrarEnPAntallaDePC {
+  display: block;
+}
+
+@media (max-width: 600px) { /* Ajusta el valor según el tamaño que consideres para dispositivos móviles */
+  .mostrarEnPAntallaDePC{
+    display: none;
+  }
+}
+
+
+
