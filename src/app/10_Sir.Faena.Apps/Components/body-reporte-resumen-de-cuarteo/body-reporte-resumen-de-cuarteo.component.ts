@@ -41,12 +41,10 @@ export class BodyReporteMediasComponent {
   }
   public generarListaDeHasta(): void {
     this.listaDeHorasHasta = [];
-    for (let i = 0; i < 8; i += 2) {
+    for (let i = 2; i <= 10; i += 2) {
       this.listaDeHorasHasta.push(i.toString().padStart(2, '0'));
     }
   }
-
-
 
   @ViewChild(ComponenteReporteFaenaProveedorComponent) _conexionConComponenteProveedor! : ComponenteReporteFaenaProveedorComponent;
 
@@ -57,8 +55,6 @@ export class BodyReporteMediasComponent {
     private _metodosDeExcelCuarteoServicio: MetodosExcelCuarteoService
   ){
   }
-
-
 
   public GetReporteDeMediasProducto(fechaDesde: Date, fechaHasta: Date, horaDesde: number, horaHasta: number) {
     if(fechaDesde != null && fechaHasta != null){      
