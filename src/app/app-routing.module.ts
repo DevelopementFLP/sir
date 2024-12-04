@@ -73,6 +73,7 @@ import { CrearPlantillaFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.T
 import { CrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-producto-ficha-tecnica/crear-producto-ficha-tecnica.component';
 import { LisaDeFichasTecnicasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDeFichasTecnicas/lisa-de-fichas-tecnicas.component';
 import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { ListaDePlantillasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDePlantillas/lista-de-plantillas.component';
 
 
 
@@ -147,9 +148,14 @@ const routes: Routes = [
     { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent, children: [
       { path: 'listaDeFichasTecnicas', component: LisaDeFichasTecnicasComponent },
       { path: 'crearFichaTecnica', component: CrearFichaTecnicaComponent },
+      // { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
+      { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
+      { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent },
+      { path: 'listaDePlantillas', component: ListaDePlantillasComponent },
       { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
       { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
       { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent }
+
     ]},
 
     { path: 'produccion/VisualizarIncidentes', component: PaginaPrincipalIncidentesComponent},

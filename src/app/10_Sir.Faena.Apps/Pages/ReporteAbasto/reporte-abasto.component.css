@@ -1,0 +1,72 @@
+
+
+/* Hacer el texto en negrita y más grande */
+.mat-list-item, mat-list-item mat-icon, mat-list-item{
+  font-weight: bold;
+  font-size: 1.2rem; 
+}
+
+/* Contenedor de fecha y botones */
+.fecha-y-botones {
+  display: flex;
+  align-items: stretch;  /* Hace que los elementos dentro se estiren para igualar su altura */
+  gap: 1rem; /* Espacio entre los elementos */
+}
+
+
+mat-list-item p {
+  display: inline-block;  /* Hace que el <p> se comporte como un elemento en línea */
+  margin: 0; 
+  font-weight: bold; 
+  font-size: 1.2rem;  
+}
+
+.grid-container-resumen{
+  display: grid;
+  grid-template-columns: 40% auto;
+  gap: 1.5rem;  
+  align-items: start;  /* Alinea los elementos al principio de la celda */
+  justify-items: stretch;  /* Estira las celdas para que ocupen el mismo espacio */
+}
+
+.grid-item-resumen {
+  flex: 1 1 200px; /* Crece y se encoge según el espacio disponible, y la base es de 200px */
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item-grafico {
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ajusta el tamaño del contenedor */
+  max-width: 800px; /* Puedes limitar el tamaño máximo */
+  margin: 0 auto; /* Centra el contenedor */
+}
+
+/* Aumentar el tamaño de la fuente de las etiquetas y los valores en la tarjeta de resumen */
+.grid-container-resumen mat-list-item {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.grid-container-resumen mat-divider {
+  margin: 0.5rem 0;
+}
+
+/* Para los encabezados de tabla también */
+.table-container th {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.table-container td {
+  font-size: 1rem;
+}
+
+/* Cambiar el estilo de las celdas de la tabla para hacerlas un poco más grandes */
+.mat-paginator {
+  font-size: 1rem;
+  font-weight: bold;
+}
+  

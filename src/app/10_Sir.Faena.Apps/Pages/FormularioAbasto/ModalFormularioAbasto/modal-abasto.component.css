@@ -1,0 +1,11 @@
+
+.contenedorDeDialogo {
+    max-width: 400px; /* Ajusta el ancho máximo del contenedor */
+    width: 100%; 
+  }
+
+
+.form-field {
+    width: 90%; /* Hace que cada campo ocupe el ancho completo del contenedor */
+    margin-bottom: 1rem; /* Espacio entre los campos */
+  }

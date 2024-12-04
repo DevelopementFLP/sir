@@ -1,0 +1,20 @@
+
+<div *ngIf="imagenes.length > 0" class="imagenes-container">
+  <div *ngFor="let imagen of imagenes" class="imagen-item">
+      <div *ngIf="imagen.contenidoImagen; else noImage">
+          <p><span class="seccion-label">Sección de Imagen: </span> {{imagen.seccionDeImagen}}</p>
+          <img 
+            [src]="'data:image/png;base64,' + imagen.contenidoImagen" 
+            alt="Imagen del producto" 
+            class="imagen" 
+            (click)="EditarImagen(imagen)" /> <!-- Evento click para editar la imagen -->
+      </div>
+      <ng-template #noImage>
+          <p class="no-image-text">No hay imagen disponible.</p>
+      </ng-template>
+  </div>
+</div>
+
+<div *ngIf="imagenes.length === 0" class="no-images-message">
+  <p>No se encontraron imágenes para este producto.</p>
+</div>

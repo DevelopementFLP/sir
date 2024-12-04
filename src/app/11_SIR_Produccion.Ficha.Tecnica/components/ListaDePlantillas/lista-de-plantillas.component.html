@@ -1,0 +1,67 @@
+<body>
+  <div *ngIf="loading">Cargando plantillas...</div>
+  
+  <!-- Selector para elegir entre Aspectos Generales y Especificaciones -->
+  <div class="selector-plantillas">
+    <label for="tipoPlantilla">Selecciona el tipo de plantilla:</label>
+    <select id="tipoPlantilla" [(ngModel)]="tipoPlantillaSeleccionado" (change)="CargarPlantillas()">
+      <option value="aspectosGenerales">Aspectos Generales</option>
+      <option value="especificaciones">Especificaciones</option>
+    </select>
+  </div>
+
+  <div class="contenedor-de-pagina">
+    <p-table 
+      *ngIf="!loading"
+      [value]="resultadoDePlantillaSeleccionada"
+      dataKey="idPlantilla" 
+      [paginator]="true"
+      [rows]="10"
+      [responsive]="true" 
+      [loading]="loading" 
+      class="tabla-de-datos">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>
+            Nombre de Plantilla
+            <p-columnFilter type="text" field="nombre" display="menu" />
+          </th>
+
+          <th>Sección</th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-plantilla>
+        <tr>
+          <td>{{ plantilla.idPlantilla }}</td>
+          <td>{{ plantilla.nombre }}</td>
+          <td>{{ plantilla.seccionDePlantilla }}</td>
+          <td class="acciones">
+            <button *ngIf="tipoPlantillaSeleccionado == 'aspectosGenerales'" pButton type="button" icon="pi pi-pencil" label="Editar" (click)="AbrirModalEditarPlantillaAspectosGenerales(plantilla)"></button>
+            <button *ngIf="tipoPlantillaSeleccionado == 'especificaciones'" pButton type="button" icon="pi pi-pencil" label="Editar" (click)="AbrirModalEditarPlantillaEspecificaciones(plantilla)"></button>
+            <button pButton type="button" icon="pi pi-trash" label="Eliminar" class="p-button-danger" (click)="EliminarPlantilla(plantilla.idPlantilla)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+    <!-- Modal para Aspectos Generales -->
+    <p-dialog [(visible)]="modalEditarPlantillaAspectosGeneralesActivo" [style]="{width: '80%'}" header="Editar Aspectos Generales" [closable]="false">
+      <modal-plantilla-aspectos-generales [plantilla]="plantillaAspectosGeneralesSeleccionada" (modalCerrado)="EscucharCierreDeModal($event)"></modal-plantilla-aspectos-generales>
+      <p-footer>
+        <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalEditarPlantilla()"></button>
+      </p-footer>
+    </p-dialog>
+
+    <!-- Modal para Especificaciones -->
+    <p-dialog [(visible)]="modalEditarPlantillaEspecificacionesActivo" [style]="{width: '80%'}" header="Editar Especificaciones" [closable]="false">
+      <modal-plantilla-especificaciones></modal-plantilla-especificaciones>
+      <p-footer>
+        <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalEditarPlantilla()"></button>
+      </p-footer>
+    </p-dialog>
+</body>

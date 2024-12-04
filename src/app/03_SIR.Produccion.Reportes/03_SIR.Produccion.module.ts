@@ -85,7 +85,7 @@ import { EditarPedidoComponent } from './pages/stock-cajas/pages/editar-pedido/e
         ComparativoCodigosComponent,
         NuevoGrupoComponent,
         ComparativoCodigosPageComponent,
-        EscapeKeyDirective,
+        EscapeKeyDirective
         EditarPedidoComponent
     ],
     exports: [

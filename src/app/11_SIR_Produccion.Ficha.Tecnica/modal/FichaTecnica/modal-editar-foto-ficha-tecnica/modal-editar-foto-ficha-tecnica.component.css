@@ -1,0 +1,68 @@
+
+
+/* Definir un z-index alto para la clase personalizada de SweetAlert */
+.swal-popup.custom-swal-popup {
+    z-index: 99999 !important; /* Establece un z-index muy alto */
+}
+
+/* Contenedor principal para las imágenes */
+.imagenes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    padding: 20px;
+    justify-items: center;
+}
+
+/* Estilo para cada ítem de imagen */
+.imagen-item {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto de hover en cada imagen */
+.imagen-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de la imagen */
+.imagen {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+/* Estilo para el texto cuando no hay imagen disponible */
+.no-image-text {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Mensaje cuando no se encuentran imágenes */
+.no-images-message {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 18px;
+    color: #555;
+}
+
+/* Estilo para la etiqueta "Sección de Imagen:" */
+.seccion-label {
+    font-weight: bold;
+    font-size: 18px;  /* Tamaño más grande */
+    color: #333;  /* Color del texto */
+}
+
+
+  

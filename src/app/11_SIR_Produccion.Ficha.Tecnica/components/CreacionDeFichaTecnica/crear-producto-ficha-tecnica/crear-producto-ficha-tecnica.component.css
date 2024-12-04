@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100%; 
+    margin: 0; 
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+    background-color: #868687; 
+    display: flex;
+    justify-content: center; 
+    align-items: baseline;
+}
+
+.contenedor-de-pagina {
+    width: 1000px;
+    height: auto; /* Alto A4 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+.seccion-titulo {
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #333; /* Color del texto */
+    text-align: center;
+}
+
+.seccion-formulario {
+    background-color: #fff; /* Fondo blanco para el formulario */
+    padding: 20px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 100%; /* Ancho completo */
+    max-width: 800px; /* Máximo ancho para el formulario */
+   
+}
+
+.p-field {
+    margin-bottom: 15px; /* Espacio entre los campos */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold; /* Texto en negrita para las etiquetas */
+}
+
+input, textarea, .p-dropdown {
+    width: 100%; /* Ancho completo para los inputs */
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordes suaves */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: border-color 0.3s; /* Transición para el borde */
+}
+
+input:focus, textarea:focus, .p-dropdown:focus {
+    border-color: #007ad9; /* Color del borde en foco */
+    outline: none; /* Quitar el contorno por defecto */
+}
+
+button {
+    margin-right: 10px; /* Espacio entre botones */
+    margin-top: 10px; /* Espacio superior para el primer botón */
+}
