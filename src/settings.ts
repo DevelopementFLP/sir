@@ -1,14 +1,11 @@
+// PRODUCCIÓN
+export const urlAPI: string = "http://192.168.0.107:82/api/";
 
-export const urlAPI: string = "http://localhost:5205/api/";
-
-
-//export const urlAPI: string = "http://192.168.0.107:82/api/";
+// DESARROLLO
+// export const urlAPI: string = "http://localhost:5205/api/";
 
 //TESTING 
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
-
-
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -149,7 +146,7 @@ export const urlUpdatePedidoPadre: string = urlStockCajas + "UpdatePedidoPadreAs
 export const urlUpdateOrdenArmadoCajasArmadas: string = urlStockCajas + "UpdateOrdenArmadoCajasArmadasAsync";
 export const urlUpdateOrdenArmado: string = urlStockCajas + "UpdateOrdenArmadoAsync";
 export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "UpdateOrdenEntregaCajasEntregadasAsync";
-export const urlUpdateOrdenentrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
+export const urlUpdateOrdenEntrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
 export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
 export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
 
@@ -236,7 +233,6 @@ export const urlGetUltimaFechaEntrada: string = urlLoteEntrada + "GetUltimaFecha
 export const urlExecInsertarDatosDW: string = urlReporteCuota + "InsertarDatosDWAsync";
 
 
-
 // Rendimientos
 export const urlRendimientos: string = urlAPI + "Rendimientos/";
 export const urlCortesPorLoteYFecha: string = urlRendimientos + "GetCortesPorLoteYFecha";
@@ -245,16 +241,23 @@ export const urlLotesPorTipo: string = urlRendimientos + "GetLotesPorTipo";
 export const urlLotesActivos: string = urlRendimientos + "GetLotesActivos";
 
 
+// Dashboard pantalla principal
+export const urlAnimalesFaenados: string = urlAPI + "AnimalesFaenados/GetAnimalesFaenadosAsync";
+export const urlAnimalesGradeYear: string = urlAPI + "AnimalesGradeYear/GetAnimalesGradeYearAsync";
+
 
 // Reporte de medias Faena
 export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
 
-
+//Ficha tecnica
 export const urlFichaTecnica: string = urlAPI + "FtFichaTecnica/"
 export const urlCrearFichaTecnica: string = urlFichaTecnica + "CrearFichaTecnica"
 export const urlBuscarFichaTecnica: string = urlFichaTecnica + "BuscarFichaTecnica"
+export const urlListaDeFichasTecnicas: string = urlFichaTecnica + "ListaDeFichasTecnicas"
+export const urlEditarFichaTecnica: string = urlFichaTecnica + "EditarFichaTecnica"
+export const urlEliminarFichaTecnica: string = urlFichaTecnica + "EliminarFichaTecnica"
 
 // Ficha Tecnica Imagenes
 export const urlFichaTecnicaImagenes: string = urlAPI + "FtImagenes/"
@@ -373,3 +376,6 @@ export const urlCrearPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaP
 export const urlEditarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EditarPresentacionDeEnvaseFichaTecnica";
 export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EliminarPresentacionDeEnvaseFichaTecnica";
 
+// Control de Calidad
+export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
+export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";

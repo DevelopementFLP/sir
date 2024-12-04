@@ -1924,9 +1924,9 @@ export class PrintService {
         totalTraseros             = totalEntradaPorTipo.trasero;
         cortesReporte             = this.ccs.separarCortesPorTipo(repo);
         cortesCuota               = cortesReporte.cuota;
-        cortesNoCuota             = cortesReporte.nocuota;
-        cortesDelanterosNoCuota   = cortesReporte.delanteroNoCuota;
-        cortesTraserosNoCuota     = cortesReporte.traseroNoCuota;
+        cortesNoCuota             = this.ccs.combinarProductosIguales(cortesReporte.nocuota);
+        cortesDelanterosNoCuota   = this.ccs.combinarProductosIguales(cortesReporte.delanteroNoCuota);
+        cortesTraserosNoCuota     = this.ccs.combinarProductosIguales(cortesReporte.traseroNoCuota);
         totalPesoCortesCuota      = this.ccs.totalPesoPorCortes(cortesCuota);
         totalPesoCortesNoCuota    = this.ccs.totalPesoPorCortes(cortesNoCuota) + cortesReporte.manta[0].peso;
         rendimientoCortesCuota    = totalPesoCortesCuota / totalEntradaPorTipo.peso;

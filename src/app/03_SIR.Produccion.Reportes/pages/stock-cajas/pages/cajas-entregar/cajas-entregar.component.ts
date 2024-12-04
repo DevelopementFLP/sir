@@ -157,7 +157,7 @@ export class CajasEntregarComponent implements OnInit, OnDestroy{
 
   async UpdateOrdenEntregaAsync(orden: OrdenEntrega[]): Promise<void> {
     try {
-      await lastValueFrom(this.stockService.UpdateOrdenEntregaAsync(orden));
+      await lastValueFrom(this.stockService.UpdateOrdenEntregaCajasEntregadasAsync(orden));
     } catch(error) {
       console.error(error)
     }

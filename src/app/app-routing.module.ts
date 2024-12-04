@@ -51,6 +51,7 @@ import { PedidosActivosComponent } from './03_SIR.Produccion.Reportes/pages/stoc
 import { VerStockComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/components/ver-stock/ver-stock.component';
 import { CajasEntregarComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/cajas-entregar/cajas-entregar.component';
 import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
+import { EditarPedidoComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/editar-pedido/editar-pedido.component';
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
@@ -109,6 +110,7 @@ const routes: Routes = [
       { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
       { path: 'cajasEntregar', component: CajasEntregarComponent },
       { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
+      { path: 'editarPedido/:id', component: EditarPedidoComponent },
       { path: '**', redirectTo: '', pathMatch: 'full'}
     ] },
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
@@ -150,6 +152,10 @@ const routes: Routes = [
       { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
       { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent },
       { path: 'listaDePlantillas', component: ListaDePlantillasComponent },
+      { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
+      { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
+      { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent }
+
     ]},
 
     { path: 'produccion/VisualizarIncidentes', component: PaginaPrincipalIncidentesComponent},

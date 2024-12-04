@@ -56,9 +56,11 @@ export class ReporteCuotaDisplayComponent implements OnInit {
 
     this.cortesReporte            = this.utils.separarCortesPorTipo(this.reporte);
     this.cortesCuota              = this.cortesReporte.cuota;
-    this.cortesNoCuota            = this.cortesReporte.nocuota;
-    this.cortesDelanterosNoCuota  = this.cortesReporte.delanteroNoCuota;
-    this.cortesTraserosNoCuota    = this.cortesReporte.traseroNoCuota;
+    this.cortesNoCuota            = this.utils.combinarProductosIguales(this.cortesReporte.nocuota);
+    
+    
+    this.cortesDelanterosNoCuota  = this.utils.combinarProductosIguales(this.cortesReporte.delanteroNoCuota);
+    this.cortesTraserosNoCuota    = this.utils.combinarProductosIguales(this.cortesReporte.traseroNoCuota);
 
     this.totalPesoCortesCuota     = this.utils.totalPesoPorCortes(this.cortesCuota);
     this.totalPesoCortesNoCuota   = this.utils.totalPesoPorCortes(this.cortesNoCuota) + this.cortesReporte.manta[0].peso;

@@ -10,4 +10,49 @@
             <h1 class="sackers regular text-uppercase">Bienvenidos a <span class="mustard">nuestra familia</span></h1>
         </div>
     </div>
+
+</div>
+<div class="grafico__container" *ngIf="mostrarContenido">
+    <div class="grafico__graficos">
+        <div class="grafico">
+            <div class="grafico__data wp animacion__slidedown">
+                <div class="grafico__data--display">
+                    <div class="data__titulo sackers">
+                        <div class="titulo__text">Total animales faenados <div class="anios__display"><span>{{aniosSeleccionados[0]}}</span><span *ngIf="aniosSeleccionados.length > 1"> - {{aniosSeleccionados[aniosSeleccionados.length - 1]}}</span></div></div>
+                        <div class="titulo__value mustard">{{totalAnimalesFaenados | number:'0.0'}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="grafico__wrapper animacion__slideup">
+                <p-chart #chartFD width="100%" height="100%" type="line" [responsive]="true" [data]="aFData" [options]="aFOptions" (onDataSelect)="onDataSelectHandler($event)"/>
+            </div>
+        </div>
+        <div class="grafico grafico__percents">
+            <div class="grafico__data wp animacion__slidedown">
+                <div class="grafico__data--display">
+                    <div class="data__titulo sackers grade__anual">
+                        <div class="titulo__text">Porcentaje animales por grade <div class="anios__display"><span>{{aniosSeleccionados[0]}}</span><span *ngIf="aniosSeleccionados.length > 1"> - {{aniosSeleccionados[aniosSeleccionados.length - 1]}}</span></div></div>
+                        <div class="titulo__value mustard">{{totalAnimalesGrade | number:'0.0'}}</div>
+                    </div>
+                    <div class="data__clasificacion sackers">
+                        <div class="clasificacion__container">
+                            <div *ngFor="let grade of dataAgrupadaShow.slice(0, mitadIndex)" class="grade">
+                                <div class="grade__title">{{grade.grade}}</div>
+                                <div class="grade__value mustard">{{ totalAnimalesGrade > 0 ? ((grade.animales / totalAnimalesGrade) | percent:'0.2-2') : '-' }}</div>
+                            </div>
+                        </div>
+                        <div class="clasificacion__container">
+                            <div *ngFor="let grade of dataAgrupadaShow.slice(mitadIndex)" class="grade">
+                                <div class="grade__title">{{grade.grade}}</div>
+                                <div class="grade__value mustard">{{ totalAnimalesGrade > 0 ? ((grade.animales / totalAnimalesGrade) | percent:'0.2-2') : '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grafico__wrapper wp animacion__slideup">
+                <p-chart #chartGD width="100%" height="100%" type="bar" [responsive]="true" [data]="aGData" [options]="aGOptions"/>
+            </div>
+        </div>
+    </div>
 </div>

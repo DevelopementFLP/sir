@@ -316,9 +316,11 @@ getPrioridadPedidoPadre(idPedidoPadre: number): number {
     
     this.pedidosRecibidos = this.pedidosRecibidos?.filter(p => p.cantidadArmado < p.cantidadArmar && p.estado==true)
 
-    this.pedidosRecibidos!.sort((a, b) => a.prioridad - b.prioridad);
+    this.pedidosRecibidos!.sort((a, b) => b.prioridad - a.prioridad);
     this.pedidosRecibidos!.sort((a, b) => a.id_Pedido_Padre - b.id_Pedido_Padre);
-    this.pedidosRecibidos!.sort((a, b) => a.prioridad_Pedido_Padre - b.prioridad_Pedido_Padre);
+    this.pedidosRecibidos!.sort((a, b) => b.prioridad_Pedido_Padre - a.prioridad_Pedido_Padre);
+    this.pedidosRecibidos!.sort((a, b) => {return new Date(a.fecha_Pedido).getTime() <= new Date(b.fecha_Pedido).getTime() ? -1 : 1});
+
 
 
     if(this.filtroFecha==1)

@@ -42,6 +42,7 @@ import { ComparativoCodigosComponent } from './components/comparativo-codigos/co
 import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
 import { ComparativoCodigosPageComponent } from './pages/comparativo-codigos-page/comparativo-codigos-page.component';
 import { EscapeKeyDirective } from './directives/escape-key.directive';
+import { EditarPedidoComponent } from './pages/stock-cajas/pages/editar-pedido/editar-pedido.component';
 
 
 
@@ -85,6 +86,7 @@ import { EscapeKeyDirective } from './directives/escape-key.directive';
         NuevoGrupoComponent,
         ComparativoCodigosPageComponent,
         EscapeKeyDirective
+        EditarPedidoComponent
     ],
     exports: [
         MainPageComponent

@@ -43,7 +43,8 @@
                 <th><div class="columna">N° Pedido</div></th>
                 <th><div class="columna">Prioridad Pedido</div></th>
                 <th><div class="columna">Items</div></th>
-                <th><div class="columna">% Entregados</div></th>
+                <th><div class="columna">Progreso</div></th>
+                <th><div class="columna">% Entregado</div></th>
                 <th><div class="columna">Subir/Bajar Prioridad</div></th>
             </tr>
         </ng-template>
@@ -54,7 +55,26 @@
                 <td><div class="valor">{{pedido.id_Pedido_Padre}} </div></td>
                 <td><div class="valor">{{pedido.prioridad_Pedido_Padre}}</div></td>
                 <td><div class="valor">{{getItems(pedido.id_Pedido_Padre)}}</div></td>
-                <td><div class="valor">{{getCantidadEntregados(pedido.id_Pedido_Padre)+' %'}}</div></td>
+                <td>
+                    <div class="valor">
+                        
+                            <p-progressBar [ngClass]="{'pb-pedidos-activos30':getCantidadEntregados(pedido.id_Pedido_Padre)<30,'pb-pedidos-activos70':getCantidadEntregados(pedido.id_Pedido_Padre)>=30&&getCantidadEntregados(pedido.id_Pedido_Padre)<70,'pb-pedidos-activos99':getCantidadEntregados(pedido.id_Pedido_Padre)>=70}"
+                            [style]="{ height: '2rem', fontSize: '1.2rem'}"
+                            [showValue]="false"
+                            [value]="getCantidadEntregados(pedido.id_Pedido_Padre).toFixed(1)"
+
+                            
+                            />
+                    
+                     </div>
+                </td>
+                <td>
+                      <div class="entregado">
+                            {{getCantidadEntregados(pedido.id_Pedido_Padre)+' %'}}
+
+                        </div>
+                </td>
+               
                 <td class="">
                     <div class="container_botones_prioridad valor">
 
@@ -100,8 +120,9 @@
 <div class="popUpVerPedido" *ngIf="mostrarPopUp">
 
     <div class="botones_popup">
-        <button class="btn_guardarCambios" (click)="guardarCambiosPedido()" [disabled]="habilitadoGuardarCambiosPedido">Guardar Cambios</button>
-        <button type="button" class="btnCerrarPopUp" (click)="cerrarPopUpVerPedidos()">X</button>
+        <button class="btn_guardarCambioss btn_editarPedido" [routerLink] = "['../editarPedido',idPedidoPadreVer]">Editar Pedido</button>
+        <button class="btn_guardarCambios btn_derecha" (click)="guardarCambiosPedido()" [disabled]="habilitadoGuardarCambiosPedido">Guardar Cambios</button>
+        <button type="button" class="btnCerrarPopUp " (click)="cerrarPopUpVerPedidos()">X</button>
     </div>
 
  

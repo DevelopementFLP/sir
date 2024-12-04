@@ -18,6 +18,7 @@ import { stockMostrar } from '../../interfaces/stockMostrar.interface';
 
 export class VerStockComponent implements OnInit, OnDestroy {
 
+
   private intervalId: any;
 
   tipos: Tipo[] | undefined = [];
@@ -31,6 +32,7 @@ export class VerStockComponent implements OnInit, OnDestroy {
   tipoSeleccionado: string | null = '';
   tamanioSeleccionado: string | null = '';
   popUpTamanoTipoVisible: boolean | undefined;
+  popUpEditarConfirmacion: boolean | undefined;
 
     // Variables para popup cuando presiona click en la imagen
     img_Grande_Url: string ="";
@@ -207,15 +209,27 @@ export class VerStockComponent implements OnInit, OnDestroy {
     
   }
 
- 
 
-  abrirPopupCantidadNueva(cantidad: number, idCaja: number) {
-
+  openDialog(): void {
+    this.popUpEditarConfirmacion = true;
+  }
+  
+  closeDialog(): void {
+    this.popUpEditarConfirmacion = false;
     
+  }
+  aceptarDialog(): void {
+    this.popUpEditarConfirmacion = false;
     this.popupVisibleEditar = true;
+    
+  }
+  
+  abrirPopupCantidadNueva(cantidad: number, idCaja: number) {
+    
+    this.popUpEditarConfirmacion = true;
     this.cantidad = cantidad;
     this.idCaja = idCaja;
-    this.isWorking = true;
+    this.isWorking = true;  
   }
 
   cerrarPopupCantidadNueva() {
@@ -534,5 +548,9 @@ export class VerStockComponent implements OnInit, OnDestroy {
         this.popUpVisibleImgGrande=false;
         this.isWorking = false;
       }
+
+
+
+    
 }
 
