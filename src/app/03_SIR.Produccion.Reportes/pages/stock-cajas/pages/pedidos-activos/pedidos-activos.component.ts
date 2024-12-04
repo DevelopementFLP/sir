@@ -672,15 +672,5 @@ if(this.pedidosActualizar){
     this.idPedidoPadre.emit(this.idPedidoPadreVer)
 
   }
-
-  idpedido!.forEach(p => {
-    const cantidadFaltan = this.pedidosMostrar?.find(t => t.idPedido === p.id_Pedido);
-    cantidadSolicitadaTotal = cantidadSolicitadaTotal + p.stock_Pedido;
-    cantidadEntregadosTotal = cantidadEntregadosTotal + cantidadFaltan!.cantidadEntregados;
-  });
-    // let TotalPorcentaje = Math.round((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal)
-    let TotalPorcentaje = ((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal).toFixed(2);
-    return Number(TotalPorcentaje);   
-  }
   
 }
