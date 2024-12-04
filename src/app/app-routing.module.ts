@@ -73,6 +73,8 @@ import { CrearPlantillaFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.T
 import { CrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-producto-ficha-tecnica/crear-producto-ficha-tecnica.component';
 import { LisaDeFichasTecnicasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDeFichasTecnicas/lisa-de-fichas-tecnicas.component';
 import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { CrearCajaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/crear-caja/crear-caja.component';
+import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
 
 
 
@@ -109,7 +111,12 @@ const routes: Routes = [
       { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
       { path: 'cajasEntregar', component: CajasEntregarComponent },
       { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
+      { path: 'crearCaja', component: CrearCajaComponent },
       { path: 'editarPedido/:id', component: EditarPedidoComponent },
+      { path: '**', redirectTo: '', pathMatch: 'full'}
+    ] },
+    { path: 'compras/solicitudDeCompra', component: SolicitudCompraComponent, children: [
+      { path: '', component: SolicitudCompraComponent },
       { path: '**', redirectTo: '', pathMatch: 'full'}
     ] },
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
