@@ -1,0 +1,117 @@
+<div class="incident-container">
+
+  <!-- Filtro por fecha y botón de carga -->
+  <div class="encabezado-de-seccion">
+    <p-calendar [(ngModel)]="fechaInicio" placeholder="Seleccione una fecha" dateFormat="dd/mm/yy"></p-calendar>
+    <button pButton label="Cargar Incidentes" icon="pi pi-refresh" class="p-button-success" (click)="GenerarListaDeIncidentes()"></button>
+  </div>
+
+
+  <p-accordion>
+    <p-accordionTab *ngFor="let puesto of incidentesPorPuesto" header="{{ puesto.nombrePuesto }} ({{ puesto.incidentes.length }} incidente{{ puesto.incidentes.length > 1 ? 's' : '' }})">
+      
+
+      <p-accordion *ngIf="puesto.incidentesPorEmpleado.length > 0">
+        <p-accordionTab *ngFor="let empleado of puesto.incidentesPorEmpleado" header="{{ empleado.codigoDeEmpleado }} - {{ empleado.incidentes[0]?.nombreDeEmpleado }} ({{ empleado.incidentes.length }} incidente{{ empleado.incidentes.length > 1 ? 's' : '' }})">
+          
+          <div class="informacion-de-empleado">
+            <p><strong>Código de Empleado:</strong> {{ empleado.codigoDeEmpleado }}</p>
+            <p><strong>Empleado:</strong> {{ empleado.incidentes[0]?.nombreDeEmpleado }}</p>
+            <p><strong>Número de Incidentes:</strong> {{ empleado.incidentes.length }}</p>
+          </div>
+  
+
+          <p-accordion *ngIf="empleado.incidentesPorTipo.length > 0">
+            <p-accordionTab *ngFor="let tipo of empleado.incidentesPorTipo" header="{{ tipo.tipoDeIncidente }} ({{ tipo.incidentes.length }} incidente{{ tipo.incidentes.length > 1 ? 's' : '' }})">
+              
+
+              <p-table [value]="tipo.incidentes" responsiveLayout="scroll" [paginator]="true" [rows]="10">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Código QR</th>
+                    <th>Puesto de Trabajo</th>
+                    <th>Producto</th>
+                    <th>Acciones</th>
+                  </tr>
+                </ng-template>
+  
+                <ng-template pTemplate="body" let-incidente>
+                  <tr>
+                    <td>{{ incidente.codigoQr }}</td>
+                    <td>{{ incidente.puestoDeTrabajo }}</td>
+                    <td>{{ incidente.producto }}</td>
+                    <td>
+                      <button pButton icon="pi pi-eye" label="Detalles" (click)="VerIncidenteDetalle(incidente)"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-accordionTab>
+          </p-accordion>
+  
+        </p-accordionTab>
+      </p-accordion>
+    </p-accordionTab>
+  </p-accordion>
+
+  <div>
+    <!-- Modal de Detalle del Incidente -->
+    <p-dialog [(visible)]="modalVisible" [modal]="true" [responsive]="true" [closable]="true" [style]="{ width: '70%', height: '80%' }">
+      <p-header>Detalles del Incidente</p-header>
+  
+      <div class="boton-modal-ficha-tecnica">
+        <button pButton icon="pi pi-info-circle" label="Ver Ficha Técnica" (click)="AbrirModalFichaTecnica(incidenteSeleccionado?.codigoDeProducto)"></button>
+      </div>
+  
+      <div *ngIf="incidenteSeleccionado" class="incidente-card">
+        <div class="incidente-grid">
+          <!-- Columna 1: Datos del Incidente -->
+          <div class="incidente-details">
+            <h1><strong>Empleado:</strong> {{ incidenteSeleccionado.nombreDeEmpleado }} (Código: {{ incidenteSeleccionado.codigoDeEmpleado }})</h1>
+            <h2><strong>Puesto de Trabajo:</strong> {{ incidenteSeleccionado.puestoDeTrabajo }}</h2>
+            <p><strong>Código QR:</strong> {{ incidenteSeleccionado.codigoQr }}</p>
+            <p><strong>Producto:</strong> {{ incidenteSeleccionado.producto }}</p>
+            <p><strong>Tipo de Incidente:</strong> {{ incidenteSeleccionado.tipoDeIncidente }}</p>
+            <p><strong>Hora:</strong> {{ incidenteSeleccionado.hora }}</p>
+          </div>
+  
+          <!-- Columna 2: Imagen del Incidente -->
+          <div *ngIf="incidenteSeleccionado.imagenDeIncidente" class="incidente-image">
+            <img [src]="'data:image/png;base64,' + incidenteSeleccionado.imagenDeIncidente" alt="Imagen del incidente" class="tamanio-de-imagen" (click)="VerImagen(incidenteSeleccionado.imagenDeIncidente)" />
+          </div>
+        </div>
+      </div>
+  
+      <div *ngIf="!incidenteSeleccionado">
+        <p>No se ha seleccionado ningún incidente.</p>
+      </div>
+    </p-dialog>
+  </div>
+  
+  
+
+  <div class="modal-ver-incidente">
+    <!-- Modal para ver la imagen ampliada -->
+    <p-dialog [(visible)]="imagenVisibleDialog" [modal]="true" [responsive]="true" [closable]="true" [style]="{ width: '50%' }">
+      <p-header>Imagen Ampliada</p-header>
+      <div class="modal-content">
+        <img [src]="'data:image/png;base64,' + imagenAmpliada" alt="Imagen Ampliada" class="modal-img" />
+      </div>
+    </p-dialog>
+  </div>
+
+
+  <!-- Modal para ver ficha técnica -->
+  <p-dialog [(visible)]="modalVerFichaTecnicaActivo" 
+    [style]="{width: '80%'}" 
+    header="Ficha Técnica" 
+    [closable]="true" 
+    (onHide)="modalVerFichaTecnicaActivo = false">
+
+    <modal-ver-ficha-tecnica [ficha]="fichaSeleccionada" 
+                      (cerrarModal)="CerrarModalVerFichaTecnica()">
+    </modal-ver-ficha-tecnica>
+
+  </p-dialog>
+
+</div>

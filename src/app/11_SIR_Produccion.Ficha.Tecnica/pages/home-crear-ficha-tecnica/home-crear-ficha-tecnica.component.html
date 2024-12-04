@@ -1,17 +1,51 @@
+
 <body>
-    <div  class="contenedor-general">
-        <p-tabView>
-            <p-tabPanel header="FT Crear Ficha Tecnica">
-                <component-crear-ficha-tecnica></component-crear-ficha-tecnica>
-            </p-tabPanel>
+        <div class="contenedor-general">
+                <!-- Barra de opciones superior con botones a la izquierda -->
+                <div class="barra-opciones">
+                        <button pButton 
+                                label="Lista de Fichas Tecnicas" 
+                                icon="pi pi-bars" 
+                                class="p-button-violet p-button-rounded"
+                                routerLink="./listaDeFichasTecnicas">
+                        </button>
+                
+                        <button pButton 
+                                label="Crear Ficha Técnica" 
+                                icon="pi pi-align-justify" 
+                                class="p-button-violet p-button-rounded"
+                                routerLink="./crearFichaTecnica">
+                        </button>
 
-            <p-tabPanel header="FT Crear Plantilla">
-                <component-crear-plantilla-ficha-tecnica></component-crear-plantilla-ficha-tecnica>
-            </p-tabPanel>
+                        <button pButton 
+                                label="Lista de Plantilas" 
+                                icon="pi pi-file" 
+                                class="p-button-info p-button-rounded"
+                                routerLink="./listaDePlantillas">
+                        </button>
+                
+                        <button pButton 
+                                label="Crear Plantilla" 
+                                icon="pi pi-file" 
+                                class="p-button-info p-button-rounded"
+                                routerLink="./crearPlantillaFichaTecnica">
+                        </button>
 
-            <p-tabPanel header="FT Crear Producto">
-                <component-crear-producto-ficha-tecnica></component-crear-producto-ficha-tecnica>
-            </p-tabPanel>            
-        </p-tabView>
-    </div>
-</body>
+                
+                        <button pButton 
+                                label="Crear Producto" 
+                                icon="pi pi-bookmark" 
+                                class="p-button-warning p-button-rounded"
+                                routerLink="./crearProductoFichaTecnica">
+                        </button>
+
+                        
+                </div>
+      
+          <!-- Contenido de la página a la derecha de la barra de botones -->
+          <div class="contenido-pagina">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </body>
+      

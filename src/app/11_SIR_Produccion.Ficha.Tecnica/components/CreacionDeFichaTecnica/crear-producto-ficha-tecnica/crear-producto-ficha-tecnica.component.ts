@@ -16,6 +16,7 @@ export class CrearProductoFichaTecnicaComponent {
 
   public productoBuscado: string = '';
   public productoEncontrado: boolean = false;
+  public buscaronUnProducto: boolean = false;
 
   public codigoProducto: string | null = null;
   public nombreProducto: string | null = null;
@@ -26,8 +27,8 @@ export class CrearProductoFichaTecnicaComponent {
     private _productoService: FtProductoService
   ) {}
 
-    public BuscarProducto() {    
-        if(this.productoBuscado.length > 0){
+  public BuscarProducto() {    
+    if (this.productoBuscado.length > 0) {
         this._productoService.GetProductoFiltradoFichaTecnica(this.productoBuscado).subscribe({
             next: (response) => {
                 if (response.esCorrecto && response.resultado) {
@@ -39,31 +40,45 @@ export class CrearProductoFichaTecnicaComponent {
                     this.descripcionProducto = producto.nombreDeProductoParaFicha;
                     this.calibreProducto = producto.calibre;
 
-                    this._sweetAlertComponent.AlertaSuccessgenerica("Producto Encontrado", `El Producto con el Codigo: ${producto.codigoProducto} fue encontrado` )
+                    this._sweetAlertComponent.AlertaSuccessgenerica("Producto Encontrado", `El Producto con el Codigo: ${producto.codigoProducto} fue encontrado`);
                     this.productoEncontrado = true;
+                    this.buscaronUnProducto = true;
                     this.productoBuscado = '';
-
                 } else {
-                
+                    // Mostrar un Sweet Alert con una opción para crear el producto
                     Swal.fire({
-                    title: 'Producto no encontrado',
-                    text: `El producto con ID: ${this.productoBuscado} no existe.`,
-                    icon: 'error',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK',
-                    })
-
-                    this.LimpiarFormulario();
+                        title: 'Producto no encontrado',
+                        text: `El producto con ID: ${this.productoBuscado} no existe. ¿Deseas crearlo?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, Crear',
+                        cancelButtonText: 'No, Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.buscaronUnProducto = true;
+                            this.productoEncontrado = false;
+                            this.codigoProducto = this.productoBuscado;
+                            this.nombreProducto = null;
+                            this.descripcionProducto = null;
+                            this.calibreProducto = null;
+                        } else {
+                            this.productoBuscado = '';
+                            this.LimpiarFormulario();
+                        }
+                    });
                 }
             },
             error: (error) => {
                 console.error('Error al obtener el producto', error);
             }
         });
-        }else{
-        this._sweetAlertComponent.AlertaErrorgenerica("Campo Vacio", `Ingrese un Codigo de Producto` )
-        }    
+    } else {
+        this._sweetAlertComponent.AlertaErrorgenerica("Campo Vacio", `Ingrese un Codigo de Producto`);
     }
+  }
+
 
     public ActualizarProducto() {
         if (!this.codigoProducto || !this.productoEncontrado) {
@@ -93,12 +108,46 @@ export class CrearProductoFichaTecnicaComponent {
             this._sweetAlertComponent.AlertaErrorgenerica("Error", `Error al actualizar el producto: ${error.message}`);
           }
         });
+    }
+
+    public CrearProducto() {
+      if (!this.codigoProducto || !this.nombreProducto) {
+          this._sweetAlertComponent.AlertaErrorgenerica("Campos Incompletos", "El campo Codigo y Nombre son requeridos para crear el producto.");
+          return;
       }
+  
+      const nuevoProducto = {
+          idProducto: 0,  // El ID se genera automáticamente en la base de datos.
+          codigoProducto: this.codigoProducto!,
+          nombre: this.nombreProducto!,
+          nombreDeProductoParaFicha: this.descripcionProducto! || '',
+          calibre: this.calibreProducto! || '',
+      };
+  
+      this._productoService.CrearProducto(nuevoProducto).subscribe({
+          next: (response) => {
+              if (response.esCorrecto) {
+                  this._sweetAlertComponent.AlertaSuccessgenerica("Producto Creado", "El producto se ha creado exitosamente.");
+                  this.LimpiarFormulario();
+              } else {
+                  this._sweetAlertComponent.AlertaErrorgenerica("Error", "No se pudo crear el producto.");
+              }
+          },
+          error: (error) => {
+              this._sweetAlertComponent.AlertaErrorgenerica("Error", `Error al crear el producto: ${error.message}`);
+          }
+      });
+    }
+  
 
     public LimpiarFormulario() {
         this.nombreProducto = null;
         this.descripcionProducto = null;
         this.calibreProducto = null;
+        this.codigoProducto = null;
+        this.productoBuscado = '';
+        this.productoEncontrado = false;
+        this.buscaronUnProducto = false;
     }
   
 }

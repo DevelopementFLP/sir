@@ -1,4 +1,5 @@
-<div class="contenedor-de-pagina">
+<body>
+  <div class="contenedor-de-pagina">
     <div class="seccion-titulo">
       <h1>Crear Producto Para Ficha Técnica</h1>
     </div>
@@ -39,14 +40,17 @@
         </div>
   
         <div class="p-field">
-          <label for="prod_descripcion">Descripción</label>
-          <input 
+          <label for="prod_descripcion">Otro</label>
+          <textarea 
               id="prod_descripcion" 
               type="text" 
               [(ngModel)]="descripcionProducto" 
               name="descripcionProducto" 
               placeholder="Ingrese una descripción" 
+              rows="3"
+              cols="30"
               required>
+          </textarea>
         </div>
   
         <div class="p-field">
@@ -62,8 +66,59 @@
   
         <button pButton type="button" label="Actualizar" icon="pi pi-pencil" (click)="ActualizarProducto()"></button>
       </form>
+
+      <!-- Formulario para crear un producto si no se encuentra -->
+      <form #productoFormCrear="ngForm" *ngIf="!productoEncontrado && buscaronUnProducto">
+        <div class="p-field">
+          <label for="prod_codigo_crear">Código de Producto</label>
+          <input 
+              id="prod_codigo_crear" 
+              type="text" 
+              [(ngModel)]="codigoProducto" 
+              name="codigoProducto" 
+              required 
+              placeholder="Ingrese el código del nuevo producto"> 
+        </div>
+
+        <div class="p-field">
+          <label for="prod_nombre_crear">Nombre</label>
+          <input 
+              id="prod_nombre_crear" 
+              type="text" 
+              [(ngModel)]="nombreProducto" 
+              name="nombreProducto" 
+              placeholder="Ingrese el nombre del producto" 
+              required>
+        </div>
+
+        <div class="p-field">
+          <label for="prod_descripcion_crear">Descripción</label>
+          <textarea 
+              id="prod_descripcion_crear" 
+              [(ngModel)]="descripcionProducto" 
+              name="descripcionProducto" 
+              placeholder="Ingrese una descripción" 
+              rows="3"
+              cols="30"
+              required>
+          </textarea>
+        </div>
+
+        <div class="p-field">
+          <label for="prod_calibre_crear">Calibre</label>
+          <input 
+              id="prod_calibre_crear" 
+              type="text" 
+              [(ngModel)]="calibreProducto" 
+              name="calibreProducto" 
+              placeholder="Ingrese un Calibre" 
+              required>
+        </div>
+
+        <button pButton type="button" label="Crear Producto" icon="pi pi-plus" (click)="CrearProducto()"></button>
+      </form>
   
       <app-sweet-alert-genericos></app-sweet-alert-genericos>
     </div>
   </div>
-  
+</body>

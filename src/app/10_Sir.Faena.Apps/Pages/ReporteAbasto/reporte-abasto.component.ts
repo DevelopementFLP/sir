@@ -12,6 +12,7 @@ import { MetodosExcelGenericosService } from 'src/app/09_SIR.Dispositivos.Apps/H
 
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-reporte-abasto',
@@ -20,15 +21,20 @@ import { saveAs } from 'file-saver';
 })
 export class ReporteAbastoComponent {
 
+  // Variables para el gráfico
+  public chart: any;  // Esto almacenará la instancia del gráfico
+
+  // Variables del gráfico
   public fechaDelDia: Date | null = null;
   public fechaSeleccionada: Date | null = null;
-  public totalDePesos: number | null = null;
-  public totalLecturas: number | null = null;
-  public totalRegistrosSinEtiqueta: number | null = null;
-  public totalRegistrosEtiquetados: number | null = null
+
+  public totalStockActual: number | null = null;
+  public totalPesoEnStock: number | null = null;
+  public totalRegistrosEntradas: number | null = null;
+  public totalRegistrosSalidas: number | null = null
+
   public pesoInput: number | null = null;
   public mostrarStockActual: boolean = false;
-
 
   columnasTablaListaDeAbasto: string[] = ['fechaDeFaena', 'secuencial', 'peso', 'proveedor', 'clasificacion', 'idAnimal', 'tropa', 'fechaDeRegistro']
 
@@ -60,98 +66,206 @@ export class ReporteAbastoComponent {
 
   public GetListaDeStockDeAbasto() {
 
-      this._lecturaDeMediaService.GetListarStockAbasto().subscribe({
-        next: (data) => {
-          if (data.esCorrecto && data.resultado.length > 0) {
-            this.dataListaDeLecturasAbasto.data = data.resultado;
-            this.dataOriginalSinFiltros = data.resultado;
+    this.LimpiarDatosYGrafico(); 
 
-            console.log(data.resultado)
-            this.sumarPesosPorLinea();           
-            this.totalLecturas = data.resultado.length;
+    this._lecturaDeMediaService.GetListarStockAbasto().subscribe({
+      next: (data) => {
+        if (data.esCorrecto && data.resultado.length > 0) {
+          this.dataListaDeLecturasAbasto.data = data.resultado;
+          
+          this.SumarPesosPorLinea();    
+          this.GenerarGraficoSemanal();       
 
-          } else {
-            this._utilidadesServicicio.mostrarAlerta("No se encontraron Datos","Error")
-          }
-        },
-        error: (e) => {
-          console.error(e);
-          this._utilidadesServicicio.mostrarAlerta(e.Message,"Error")
+        } else {
+          this._utilidadesServicicio.mostrarAlerta("No se encontraron Datos","Error")
         }
-      });    
-    }    
+      },
+      error: (e) => {
+        console.error(e);
+        this._utilidadesServicicio.mostrarAlerta(e.Message,"Error")
+      }
+    });    
+  }    
 
-    // public stockActualEnCamara() {
-    //   if (this.mostrarStockActual) {
-        
-    //     // filtro 2 tablas con las entradas y salidas
-    //     const entradas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Entrada"));
-    //     const salidas = this.dataOriginalSinFiltros.filter(item => item.operacion.includes("Salida"));
-
-    //     // me quedo con los id de las salidas
-    //     const idDeSalidas = new Set(salidas.map(item => item.idAnimal));
+  public SumarPesosPorLinea(): void {
+    let totalStockActual = 0;  // Para las unidades de stock (entradas - salidas)
+    let totalPesoEnStock = 0;  // Para el peso en stock (peso de entradas - peso de salidas)
+    let totalRegistrosEntradas = 0;  // Contador de entradas del día
+    let totalRegistrosSalidas = 0;   // Contador de salidas del día
+    let totalPesoEntradas = 0;   // Peso total de las entradas (todo el período)
+    let totalPesoSalidas = 0;    // Peso total de las salidas (todo el período)
+    let totalDeUnidadesDeEntrada = 0  
+    let totalDeUnidadesDeSalida = 0  
+  
+    const fechaHoy = new Date();
+    const fechaHoyFormateada = this.formatoFecha(fechaHoy);  // Formateamos la fecha de hoy
     
-    //     // filtro las entradas que no tienen salidas por los ID
-    //     const entradasSinSalida = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
-    
-    //     this.dataListaDeLecturasAbasto.data = entradasSinSalida;
-    //   } else {
-    //     // Restablece los datos originales si el checkbox está desmarcado
-    //     this.dataListaDeLecturasAbasto.data = [...this.dataOriginalSinFiltros];
-    //   }
-    //   this.sumarPesosPorLinea();
-    // }
+    // Filtrar las entradas y salidas globalmente (no filtradas por fecha aún)
+    const entradas = this.dataListaDeLecturasAbasto.data.filter(lectura =>
+      lectura.operacion.toLowerCase().includes('entrada')  // Filtra las entradas
+    );
+  
+    const salidas = this.dataListaDeLecturasAbasto.data.filter(lectura =>
+      lectura.operacion.toLowerCase().includes('salida')  // Filtra las salidas
+    );
 
-    public sumarPesosPorLinea(): void {
-        let totalPesos = 0;
-        let totalRegistrosEtiquetados = 0;
-        let totalRegistrosSinEtiqueta = 0;
+    const operacionesDeSalidas = new Set(salidas.map(item => item.idAnimal));
 
-        this.dataListaDeLecturasAbasto.data.forEach((lectura) => {
-            totalPesos += lectura.peso;
+    const stockActual = entradas.filter(item => !operacionesDeSalidas.has(item.idAnimal));
+  
+    // Calcular el total de registros y pesos para todas las entradas y salidas
+    entradas.forEach((lectura) => {
+      totalRegistrosEntradas += 1;  // Contar registros de entradas (todas)
+      totalPesoEntradas += lectura.peso;  // Sumar el peso de las entradas (todo el período)
+    });
+  
+    salidas.forEach((lectura) => {
+      totalRegistrosSalidas += 1;   // Contar registros de salidas (todas)
+      totalPesoSalidas += lectura.peso;  // Sumar el peso de las salidas (todo el período)
+    });
 
-            if(lectura.operacion.includes("Manual"))
-            {
-              totalRegistrosSinEtiqueta += 1
-            }
-            else
-            {
-              totalRegistrosEtiquetados += 1
-            }
-        });
+    // Calcular el stock total de unidades y el peso en stock
+    totalStockActual = stockActual.length;  // Solo las entradas que no tienen salidas asociadas
+    totalPesoEnStock = stockActual.reduce((acc, lectura) => acc + lectura.peso, 0);  // Peso de las entradas sin salida        
+  
+    // Filtrar las entradas y salidas por la fecha de hoy
+    entradas.forEach((lectura) => {
+      if (lectura.fechaDeRegistro.includes(fechaHoyFormateada)) {
+        totalDeUnidadesDeEntrada++;  // Contar solo las entradas del día
+      }
+    });
+  
+    salidas.forEach((lectura) => {
+      if (lectura.fechaDeRegistro.includes(fechaHoyFormateada)) {        
+        totalDeUnidadesDeSalida++;   // Contar solo las salidas del día
+      }
+    });
+  
+    // Asignar los valores calculados a las variables
+    this.totalStockActual = totalStockActual;              // Stock de unidades (entradas - salidas)
+    this.totalPesoEnStock = parseFloat(totalPesoEnStock.toFixed(2));  // Peso en stock (entradas - salidas)
+    this.totalRegistrosEntradas = totalDeUnidadesDeEntrada;  // Entradas del día (solo entradas del día)
+    this.totalRegistrosSalidas = totalDeUnidadesDeSalida;    // Salidas del día (solo salidas del día)
 
-        this.totalDePesos = parseFloat(totalPesos.toFixed(2));
-        this.totalRegistrosEtiquetados = totalRegistrosEtiquetados;
-        this.totalRegistrosSinEtiqueta = totalRegistrosSinEtiqueta;
+  }
+
+
+  // Método que genera el gráfico de entradas y salidas de la semana
+  public GenerarGraficoSemanal(): void {
+    const entradasPorDia = new Array(7).fill(0);  // Array para almacenar entradas de cada día de la semana
+    const salidasPorDia = new Array(7).fill(0);  // Array para almacenar salidas de cada día de la semana
+
+    const fechaHoy = new Date();
+    for (let i = 0; i < 7; i++) {
+      const fecha = new Date(fechaHoy);
+      fecha.setDate(fechaHoy.getDate() - i);  // Restamos días para obtener la semana pasada
+
+      const fechaFormateada = this.formatoFecha(fecha);
+      
+      // Contar entradas y salidas de la fecha actual
+      this.dataListaDeLecturasAbasto.data.forEach((lectura) => {
+        if (lectura.fechaDeRegistro.includes(fechaFormateada)) {
+          if (lectura.operacion.toLowerCase().includes('entrada')) {
+            entradasPorDia[i]++;
+          } else if (lectura.operacion.toLowerCase().includes('salida')) {
+            salidasPorDia[i]++;
+          }
+        }
+      });
     }
 
-//Orden de columnas en excel
-customHeaders: string[] = [
-  'Fecha Faena',
-  'Secuencial',
-  'Peso',
-  'Proveedor',
-  'Clasificacion',
-  'Id Animal',
-  'Tropa',
-  'Fecha de Registro',
-];
+    // Crear el gráfico utilizando Chart.js
+    this.chart = new Chart('canvas', {
+      type: 'bar',  // Tipo de gráfico
+      data: {
+        labels: ['Hoy', 'Ayer', '2 días', '3 días', '4 días', '5 días', '6 días'],  // Etiquetas de los días
+        datasets: [
+          {
+            label: 'Entradas',
+            data: entradasPorDia,  // Datos de entradas
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Salidas',
+            data: salidasPorDia,  // Datos de salidas
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Días de la Semana'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Unidades'
+            },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  // Método que limpia los datos y el gráfico antes de realizar una nueva consulta
+  public LimpiarDatosYGrafico(): void {
+    // Limpiar los datos del gráfico
+    if (this.chart) {
+      this.chart.destroy();  // Destruir el gráfico actual
+      this.chart = null;     // Limpiar la instancia del gráfico
+    }
+
+    // Limpiar las variables relacionadas con los datos
+    this.totalStockActual = null;
+    this.totalPesoEnStock = null;
+    this.totalRegistrosEntradas = null;
+    this.totalRegistrosSalidas = null;
+    
+    // Limpiar los datos de la tabla
+    this.dataListaDeLecturasAbasto.data = [];
+    this.dataOriginalSinFiltros = [];
+  }
+  
+  
+  
+
+  //Orden de columnas en excel
+  customHeaders: string[] = [
+    'Fecha Faena',
+    'Secuencial',
+    'Peso',
+    'Proveedor',
+    'Clasificacion',
+    'Id Animal',
+    'Tropa',
+    'Fecha de Registro',
+  ];
 
 
-// Mapea los encabezados a los nombres de las columnas originales para moverlos como quiera
-columnMapping: { [key: string]: string } = {
-  'Fecha Faena': 'fechaDeFaena',
-  'Secuencial': 'secuencial',
-  'Peso': 'peso',
-  'Proveedor': 'proveedor',
-  'Clasificacion': 'clasificacion',
-  'Id Animal': 'idAnimal',
-  'Tropa': 'tropa',
-  'Fecha de Registro': 'fechaDeRegistro',
-};
+  // Mapea los encabezados a los nombres de las columnas originales para moverlos como quiera
+  columnMapping: { [key: string]: string } = {
+    'Fecha Faena': 'fechaDeFaena',
+    'Secuencial': 'secuencial',
+    'Peso': 'peso',
+    'Proveedor': 'proveedor',
+    'Clasificacion': 'clasificacion',
+    'Id Animal': 'idAnimal',
+    'Tropa': 'tropa',
+    'Fecha de Registro': 'fechaDeRegistro',
+  };
 
 
-public async exportarAExcel(): Promise<void> {
+  public async exportarAExcel(): Promise<void> {
 
     const workbookAbasto = new ExcelJS.Workbook();
     const worksheetStockActual = workbookAbasto.addWorksheet('Stock Actual');
@@ -166,21 +280,23 @@ public async exportarAExcel(): Promise<void> {
     await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetEntradas, 'Entradas de Abasto', 'B2', 'M4')
     await this._metodosDeExcelGenericoService.InsertHederSheet(workbookAbasto, WorksheetSalidas, 'Salidas de Abasto', 'B2', 'M4')
 
-    // Filtrar y agregar datos a las hojas correspondientes
-    const listaTotal = this.dataListaDeLecturasAbasto.data;
-
     const fechaSeleccionadaStr = this.fechaSeleccionada ? this.fechaSeleccionada.toISOString().split('T')[0] : null;
-    const entradas = listaTotal.filter(item => item.operacion.includes('Entrada'));
-    const salidas = listaTotal.filter(item => item.operacion.includes('Salida'));
 
-    // Me quedo con los id de las salidas
-    const idDeSalidas = new Set(salidas.map(item => item.idAnimal));    
-    // filtro las entradas que no tienen salidas por los ID
-    const stockActual = entradas.filter(item => !idDeSalidas.has(item.idAnimal));
+    // Filtrar las entradas y salidas globalmente (no filtradas por fecha aún)
+    const entradas = this.dataListaDeLecturasAbasto.data.filter(lectura =>
+      lectura.operacion.toLowerCase().includes('entrada')  // Filtra las entradas
+    );
+  
+    const salidas = this.dataListaDeLecturasAbasto.data.filter(lectura =>
+      lectura.operacion.toLowerCase().includes('salida')  // Filtra las salidas
+    );
+
+    const operacionesDeSalidas = new Set(salidas.map(item => item.idAnimal));
+
+    const stockActual = entradas.filter(item => !operacionesDeSalidas.has(item.idAnimal));
 
     const entradasConFecha = entradas.filter(item => item.fechaDeRegistro === fechaSeleccionadaStr);
     const salidasConFecha = salidas.filter(item => item.fechaDeRegistro === fechaSeleccionadaStr);
-
 
     // Agregar encabezados de columna
     this.customHeaders.forEach((header, index) => {

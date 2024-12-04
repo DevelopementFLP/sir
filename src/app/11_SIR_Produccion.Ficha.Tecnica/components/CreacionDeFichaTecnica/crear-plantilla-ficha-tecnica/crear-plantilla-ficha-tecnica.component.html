@@ -1,375 +1,372 @@
 
+<body>
+    <div class="contenedor-de-pagina">
 
-<div class="contenedor-de-pagina">
-
-    <div class="seccion-titulo">
-        <h1>CREAR PLANTILLA FICHA TECNICA</h1>
-    </div>
-
-    <div class="flex-contenedor-acciones">
-        <div class="acciones-pDropdown">    
-            <label>Acción:</label>        
-            <p-dropdown 
-                [(ngModel)]="accionSeleccionada" 
-                [options]="[{label: 'Crear', value: 'crear'}, {label: 'Editar', value: 'editar'}]" 
-                placeholder="Seleccionar..."
-                (onChange)="accionSeleccionada === 'editar' ? mostrarInputsEditar = true : mostrarInputsEditar = false">
-            </p-dropdown>
-        </div>   
-    
-        <div class="acciones-pDropdown">    
-            <label>Seleccione una sección:</label>        
-            <p-dropdown 
-                [(ngModel)]="seccionSeleccionada" 
-                [options]="seccionesDePlantilla" 
-                placeholder="Seleccionar..."
-                (onChange)="GenerarListasDeCampos(seccionSeleccionada)">
-            </p-dropdown>
-        </div>      
-    </div>
-
-    <div *ngIf="mostrarInputsEditar" class="busqueda-plantilla">
-        <label for="descripcionDePlantilla">Nombre de Plantilla:</label>
-        <div class="input-container">
-            <input type="text" id="descripcionDePlantilla" [(ngModel)]="descripcionDePlantilla" placeholder="Ingrese una descripcion" />
-        </div>
-        <div *ngIf="seccionSeleccionada === 'formularioAspectosGenerales'" style="margin-bottom: 0.5rem;">
-            <button                
-                pButton 
-                pRipple 
-                label="Buscar Aspectos Generales" 
-                class="p-button-success" 
-                (click)="BuscarPlantillaDeAspectosGenerales()"
-            ></button>           
-        </div>
-        
-        <div *ngIf="seccionSeleccionada === 'formularioDeEspecificaciones'" style="margin-bottom: 0.5rem;">
-            <button
-                pButton 
-                pRipple 
-                label="Buscar Especificaciones" 
-                class="p-button-success" 
-                (click)="BuscarPlantillaDeEspecificaciones()"
-            ></button>               
-        </div>
-    </div>
-    
-
-    <div *ngIf="(seccionSeleccionada === 'formularioAspectosGenerales')" class="seccion-formulario">
-      <h3>Formulario Aspectos Generales</h3>
-  
-      <form [formGroup]="formularioAspectosGenerales" (ngSubmit)="EnviarFormularioAspectosGenerales()">
-        <div class="p-field">
-            <label for="nombre">Nombre de Plantilla:</label>
-            <input id="nombre" formControlName="nombre" pInputText required />
+        <div class="seccion-titulo">
+            <h1>CREAR PLANTILLA FICHA TECNICA</h1>
         </div>
 
-        <div class="p-field">
-            <label for="nombreDeProducto">Nombre de Producto:</label>
-            <input id="nombreDeProducto" formControlName="nombreDeProducto" pInputText required />
+        <div class="flex-contenedor-acciones">
+
+            <div class="acciones-pDropdown">    
+                <label>Seleccione una sección:</label>        
+                <p-dropdown 
+                    [(ngModel)]="seccionSeleccionada" 
+                    [options]="seccionesDePlantilla" 
+                    placeholder="Seleccionar..."
+                    (onChange)="GenerarListasDeCampos(seccionSeleccionada)">
+                </p-dropdown>
+            </div>      
         </div>
 
-        <div class="p-field">
-            <label for="idMarca">Marca:</label>
-            <p-dropdown 
-                id="idMarca" 
-                formControlName="idMarca" 
-                [options]="GenerarListasDeCampos('marcas')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idMarca'" 
-                placeholder="Seleccione una Marca" 
-                >
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idTipoDeUso">Tipo de Uso:</label>
-            <p-dropdown 
-                id="idTipoDeUso" 
-                formControlName="idTipoDeUso" 
-                [options]="GenerarListasDeCampos('tiposDeUso')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idTipoDeUso'" 
-                placeholder="Seleccione un tipo de uso" 
-                >
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idAlergeno">Alergeno:</label>
-            <p-dropdown 
-                id="idAlergeno" 
-                formControlName="idAlergeno" 
-                [options]="GenerarListasDeCampos('alergeno')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idAlergeno'" 
-                placeholder="Seleccione un alérgeno">
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idCondicionAlmacenamiento">Condición Almacenamiento:</label>
-            <p-dropdown 
-                id="idCondicionAlmacenamiento" 
-                formControlName="idCondicionAlmacenamiento" 
-                [options]="GenerarListasDeCampos('condicionDeAlmacenamiento')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idCondicionDeAlmacenamiento'" 
-                placeholder="Seleccione una condición" 
-                >
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idVidaUtil">Vida Útil:</label>
-            <p-dropdown 
-                id="idVidaUtil" 
-                formControlName="idVidaUtil" 
-                [options]="GenerarListasDeCampos('vidaUtil')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idVidaUtil'" 
-                placeholder="Seleccione vida útil" 
-                >
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idTipoDeEnvase">Tipo de Envase:</label>
-            <p-dropdown 
-                id="idTipoDeEnvase" 
-                formControlName="idTipoDeEnvase" 
-                [options]="GenerarListasDeCampos('tipoDeEnvase')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idTipoDeEnvase'" 
-                placeholder="Seleccione tipo de envase" 
-                >
-            </p-dropdown>
-        </div>
-
-        <div class="p-field">
-            <label for="idPresentacionDeEnvase">Presentación de Envase:</label>
-            <p-dropdown 
-                id="idPresentacionDeEnvase" 
-                formControlName="idPresentacionDeEnvase" 
-                [options]="GenerarListasDeCampos('presentacionDeEnvase')" 
-                [optionLabel]="'nombre'" 
-                [optionValue]="'idPresentacionDeEnvase'" 
-                placeholder="Seleccione presentación" 
-                >
-            </p-dropdown>
+        <div *ngIf="mostrarInputsEditar" class="busqueda-plantilla">
+            <label for="descripcionDePlantilla">Nombre de Plantilla:</label>
+            <div class="input-container">
+                <input type="text" id="descripcionDePlantilla" [(ngModel)]="descripcionDePlantilla" placeholder="Ingrese una descripcion" />
             </div>
-
-            <div class="p-field">
-                <label for="pesoPromedio">Peso Promedio:</label>
-                <input id="pesoPromedio" type="number" formControlName="pesoPromedio" pInputText required />
+            <div *ngIf="seccionSeleccionada === 'formularioAspectosGenerales'" style="margin-bottom: 0.5rem;">
+                <button                
+                    pButton 
+                    pRipple 
+                    label="Buscar Aspectos Generales" 
+                    class="p-button-success" 
+                    (click)="BuscarPlantillaDeAspectosGenerales()"
+                ></button>           
             </div>
-
-            <div class="p-field">
-                <label for="unidadesPorCaja">Unidades por Caja:</label>
-                <input id="unidadesPorCaja" type="number" formControlName="unidadesPorCaja" pInputText required />
+            
+            <div *ngIf="seccionSeleccionada === 'formularioDeEspecificaciones'" style="margin-bottom: 0.5rem;">
+                <button
+                    pButton 
+                    pRipple 
+                    label="Buscar Especificaciones" 
+                    class="p-button-success" 
+                    (click)="BuscarPlantillaDeEspecificaciones()"
+                ></button>               
             </div>
+        </div>
 
-            <div class="p-field">
-                <label for="dimensiones">Dimensiones:</label>
-                <input id="dimensiones" type="text" formControlName="dimensiones" pInputText required />
-            </div>
 
-            <div *ngIf="accionSeleccionada != 'editar'">
-                <button pButton type="submit" label="Crear Sección de Aspectos Generales" [disabled]="formularioAspectosGenerales.invalid"></button>
-            </div>
+        <div *ngIf="(seccionSeleccionada === 'formularioAspectosGenerales')" class="seccion-formulario">
+            <h3>Formulario Aspectos Generales</h3>
 
-            <div *ngIf="accionSeleccionada === 'editar'">
-                <button pButton type="button" label="Editar Plantilla de Aspectos Generales" (click)="EditarPlantillaDeAspectosGenerales()" [disabled]="formularioAspectosGenerales.invalid"></button>
-            </div>
-
-        </form>
-    </div>
-  
-
-    <div *ngIf="seccionSeleccionada === 'formularioDeEspecificaciones'" class="seccion-formulario">
-        <h3> Formulario Especificaciones </h3>
-
-        <form [formGroup]="formularioEspecificaciones" (ngSubmit)="EnviarFormularioEspecificaciones()">
-
+            <form [formGroup]="formularioAspectosGenerales" (ngSubmit)="EnviarFormularioAspectosGenerales()">
             <div class="p-field">
                 <label for="nombre">Nombre de Plantilla:</label>
                 <input id="nombre" formControlName="nombre" pInputText required />
             </div>
-        
+
             <div class="p-field">
-                <label for="grasaVisible">Grasa Visible:</label>
-                <input id="grasaVisible" formControlName="grasaVisible" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="espesorCobertura">Espesor Cobertura:</label>
-                <input id="espesorCobertura" formControlName="espesorCobertura" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="ganglios">Ganglios:</label>
-                <input id="ganglios" formControlName="ganglios" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="hematomas">Hematomas:</label>
-                <input id="hematomas" formControlName="hematomas" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="huesosCartilagos">Huesos Cartílagos:</label>
-                <input id="huesosCartilagos" formControlName="huesosCartilagos" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="elementosExtraños">Elementos Extraños:</label>
-                <input id="elementosExtraños" formControlName="elementosExtraños" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="idColor">Color:</label>
-                <p-dropdown 
-                    id="idColor" 
-                    formControlName="idColor" 
-                    [options]="GenerarListasDeCampos('colores')" 
-                    [optionLabel]="'nombre'" 
-                    [optionValue]="'idColor'" 
-                    placeholder="Seleccione un color" 
-                    >
-                </p-dropdown>
-            </div>
-        
-            <div class="p-field">
-                <label for="idOlor">Olor:</label>
-                <p-dropdown 
-                    id="idOlor" 
-                    formControlName="idOlor" 
-                    [options]="GenerarListasDeCampos('olores')" 
-                    [optionLabel]="'nombre'" 
-                    [optionValue]="'idOlor'" 
-                    placeholder="Seleccione un olor" 
-                    >
-                </p-dropdown>
-            </div>
-        
-            <div class="p-field">
-                <label for="idPh">Ph:</label>
-                <p-dropdown 
-                    id="idPh" 
-                    formControlName="idPh" 
-                    [options]="GenerarListasDeCampos('ph')" 
-                    [optionLabel]="'valor'" 
-                    [optionValue]="'idPh'" 
-                    placeholder="Seleccione un pH" 
-                    >
-                </p-dropdown>
-            </div>
-        
-            <div class="p-field">
-                <label for="aerobiosMesofilosTotales">Aerobios Mesofilos Totales:</label>
-                <input id="aerobiosMesofilosTotales" formControlName="aerobiosMesofilosTotales" pInputText />
-            </div>
-        
-            <div class="p-field">
-                <label for="enterobacterias">Enterobacterias:</label>
-                <div class="checkbox-container">
-                    <input id="enterobacterias" formControlName="enterobacterias" pInputText />
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="enviarEnterobacterias" />
-                    </label>
-                </div>
-            </div>
-        
-            <div class="p-field">
-                <label for="stec0157">Stec 0157:</label>
-                <div class="checkbox-container">
-                    <input id="stec0157" formControlName="stec0157" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarStec" />
-                    </label>
-                </div>
-            </div>
-            
-        
-            <div class="p-field">
-                <label for="stecNo0157">Stec No 0157:</label>
-                <div class="checkbox-container">
-                    <input id="stecNo0157" formControlName="stecNo0157" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarNoStec" />
-                    </label>
-                </div>
-            </div>
-            
-        
-            <div class="p-field">
-                <label for="salmonella">Salmonella:</label>
-                <div class="checkbox-container">
-                    <input id="salmonella" formControlName="salmonella" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarSalmonella" />
-                    </label>
-                </div>
-            </div>
-            
-            <div class="p-field">
-                <label for="estafilococos">Estafilococos:</label>
-                <div class="checkbox-container">
-                    <input id="estafilococos" formControlName="estafilococos" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarEstafilococos" />
-                    </label>
-                </div>
-            </div>
-            
-            <div class="p-field">
-                <label for="pseudomonas">Pseudomonas:</label>
-                <div class="checkbox-container">
-                    <input id="pseudomonas" formControlName="pseudomonas" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarPseudomonas" />
-                    </label>
-                </div>
-            </div>
-            
-            <div class="p-field">
-                <label for="escherichiaColi">Escherichia Coli:</label>
-                <div class="checkbox-container">
-                    <input id="escherichiaColi" formControlName="escherichiaColi" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarEscherichiaColi" />
-                    </label>
-                </div>
-            </div>
-            
-            <div class="p-field">
-                <label for="coliformesTotales">Coliformes Totales:</label>
-                <div class="checkbox-container">
-                    <input id="coliformesTotales" formControlName="coliformesTotales" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarColiformes" />
-                    </label>
-                </div>
+                <label for="nombreDeProducto">Nombre de Producto:</label>
+                <input id="nombreDeProducto" formControlName="nombreDeProducto" pInputText required />
             </div>
 
             <div class="p-field">
-                <label for="coliformesFecales">Coliformes Fecales:</label>
-                <div class="checkbox-container">
-                    <input id="coliformesFecales" formControlName="coliformesFecales" pInputText />
-                    <label>
-                        <input type="checkbox" formControlName="enviarColiformesFecales" />
-                    </label>
-                </div>
-            </div>
-            
-            <div *ngIf="accionSeleccionada != 'editar'">
-                <button pButton type="submit" label="Crear Formulario Especificaciones" [disabled]="formularioEspecificaciones.invalid"></button>
+                <label for="idMarca">Marca:</label>
+                <p-dropdown 
+                    id="idMarca" 
+                    formControlName="idMarca" 
+                    [options]="GenerarListasDeCampos('marcas')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idMarca'" 
+                    placeholder="Seleccione una Marca" 
+                    >
+                </p-dropdown>
             </div>
 
-            <div *ngIf="accionSeleccionada === 'editar'">
-                <button pButton type="button" label="Editar Plantilla de Especificaciones" (click)="EditarFormularioEspecificaciones()" [disabled]="formularioEspecificaciones.invalid"></button>
+            <div class="p-field">
+                <label for="idTipoDeUso">Tipo de Uso:</label>
+                <p-dropdown 
+                    id="idTipoDeUso" 
+                    formControlName="idTipoDeUso" 
+                    [options]="GenerarListasDeCampos('tiposDeUso')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idTipoDeUso'" 
+                    placeholder="Seleccione un tipo de uso" 
+                    >
+                </p-dropdown>
             </div>
-        </form>
+
+            <div class="p-field">
+                <label for="idAlergeno">Alergeno:</label>
+                <p-dropdown 
+                    id="idAlergeno" 
+                    formControlName="idAlergeno" 
+                    [options]="GenerarListasDeCampos('alergeno')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idAlergeno'" 
+                    placeholder="Seleccione un alérgeno">
+                </p-dropdown>
+            </div>
+
+            <div class="p-field">
+                <label for="idCondicionAlmacenamiento">Condición Almacenamiento:</label>
+                <p-dropdown 
+                    id="idCondicionAlmacenamiento" 
+                    formControlName="idCondicionAlmacenamiento" 
+                    [options]="GenerarListasDeCampos('condicionDeAlmacenamiento')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idCondicionDeAlmacenamiento'" 
+                    placeholder="Seleccione una condición" 
+                    >
+                </p-dropdown>
+            </div>
+
+            <div class="p-field">
+                <label for="idVidaUtil">Vida Útil:</label>
+                <p-dropdown 
+                    id="idVidaUtil" 
+                    formControlName="idVidaUtil" 
+                    [options]="GenerarListasDeCampos('vidaUtil')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idVidaUtil'" 
+                    placeholder="Seleccione vida útil" 
+                    >
+                </p-dropdown>
+            </div>
+
+            <div class="p-field">
+                <label for="idTipoDeEnvase">Tipo de Envase:</label>
+                <p-dropdown 
+                    id="idTipoDeEnvase" 
+                    formControlName="idTipoDeEnvase" 
+                    [options]="GenerarListasDeCampos('tipoDeEnvase')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idTipoDeEnvase'" 
+                    placeholder="Seleccione tipo de envase" 
+                    >
+                </p-dropdown>
+            </div>
+
+            <div class="p-field">
+                <label for="idPresentacionDeEnvase">Presentación de Envase:</label>
+                <p-dropdown 
+                    id="idPresentacionDeEnvase" 
+                    formControlName="idPresentacionDeEnvase" 
+                    [options]="GenerarListasDeCampos('presentacionDeEnvase')" 
+                    [optionLabel]="'nombre'" 
+                    [optionValue]="'idPresentacionDeEnvase'" 
+                    placeholder="Seleccione presentación" 
+                    >
+                </p-dropdown>
+                </div>
+
+                <div class="p-field">
+                    <label for="pesoPromedio">Peso Promedio:</label>
+                    <input id="pesoPromedio" type="text" formControlName="pesoPromedio" pInputText required />
+                </div>
+
+                <div class="p-field">
+                    <label for="unidadesPorCaja">Unidades por Caja:</label>
+                    <input id="unidadesPorCaja" type="text" formControlName="unidadesPorCaja" pInputText required />
+                </div>
+
+                <div class="p-field">
+                    <label for="dimensiones">Dimensiones:</label>
+                    <input id="dimensiones" type="text" formControlName="dimensiones" pInputText required />
+                </div>
+
+                <div *ngIf="accionSeleccionada != 'editar'">
+                    <button pButton type="submit" label="Crear Sección de Aspectos Generales" [disabled]="formularioAspectosGenerales.invalid"></button>
+                </div>
+
+                <div *ngIf="accionSeleccionada === 'editar'">
+                    <button pButton type="button" label="Editar Plantilla de Aspectos Generales" (click)="EditarPlantillaDeAspectosGenerales()" [disabled]="formularioAspectosGenerales.invalid"></button>
+                </div>
+
+            </form>
+        </div>
+
+
+        <div *ngIf="seccionSeleccionada === 'formularioDeEspecificaciones'" class="seccion-formulario">
+            <h3> Formulario Especificaciones </h3>
+
+            <form [formGroup]="formularioEspecificaciones" (ngSubmit)="EnviarFormularioEspecificaciones()">
+
+                <div class="p-field">
+                    <label for="nombre">Nombre de Plantilla:</label>
+                    <input id="nombre" formControlName="nombre" pInputText required />
+                </div>
+            
+                <div class="p-field">
+                    <label for="grasaVisible">Grasa Visible:</label>
+                    <input id="grasaVisible" formControlName="grasaVisible" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="espesorCobertura">Espesor Cobertura:</label>
+                    <input id="espesorCobertura" formControlName="espesorCobertura" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="ganglios">Ganglios:</label>
+                    <input id="ganglios" formControlName="ganglios" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="hematomas">Hematomas:</label>
+                    <input id="hematomas" formControlName="hematomas" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="huesosCartilagos">Huesos Cartílagos:</label>
+                    <input id="huesosCartilagos" formControlName="huesosCartilagos" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="elementosExtraños">Elementos Extraños:</label>
+                    <input id="elementosExtraños" formControlName="elementosExtraños" pInputText />
+                </div>
+            
+                <div class="p-field">
+                    <label for="idColor">Color:</label>
+                    <p-dropdown 
+                        id="idColor" 
+                        formControlName="idColor" 
+                        [options]="GenerarListasDeCampos('colores')" 
+                        [optionLabel]="'nombre'" 
+                        [optionValue]="'idColor'" 
+                        placeholder="Seleccione un color" 
+                        >
+                    </p-dropdown>
+                </div>
+            
+                <div class="p-field">
+                    <label for="idOlor">Olor:</label>
+                    <p-dropdown 
+                        id="idOlor" 
+                        formControlName="idOlor" 
+                        [options]="GenerarListasDeCampos('olores')" 
+                        [optionLabel]="'nombre'" 
+                        [optionValue]="'idOlor'" 
+                        placeholder="Seleccione un olor" 
+                        >
+                    </p-dropdown>
+                </div>
+            
+                <div class="p-field">
+                    <label for="idPh">Ph:</label>
+                    <p-dropdown 
+                        id="idPh" 
+                        formControlName="idPh" 
+                        [options]="GenerarListasDeCampos('ph')" 
+                        [optionLabel]="'valor'" 
+                        [optionValue]="'idPh'" 
+                        placeholder="Seleccione un pH" 
+                        >
+                    </p-dropdown>
+                </div>
+            
+                <div class="p-field">
+                    <label for="aerobiosMesofilosTotales">Aerobios Mesofilos Totales:</label>
+                    <div class="checkbox-container">
+                        <input id="aerobiosMesofilosTotales" formControlName="aerobiosMesofilosTotales" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarAerobiosMesofilosTotales" />
+                        </label>
+                    </div>
+                </div>
+            
+                <div class="p-field">
+                    <label for="enterobacterias">Enterobacterias:</label>
+                    <div class="checkbox-container">
+                        <input id="enterobacterias" formControlName="enterobacterias" pInputText />
+                        <label class="checkbox-label">
+                            <input type="checkbox" formControlName="enviarEnterobacterias" />
+                        </label>
+                    </div>
+                </div>
+            
+                <div class="p-field">
+                    <label for="stec0157">STEC O157:H7:</label>
+                    <div class="checkbox-container">
+                        <input id="stec0157" formControlName="stec0157" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarStec" />
+                        </label>
+                    </div>
+                </div>
+                
+            
+                <div class="p-field">
+                    <label for="stecNo0157">STEC no O157:H7:</label>
+                    <div class="checkbox-container">
+                        <input id="stecNo0157" formControlName="stecNo0157" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarNoStec" />
+                        </label>
+                    </div>
+                </div>
+                
+            
+                <div class="p-field">
+                    <label for="salmonella">Salmonella:</label>
+                    <div class="checkbox-container">
+                        <input id="salmonella" formControlName="salmonella" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarSalmonella" />
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="p-field">
+                    <label for="estafilococos">Estafilococos (ufc/g):</label>
+                    <div class="checkbox-container">
+                        <input id="estafilococos" formControlName="estafilococos" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarEstafilococos" />
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="p-field">
+                    <label for="pseudomonas">Pseudomonas:</label>
+                    <div class="checkbox-container">
+                        <input id="pseudomonas" formControlName="pseudomonas" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarPseudomonas" />
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="p-field">
+                    <label for="escherichiaColi">Escherichia Coli:</label>
+                    <div class="checkbox-container">
+                        <input id="escherichiaColi" formControlName="escherichiaColi" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarEscherichiaColi" />
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="p-field">
+                    <label for="coliformesTotales">Coliformes Totales:</label>
+                    <div class="checkbox-container">
+                        <input id="coliformesTotales" formControlName="coliformesTotales" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarColiformes" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="p-field">
+                    <label for="coliformesFecales">Coliformes Fecales:</label>
+                    <div class="checkbox-container">
+                        <input id="coliformesFecales" formControlName="coliformesFecales" pInputText />
+                        <label>
+                            <input type="checkbox" formControlName="enviarColiformesFecales" />
+                        </label>
+                    </div>
+                </div>
+                
+                <div *ngIf="accionSeleccionada != 'editar'">
+                    <button pButton type="submit" label="Crear Formulario Especificaciones" [disabled]="formularioEspecificaciones.invalid"></button>
+                </div>
+
+                <div *ngIf="accionSeleccionada === 'editar'">
+                    <button pButton type="button" label="Editar Plantilla de Especificaciones" (click)="EditarFormularioEspecificaciones()" [disabled]="formularioEspecificaciones.invalid"></button>
+                </div>
+            </form>
+        </div>
+
     </div>
-    
-</div>
+</body>

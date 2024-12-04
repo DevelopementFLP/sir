@@ -37,6 +37,22 @@ import { CrearFichaTecnicaComponent } from './components/CreacionDeFichaTecnica/
 import { FtSeccionDestinoComponent } from './components/MantenimientoFichaTecnica/ft-seccion-destino/ft-seccion-destino.component';
 
 import { ButtonModule } from 'primeng/button';
+import { LisaDeFichasTecnicasComponent } from './components/ListaDeFichasTecnicas/lisa-de-fichas-tecnicas.component';
+import { AppRoutingModule } from '../app-routing.module';
+import { RouterModule } from '@angular/router';
+import { EditarFichaTecnicaComponent } from './modal/FichaTecnica/modal-editar-ficha-tecnica/editar-ficha-tecnica.component';
+
+import { DialogModule } from 'primeng/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ModalVerFichaTecnicaComponent } from './modal/FichaTecnica/modal-ver-ficha-tecnica/modal-ver-ficha-tecnica.component';
+import { ModalEditarFotoFichaTecnicaComponent } from './modal/FichaTecnica/modal-editar-foto-ficha-tecnica/modal-editar-foto-ficha-tecnica.component';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ListaDePlantillasComponent } from './components/ListaDePlantillas/lista-de-plantillas.component';
+import { ModalplantillaAspectosGeneralesComponent } from './modal/plantillas/modalplantilla-aspectos-generales/modalplantilla-aspectos-generales.component';
+import { ModalplantillaEspecificacionesComponent } from './modal/plantillas/modalplantilla-especificaciones/modalplantilla-especificaciones.component';
+
+
 
 @NgModule({
   declarations: [
@@ -60,9 +76,16 @@ import { ButtonModule } from 'primeng/button';
       CrearPlantillaFichaTecnicaComponent,
       CrearFichaTecnicaComponent,
       FtSeccionDestinoComponent,
+      LisaDeFichasTecnicasComponent,
+      EditarFichaTecnicaComponent,
+      ModalVerFichaTecnicaComponent,
+      ModalEditarFotoFichaTecnicaComponent,
+      ListaDePlantillasComponent,
+      ModalplantillaAspectosGeneralesComponent,
+      ModalplantillaEspecificacionesComponent,
   ],
   exports:[
-    
+    ModalVerFichaTecnicaComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +100,13 @@ import { ButtonModule } from 'primeng/button';
     CardModule,
     TabViewModule,
     PanelModule,
-    ButtonModule
+    ButtonModule,
+    AppRoutingModule,
+    RouterModule,
+    DialogModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
+    FileUploadModule
   ]
 })
 export class ProduccionFichaTecnicaModule { }

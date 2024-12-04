@@ -39,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DispositivoModule } from './09_SIR.Dispositivos.Apps/09_SIR.Dispositivo.Apps.module';
 import { FaenaModule } from './10_Sir.Faena.Apps/10_Sir_Faena.Apps.module';
 import { ProduccionFichaTecnicaModule } from './11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module';
+import { ProduccionControlDeCalidadModule } from './12_SIR_Produccion.ControlDeCalidad/12_Sir_Produccion_ControlDeCalidad.module';
 
 
 registerLocaleData(localeEs);
@@ -76,7 +77,8 @@ registerLocaleData(localeEs);
     MatDialogModule,
     DispositivoModule,
     FaenaModule,
-    ProduccionFichaTecnicaModule
+    ProduccionFichaTecnicaModule,
+    ProduccionControlDeCalidadModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },

@@ -3,18 +3,23 @@
 }
 
 body {
+    height: 100%; 
+    margin: 0; 
+    padding: 1rem;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4; /* Color de fondo suave */
+    background-color: #868687; 
+    display: flex;
+    justify-content: center; 
+    align-items: baseline;
 }
 
 .contenedor-de-pagina {
+    width: 1000px;
+    height: auto; /* Alto A4 */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    
+    align-items: center;    
 }
 
 .seccion-titulo {

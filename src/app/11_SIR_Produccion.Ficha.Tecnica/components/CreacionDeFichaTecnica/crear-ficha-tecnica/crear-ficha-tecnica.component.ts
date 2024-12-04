@@ -30,7 +30,6 @@ export class CrearFichaTecnicaComponent {
   public calibreDeProducto: string = '';
   public descripcionDelProducto: string = '';
 
-
   public imagenSeleccionadaAreaLogo: File | null = null;
   public urlLogo: string | null = null;
   
@@ -66,8 +65,8 @@ export class CrearFichaTecnicaComponent {
   public vidaUtil: string = '';
   public tipoDeEnvase: string = '';
   public presentacionDeEnvase: string = '';
-  public pesoPromedio: number = 0;
-  public unidadesPorCaja: number = 0;
+  public pesoPromedio: string = '';
+  public unidadesPorCaja: string = '';
   public dimensiones: string = '';
 
   //! Campos de Especificaciones
@@ -91,14 +90,13 @@ export class CrearFichaTecnicaComponent {
   public pseudomonas: string = '';
   public escherichiaColi: string = '';
   public coliformesTotales: string = '';
+  public coliformesFecales: string = '';
 
   //! Campos de Plantilla
   public elaboradoPor: string = 'Departamento de Produccion';
   public aprobadoPor: string = 'Jefe de Desosado';
   public observacionDelProducto: string = '';
   public fechaDelDia: string = '';
-
-
 
   constructor(
     private _FtAspectosGeneralesService: FtAspectosGeneralesService,
@@ -119,9 +117,31 @@ export class CrearFichaTecnicaComponent {
     if (this.codigoProducto!.trim() !== '') {
         const codigoProductoRecibido = this.codigoProducto!.trim();
 
-        this.ObtenerNombreProducto(codigoProductoRecibido);
-        this.codigoProducto = '';
-        
+        this._FtFichaTecnicaService.BuscarFichaTecnica(codigoProductoRecibido).subscribe(
+            response => {
+                if (response.esCorrecto && response.resultado) {
+                    // Si el producto ya tiene una ficha técnica asociada, mostramos la alerta
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Este código de producto ya está asociado a una ficha técnica.',
+                        icon: 'error'
+                    });
+                    this.codigoProducto = ''; 
+                    return;
+                } else {
+                    this.ObtenerNombreProducto(codigoProductoRecibido); 
+                }
+            },
+            error => {
+                console.error('Error al buscar ficha técnica', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al verificar el código de producto.',
+                    icon: 'error'
+                });
+                this.codigoProducto = ''; 
+            }
+        );
     } else {
         Swal.fire({
             title: 'Error',
@@ -151,11 +171,11 @@ export class CrearFichaTecnicaComponent {
                   this.codigoProducto = '';
               }
 
-                // Asignar otros valores
                 this.nombreProducto = response.resultado.nombre || 'Resultado Indefinido';   
                 this.descripcionDelProducto = response.resultado.nombreDeProductoParaFicha || 'Resultado Indefinido'; 
                 this.ObtenerFechaDeHoy();    
                 this.contadorDePasadas++;
+                this.codigoProducto = '';
             } else {
                 Swal.fire({
                     title: 'Error',
@@ -164,6 +184,7 @@ export class CrearFichaTecnicaComponent {
                 });
                 this.contadorDePasadas = 0;
                 this.listaDeProductosParaCargar = [];
+                this.codigoProducto = '';
             }
         },
         error => {
@@ -175,11 +196,12 @@ export class CrearFichaTecnicaComponent {
             });
             this.contadorDePasadas = 0;
             this.listaDeProductosParaCargar = [];
+            this.codigoProducto = '';
         }
     );
   }
 
-  private CargarAspectosGenerales(): void {
+  public CargarAspectosGenerales(): void {
   
     this._FtAspectosGeneralesService.GetListaAspectosGenerales().subscribe(
       response => {
@@ -195,7 +217,7 @@ export class CrearFichaTecnicaComponent {
     );
   }
 
-  private CargarEspecificaciones(): void {
+  public CargarEspecificaciones(): void {
   
     this._FtEspecificacionesService.GetListaDeEspecificaciones().subscribe(
       response => {
@@ -292,6 +314,7 @@ export class CrearFichaTecnicaComponent {
             this.pseudomonas = datos.pseudomonas || '';
             this.escherichiaColi = datos.escherichiaColi || '';
             this.coliformesTotales = datos.coliformesTotales || '';
+            this.coliformesFecales = datos.coliformesFecales || '';
             
           } else {
 
@@ -344,7 +367,7 @@ export class CrearFichaTecnicaComponent {
         return;
     }
 
-    const codigosDeProducto = this.listaDeProductosParaCargar.join('- ');
+    const codigosDeProducto = this.listaDeProductosParaCargar.join(' - ');
 
     const fichaTecnica: FtFichaTecnicaDTO = {
         // Identificación
@@ -363,8 +386,8 @@ export class CrearFichaTecnicaComponent {
         vidaUtil: this.vidaUtil || '',                      
         tipoDeEnvase: this.tipoDeEnvase || '',              
         presentacionDeEnvase: this.presentacionDeEnvase || '',       
-        pesoPromedio: this.pesoPromedio || 0, 
-        unidadesPorCaja: this.unidadesPorCaja || 0, 
+        pesoPromedio: this.pesoPromedio || '', 
+        unidadesPorCaja: this.unidadesPorCaja || '', 
         dimensiones: this.dimensiones || '',
         
         // Especificaciones
@@ -377,7 +400,7 @@ export class CrearFichaTecnicaComponent {
         elementosExtranos: this.elementosExtranos || '',
         color: this.color || '',                
         olor: this.olor || '',                  
-        ph: this.ph ? String(this.ph) : '',                      
+        ph: this.ph || '',                      
         aerobiosMesofilosTotales: this.aerobiosMesofilosTotales || '',
         enterobacterias: this.enterobacterias || '',
         stec0157: this.stec0157 || '',
@@ -387,6 +410,7 @@ export class CrearFichaTecnicaComponent {
         pseudomonas: this.pseudomonas || '',
         escherichiaColi: this.escherichiaColi || '',
         coliformesTotales: this.coliformesTotales || '',
+        coliformesFecales: this.coliformesFecales || '',
 
         observacion: this.observacionDelProducto || '',
         elaboradoPor: this.elaboradoPor || '', 
@@ -498,7 +522,6 @@ export class CrearFichaTecnicaComponent {
 
   public CrearImagenFichaTecnica(): void {
 
-    // Verifica si hay imágenes seleccionadas
     const imagenesPorSeccion = [
       { seccion: 1, imagen: this.imagenSeleccionadaAreaLogo },
       { seccion: 2, imagen: this.imagenSeleccionadaAreaCorte },
@@ -569,8 +592,8 @@ export class CrearFichaTecnicaComponent {
     this.vidaUtil = '';
     this.tipoDeEnvase = '';
     this.presentacionDeEnvase = '';
-    this.pesoPromedio = 0;
-    this.unidadesPorCaja = 0;
+    this.pesoPromedio  = '';
+    this.unidadesPorCaja  = '';
     this.dimensiones = '';
     this.nombre = '';
     this.grasaVisible = '';
@@ -591,6 +614,7 @@ export class CrearFichaTecnicaComponent {
     this.pseudomonas = '';
     this.escherichiaColi = '';
     this.coliformesTotales = '';
+    this.coliformesFecales = '';
     this.elaboradoPor = 'Departamento de Produccion';
     this.aprobadoPor = 'Jefe de Desosado';
     this.observacionDelProducto = '';

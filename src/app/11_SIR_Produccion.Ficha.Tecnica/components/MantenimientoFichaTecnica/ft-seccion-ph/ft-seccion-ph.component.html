@@ -25,7 +25,7 @@
                     <span *ngIf="phSeleccionado?.idPh !== element.idPh">{{element.nombre}}</span>
                 </td>
                 <td>
-                    <input *ngIf="phSeleccionado?.idPh === element.idPh" [(ngModel)]="phSeleccionado!.valor" type="number" />
+                    <input *ngIf="phSeleccionado?.idPh === element.idPh" [(ngModel)]="phSeleccionado!.valor" type="text" />
                     <span *ngIf="phSeleccionado?.idPh !== element.idPh">{{element.valor}}</span>
                 </td>
                 <td>

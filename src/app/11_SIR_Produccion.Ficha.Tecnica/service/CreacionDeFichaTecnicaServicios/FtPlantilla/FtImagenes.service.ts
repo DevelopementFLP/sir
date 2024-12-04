@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { FtImagenesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtImagenesDTO';
-import { urlBuscarImagenFichaTecnica, urlCrearImagenesFichaTecnica } from 'src/settings';
+import { urlBuscarImagenFichaTecnica, urlCrearImagenesFichaTecnica, urlEditarImagenFichaTecnica } from 'src/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,15 @@ export class FtImagenesService {
     return this.http.get<ApiResponse>(`${urlBuscarImagenFichaTecnica}`, { params });
   }
 
+  // Servicio para actualizar la imagen de la ficha técnica
+  public EditarImagenFichaTecnica(idFoto: number, seccionDeImagen: number, imagenFile: File): Observable<ApiResponse> {
+    const formatoDeDatos = new FormData();
+    formatoDeDatos.append('idFoto', idFoto.toString()); // Código del producto
+    formatoDeDatos.append('seccionDeImagen', seccionDeImagen.toString()); // Sección de la imagen
+    formatoDeDatos.append('imagenFile', imagenFile); // La nueva imagen
+
+    // Asegúrate de que el URL sea correcto
+    return this.http.put<ApiResponse>(`${urlEditarImagenFichaTecnica}`, formatoDeDatos);
+  }
 
 }

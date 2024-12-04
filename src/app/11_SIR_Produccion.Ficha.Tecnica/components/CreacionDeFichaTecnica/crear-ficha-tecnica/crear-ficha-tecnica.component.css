@@ -2,11 +2,10 @@ body, html {
     height: 100%; 
     margin: 0; 
     padding: 1rem;
-    background-color: #f1ebea; 
+    background-color: #868687; 
     display: flex;
     justify-content: center;
-    align-items: center;
-    
+    align-items: baseline;
 }
 
 p{
@@ -23,8 +22,10 @@ h1, h2, h3{
 }
 
 
+
 .contenido-de-pagina{
-    width: 1000px; /* Ancho A4 */
+    /*width: 1000px; /* Ancho A4 */
+    width: 1000px;
     height: 1123px; /* Alto A4 */
     padding: 1rem;
     background-color: white; /* Fondo blanco para el formulario */
@@ -661,14 +662,18 @@ h1, h2, h3{
 
 .caj-20-sec-8{
     grid-column: 3;
-    /* grid-row: 10; */
     background-color: #d3ebf2;
     font-weight: bold;
 }
 
 .caj-21-sec-8{
     grid-column: 3;
-    /* grid-row: 11; */
+    background-color: #d3ebf2;
+    font-weight: bold;
+}
+
+.caj-22-sec-8{
+    grid-column: 3;
     background-color: #d3ebf2;
     font-weight: bold;
 }

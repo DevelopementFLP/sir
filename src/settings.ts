@@ -8,9 +8,6 @@ export const urlAPI: string = "http://localhost:5205/api/";
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
-
-
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
@@ -251,24 +248,26 @@ export const urlFaena: string = urlAPI + "ReporteDeMedias/"
 export const urlGetReporteDeMediasProducto: string = urlFaena + "reporteDeMediasPorProducto"
 export const urlGetReporteDeMediasProveedor: string = urlFaena + "reporteDeMediasPorProveedor"
 
-
+//Ficha tecnica
 export const urlFichaTecnica: string = urlAPI + "FtFichaTecnica/"
 export const urlCrearFichaTecnica: string = urlFichaTecnica + "CrearFichaTecnica"
 export const urlBuscarFichaTecnica: string = urlFichaTecnica + "BuscarFichaTecnica"
+export const urlListaDeFichasTecnicas: string = urlFichaTecnica + "ListaDeFichasTecnicas"
+export const urlEditarFichaTecnica: string = urlFichaTecnica + "EditarFichaTecnica"
+export const urlEliminarFichaTecnica: string = urlFichaTecnica + "EliminarFichaTecnica"
 
 // Ficha Tecnica Imagenes
 export const urlFichaTecnicaImagenes: string = urlAPI + "FtImagenes/"
 export const urlCrearImagenesFichaTecnica: string = urlFichaTecnicaImagenes + "CrearImagenFichaTecnica"
 export const urlBuscarImagenFichaTecnica: string = urlFichaTecnicaImagenes + "BuscarImagenesPorProducto"
+export const urlEditarImagenFichaTecnica: string = urlFichaTecnicaImagenes + "EditarImagenFichaTecnica"
 
 
 // Ficha Tecnica Productos
 export const urlFichaTecnicaProductos: string = urlAPI + "FtProductos/"
-export const urlGetListaDeProductosFichaTecnica: string = urlFichaTecnicaProductos + "ListaProductoFichaTecnica"
 export const urlGetProductoFiltradoFichaTecnica: string = urlFichaTecnicaProductos + "BuscarProductoFichaTecnica"
 export const urlCrearProductosFichaTecnica: string = urlFichaTecnicaProductos + "CrearProductoFichaTecnica"
 export const urlEditarProductosFichaTecnica: string = urlFichaTecnicaProductos + "EditarProductoFichaTecnica"
-export const urlEliminarProductosFichaTecnica: string = urlFichaTecnicaProductos + "EliminarProductoFichaTecnica"
 
 // Ficha Tecnica Plantillas
 export const urlFichaTecnicaPlantilla: string = urlAPI + "FtPlantillas/"
@@ -373,3 +372,6 @@ export const urlCrearPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaP
 export const urlEditarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EditarPresentacionDeEnvaseFichaTecnica";
 export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecnicaPresentacionDeEnvase + "EliminarPresentacionDeEnvaseFichaTecnica";
 
+// Control de Calidad
+export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
+export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";
