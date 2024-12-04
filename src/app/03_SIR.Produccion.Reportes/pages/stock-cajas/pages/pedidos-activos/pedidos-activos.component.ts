@@ -672,5 +672,5 @@ if(this.pedidosActualizar){
     this.idPedidoPadre.emit(this.idPedidoPadreVer)
 
   }
-
+  
 }
