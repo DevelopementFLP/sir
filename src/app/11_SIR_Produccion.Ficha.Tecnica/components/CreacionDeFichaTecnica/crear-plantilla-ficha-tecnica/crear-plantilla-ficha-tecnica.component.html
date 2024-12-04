@@ -7,15 +7,6 @@
         </div>
 
         <div class="flex-contenedor-acciones">
-            <div class="acciones-pDropdown">    
-                <label>Acción:</label>        
-                <p-dropdown 
-                    [(ngModel)]="accionSeleccionada" 
-                    [options]="[{label: 'Crear', value: 'crear'}, {label: 'Editar', value: 'editar'}]" 
-                    placeholder="Seleccionar..."
-                    (onChange)="accionSeleccionada === 'editar' ? mostrarInputsEditar = true : mostrarInputsEditar = false">
-                </p-dropdown>
-            </div>   
 
             <div class="acciones-pDropdown">    
                 <label>Seleccione una sección:</label>        
@@ -161,12 +152,12 @@
 
                 <div class="p-field">
                     <label for="pesoPromedio">Peso Promedio:</label>
-                    <input id="pesoPromedio" type="number" formControlName="pesoPromedio" pInputText required />
+                    <input id="pesoPromedio" type="text" formControlName="pesoPromedio" pInputText required />
                 </div>
 
                 <div class="p-field">
                     <label for="unidadesPorCaja">Unidades por Caja:</label>
-                    <input id="unidadesPorCaja" type="number" formControlName="unidadesPorCaja" pInputText required />
+                    <input id="unidadesPorCaja" type="text" formControlName="unidadesPorCaja" pInputText required />
                 </div>
 
                 <div class="p-field">

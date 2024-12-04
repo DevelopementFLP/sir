@@ -91,8 +91,12 @@
                 <p>Producto / Product</p>
             </div>  
             <div class="grid-items-seccion cajas-de-datos">
-                <p> {{ producto }}</p>
-            </div>  
+                <input 
+                    style="width: 100%;" 
+                    type="text" 
+                    [(ngModel)]="producto" 
+                    [value]="producto" />
+            </div>
 
 
             <div class="grid-items-seccion caj-3-sec-2">
@@ -300,7 +304,7 @@
                 <div class="grid-items-seccion caj-6-sec-7">
                     <input 
                         style="width: 100%;"
-                        type="number" 
+                        type="text" 
                         [(ngModel)]="pesoPromedio" 
                         [value]="pesoPromedio" />
                 </div>  
@@ -313,7 +317,7 @@
                 <div class="grid-items-seccion caj-6-sec-7">
                     <input 
                         style="width: 100%;"
-                        type="number" 
+                        type="text" 
                         [(ngModel)]="unidadesPorCaja" 
                         [value]="unidadesPorCaja" />
                 </div>   

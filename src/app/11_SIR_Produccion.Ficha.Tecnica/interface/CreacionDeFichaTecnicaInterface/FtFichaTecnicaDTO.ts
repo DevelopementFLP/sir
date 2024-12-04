@@ -14,8 +14,8 @@ export interface FtFichaTecnicaDTO {
     tipoDeEnvase?: string;       
     presentacionDeEnvase?: string; 
 
-    pesoPromedio?: number; 
-    unidadesPorCaja?: number; 
+    pesoPromedio?: string; 
+    unidadesPorCaja?: string; 
     dimensiones?: string; 
 
     // Especificaciones

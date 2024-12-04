@@ -1,13 +1,40 @@
+
 /* Contenedor principal con tamaño A3 centrado */
 .incident-container {
-  width: 1190px; /* Aproximadamente A3 en px */
-  height: 842px; /* Aproximadamente A3 en px */
-  margin: 0 auto; /* Centrado horizontal */
-  padding: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow: auto;
+  width: 1190px; 
+  max-width: 1100px; /* Límite máximo de ancho para no exceder el tamaño de la pantalla */
+  height: 842px; /* Automático para que ajuste según el contenido */
+  margin: 30px auto; /* Centrado horizontal y pequeño margen superior */
+  padding: 30px; /* Espaciado dentro del contenedor */
+  background-color: #e2e2e2; /* Fondo blanco para mejor visibilidad */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-radius: 10px; /* Bordes redondeados */
+  display: flex; /* Usamos flex para centrar contenido */
+  flex-direction: column; /* Alinea el contenido verticalmente */
+  align-items: center; /* Centrado horizontal */
+  animation: fadeIn 0.5s ease-in-out; /* Animación para suavizar la entrada */
 }
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Opcional: Estilos adicionales para mejorar el texto dentro del contenedor */
+.incident-container p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  margin: 10px 0;
+}
+
   
 .encabezado-de-seccion {
   display: flex;
@@ -17,15 +44,6 @@
   gap: 2rem;
 }
 
-.filter-controls p-calendar {
-  margin-right: 10px;
-  width: 200px;
-}
-  
-.filter-controls button {
-  margin-left: 10px;
-}
-  
 /* Ajustar tamaño de los paneles de expansión dentro del accordion */
 p-accordion .p-accordion-tab {
   margin-bottom: 10px;
@@ -43,4 +61,34 @@ p-accordion .p-accordion-tab {
   display: block;
   margin: 0 auto;  
 }
+
+
+.boton-modal-ficha-tecnica{
+  display: flex;
+  justify-content: end;
+  margin: 0.5rem;
+}
+
+.incidente-grid {
+  display: grid;
+  grid-template-columns: 50% 50%; 
+  gap: 20px; 
+}
+
+.incidente-details {
+  padding: 10px;
+  border-right: 1px solid #ddd; 
+}
+
+.incidente-image img {
+  width: 100%; /* Asegura que la imagen ocupe el 100% del contenedor */
+  max-width: 400px; /* Limita el tamaño máximo de la imagen */
+  cursor: pointer; /* Cambia el cursor cuando pasa por encima de la imagen */
+}
+
+.tamanio-de-imagen {
+  max-width: 100%;
+  height: auto;
+}
+
   

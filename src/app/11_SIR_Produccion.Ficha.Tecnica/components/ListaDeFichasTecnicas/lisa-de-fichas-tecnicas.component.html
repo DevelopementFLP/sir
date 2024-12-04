@@ -1,41 +1,70 @@
-
-
 <body>
-  
   <div *ngIf="loading">Cargando fichas técnicas...</div>
 
-  <div class="contenedor-de-pagina">
-  <p-table *ngIf="!loading" [value]="fichaTecnica" [paginator]="true" [rows]="10" [responsive]="true" class="p-datatable-striped">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ID</th>
-        <th>Código de Producto</th>
-        <th>Nombre de Producto</th>
-        <th></th>
-      </tr>
-    </ng-template>
+  <div [ngClass]="{
+    'crear-ficha': rutaActual.includes('CrearProductoFichaTecnica'),
+    'generar-ficha': rutaActual.includes('GenerarFichaTecnica')
+    }">
+    <!-- Tabla con PrimeNG -->
+    <p-table 
+      *ngIf="!loading"
+      [value]="fichaTecnica" 
+      dataKey="codigoDeProducto"
+      [paginator]="true" 
+      [rows]="10"  
+      [responsive]="true" 
+      [loading]="loading"
+      class="tabla-de-datos"
+        >
 
-    <ng-template pTemplate="body" let-ficha>
-      <tr>
-        <td>{{ ficha.idFichaTecnica }}</td>
-        <td>{{ ficha.codigoDeProducto }}</td>
-        <td>{{ ficha.nombreDeProducto }}</td>
-        <td>
-          <button pButton type="button" icon="pi pi-pencil" label="Editar" (click)="AbrirModal(ficha)"></button>
-          <button pButton type="button" icon="pi pi-trash" label="Eliminar" class="p-button-danger" (click)="EliminarFicha(ficha.idFichaTecnica!)"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
 
-  <!-- Modal para editar ficha técnica -->
-  <p-dialog [(visible)]="modalVisible" [style]="{width: '80%'}" header="Editar Ficha Técnica" [closable]="false">
-    <!-- El componente de editar ficha técnica aquí -->
-    <app-editar-ficha-tecnica [ficha]="fichaSeleccionada" (cerrarModal)="CerrarModal()"></app-editar-ficha-tecnica>
-    
-    <p-footer>
-      <button pButton label="Cerrar" icon="pi pi-times" (click)="modalVisible = false"></button>
-    </p-footer>
-  </p-dialog>
+      <!-- Encabezado de la tabla -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>
+            Código de Producto 
+            <p-columnFilter type="text" field="codigoDeProducto" display="menu" />
+          </th>
+          <th>
+            Destino
+            <p-columnFilter type="text" field="destino" display="menu" />
+          </th>
+          <th>Nombre de Producto</th>
+          <th></th>
+        </tr>
+      </ng-template>
+
+      <!-- Cuerpo de la tabla -->
+      <ng-template pTemplate="body" let-ficha>
+        <tr>
+          <td>{{ ficha.idFichaTecnica }}</td>
+          <td>{{ ficha.codigoDeProducto }}</td>
+          <td>{{ ficha.destino }}</td>
+          <td>{{ ficha.nombreDeProducto }}</td>
+          <td class="acciones">
+            <button pButton type="button" icon="pi pi-eye" label="Ver" class="p-button-info" (click)="AbrirModalVerFichaTecnica(ficha)"></button>
+            <button *ngIf="mostrarBotonesSegunRuta" pButton type="button" icon="pi pi-pencil" label="Editar" (click)="AbrirModalEditarFichaTecnica(ficha)"></button>
+            <button *ngIf="mostrarBotonesSegunRuta" pButton type="button" icon="pi pi-trash" label="Eliminar" class="p-button-danger" (click)="EliminarFicha(ficha.idFichaTecnica!, ficha.codigoDeProducto)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <!-- Modal para editar ficha técnica -->
+    <p-dialog [(visible)]="modalEditarFichaTecnicaActivo" [style]="{width: '80%'}" header="Editar Ficha Técnica" [closable]="false">
+      <modal-editar-ficha-tecnica [ficha]="fichaSeleccionada" (modalCerrado)="EscucharCierreDeModal($event)"></modal-editar-ficha-tecnica>
+      <p-footer>
+        <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalEditarFichaTecnica()"></button>
+      </p-footer>
+    </p-dialog>
+
+    <!-- Modal para ver ficha técnica -->
+    <p-dialog [(visible)]="modalVerFichaTecnicaActivo" [style]="{width: '80%'}" header="Ficha Técnica" [closable]="false">
+      <modal-ver-ficha-tecnica *ngIf="modalVerFichaTecnicaActivo" [ficha]="fichaSeleccionada"></modal-ver-ficha-tecnica>
+      <p-footer>
+        <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalVerFichaTecnica()"></button>
+      </p-footer>
+    </p-dialog>
   </div>
 </body>

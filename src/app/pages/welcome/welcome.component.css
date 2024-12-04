@@ -1,10 +1,12 @@
+
+@import "../../../../node_modules/primeflex/primeflex.min.css";
+
 @font-face {
     font-family: 'sackers';
     src: url('../../../fonts/SackersGothicStd-Heavy.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
-}
-  
+
 .logo {
     height: 700px;
     width: 80%;
@@ -18,6 +20,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+
     opacity: 0.2;
     padding: 1rem;
     background-image: url('../../../assets/images/flp/home-img-flp.jpg');
@@ -40,7 +43,7 @@ h1 {
 
 .sackers {
     font-family: 'Sackers', sans-serif;
-}
+
 
 .regular {
     font-weight: 400;
@@ -123,6 +126,51 @@ h1 {
 .grafico__data,
 .grafico__data--display {
     width: 100%;
+
+    background-image: url('../../../assets/images/flp/frigorifico-las-piedras.png');
+    background-repeat: no-repeat;
+    background-position: top;
+}
+
+.fondo__2 {
+    width: 100%;
+    height: 100%;
+    align-self: center;
+}
+
+.fondo__3 {
+    height: 100%;
+    width: 100%;
+    background-image: url('../../../assets/images/flp/productos-flp.png');
+    background-repeat: no-repeat;
+    background-position: top;
+}
+
+.imagen__fondo {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+  }
+  
+
+  /*medias queries*/
+  @media (max-height:690px) or (max-width:870px)  {
+    .imagen__3,
+    .imagen__2 {
+        display: none;
+    }
+
+    .imagen__1 {
+        height: 100%;
+        z-index: 100;
+    }
+  }
+
+  @media (max-width:1160px) {
+    h1 {
+        font-size: 30px;
+    }
+  }
     height: 100%;
 }
 

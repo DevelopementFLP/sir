@@ -1,11 +1,34 @@
 <div class="grid-container" *ngIf="ficha">
 
+    <!-- Botón para abrir el modal -->
+    <button pButton label="Editar Fotos" icon="pi pi-pencil" (click)="AbrirModalEditarFoto()"></button>
+
+    <!-- Modal para editar foto -->
+    <p-dialog [(visible)]="modalEditarFotoTecnicaActivo" [style]="{width: '80%'}" header="Editar Foto" [closable]="false">
+        <modal-editar-foto-ficha-tecnica 
+        [codigoProducto]="codigoProducto" 
+        [modalAbierto]="modalEditarFotoTecnicaActivo"
+        (cerrarModal)="CerrarModalEditarFotoTecnica()">
+        </modal-editar-foto-ficha-tecnica>
+
+        <p-footer>
+            <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalEditarFotoTecnica()"></button>
+        </p-footer>
+    </p-dialog>
+
+    
+
     <!-- Sección de Datos del Producto -->
-    <div class="grid-container-seccion">
+    <div class="grid-container-seccion">         
         
         <div class="grid-items caj-2">
             <p>Código / Code</p>
             <input [(ngModel)]="codigoProducto" (ngModelChange)="VerificarCambios()" class="input-field" disabled>
+        </div>
+
+        <div class="grid-items caj-3">
+            <p>Producto / Product</p>
+            <textarea [(ngModel)]="descripcionDelProducto" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
         </div>
 
         <!-- Campos de entrada de datos del producto -->
@@ -15,10 +38,10 @@
         </div>
 
         <div class="grid-items caj-3">
-            <p>Descripción / Description</p>
-            <textarea [(ngModel)]="descripcionDelProducto" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
+            <p>Otro /Other</p>
+            <textarea [(ngModel)]="descripcionLargaDeProducto" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
         </div>
-
+    
         <div class="grid-items caj-3">
             <p>Destino / Destination</p>
             <textarea [(ngModel)]="destino" (ngModelChange)="VerificarCambios()" class="input-field" required></textarea>
@@ -61,12 +84,12 @@
 
         <div class="grid-items caj-11">
             <p>Peso Promedio / Average Weight</p>
-            <input type="number" [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" required>
+            <input type="text" [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" required>
         </div>
 
         <div class="grid-items caj-12">
             <p>Unidades por Caja / Units per Box</p>
-            <input type="number" [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" required>
+            <input type="text" [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" required>
         </div>
 
         <div class="grid-items caj-13">
@@ -191,5 +214,7 @@
     <div class="grid-items">
         <button [disabled]="!seModificoAlgunCampo" (click)="EditarFichaTecnica()" class="btn-editar">Guardar Cambios</button>
     </div>
+
+
 
 </div>
