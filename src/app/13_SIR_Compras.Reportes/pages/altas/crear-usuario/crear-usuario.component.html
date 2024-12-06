@@ -1,0 +1,65 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR USUARIO</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del Usuario</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombre"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+    <div class="contenedor-campos">
+      <label>Apellido del Usuario</label>
+      <input 
+          type="text" 
+          [(ngModel)]="apellido" 
+          name="apellido"
+          placeholder="Ingrese el apellido"  
+          required> 
+    </div>
+
+    <div class="contenedor-campos divSelect">
+        <label>Rol del Usuario</label>
+        <select 
+            class="select"
+            id="unidades" 
+            [(ngModel)]="idRol" 
+            name="empresa"
+            required>
+            <option *ngFor="let rol of roles" [value]="rol.idRol">
+            {{rol.nombre}}
+            </option>
+        </select>
+
+      </div>
+    <div class="contenedor-campos divSelect">
+        <label>Departamento del Usuario</label>
+        <select 
+            class="select"
+            id="departamento" 
+            [(ngModel)]="idDepartamento" 
+            name="empresa"
+            required>
+            <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento">
+            {{departamento.nombre}}
+            </option>
+        </select>
+
+      </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearUsuario()"></button>   
+    </form>
+
+</div>
+</div>

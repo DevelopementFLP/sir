@@ -1,0 +1,99 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR PRODUCTO</h1>
+        </div>
+
+<div class="contenedor-columnas">
+    <div class="columna1">
+       
+    <div class="contenedor-campos">
+      <label>Nombre del Producto</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreProducto"
+          placeholder="Ingrese nombre del producto"  
+          required> 
+    </div>
+
+    <div class="contenedor-campos" *ngIf="nombre!='' || mostrarUnoEnUno==false">
+        <label>Descripción del Producto</label>
+        <textarea 
+        type="text" 
+            [(ngModel)]="descripcion"
+            name="descripcion" 
+            placeholder="Ingrese una descripción" 
+            rows="3"
+            cols="30"
+            required>
+        </textarea>
+      </div>
+
+      <div class="contenedor-campos divSelect" *ngIf="descripcion!='' || mostrarUnoEnUno==false">
+        <label>Unidad del producto</label>
+        <select 
+            class="select"
+            id="unidades" 
+            [(ngModel)]="idUnidad" 
+            name="unidades"
+            required>
+            <option *ngFor="let unidad of unidades" [value]="unidad.idUnidad">
+            {{unidad.nombre}}
+            </option>
+        </select>
+
+      </div>
+      </div>
+
+      <div class="columna2">
+
+     
+
+    
+
+    <div class="contenedor-campos" *ngIf="descripcion!=''  || mostrarUnoEnUno==false">
+      <label>codigo del Producto</label>
+      <input 
+          type="text" 
+          [(ngModel)]="codigoProducto" 
+          name="codigoProducto"
+          placeholder="Ingrese el código del producto" 
+          required>
+    </div>  
+
+    <div class="contenedor-campos" *ngIf="codigoProducto!='' || mostrarUnoEnUno==false">
+        <label>Código del Producto Alernativo</label>
+        <input 
+            type="text" 
+            [(ngModel)]="codigoProductoAlternativo" 
+            name="codigoProductoAlternativo"
+            placeholder="Ingrese código alternativo" 
+            >
+      </div>
+
+      <div class="contenedor-campos" *ngIf="codigoProductoAlternativo!=''  || mostrarUnoEnUno==false">
+        <label>Código del Producto Alernativo 2</label>
+        <input 
+            type="text" 
+            [(ngModel)]="codigoProductoAlternativo2" 
+            name="codigoProductoAlternativo2"
+            placeholder="Ingrese código alternativo 2"
+            required>
+      </div>
+     
+    </div>
+  
+</div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearProducto()"></button>   
+    </form>
+
+</div>
+</div>

@@ -1,0 +1,42 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR ALMACÉN</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del almacén</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreAlmacen"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+    <div class="contenedor-campos">
+        <label>Descripción del almacén</label>
+        <textarea 
+        type="text" 
+            [(ngModel)]="descripcion"
+            name="descripcion" 
+            placeholder="Ingrese una descripción" 
+            rows="3"
+            cols="30"
+            required>
+        </textarea>
+      </div>
+
+   
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAlmacen()"></button>   
+    </form>
+
+</div>
+</div>

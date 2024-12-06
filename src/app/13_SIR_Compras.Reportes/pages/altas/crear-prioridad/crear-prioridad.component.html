@@ -1,0 +1,27 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR PRIORIDAD</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre de la Prioridad</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombre"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearPrioridad()"></button>   
+    </form>
+
+</div>
+</div>

@@ -41,6 +41,20 @@ import { FaenaModule } from './10_Sir.Faena.Apps/10_Sir_Faena.Apps.module';
 import { ProduccionFichaTecnicaModule } from './11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module';
 import { ProduccionControlDeCalidadModule } from './12_SIR_Produccion.ControlDeCalidad/12_Sir_Produccion_ControlDeCalidad.module';
 import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
+import { CrearProductoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-producto/crear-producto.component';
+import { CrearEmpresaComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-empresa/crear-empresa.component';
+import { CrearAtributoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-atributo/crear-atributo.component';
+import { CrearDepartamentoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-departamento/crear-departamento.component';
+import { CrearCentroDeCostoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-centro-de-costo/crear-centro-de-costo.component';
+import { CrearAreaDestinoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-area-destino/crear-area-destino.component';
+import { CrearAlmacenComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-almacen/crear-almacen.component';
+import { CrearUnidadComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-unidad/crear-unidad.component';
+import { ComprasConfiguracionComponent } from './13_SIR_Compras.Reportes/pages/compras-configuracion/compras-configuracion.component';
+import { MenuComprasComponent } from './13_SIR_Compras.Reportes/pages/menu-compras/menu-compras.component';
+import { StockProductoComponent } from './13_SIR_Compras.Reportes/pages/altas/stock-producto/stock-producto.component';
+import { CrearUsuarioComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-usuario/crear-usuario.component';
+import { CrearPrioridadComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-prioridad/crear-prioridad.component';
+import { CrearEstadoSolicitudComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-estado-solicitud/crear-estado-solicitud.component';
 
 registerLocaleData(localeEs);
 
@@ -53,7 +67,21 @@ registerLocaleData(localeEs);
     UserComponent,
     ReportesComponent,
     WelcomeComponent,
-    SolicitudCompraComponent
+    SolicitudCompraComponent,
+    CrearProductoComponent,
+    CrearEmpresaComponent,
+    CrearAtributoComponent,
+    CrearDepartamentoComponent,
+    CrearCentroDeCostoComponent,
+    CrearAreaDestinoComponent,
+    CrearAlmacenComponent,
+    CrearUnidadComponent,
+    ComprasConfiguracionComponent,
+    MenuComprasComponent,
+    StockProductoComponent,
+    CrearUsuarioComponent,
+    CrearPrioridadComponent,
+    CrearEstadoSolicitudComponent
   ],
   imports: [
     AppRoutingModule,

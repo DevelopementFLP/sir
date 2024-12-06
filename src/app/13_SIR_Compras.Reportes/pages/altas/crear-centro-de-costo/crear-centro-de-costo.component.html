@@ -1,0 +1,62 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR CENTRO DE COSTO</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del Centro</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreCentro"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+    <div class="contenedor-campos divSelect">
+        <label>Empresa</label>
+        <select 
+            class="select"
+            id="unidades" 
+            [(ngModel)]="idEmpresa" 
+            name="empresa"
+            required>
+            <option *ngFor="let empresa of empresas" [value]="empresa.idEmpresa">
+            {{empresa.nombre}}
+            </option>
+        </select>
+
+      </div>
+
+    
+    <div class="contenedor-campos">
+      <label>Código del Centro</label>
+      <input 
+          type="text" 
+          [(ngModel)]="codigo" 
+          name="codigoCentro"
+          placeholder="Ingrese el código del departamento"  
+          required> 
+    </div>
+    <div class="contenedor-campos">
+      <label>Código Alernativo del Centro</label>
+      <input 
+          type="text" 
+          [(ngModel)]="codigoAlernativo" 
+          name="codigoAlternativo"
+          placeholder="Ingrese el código alernativo del departamento"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearCentroDeCosto()"></button>   
+    </form>
+
+</div>
+</div>

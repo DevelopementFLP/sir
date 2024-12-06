@@ -1,0 +1,38 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR ATRIBUTO</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del atributo</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombreAtributo" 
+          name="nombreEmpresa"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+    
+    <div class="contenedor-campos">
+      <label>Código Atributo</label>
+      <input 
+          type="text" 
+          [(ngModel)]="codigoAtributo" 
+          name="codigoAtributo"
+          placeholder="Ingrese el código del atributo"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAtributo()"></button>   
+    </form>
+
+</div>
+</div>

@@ -1,0 +1,27 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR ESTADO DE SOLICITUD</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del Estado</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreEstado"
+          placeholder="Ingrese el Nombre"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearEstadoSolicitud()"></button>   
+    </form>
+
+</div>
+</div>

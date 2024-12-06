@@ -176,7 +176,6 @@ width: min-content;
   display: flex;
   justify-content: center;
   margin-right: 2rem;
-
   /* Flotante */
 
   position: fixed; /* Posición fija en la ventana del navegador */

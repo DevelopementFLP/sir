@@ -1,0 +1,84 @@
+.titulo{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+h1 {
+    color: #333; /* Color del texto */
+    text-align: center;
+}
+
+.contenedor-pagina {
+    width: max;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+.seccion-formulario {
+    margin-top: 2rem;
+    background-color: #fff; /* Fondo blanco para el formulario */
+    padding: 20px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 100%; /* Ancho completo */
+    max-width: 800px; /* Máximo ancho para el formulario */
+    /* width: 100%; */
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+   
+}
+
+.contenedor-campos {
+    margin-bottom: 15px; /* Espacio entre los campos */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold; /* Texto en negrita para las etiquetas */
+}
+
+input, textarea, .select{
+    width: 100%; /* Ancho completo para los inputs */
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordes suaves */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: border-color 0.3s; /* Transición para el borde */
+}
+
+input:focus, textarea:focus{
+    border-color: #007ad9; /* Color del borde en foco */
+    outline: none; /* Quitar el contorno por defecto */
+}
+
+button {
+    margin-top: 2rem; /* Espacio superior para el primer botón */
+    display: flex;
+    justify-self: center;
+
+}
+
+.contenedor-columnas{
+    display: flex;
+    flex-direction: row;
+    column-gap: 6rem;
+}
+
+.divSelect{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.select{
+    display: flex;
+    width: 100%;
+    text-align: center;
+
+    
+}

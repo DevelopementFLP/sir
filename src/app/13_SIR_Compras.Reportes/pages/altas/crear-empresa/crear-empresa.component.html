@@ -1,0 +1,27 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR EMPRESA</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre de la empresa</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreEmpresa"
+          placeholder="Ingrese el Nombre"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearEmpresa()"></button>   
+    </form>
+
+</div>
+</div>

@@ -1,0 +1,29 @@
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR CENTRO ÁREA DE DESTINO</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del área de destino</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreArea"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+   
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAreaDestino()"></button>   
+    </form>
+
+</div>
+</div>

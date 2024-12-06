@@ -1,1 +1,151 @@
-<p>solicitud-compra works!</p>
+
+
+<div class="contenedor-pagina">
+    
+    
+    <div class="seccion-formulario">
+        <form #productoForm="ngForm">
+            
+    <div class="titulo">
+        <h1>CREAR SOLICITUD DE COMPRA</h1>
+        </div>
+        <div class="contenedor-campos divSelect prioridad">
+            <label>Prioridad</label>
+            <select 
+                class="select"
+                id="prioridad" 
+                [(ngModel)]="idPrioridad" 
+                name="prioridad"
+                required>
+                <option *ngFor="let prioridad of prioridadesActivas" [value]="prioridad.idPrioridad">
+                {{prioridad.nombre}}
+                </option>
+            </select>
+    
+          </div>
+        
+<div class="contenedor-contenedor">
+    <div class="contenedor-campos">
+      <label>Producto</label>
+
+      <div class="contenedorProducto">
+
+        <button pButton type="button" label="" icon="pi pi-search"  (click)="abrirPopUpMostrarProductos()"></button>   
+          <input 
+          type="text" 
+          [disabled]="true"
+          [(ngModel)]="nombreProducto" 
+          name="nombreProducto"
+          placeholder="Seleccione el Producto"
+          required> 
+        </div>
+    </div>
+
+    <div class="contenedor-campos">
+        <label>Cantidad</label>
+        <input 
+            type="number" 
+            [(ngModel)]="cantidad" 
+            name="cantidadProducto"
+            placeholder="Ingrese la Cantidad"  
+            required
+            > 
+      </div>
+   
+
+      <div class="contenedor-campos divSelect">
+        <label>Area de Destino</label>
+        <select 
+            class="select"
+            id="unidades" 
+            [(ngModel)]="idArea" 
+            name="unidades"
+            required>
+            <option *ngFor="let area of areaDestino" [value]="area.idArea">
+            {{area.nombre}}
+            </option>
+        </select>
+
+      </div>
+    </div>
+
+      <button pButton type="button" label="Agregar Producto" icon="pi pi-plus" class="btn_crear" (click)="crearOrdenSolicitud()"></button>   
+
+       <!-- Tabla para ver productos que va agregando para crear la solicitud -->
+<div class="tablaProductosSolicitud" >
+
+    <p-table class="tablaCrearSolicitud" *ngIf="crearSolicitud.length>0"
+        [value]="crearSolicitud !"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+        >
+        <ng-template pTemplate="header">
+            <tr>             
+                <th class=""><div class="columna">Nombre</div></th>
+                <th class=""><div class="columna">Unidad</div></th>
+                <th class=""><div class="columna">Código Producto</div></th>
+                <th class=""><div class="columna">Cantidad</div></th>
+                <th class=""><div class="columna">Área de Destino</div></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto *ngIf="crearSolicitud">
+            <tr> 
+                <td class=""><div class="valor">{{getNombreProducto(producto.idProducto)}}</div></td>
+                <td class=""><div class="valor">{{getNombreUnidad(getUnidadDeProducto(producto.idProducto))}}</div></td>
+                <td class=""><div class="valor">{{getCodigoProductoDeId(producto.idProducto)}}</div></td>
+                <td class=""><div class="valor">{{producto.cantidad}}</div></td>
+                <td class=""><div class="valor">{{getNombreAreaDestino(producto.idArea)}}</div></td>
+                <td class="">
+                    <!-- <button pButton type="button" label="" icon="pi pi-send"  (click)="seleccionarProducto(producto.idProducto,producto.nombre)"></button> -->
+                </td>                   
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+        <!-- Termina la tabla de productos  -->
+    </form>
+
+
+    
+
+</div>
+
+</div>
+
+
+<!-- PopUp ver productos -->
+<div class="popUpVerProductos" *ngIf="mostrarProductos">
+    <div class="botones_cerrar_popUp">
+        <button pButton type="button" label="" icon="pi pi-times" class="btn_cerrar" (click)="cerrarPopUpVerProductos()"></button>   
+    </div>
+    <p-table class="tabla"
+        [value]="productosActivos!"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+        >
+        <ng-template pTemplate="header">
+            <tr>             
+                <th class=""><div class="columna">Nombre</div></th>
+                <th class=""><div class="columna">Unidad</div></th>
+                <th class=""><div class="columna">Código Producto</div></th>
+                <th class=""><div class="columna">Código Alternativo</div></th>
+                <th class=""><div class="columna">Código Alternativo 2</div></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto *ngIf="productosActivos">
+            <tr> 
+                <td class=""><div class="valor">{{producto.nombre}}</div></td>
+                <td class=""><div class="valor">{{getNombreUnidad(producto.idUnidad)}}</div></td>
+                <td class=""><div class="valor">{{producto.codigoProducto}}</div></td>
+                <td class=""><div class="valor">{{producto.codigoProductoAlternativo}}</div></td>
+                <td class=""><div class="valor">{{producto.codigoProductoAlternativo2}}</div></td>
+                <td class="">
+                    <button pButton type="button" label="" icon="pi pi-send"  (click)="seleccionarProducto(producto.idProducto,producto.nombre,producto.codigoProducto)"></button>
+                </td>                   
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
