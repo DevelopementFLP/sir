@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { FtImagenesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtImagenesDTO';
 import { FtFichaTecnicaService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./generar-ficha-tecnica-producto.component.css']
 })
 export class FichaTecnicaProductoComponent {
+
 
   public codigoDeProductoInput: string = "";
   public loadingDePdf: boolean = false;

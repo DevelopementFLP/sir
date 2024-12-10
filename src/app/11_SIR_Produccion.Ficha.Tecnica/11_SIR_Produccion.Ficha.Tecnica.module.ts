@@ -72,7 +72,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       EditarFichaTecnicaComponent,
   ],
   exports:[
-    
+    FichaTecnicaProductoComponent
   ],
   imports: [
     CommonModule,

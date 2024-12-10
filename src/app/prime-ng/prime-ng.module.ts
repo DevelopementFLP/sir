@@ -6,6 +6,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
+import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
@@ -39,6 +40,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ButtonModule,
     CalendarModule,
     CardModule,
+    CarouselModule,
     ChartModule,
     CheckboxModule,
     ChipModule,

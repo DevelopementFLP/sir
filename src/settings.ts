@@ -1,11 +1,11 @@
 // PRODUCCIÓN
-export const urlAPI: string = "http://192.168.0.107:82/api/";
+// export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 // DESARROLLO
-// export const urlAPI: string = "http://localhost:5205/api/";
+export const urlAPI: string = "http://localhost:5205/api/";
 
 //TESTING 
-//export const urlAPI: string = "http://192.168.0.107:90/api/";
+// export const urlAPI: string = "http://192.168.0.107:98/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -379,3 +379,9 @@ export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecni
 // Control de Calidad
 export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
 export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";
+
+// Dashboard Ficha Tecnica Productos Activos Ordenes
+export const urlDashboardFichaTecnica: string = urlAPI + "DashboardFichaTecnica/";
+export const urlProductosActivos: string = urlDashboardFichaTecnica + "GetProductosActivosAsync";
+export const urlTiempoProductoActivo: string = urlDashboardFichaTecnica + "GetTiempoProductoActivo";
+export const urlTiempoActualizacionDashboard: string = urlDashboardFichaTecnica + "GetTiempoActualizacionDashboard";

@@ -42,8 +42,10 @@ import { ComparativoCodigosComponent } from './components/comparativo-codigos/co
 import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
 import { ComparativoCodigosPageComponent } from './pages/comparativo-codigos-page/comparativo-codigos-page.component';
 import { EscapeKeyDirective } from './directives/escape-key.directive';
-
-
+import { DashboardFichaTecnicaComponent } from './pages/dashboard-ficha-tecnica/dashboard-ficha-tecnica.component';
+import { NoDataComponent } from './pages/dashboard-ficha-tecnica/components/no-data/no-data.component';
+import { ProduccionFichaTecnicaModule } from "../11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module";
+import { DisplaySoundComponent } from './pages/dashboard-ficha-tecnica/components/display-sound/display-sound.component';
 
 @NgModule({
     declarations: [
@@ -84,7 +86,10 @@ import { EscapeKeyDirective } from './directives/escape-key.directive';
         ComparativoCodigosComponent,
         NuevoGrupoComponent,
         ComparativoCodigosPageComponent,
-        EscapeKeyDirective
+        EscapeKeyDirective,
+        DashboardFichaTecnicaComponent,
+        NoDataComponent,
+        DisplaySoundComponent
     ],
     exports: [
         MainPageComponent
@@ -95,7 +100,8 @@ import { EscapeKeyDirective } from './directives/escape-key.directive';
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
-        SplitterModule
+        SplitterModule,
+        ProduccionFichaTecnicaModule
     ]
 })
 

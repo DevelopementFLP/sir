@@ -1,0 +1,35 @@
+/*tablet*/
+@media only screen and (min-width: 768px) {
+    .contenedor__regions {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .regions__productos {
+        width: 25%;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 0.3rem 0.5rem;
+        gap: 5px;
+
+        position: relative;
+    }
+
+    .regions__ficha {
+        width: 100%;
+    }
+
+    .productos__producto {
+        width: 100%;
+        height: 60px;
+    }
+
+    .producto__nombre {
+        max-width: 100%;
+    }
+
+}

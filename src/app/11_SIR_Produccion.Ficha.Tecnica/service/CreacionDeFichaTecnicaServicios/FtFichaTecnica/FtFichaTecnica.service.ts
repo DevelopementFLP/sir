@@ -24,7 +24,7 @@ export class FtFichaTecnicaService {
 
   public BuscarFichaTecnica(codigoDeProducto: string): Observable<ApiResponse> {
     let params = new HttpParams()
-    .set('codigoDeProducto', codigoDeProducto)
+    .set('codigoDeProducto', codigoDeProducto)    
     return this.http.get<ApiResponse>(`${urlBuscarFichaTecnica}`, { params });
   }
 
