@@ -24,7 +24,7 @@ const progressBarAnimation = `
             }
         }
 
-        @media (max-width: 1800px) {
+        @media (max-width: @minWidht) {
             .ficha__detalles::before {
                 content: none;
             } 
@@ -32,18 +32,9 @@ const progressBarAnimation = `
     
       `;
 
-const progresBarNoAnimation = `
-    .ficha__detalles::before {
-            content: none;
-            animation: none;
-    }`;
-    
-export function resetProgressBarAnimation(): void {
-
-}
-
 export function setProgressBarAnimation(
-  duration: number
+  duration: number,
+  minWidth: number
 ) {
     let styleTag = document.querySelector('style');
     if(!styleTag) {
@@ -51,7 +42,7 @@ export function setProgressBarAnimation(
         document.head.appendChild(styleTag);
     }
 
-    const finalStyle = progressBarAnimation.replace('@animationDuration', `${duration / 1000}s`);
+    const finalStyle = progressBarAnimation.replace('@animationDuration', `${duration / 1000}s`).replace('@minWidht', `${minWidth}px`);
 
-    styleTag.innerHTML = finalStyle;
+    styleTag.innerHTML += finalStyle;
 }

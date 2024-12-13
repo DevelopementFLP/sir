@@ -1,18 +1,18 @@
 
 // PRODUCCIÓN
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
+export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 // DESARROLLO
-export const urlAPI: string = "http://localhost:5205/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 
 //TESTING 
-// export const urlAPI: string = "http://192.168.0.107:98/api/";
+// export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
-export const urlCambiarContrasenia: string = urlAPI + "User/CambiarContrasenia";
+export const urlCambiarContrasenia: string = urlAPI + "User/Ca mbiarContrasenia";
 export const urlPCC: string = urlAPI + "Pcc";
 export const urlPerfiles: string = urlAPI + "Perfiles";
 export const urlReportes: string = urlAPI + "Reportes";

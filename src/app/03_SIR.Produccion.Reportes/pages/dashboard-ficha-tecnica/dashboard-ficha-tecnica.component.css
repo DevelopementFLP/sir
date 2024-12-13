@@ -177,6 +177,7 @@
 
 .detalles__ft {
     height: 100%;
+    padding: 0.5rem;
     background-color: var(--dash-ft-bg-ficha);
 }
 
@@ -203,4 +204,32 @@ button:focus {
     height: 100vh;
     opacity: 0.9;
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.animacion__slideright {
+    animation: slideright 1s;
+    transition: all 0.3s ease-in-out;
+}
+
+.animacion__slideleft {
+    animation: slideleft 1s;
+    transition: all 0.3s ease-in-out;
+}
+
+@keyframes slideright {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideleft {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }

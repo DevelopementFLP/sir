@@ -126,7 +126,6 @@
         align-items: center;  
  
         height: 100%;
-        background-color: #003566;
     }
 
     .tv__imagenes {
@@ -149,5 +148,15 @@
         max-height: 100%;
         min-width: 100%;
         min-height: 100%;
+    }
+
+    .img__divider {
+        min-height: 1px;
+        min-width: 80%;
+        max-width: 80%;
+        border: 0.5px solid #d2d2d2;
+        opacity: 0.1;
+        align-self: center;
+        position: relative;
     }
 }

@@ -3,13 +3,14 @@ import { lastValueFrom } from 'rxjs';
 
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { DashboardFichaTecnicaService } from './services/dashboard-ficha-tecnica.service';
-import { FichaTecnicaProductoComponent } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/components/GenerarFichaTecnica/generar-ficha-tecnica-producto.component';
 import { FtImagenesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtImagenesDTO';
 import { FtImagenesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtImagenes.service';
 import { ProductoActivo } from './interfaces/ProductoActivo.interface';
 import { ProductoImagen } from './types/ProductoImagen.type';
 import * as ProgressBar from './helpers/progressbar.helper';
 import { ScreenService } from 'src/app/shared/services/screen.service';
+import { FtFichaTecnicaService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
+import { FtFichaTecnicaDTO } from '../../../11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
 
 @Component({
   selector: 'app-dashboard-ficha-tecnica',
@@ -22,7 +23,8 @@ import { ScreenService } from 'src/app/shared/services/screen.service';
 })
 export class DashboardFichaTecnicaComponent
   implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
-  anchoPantalla: number = 0;
+  currentScreenWidht: number = 0;
+  currentFt: FtFichaTecnicaDTO | null = null;
   fichaTecnicaSeleccionada: string | undefined;
   hoy: Date = new Date();
   imagenAreaCorte: string | undefined = undefined;
@@ -46,20 +48,23 @@ export class DashboardFichaTecnicaComponent
   tiempoActualizacion: number = 300000;
   tiempoProductoActivo: number = 0;
 
-  @ViewChild('fT', { static: false }) fT!: FichaTecnicaProductoComponent;
+  mustRefreshData: boolean = false;
+
   @ViewChild('notificacion', { static: false }) notificacionRef!: ElementRef;
 
   constructor(
     private dftService: DashboardFichaTecnicaService,
     private ftImagenService: FtImagenesService,
-    private screenService: ScreenService
+    private ftService: FtFichaTecnicaService,
+    private screenService: ScreenService,
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.anchoPantalla = this.screenService.getScreenWidth();
-    if (this.anchoPantalla >= this.minScreenWidth) {
+    this.currentScreenWidht = this.screenService.getScreenWidth();
+    if (this.currentScreenWidht >= this.minScreenWidth) {
       this.startFullScreenPresentation();
     } else {
+      this.mustRefreshData = true;
       await this.setData();
       this.clearTimeInterval(this.intervaloActualizacion);
       this.clearTimeInterval(this.intervaloCarrusel);
@@ -69,7 +74,7 @@ export class DashboardFichaTecnicaComponent
 
   ngAfterViewInit(): void {
     this.navBar = document.querySelector('#main-page')!;
-    this.navBar.style.display = this.anchoPantalla >= this.minScreenWidth ? 'none' : 'block';
+    this.navBar.style.display = this.currentScreenWidht >= this.minScreenWidth ? 'none' : 'block';
   }
 
   protected async setData(): Promise<void> {
@@ -81,7 +86,7 @@ export class DashboardFichaTecnicaComponent
 
   ngAfterViewChecked(): void {
     this.hideHeadersFT();
-    if (this.anchoPantalla >= this.minScreenWidth) {
+    if (this.currentScreenWidht >= this.minScreenWidth) {
       this.scrollToActiveElement();
     }
   }
@@ -121,17 +126,25 @@ export class DashboardFichaTecnicaComponent
   }
 
   private async showFichaTecnica(): Promise<void> {
-    if (this.anchoPantalla < this.minScreenWidth) {
-      this.fichaTecnicaSeleccionada =
-        this.productosActivosFicha[this.indiceActual].name;
-      //this.fT.codigoDeProductoInput = this.productosActivos[this.indiceActual].code;
-      //await this.fT.BuscarFichaTecnica();
-    } else this.fichaTecnicaSeleccionada = undefined;
+    if (this.currentScreenWidht < this.minScreenWidth) {
+      this.fichaTecnicaSeleccionada = this.productosActivosFicha[this.indiceActual].name;
+      await lastValueFrom(this.ftService.BuscarFichaTecnica(this.productosActivosFicha[this.indiceActual].code))
+        .then((ftResponse: ApiResponse) => {
+          this.currentFt = ftResponse.esCorrecto ? ftResponse.resultado[0] as FtFichaTecnicaDTO : null;
+        })
+        .catch((error) => {
+          console.error((error));
+        });
+    }
+    else {
+      this.fichaTecnicaSeleccionada = undefined;
+      this.currentFt = null;
+    }
   }
 
   protected onProductoClick(index: number): void {
     this.indiceActual = index;
-    if (this.anchoPantalla < this.minScreenWidth) this.showFichaTecnica();
+    if (this.currentScreenWidht < this.minScreenWidth) this.showFichaTecnica();
     else this.showInfo();
   }
 
@@ -140,7 +153,9 @@ export class DashboardFichaTecnicaComponent
     this.clearTimeInterval(this.intervaloCarrusel);
     this.showInfo();
     this.intervaloCarrusel = setInterval(() => {
-      if (this.anchoPantalla >= this.minScreenWidth) {
+      if (this.currentScreenWidht >= this.minScreenWidth) {
+         if(this.productosActivosFicha.length > 1) 
+          this.resetPicturesAnimations();
         this.indiceActual = (this.indiceActual + 1) % this.productosActivosFicha.length;
         this.showInfo();
       }
@@ -165,18 +180,23 @@ export class DashboardFichaTecnicaComponent
 
   @HostListener('window:resize', ['$event'])
   async onResize(event: any) {
-    this.anchoPantalla = this.screenService.getScreenWidth();
+    this.currentScreenWidht = this.screenService.getScreenWidth();
 
-    if (this.anchoPantalla < this.minScreenWidth) {
+    if (this.currentScreenWidht < this.minScreenWidth) {
+      this.mustRefreshData = true;
       this.navBar.style.display = 'block';
       this.stopCarousel();
       this.indiceActual = 0;
       this.showFichaTecnica();
       this.clearTimeInterval(this.intervaloActualizacion);
+
     } else {
-      await this.setImagenesFichaTecnica();
-      this.productosActivosFicha = this.filterActiveProductosByFT();
-      this.startFullScreenPresentation();
+      if(this.mustRefreshData) {
+        this.mustRefreshData = false;
+        await this.setImagenesFichaTecnica();
+        this.productosActivosFicha = this.filterActiveProductosByFT();
+        this.startFullScreenPresentation();
+      }
     }
   }
 
@@ -223,6 +243,7 @@ export class DashboardFichaTecnicaComponent
   }
 
   private async startFullScreenPresentation(): Promise<void> {
+    this.mustRefreshData = false;
     const mainContent = document.querySelector('#mainContent');
 
     if (mainContent instanceof HTMLElement) {
@@ -230,6 +251,7 @@ export class DashboardFichaTecnicaComponent
       mainContent.focus();
     }
 
+    //this.navBar.style.display = 'none';
     await this.updateData();
   }
 
@@ -237,12 +259,12 @@ export class DashboardFichaTecnicaComponent
     await this.setData();
     this.startCarousel();
     if (this.productosActivosFicha.length > 1)
-      ProgressBar.setProgressBarAnimation(this.tiempoProductoActivo);
+      ProgressBar.setProgressBarAnimation(this.tiempoProductoActivo, this.minScreenWidth);
     if (this.playingSound) this.onAudioPlay();
 
     this.intervaloActualizacion = setInterval(async () => {
       if (this.productosActivosFicha.length > 1)
-        ProgressBar.setProgressBarAnimation(this.tiempoProductoActivo);
+        ProgressBar.setProgressBarAnimation(this.tiempoProductoActivo, this.minScreenWidth);
       if (this.playingSound) this.onAudioPlay();
       await this.setData();
     }, this.tiempoActualizacion);
@@ -265,11 +287,28 @@ export class DashboardFichaTecnicaComponent
     this.notificacionRef.nativeElement.play();
   }
 
+  private resetPicturesAnimations(): void {
+    const imgCut = document.querySelector('#imgCut') as HTMLElement;
+    const imgPP = document.querySelector('#imgPrimaryPacking') as HTMLElement;
+
+    if(imgCut) {
+      imgCut.classList.remove('animacion__slideright');
+      void imgCut.offsetParent;
+      imgCut.classList.add('animacion__slideright');
+    }
+
+    if(imgPP){
+      imgPP.classList.remove('animacion__slideleft');
+      void imgPP.offsetWidth
+      imgPP.classList.add('animacion__slideleft');
+    }
+  }
+
   @HostListener('keyup', ['$event'])
-  onKeyUp(e: KeyboardEvent) {
+  onKeyUp(e: KeyboardEvent) {    
     if (e.code === 'KeyP') {
       this.playingSound = !this.playingSound;
-
+      
       this.showPlayingSound = true;
       setTimeout(() => {
         this.showPlayingSound = false;
