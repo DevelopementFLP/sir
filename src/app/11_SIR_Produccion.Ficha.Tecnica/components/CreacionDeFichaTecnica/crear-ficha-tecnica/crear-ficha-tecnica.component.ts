@@ -65,8 +65,8 @@ export class CrearFichaTecnicaComponent {
   public vidaUtil: string = '';
   public tipoDeEnvase: string = '';
   public presentacionDeEnvase: string = '';
-  public pesoPromedio: number = 0;
-  public unidadesPorCaja: number = 0;
+  public pesoPromedio: string = '';
+  public unidadesPorCaja: string = '';
   public dimensiones: string = '';
 
   //! Campos de Especificaciones
@@ -201,7 +201,7 @@ export class CrearFichaTecnicaComponent {
     );
   }
 
-  private CargarAspectosGenerales(): void {
+  public CargarAspectosGenerales(): void {
   
     this._FtAspectosGeneralesService.GetListaAspectosGenerales().subscribe(
       response => {
@@ -217,7 +217,7 @@ export class CrearFichaTecnicaComponent {
     );
   }
 
-  private CargarEspecificaciones(): void {
+  public CargarEspecificaciones(): void {
   
     this._FtEspecificacionesService.GetListaDeEspecificaciones().subscribe(
       response => {
@@ -386,8 +386,8 @@ export class CrearFichaTecnicaComponent {
         vidaUtil: this.vidaUtil || '',                      
         tipoDeEnvase: this.tipoDeEnvase || '',              
         presentacionDeEnvase: this.presentacionDeEnvase || '',       
-        pesoPromedio: this.pesoPromedio || 0, 
-        unidadesPorCaja: this.unidadesPorCaja || 0, 
+        pesoPromedio: this.pesoPromedio || '', 
+        unidadesPorCaja: this.unidadesPorCaja || '', 
         dimensiones: this.dimensiones || '',
         
         // Especificaciones
@@ -592,8 +592,8 @@ export class CrearFichaTecnicaComponent {
     this.vidaUtil = '';
     this.tipoDeEnvase = '';
     this.presentacionDeEnvase = '';
-    this.pesoPromedio = 0;
-    this.unidadesPorCaja = 0;
+    this.pesoPromedio  = '';
+    this.unidadesPorCaja  = '';
     this.dimensiones = '';
     this.nombre = '';
     this.grasaVisible = '';

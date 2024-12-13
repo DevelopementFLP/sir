@@ -46,6 +46,10 @@ import { DashboardFichaTecnicaComponent } from './pages/dashboard-ficha-tecnica/
 import { NoDataComponent } from './pages/dashboard-ficha-tecnica/components/no-data/no-data.component';
 import { ProduccionFichaTecnicaModule } from "../11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module";
 import { DisplaySoundComponent } from './pages/dashboard-ficha-tecnica/components/display-sound/display-sound.component';
+import { EditarPedidoComponent } from './pages/stock-cajas/pages/editar-pedido/editar-pedido.component';
+import { CrearCajaComponent } from './pages/stock-cajas/pages/crear-caja/crear-caja.component';
+
+
 
 @NgModule({
     declarations: [
@@ -89,7 +93,9 @@ import { DisplaySoundComponent } from './pages/dashboard-ficha-tecnica/component
         EscapeKeyDirective,
         DashboardFichaTecnicaComponent,
         NoDataComponent,
-        DisplaySoundComponent
+        DisplaySoundComponent,
+        EditarPedidoComponent,
+        CrearCajaComponent
     ],
     exports: [
         MainPageComponent

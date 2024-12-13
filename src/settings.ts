@@ -1,3 +1,4 @@
+
 // PRODUCCIÓN
 // export const urlAPI: string = "http://192.168.0.107:82/api/";
 
@@ -146,7 +147,7 @@ export const urlUpdatePedidoPadre: string = urlStockCajas + "UpdatePedidoPadreAs
 export const urlUpdateOrdenArmadoCajasArmadas: string = urlStockCajas + "UpdateOrdenArmadoCajasArmadasAsync";
 export const urlUpdateOrdenArmado: string = urlStockCajas + "UpdateOrdenArmadoAsync";
 export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "UpdateOrdenEntregaCajasEntregadasAsync";
-export const urlUpdateOrdenentrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
+export const urlUpdateOrdenEntrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
 export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
 export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
 
@@ -263,6 +264,7 @@ export const urlEliminarFichaTecnica: string = urlFichaTecnica + "EliminarFichaT
 export const urlFichaTecnicaImagenes: string = urlAPI + "FtImagenes/"
 export const urlCrearImagenesFichaTecnica: string = urlFichaTecnicaImagenes + "CrearImagenFichaTecnica"
 export const urlBuscarImagenFichaTecnica: string = urlFichaTecnicaImagenes + "BuscarImagenesPorProducto"
+export const urlEditarImagenFichaTecnica: string = urlFichaTecnicaImagenes + "EditarImagenFichaTecnica"
 
 
 // Ficha Tecnica Productos

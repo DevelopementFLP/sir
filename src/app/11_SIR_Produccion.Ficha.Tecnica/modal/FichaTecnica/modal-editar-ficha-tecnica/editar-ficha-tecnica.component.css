@@ -50,3 +50,14 @@
     cursor: not-allowed;  
     opacity: 0.6;  
 }
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Alinea los elementos de manera que haya espacio entre el input y el checkbox */
+}
+
+.input-field {
+    flex-grow: 1; /* Esto hace que el campo de texto ocupe todo el espacio disponible */
+    margin-right: 10px; /* Añade un pequeño espacio entre el input y el checkbox */
+}

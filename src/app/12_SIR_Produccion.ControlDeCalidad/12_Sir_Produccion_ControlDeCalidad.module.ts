@@ -14,12 +14,13 @@ import { DialogModule } from 'primeng/dialog';
 import { AccordionModule } from 'primeng/accordion';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
+import { ProduccionFichaTecnicaModule } from '../11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module';
 
 
 @NgModule({
   declarations: [
     ComponentePaginaPrincipalIncidentesComponent,
-    PaginaPrincipalIncidentesComponent,
+    PaginaPrincipalIncidentesComponent
   ],
   exports: [
     ComponentePaginaPrincipalIncidentesComponent,
@@ -36,7 +37,8 @@ import { FormsModule } from '@angular/forms';
     ButtonModule,
     AccordionModule,
     CalendarModule,
-    FormsModule
+    FormsModule,
+    ProduccionFichaTecnicaModule
   ]
 })
 export class ProduccionControlDeCalidadModule { }

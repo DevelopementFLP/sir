@@ -1,21 +1,23 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { FtFichaTecnicaDTO } from '../../interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
-import { FtFichaTecnicaService } from '../../service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FtFichaTecnicaDTO } from '../../../interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
+import { FtFichaTecnicaService } from '../../../service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
 
 import Swal from 'sweetalert2';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 
 @Component({
-  selector: 'app-editar-ficha-tecnica',
+  selector: 'modal-editar-ficha-tecnica',
   templateUrl: './editar-ficha-tecnica.component.html',
   styleUrls: ['./editar-ficha-tecnica.component.css']
 })
 export class EditarFichaTecnicaComponent {
 
   @Input() ficha: FtFichaTecnicaDTO | null = null;
-  @Output() cerrarModal = new EventEmitter<void>();
+  @Output() modalCerrado: EventEmitter<boolean> = new EventEmitter<boolean>(); 
 
   public seModificoAlgunCampo: boolean = false;
+  public modalEditarFotoTecnicaActivo: boolean = false; 
+  public fichaSeleccionada: any;  
   
   constructor(
     private _fichaTecnicaService: FtFichaTecnicaService,
@@ -26,6 +28,7 @@ export class EditarFichaTecnicaComponent {
   public codigoProducto: string = '';
   public nombreProducto: string = '';
   public descripcionDelProducto: string = '';
+  public descripcionLargaDeProducto: string = '';
   public destino: string = '';
   public marca: string = '';
   public tipoDeUso: string = '';
@@ -34,8 +37,8 @@ export class EditarFichaTecnicaComponent {
   public vidaUtil: string = '';
   public tipoDeEnvase: string = '';
   public presentacionDeEnvase: string = '';
-  public pesoPromedio: number = 0;
-  public unidadesPorCaja: number = 0;
+  public pesoPromedio: string = '';
+  public unidadesPorCaja: string = '';
   public dimensiones: string = '';
   public idioma: string = '';
   public grasaVisible: string = '';
@@ -67,57 +70,58 @@ export class EditarFichaTecnicaComponent {
       // Asignar el idFichaTecnica al recibir nuevos datos de ficha
       this.idFichaTecnica = this.ficha.idFichaTecnica;
       this.CargarDatosFichaTecnica(this.ficha);
-      console.log(this.idFichaTecnica)
     }
   }
 
-   private CargarDatosFichaTecnica(ficha: FtFichaTecnicaDTO): void {
+  private CargarDatosFichaTecnica(ficha: FtFichaTecnicaDTO): void {
     // Datos generales del producto
-    this.codigoProducto = ficha.codigoDeProducto || '';
-    this.nombreProducto = ficha.nombreDeProducto || '';
-    this.descripcionDelProducto = ficha.descripcionLargaDeProducto || '';
+    this.codigoProducto = ficha.codigoDeProducto || 'NO APLICA';
+    this.nombreProducto = ficha.nombreDeProducto || 'NO APLICA';
+    this.descripcionDelProducto = ficha.descripcionDeProducto || '';
+    this.descripcionLargaDeProducto = ficha.descripcionLargaDeProducto || '';
 
     // Aspectos generales
-    this.destino = ficha.destino || '';
-    this.marca = ficha.marca || '';
-    this.tipoDeUso = ficha.tipoDeUso || '';
-    this.alergeno = ficha.alergeno || '';
-    this.almacenamiento = ficha.condicionAlmacenamiento || '';
-    this.vidaUtil = ficha.vidaUtil || '';
-    this.tipoDeEnvase = ficha.tipoDeEnvase || '';
-    this.presentacionDeEnvase = ficha.presentacionDeEnvase || '';
-    this.pesoPromedio = ficha.pesoPromedio || 0;
-    this.unidadesPorCaja = ficha.unidadesPorCaja || 0;
-    this.dimensiones = ficha.dimensiones || '';
+    this.destino = ficha.destino?.trim() || 'NO APLICA';
+    this.marca = ficha.marca?.trim() || 'NO APLICA';
+    this.tipoDeUso = ficha.tipoDeUso?.trim() || 'NO APLICA';
+    this.alergeno = ficha.alergeno?.trim() || 'NO APLICA';
+    this.almacenamiento = ficha.condicionAlmacenamiento?.trim() || 'NO APLICA';
+    this.vidaUtil = ficha.vidaUtil?.trim() || 'NO APLICA';
+    this.tipoDeEnvase = ficha.tipoDeEnvase?.trim() || 'NO APLICA';
+    this.presentacionDeEnvase = ficha.presentacionDeEnvase?.trim() || 'NO APLICA';
+    this.pesoPromedio = ficha.pesoPromedio || 'NO APLICA'; // Asumí que este campo es un string
+    this.unidadesPorCaja = ficha.unidadesPorCaja || 'NO APLICA';
+    this.dimensiones = ficha.dimensiones?.trim() || 'NO APLICA';
 
     // Especificaciones
-    this.grasaVisible = ficha.grasaVisible || '';
-    this.espesorCobertura = ficha.espesorCobertura || '';
-    this.ganglios = ficha.ganglios || '';
-    this.hematomas = ficha.hematomas || '';
-    this.huesosCartilagos = ficha.huesosCartilagos || '';
-    this.idioma = ficha.idioma || '';
-    this.elementosExtranos = ficha.elementosExtranos || '';
-    this.color = ficha.color || '';
-    this.olor = ficha.olor || '';
-    this.ph = ficha.ph || '';
-    this.aerobiosMesofilosTotales = ficha.aerobiosMesofilosTotales || '';
-    this.enterobacterias = ficha.enterobacterias || '';
-    this.stec0157 = ficha.stec0157 || '';
-    this.stecNo0157 = ficha.stecNo0157 || '';
-    this.salmonella = ficha.salmonella || '';
-    this.estafilococos = ficha.estafilococos || '';
-    this.pseudomonas = ficha.pseudomonas || '';
-    this.escherichiaColi = ficha.escherichiaColi || '';
-    this.coliformesTotales = ficha.coliformesTotales || '';
-    this.coliformesFecales = ficha.coliformesFecales || '';
+    this.grasaVisible = ficha.grasaVisible?.trim() || 'NO APLICA';
+    this.espesorCobertura = ficha.espesorCobertura?.trim() || 'NO APLICA';
+    this.ganglios = ficha.ganglios?.trim() || 'NO APLICA';
+    this.hematomas = ficha.hematomas?.trim() || 'NO APLICA';
+    this.huesosCartilagos = ficha.huesosCartilagos?.trim() || 'NO APLICA';
+    this.idioma = ficha.idioma?.trim() || 'NO APLICA';
+    this.elementosExtranos = ficha.elementosExtranos?.trim() || 'NO APLICA';
+    this.color = ficha.color?.trim() || 'NO APLICA';
+    this.olor = ficha.olor?.trim() || 'NO APLICA';
+    this.ph = ficha.ph?.trim() || 'NO APLICA';
+    this.aerobiosMesofilosTotales = ficha.aerobiosMesofilosTotales?.trim() || 'NO APLICA';
+    this.enterobacterias = ficha.enterobacterias?.trim() || 'NO APLICA';
+    this.stec0157 = ficha.stec0157?.trim() || 'NO APLICA';
+    this.stecNo0157 = ficha.stecNo0157?.trim() || 'NO APLICA';
+    this.salmonella = ficha.salmonella?.trim() || 'NO APLICA';
+    this.estafilococos = ficha.estafilococos?.trim() || 'NO APLICA';
+    this.pseudomonas = ficha.pseudomonas?.trim() || 'NO APLICA';
+    this.escherichiaColi = ficha.escherichiaColi?.trim() || 'NO APLICA';
+    this.coliformesTotales = ficha.coliformesTotales?.trim() || 'NO APLICA';
+    this.coliformesFecales = ficha.coliformesFecales?.trim() || 'NO APLICA';
 
     // Observaciones y firma
-    this.observacionDelProducto = ficha.observacion || '';
-    this.elaboradoPor = ficha.elaboradoPor || '';
-    this.aprobadoPor = ficha.aprobadoPor || '';
-    this.fechaDelDia = ficha.fechaCreacion || '';
-  }
+    this.observacionDelProducto = ficha.observacion?.trim() || 'NO APLICA';
+    this.elaboradoPor = ficha.elaboradoPor?.trim() || 'NO APLICA';
+    this.aprobadoPor = ficha.aprobadoPor?.trim() || 'NO APLICA';
+    this.fechaDelDia = ficha.fechaCreacion?.trim() || 'NO APLICA';
+}
+
 
 
   // Método para guardar los cambios de la ficha técnica
@@ -126,7 +130,7 @@ export class EditarFichaTecnicaComponent {
       idFichaTecnica: this.idFichaTecnica, 
       nombreDeProducto: this.nombreProducto,
       descripcionDeProducto: this.descripcionDelProducto,
-      descripcionLargaDeProducto: this.descripcionDelProducto,
+      descripcionLargaDeProducto: this.descripcionLargaDeProducto,
       destino: this.destino,
       marca: this.marca,
       tipoDeUso: this.tipoDeUso,
@@ -164,8 +168,6 @@ export class EditarFichaTecnicaComponent {
       fechaCreacion: this.fechaDelDia,
     };
 
-    console.log(fichaActualizada)
-
     // Verificar si todos los campos requeridos están completos
     if (!this.nombreProducto || !this.descripcionDelProducto || !this.marca || !this.tipoDeUso || !this.almacenamiento || !this.vidaUtil) {
       Swal.fire('Advertencia', 'Por favor, completa todos los campos requeridos.', 'warning');
@@ -179,18 +181,16 @@ export class EditarFichaTecnicaComponent {
           Swal.fire('Éxito', 'La ficha técnica se actualizó correctamente.', 'success');
           
           this.LimpiarCampos(); 
-          this.cerrarModal.emit(); 
+          this.modalCerrado.emit(true);
           
         } else {
           Swal.fire('Error', response.mensaje!, 'error');
-          this.LimpiarCampos();
-          this.cerrarModal.emit(); 
+          this.LimpiarCampos(); 
         }
       },
       error => {
         console.error('Error al editar la ficha técnica:', error);
         this.LimpiarCampos();
-        this.cerrarModal.emit(); 
       }
     );
   }
@@ -199,7 +199,8 @@ export class EditarFichaTecnicaComponent {
   public VerificarCambios(): void {
     this.seModificoAlgunCampo = (
       this.nombreProducto !== this.ficha?.nombreDeProducto ||
-      this.descripcionDelProducto !== this.ficha?.descripcionLargaDeProducto ||
+      this.descripcionDelProducto !== this.ficha?.descripcionDeProducto ||
+      this.descripcionLargaDeProducto !== this.ficha?.descripcionLargaDeProducto ||
       this.codigoProducto !== this.ficha?.codigoDeProducto ||
       this.marca !== this.ficha?.marca ||
       this.tipoDeUso !== this.ficha?.tipoDeUso ||
@@ -241,6 +242,7 @@ export class EditarFichaTecnicaComponent {
     // Limpiar los campos de texto y numéricos
     this.nombreProducto = '';
     this.descripcionDelProducto = '';
+    this.descripcionLargaDeProducto = '';
     this.destino = '';
     this.marca = '';
     this.tipoDeUso = '';
@@ -249,8 +251,8 @@ export class EditarFichaTecnicaComponent {
     this.vidaUtil = '';
     this.tipoDeEnvase = '';
     this.presentacionDeEnvase = '';
-    this.pesoPromedio = 0;
-    this.unidadesPorCaja = 0;
+    this.pesoPromedio = '';
+    this.unidadesPorCaja = '';
     this.dimensiones = '';
     this.grasaVisible = '';
     this.espesorCobertura = '';
@@ -275,6 +277,19 @@ export class EditarFichaTecnicaComponent {
     this.observacionDelProducto = '';
 
     this.seModificoAlgunCampo = false; 
+  }
+
+  // Función para abrir el modal de edición de imagen
+  public AbrirModalEditarFoto(): void {
+    if (this.ficha) {
+      this.codigoProducto = this.ficha.codigoDeProducto!; // Asigna el código del producto
+    }
+    this.modalEditarFotoTecnicaActivo = true;  // Mostrar el modal
+  }
+  
+  // Función para cerrar el modal
+  public CerrarModalEditarFotoTecnica(): void {
+    this.modalEditarFotoTecnicaActivo = false;
   }
 
 }

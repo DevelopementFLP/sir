@@ -51,6 +51,7 @@ import { PedidosActivosComponent } from './03_SIR.Produccion.Reportes/pages/stoc
 import { VerStockComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/components/ver-stock/ver-stock.component';
 import { CajasEntregarComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/cajas-entregar/cajas-entregar.component';
 import { EntregaNoSolicitadaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/entrega-no-solicitada/entrega-no-solicitada.component';
+import { EditarPedidoComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/editar-pedido/editar-pedido.component';
 import { DispositvosComponent } from './09_SIR.Dispositivos.Apps/layout/Formularios/Dispositvos/dispositvos.component';
 import { LecturasDispositivosComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/LecturasDispositivos/lecturas-dispositivos.component';
 import { MermaPorPesoComponent } from './09_SIR.Dispositivos.Apps/layout/Reportes/MermaDePesos/merma-por-peso.component';
@@ -72,6 +73,10 @@ import { CrearPlantillaFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.T
 import { CrearProductoFichaTecnicaComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/CreacionDeFichaTecnica/crear-producto-ficha-tecnica/crear-producto-ficha-tecnica.component';
 import { LisaDeFichasTecnicasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDeFichasTecnicas/lisa-de-fichas-tecnicas.component';
 import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { CrearCajaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/crear-caja/crear-caja.component';
+import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
+import { ListaDePlantillasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDePlantillas/lista-de-plantillas.component';
+
 import { DashboardFichaTecnicaComponent } from './03_SIR.Produccion.Reportes/pages/dashboard-ficha-tecnica/dashboard-ficha-tecnica.component';
 
 
@@ -110,6 +115,12 @@ const routes: Routes = [
       { path: 'pedidosRecibidos', component: PedidosRecibidosComponent },
       { path: 'cajasEntregar', component: CajasEntregarComponent },
       { path: 'entregaNoSolicitada', component: EntregaNoSolicitadaComponent },
+      { path: 'crearCaja', component: CrearCajaComponent },
+      { path: 'editarPedido/:id', component: EditarPedidoComponent },
+      { path: '**', redirectTo: '', pathMatch: 'full'}
+    ] },
+    { path: 'compras/solicitudDeCompra', component: SolicitudCompraComponent, children: [
+      { path: '', component: SolicitudCompraComponent },
       { path: '**', redirectTo: '', pathMatch: 'full'}
     ] },
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
@@ -147,9 +158,14 @@ const routes: Routes = [
     { path: 'produccion/CrearProductoFichaTecnica', component: HomeCrearProductoFichaTecnicaComponent, children: [
       { path: 'listaDeFichasTecnicas', component: LisaDeFichasTecnicasComponent },
       { path: 'crearFichaTecnica', component: CrearFichaTecnicaComponent },
+      // { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
+      { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
+      { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent },
+      { path: 'listaDePlantillas', component: ListaDePlantillasComponent },
       { path: 'editarFicha/:id', component: HomeCrearProductoFichaTecnicaComponent },
       { path: 'crearPlantillaFichaTecnica', component: CrearPlantillaFichaTecnicaComponent },
       { path: 'crearProductoFichaTecnica', component: CrearProductoFichaTecnicaComponent }
+
     ]},
 
     { path: 'produccion/VisualizarIncidentes', component: PaginaPrincipalIncidentesComponent},

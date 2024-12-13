@@ -24,6 +24,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
+import { 
+  ProgressBarModule } from 'primeng/progressbar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SidebarModule } from 'primeng/sidebar';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -58,6 +60,7 @@ import { TooltipModule } from 'primeng/tooltip';
     MultiSelectModule,
     PanelMenuModule,
     PasswordModule,
+    ProgressBarModule,
     RadioButtonModule,
     SelectButtonModule,
     SidebarModule,

@@ -1,0 +1,118 @@
+<!-- Modal Plantilla Aspectos Generales -->
+<div class="modal-content">
+
+  <div class="modal-body">
+
+      <!-- Nombre de Plantilla -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Nombre de Plantilla</p>
+              <input [(ngModel)]="nombreDePlantilla" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Nombre de Plantilla">
+          </div>
+      </div>
+
+      <!-- Nombre de Producto -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Nombre de Producto</p>
+              <input [(ngModel)]="nombreDeProducto" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Nombre del Producto">
+          </div>
+      </div>
+
+      <!-- Marca -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Marca</p>
+              <select [(ngModel)]="idMarca" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let marca of marcas" [value]="marca.idMarca">{{ marca.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Tipo de Uso -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Tipo de Uso</p>
+              <select [(ngModel)]="idTipoDeUso" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let tipoDeUso of tiposDeUso" [value]="tipoDeUso.idTipoDeUso">{{ tipoDeUso.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Alergeno -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Alergeno</p>
+              <select [(ngModel)]="idAlergeno" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let alergeno of alergenos" [value]="alergeno.idAlergeno">{{ alergeno.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Condición de Almacenamiento -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Condición de Almacenamiento</p>
+              <select [(ngModel)]="idCondicionAlmacenamiento" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let condicion of condicionesDeAlmacenamiento" [value]="condicion.idCondicionDeAlmacenamiento">{{ condicion.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Vida Útil -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Vida Útil</p>
+              <select [(ngModel)]="idVidaUtil" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let vida of vidasUtil" [value]="vida.idVidaUtil">{{ vida.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Tipo de Envase -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Tipo de Envase</p>
+              <select [(ngModel)]="idTipoDeEnvase" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let tipoDeEnvase of tiposDeEnvase" [value]="tipoDeEnvase.idTipoDeEnvase">{{ tipoDeEnvase.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Presentación de Envase -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Presentación de Envase</p>
+              <select [(ngModel)]="idPresentacionDeEnvase" (ngModelChange)="VerificarCambios()" class="input-field">
+                  <option *ngFor="let presentacion of presentacionesDeEnvase" [value]="presentacion.idPresentacionDeEnvase">{{ presentacion.nombre }}</option>
+              </select>
+          </div>
+      </div>
+
+      <!-- Peso Promedio -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Peso Promedio</p>
+              <input [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Peso Promedio" type="number">
+          </div>
+      </div>
+
+      <!-- Unidades por Caja -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Unidades por Caja</p>
+              <input [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Unidades por Caja" type="number">
+          </div>
+      </div>
+
+      <!-- Dimensiones -->
+      <div class="grid-container-seccion">
+          <div class="grid-items caj-2">
+              <p>Dimensiones</p>
+              <input [(ngModel)]="dimensiones" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Dimensiones" type="text">
+          </div>
+      </div>
+
+  </div>
+
+</div>

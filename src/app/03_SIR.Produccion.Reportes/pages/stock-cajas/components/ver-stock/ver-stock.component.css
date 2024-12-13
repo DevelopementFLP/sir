@@ -2,7 +2,6 @@
   font-size: 2rem;
 
 }
-
 .valor,
 .total,
 .totalS{
@@ -62,6 +61,7 @@
 .botones_editar {
   display: flex;
   font-size: 2rem;
+  column-gap: 2rem;
 }
 
 .boton_lapiz {
@@ -202,7 +202,7 @@
 .lblTamanoTipo{
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: center;  
 }
 
 .contenedor_Img_Grande{
@@ -232,4 +232,58 @@
   display: flex;
   justify-content: center;
   margin-top: 2rem;
+}
+
+
+/*  confirmar editar cantidad */
+
+.dialogEditarCantidadConfirmar{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 9999;
+  display: none;
+  width: 60%;
+  height: 40%;
+}
+
+.dialog-contentEditarCantidad {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 2rem;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+.botonesEditarCantidadConfirmar{
+  display: flex;
+  justify-content: center;
+  column-gap: 2rem;
+  margin-top: 2rem;
+}
+.btnEditarCancelar{
+  background-color:#c70a0a;
+  font-size: 2rem;
+}
+.btnEditarAceptar{
+  color:#6ca50b;
+  background-color:rgba(255, 255, 255, 0);
+  border-color: rgba(255, 255, 255, 0);
+}
+
+.tituloAdvertencia{
+  font-size: 6rem;
+  margin-top: 2rem;
+  color: red;
+}
+.subTituloAdvertencia{
+  font-size: 2.5rem;
 }

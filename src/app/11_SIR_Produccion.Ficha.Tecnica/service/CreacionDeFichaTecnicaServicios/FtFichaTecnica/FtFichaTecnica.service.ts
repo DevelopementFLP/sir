@@ -32,8 +32,10 @@ export class FtFichaTecnicaService {
     return this.http.put<ApiResponse>(`${urlEditarFichaTecnica}`, modelo);
   }
 
-  public EliminarFichaTecnica(id: number): Observable<ApiResponse> {
-    let params = new HttpParams().set('id', id.toString());
+  public EliminarFichaTecnica(id: number, codigoDeProducto: string): Observable<ApiResponse> {
+    let params = new HttpParams()
+    .set('id', id.toString())
+    .set('codigoDeProducto', codigoDeProducto);
     return this.http.delete<ApiResponse>(`${urlEliminarFichaTecnica}`, { params });
   }
   

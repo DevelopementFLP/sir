@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FtFichaTecnicaDTO } from '../../interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
 import { FtFichaTecnicaService } from '../../service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
-import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
-import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'component-lisa-de-fichas-tecnicas',
@@ -15,47 +14,95 @@ export class LisaDeFichasTecnicasComponent {
 
   public fichaTecnica: FtFichaTecnicaDTO[] = []; 
   public fichaSeleccionada: FtFichaTecnicaDTO | null = null;
-  public modalVisible = false;
+  public modalEditarFichaTecnicaActivo = false;
+  public modalVerFichaTecnicaActivo = false; 
   public loading = true; 
+
+  public mostrarBotonesSegunRuta: boolean = false; 
+  rutaActual: string = ''; 
 
   constructor(
     private fichaTecnicaService: FtFichaTecnicaService,
-    private dialog: MatDialog // Inyectamos MatDialog
+    private router: Router // Inyecta Router
   ) { }
 
   ngOnInit(): void {
+    // Detectar la ruta actual y mostrar los botones según la ruta
+    this.router.events.subscribe(() => {
+      this.mostrarBotonesSegunRuta = this.router.url.includes('CrearProductoFichaTecnica');
+      // Guardamos la ruta actual para aplicar diferentes estilos si es necesario
+      this.rutaActual = this.router.url;
+    });
+  
     this.ObtenerFichasTecnicas();
   }
 
 
   public ObtenerFichasTecnicas(): void {
+    this.loading = true; // Asegúrate de que el loading esté en true cuando se haga la llamada
+  
     this.fichaTecnicaService.GetListaDeFichasTecnicas().subscribe(response => {
       if (response.esCorrecto) {
-        this.fichaTecnica = response.resultado; 
+        this.fichaTecnica = response.resultado;
         this.loading = false;
       } else {
-        console.error('Error al obtener fichas técnicas: ', response.mensaje);
+        // Si la respuesta no es correcta, muestra un error con SweetAlert
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `Error al obtener fichas técnicas: ${response.mensaje}`,
+        });
         this.loading = false;
       }
     }, error => {
-      console.error('Error de conexión: ', error);
+      // Si hay un error de conexión, muestra el error con SweetAlert
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de Conexión',
+        text: `Ocurrió un error al intentar obtener las fichas técnicas: ${error.message}`,
+      });
       this.loading = false;
     });
   }
 
 
-  public AbrirModal(ficha: FtFichaTecnicaDTO): void {
+  public AbrirModalEditarFichaTecnica(ficha: FtFichaTecnicaDTO): void {
     this.fichaSeleccionada = ficha;
-    this.modalVisible = true;
+    this.modalEditarFichaTecnicaActivo = true;
   }
 
   // Método para cerrar el modal
-  public CerrarModal() {
-    this.modalVisible = false;
+  public CerrarModalEditarFichaTecnica() {
+    this.modalEditarFichaTecnicaActivo = false;
     this.ObtenerFichasTecnicas();
   }
 
-  EliminarFicha(id: number): void {
+  // Método que se llama cuando el modal se cierra después de la edición
+  public EscucharCierreDeModal(event: boolean): void {
+    if (event) {
+      this.modalEditarFichaTecnicaActivo = false;
+      this.ObtenerFichasTecnicas();
+    }
+  }
+  
+
+   // Método para abrir el modal de creación de nueva ficha técnica
+   public AbrirModalVerFichaTecnica(ficha: FtFichaTecnicaDTO): void {
+    this.fichaSeleccionada = ficha;
+    this.modalVerFichaTecnicaActivo = true;
+  }
+
+  // Método para cerrar el modal de creación
+  public CerrarModalVerFichaTecnica(): void {
+    this.modalVerFichaTecnicaActivo = false;  
+  }
+
+  EliminarFicha(id: number, codigoDeProducto: string): void {
+
+    // Obtener el código de producto hasta el primer espacio
+    const codigoCorto = codigoDeProducto.split(' ')[0];
+
+
     Swal.fire({
       title: '¿Estás seguro?',
       text: "No podrás recuperar esta ficha técnica una vez eliminada.",
@@ -67,7 +114,7 @@ export class LisaDeFichasTecnicasComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.fichaTecnicaService.EliminarFichaTecnica(id).subscribe(response => {
+        this.fichaTecnicaService.EliminarFichaTecnica(id, codigoCorto).subscribe(response => {
           if (response.esCorrecto) {
             this.ObtenerFichasTecnicas();
             Swal.fire(
@@ -94,6 +141,5 @@ export class LisaDeFichasTecnicasComponent {
       }
     });
   }
-
 
 }

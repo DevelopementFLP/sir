@@ -1,9 +1,11 @@
 export interface CajaDisenioPedido {
-    idDisenio:  number;
+  idPedido: number;  
+  idDisenio:  number;
     cantidad:   number;
     nombreDisenio: string;
     tamano: string;
     tipo: string;
-    StockOProduccion: string
+    StockOProduccion: string;
     prioridad: number;
+
   }
