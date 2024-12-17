@@ -77,6 +77,7 @@ import { CrearCajaComponent } from './03_SIR.Produccion.Reportes/pages/stock-caj
 import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
 import { ListaDePlantillasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDePlantillas/lista-de-plantillas.component';
 
+import { DashboardFichaTecnicaComponent } from './03_SIR.Produccion.Reportes/pages/dashboard-ficha-tecnica/dashboard-ficha-tecnica.component';
 
 
 
@@ -105,6 +106,7 @@ const routes: Routes = [
     { path: 'produccion/reporteCuota', component: ReporteCuotaComponent},
     { path: 'produccion/rendimientos', component: RendimientosComponent},
     { path: 'produccion/comparativoCodigos', component: ComparativoCodigosPageComponent },
+    { path: 'produccion/productosPorOrdenesActivas', component: DashboardFichaTecnicaComponent},
     { path: 'produccion/stockCajas', component: MainComponent, children: [
       { path: '', component: MenuComponent },
       { path: 'crearPedido', component: CrearPedidoComponent },

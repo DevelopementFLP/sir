@@ -1,0 +1,71 @@
+:host {
+    --mustard: #AF6E23;
+}
+
+.mustard {
+    color: var(--mustard);
+}
+
+.no-data__container {
+  max-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-data__message {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 800;
+    flex: 1;
+    align-content: center;
+    text-align: center;
+}
+
+.no-data__image {
+    flex: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.5;
+}
+
+.image__wrapper {
+    width: 100%;
+    height: 100%;
+    --webkit-mask-image: url("../../../../../../assets/images/logos/logo_t4.svg");
+    mask-image: url("../../../../../../assets/images/logos/logo_t4.svg");
+    mask-repeat: no-repeat;
+    mask-position: center; 
+}
+
+.image__img {
+    height: 100%;
+    width: 100%;
+}
+
+
+@media screen and (min-width:868px) {
+    .no-data__message {
+        font-size: 1.5rem;
+    }
+    
+    .no-data__image {
+        width: 650px;
+    }
+}
+
+@media screen and (min-width:1800px) {
+    .no-data__message {
+        padding-top: 1rem;
+        font-size: 3rem;
+        text-shadow: 1px 1px 2px rgba(175, 110, 35, 0.1);
+    }
+
+    .no-data__image {
+        width: 1250px;
+    }
+}

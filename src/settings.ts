@@ -1,25 +1,18 @@
 
 // PRODUCCIÓN
-// export const urlAPI: string = "http://192.168.0.107:82/api/";
-
+export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 // DESARROLLO
 // export const urlAPI: string = "http://localhost:5205/api/";
 
-// PRODUCCIÓN
-export const urlAPI: string = "http://192.168.0.107:82/api/";
-
 //TESTING 
 // export const urlAPI: string = "http://192.168.0.107:90/api/";
-
-// API que apunta a la bd de testing
-// export const urlAPI: string = "http://192.168.0.107:98/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
 export var urlUsuarioPorNombre: string = urlUsuarios + "/nombreUsuario";
 export var urlUsuarioPorId: string = urlUsuarios + "/idUsuarionombreUsuario"
-export const urlCambiarContrasenia: string = urlAPI + "User/CambiarContrasenia";
+export const urlCambiarContrasenia: string = urlAPI + "User/Ca mbiarContrasenia";
 export const urlPCC: string = urlAPI + "Pcc";
 export const urlPerfiles: string = urlAPI + "Perfiles";
 export const urlReportes: string = urlAPI + "Reportes";
@@ -388,3 +381,9 @@ export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecni
 // Control de Calidad
 export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
 export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";
+
+// Dashboard Ficha Tecnica Productos Activos Ordenes
+export const urlDashboardFichaTecnica: string = urlAPI + "DashboardFichaTecnica/";
+export const urlProductosActivos: string = urlDashboardFichaTecnica + "GetProductosActivosAsync";
+export const urlTiempoProductoActivo: string = urlDashboardFichaTecnica + "GetTiempoProductoActivo";
+export const urlTiempoActualizacionDashboard: string = urlDashboardFichaTecnica + "GetTiempoActualizacionDashboard";

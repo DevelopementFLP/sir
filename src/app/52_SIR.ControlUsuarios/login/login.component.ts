@@ -14,7 +14,7 @@ import { NavBarService } from 'src/app/shared/services/nav-bar.service';
 import { Reporte } from 'src/app/shared/models/reporte.interface';
 import { AccesoReporte } from '../interfaces/AccesoReporte.interface';
 import { ReportesService } from 'src/app/shared/services/reportes.service';
-import { map, filter } from 'rxjs';
+import { map, filter, lastValueFrom } from 'rxjs';
 
 
 @Component({
@@ -88,7 +88,7 @@ export class LoginComponent implements AfterViewInit {
             this.sessionManagerService.setStorage('actualUser', this.usuarioObtenido[0]);
            
             this.dataService.getReportesPorAcceso(this.usuarioObtenido[0].id_perfil).subscribe(
-              async (reportes: Reporte[]) => {
+              async (reportes: Reporte[]) => {                
                 await this.getReportes();
                 this.menuItems = this.filtrarReportes(reportes);
                 this.menuItems = this.navBarService.transformarAMenuItems(reportes);
@@ -115,11 +115,19 @@ export class LoginComponent implements AfterViewInit {
   }
 
   private async getReportes(): Promise<void> {
-    this.reportes =  await this.reportesService.getAccesoReportes(this.usuarioObtenido[0].id_usuario).toPromise()
+    this.reportes =  await lastValueFrom(this.reportesService.getAccesoReportes(this.usuarioObtenido[0].id_usuario)); 
   }
 
   private filtrarReportes(rep: MenuItem[]): MenuItem[] {
     const reportes: string[] = Array.from(new Set(this.reportes?.map(r => r.nombre_Reporte.trim())));
+    
+    // rep.forEach(r => {
+    //   r.items = r.items?.filter(element => {
+    //     element.items = element.items?.filter(item => reportes.includes(item.label!.trim())) || [];
+    //     return element.items.length > 0;
+    //   });
+    // });
+    
 
     if (rep.length > 0 && rep[0].items) {
         rep[0].items = rep[0].items.filter(element => {
@@ -128,6 +136,7 @@ export class LoginComponent implements AfterViewInit {
         });
     }
 
+ 
     return rep;
 }
 

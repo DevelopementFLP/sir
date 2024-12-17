@@ -1,0 +1,40 @@
+.sound__container,
+.sound__image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sound__container {
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s ease-in-out;
+    animation-name: reveal;
+    animation-duration: 0.7s;
+}
+
+.sound__image {
+    width: 250px;
+    height: 250px;
+    border-radius: 30px;
+    background-color: #ebf5fb;
+}
+
+.image {
+    width: 200px;
+}
+
+.sound__text {
+    font-size: 1.3rem;
+}
+
+@keyframes reveal {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+    
+}

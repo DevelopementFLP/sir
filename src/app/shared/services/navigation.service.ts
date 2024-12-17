@@ -14,4 +14,7 @@ export class NavigationService {
     this.router.navigate(['/' + ruta ]);
   }
 
+  public matchUrl(text: string): boolean {
+    return this.router.url.includes(text);
+  }
 }
