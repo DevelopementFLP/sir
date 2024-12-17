@@ -423,8 +423,9 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       this.isDialogOpen = false;
       if (result !== undefined) {
         try {
-          await this.getCodigosConPrecio();
-          await this.getFechasListasPrecios();
+          // await this.getCodigosConPrecio();
+          // await this.getFechasListasPrecios();
+          await this.ngOnInit();
         } catch (error) {
           console.error('ERROR: ', error);
         }
@@ -455,7 +456,6 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Funciones auxiliares
-
   private getUrl(): string {
     return window.location.href;
   }

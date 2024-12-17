@@ -12,6 +12,7 @@ import { ConfPrecios } from '../../Interfaces/ConfPrecios.interface';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonService } from 'src/app/shared/services/common.service';
 import { PrecioCarga } from '../../Interfaces/PrecioCarga.interface';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-admin-precios',
@@ -153,8 +154,8 @@ export class AdminPreciosComponent implements OnInit {
 
   async deleteListaPrecios(): Promise<void> {
     try {
-      await this.ckSrvc.deleteFechaPrecio(this.eliminarFechas).toPromise();
-      this.dialogRef.close();
+      await lastValueFrom(this.ckSrvc.deleteFechaPrecio(this.eliminarFechas));
+      this.dialogRef.close('Eliminado');
     } catch {
       this.mostrarMensaje(
         'Hubo un error al intentar eliminar alguna lista de precios',
@@ -239,9 +240,8 @@ export class AdminPreciosComponent implements OnInit {
 
         if (this.fechasDistintas.length > 0) {
           try {
-            await this.ckSrvc
-              .insertarListaPrecios(this.fechasDistintas)
-              .toPromise();
+            await lastValueFrom(this.ckSrvc.insertarListaPrecios(this.fechasDistintas));
+              
             await this.mostrarMensaje(
               'Las listas de precios se agregaron correctamente.',
               'Todo bien',
@@ -296,7 +296,7 @@ export class AdminPreciosComponent implements OnInit {
                   const codProdValue: string = info.codigo;
                   const fechaProduccion: Date = this.convertirSerialAFecha(info.fecha);
                   if (codProdValue != undefined) {
-                    if (this.insertarPrecios.find(p => p.codigo_Producto == codProdValue && p.fecha_Produccion === fechaProduccion) != undefined)
+                    if (this.insertarPrecios.find(p => p.codigo_Producto === codProdValue && this.comSrvc.formatearFecha(p.fecha_Produccion) === this.comSrvc.formatearFecha(fechaProduccion)) != undefined)
                       this.errores.push(
                         `El código ${codProdValue} para la fecha ${fechaProduccion} se encuentra más de una vez. Se guardó la primera ocurrencia.`
                       );
