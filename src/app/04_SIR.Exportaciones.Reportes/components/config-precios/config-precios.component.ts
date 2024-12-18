@@ -554,7 +554,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       })
       .catch((error) => {
         console.log(error);
-      });
+      });      
   }
 
   private ordenarArray(array: string[]): string[] {
@@ -822,6 +822,11 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     
     return { idCarga: this.selectedCargas, contenedores };
   }
+
+  protected async reiniciar(): Promise<void> {
+    window.location.reload();
+  }
+
   //#endregion
 
 

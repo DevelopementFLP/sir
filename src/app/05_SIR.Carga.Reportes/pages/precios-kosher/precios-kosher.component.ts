@@ -62,6 +62,10 @@ export class PreciosKosherComponent implements OnInit {
     this.resetearFechas();
   }
 
+  protected async reiniciar(): Promise<void> {
+    window.location.reload();
+  }
+
   private resetearFechas(): void {
     this.fechaDesde = new Date();
     this.fechaDesdeStr = this.commonService.formatearFecha(this.fechaDesde);
@@ -138,11 +142,7 @@ export class PreciosKosherComponent implements OnInit {
       this.pesosBrutosContenedor = res;
       this.datosCargaReporte = this.ajusteService.setPesoBrutoPorContenedor(this.datosCargaReporte, this.pesosBrutosContenedor);
 
-      console.log(this.fechasReporte);
-
       await this.setListasPrecios(this.fechasReporte);
-
-      console.log(this.listasPrecios);
 
       if (this.listasPrecios.length === 0) {
         const fechas = this.fechasReporte.map(f => formatDate(f, 'dd/MM/yyyy', 'es-UY')).join(", ");

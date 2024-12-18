@@ -1292,6 +1292,7 @@ export class PrintService {
             const cajasPorMercaEsp = cajasPorMercaCont.filter(c => c.especie == esp);
             tipos.forEach(tipo => {
               const cajasPorMercaEspTipo = cajasPorMercaEsp.filter(c => c.tipoProducto == tipo);
+              let sumPallets = 0;
               if(cajasPorMercaEspTipo.length > 0) {
                 const precios = Array.from(new Set(cajasPorMercaEspTipo.map(cpmet => cpmet.precioTonelada))).sort((a, b) => { if(a >= b) return 1; else return -1});
                 precios.forEach(precio => {
@@ -1306,7 +1307,8 @@ export class PrintService {
                       hojaDetalle.getCell("C" + filaCaja).value = merca;
                       hojaDetalle.getCell("C" + filaCaja).font = fuenteMerca;
                       hojaDetalle.getCell("C" + filaCaja).alignment = alineacionCentro;
-                      hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMercaEspTipoPrec)
+                      hojaDetalle.getCell("D" + filaCaja).value = this.deps.cantidadPallets(cajasPorMercaEspTipoPrec);
+                      sumPallets += this.deps.cantidadPallets(cajasPorMercaEspTipoPrec);
                       hojaDetalle.getCell("E" + filaCaja).value = this.deps.cantidadCajas(cajasPorMercaEspTipoPrec);
                       hojaDetalle.getCell("F" + filaCaja).value = parseFloat(kilosNetos.toFixed(2));
                       hojaDetalle.getCell("F" + filaCaja).numFmt = formatoNumero;
@@ -1334,7 +1336,7 @@ export class PrintService {
               if(cantCajas > 0) {
                 const kilosNetos = this.deps.sumarKilosNetos(cajasPorMercaEspTipo);
                 const sumaPrecios = this.deps.sumarPrecios(cajasPorMercaEspTipo);
-                hojaDetalle.getCell("D" + filaCaja).value = dataAgrupadaByCont.cantidadPallets;
+                hojaDetalle.getCell("D" + filaCaja).value = sumPallets;
                 hojaDetalle.getCell("D" + filaCaja).font = fuenteSubTitulos;
                 hojaDetalle.getCell("D" + filaCaja).style.fill = fondoSubTotal;
                 hojaDetalle.getCell("E" + filaCaja).value = cantCajas;
@@ -1443,7 +1445,7 @@ export class PrintService {
       if(a <= b) return -1;
       return 1;
     });
-
+    
     nombresMercaderias.forEach(merca => {
       const cajasPorMerca = noCortes.filter(nc => nc.mercaderia == merca);
       containers.forEach(cont => {

@@ -12,12 +12,12 @@ export class DetalleEmbarquePrintService {
     "BONE": "HUESOS",
     "FAT": "GRASA",
     "HLRR": "TRIMMING",
-    "HRT": "CORAZÓN",
+    "HT": "CORAZÓN",
     "LIV": "HÍGADO",
     "ROS": "QUIJADA",
     "SWT": "MOLLEJA",
     "TEN": "TENDONES",
-    "TNG": "LENGUA"
+    "TON": "LENGUA"
   };
 
 

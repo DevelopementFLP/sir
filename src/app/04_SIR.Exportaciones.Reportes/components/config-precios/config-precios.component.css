@@ -44,6 +44,7 @@
         box-shadow: 2px 2px 0 gray !important;
         border-radius: 5px !important;
         border: 0.5px solid gray;
+        overflow-y: scroll;
     }
 
     .p-tabview .p-tabview-panels {
