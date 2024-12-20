@@ -1,7 +1,8 @@
 export interface LineadeSolicitud{
     idLineaDeSolicitud: number;
-    idOrden: number;
+    idOrdenDeSolicitud: number;
     idProducto: number;
-    idArea: number;
+    idAreaDestino: number;
     cantidad: number;
+    comentario: string;
 }

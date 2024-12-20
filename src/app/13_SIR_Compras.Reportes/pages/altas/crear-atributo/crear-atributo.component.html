@@ -1,15 +1,71 @@
 
 
-<div class="contenedor-pagina">
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
     
     
     <div class="seccion-formulario">
-        <form #productoForm="ngForm">
-            
-    <div class="titulo">
-        <h1>CREAR ATRIBUTO</h1>
-        </div>
+        <button pButton type="button" label="Crear Atributo" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAtributo()"></button>   
 
+        <div class="titulo">
+          <h1>LISTADO DE ATRIBUTOS</h1>
+          </div>
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla"
+      [value]="atributosExistentes!"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,40]"
+      styleClass="p-datatable-striped"
+      [scrollable]="true"
+      scrollHeight="500px"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Nombre</div></th>
+          <th class=""><div class="columna">Código</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-atributo>
+        <tr>
+          <td class="">
+            <div class="valor">{{atributo.nombre}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{atributo.codigoDeAtributo}}</div>
+          </td>
+          <td class="">
+            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(atributo.idAtributo)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Cierra tabla -->
+
+    </div>
+</div>
+  <div class="popUpCrear" *ngIf="mostrarPopUp">
+
+
+    <div class="botones_cerrar_popUp">
+      <button
+        pButton
+        type="button"
+        label=""
+        icon="pi pi-times"
+        class="btn_cerrarPopUp"
+        (click)="cerrarPopUpAtributo()"
+      ></button>
+    </div>
+
+
+    <div class="titulo">
+      <h1>CREAR ATRIBUTO</h1>
+      </div>
+
+      
     <div class="contenedor-campos">
       <label>Nombre del atributo</label>
       <input 
@@ -32,7 +88,5 @@
     </div>
 
       <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAtributo()"></button>   
-    </form>
-
-</div>
-</div>
+   
+  </div>

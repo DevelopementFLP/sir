@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Empresa } from '../../../interfaces/Empresa.interface';
 import { CentroDeCosto } from '../../../interfaces/CentroDeCosto.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-centro-de-costo',
@@ -16,44 +18,16 @@ export class CrearCentroDeCostoComponent implements OnInit{
   nombre: string = "";
   empresas: Empresa[] = [];
   centroExistente: CentroDeCosto[] = [];
-  centroCrear: CentroDeCosto[] = [];
+  centroCrear!: CentroDeCosto;
+  mostrarPopUp: boolean = false;
  
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    this.empresas.push({
-      idEmpresa: 1,
-      nombre: 'Empresa 1'
-    })
-    this.empresas.push({
-      idEmpresa: 2,
-      nombre: 'Empresa 2'
-    })
-    this.empresas.push({
-      idEmpresa: 3,
-      nombre: 'Empresa 3'
-    })
-    this.empresas.push({
-      idEmpresa: 4,
-      nombre: 'Empresa 4'
-    })
-
-    this.centroExistente.push({
-      idCentroDeCosto: 0,
-      idEmpresa: 0,
-      codigo: 1,
-      codigoAlternativo: '2',
-      nombre: 'prueba'
-    })
-    this.centroExistente.push({
-      idCentroDeCosto: 0,
-      idEmpresa: 0,
-      codigo: 2,
-      codigoAlternativo: '3',
-      nombre: 'prueba2'
-    })
+    await this.iniciar();
+    console.log(this.empresas);
   }
 
-  crearCentroDeCosto(){
+  async crearCentroDeCosto(){
 
     if(this.validarDatos()==false)
       return;
@@ -63,18 +37,64 @@ export class CrearCentroDeCostoComponent implements OnInit{
    
     console.log("Ingreso datos");
 
-    this.centroCrear = [];
-    this.centroCrear.push({
+
+    this.centroCrear = {
       idCentroDeCosto: 0,
-      idEmpresa: this.idEmpresa,
+      idEmpresa: Number(this.idEmpresa),
       codigo: this.codigo,
       codigoAlternativo: this.codigoAlernativo,
       nombre: this.nombre
-    })
+    }
 
-    console.log(this.centroCrear);
+    await this.crearCentroDeCostoInsert(this.centroCrear);
+    await this.iniciar();
+    this.mostrarPopUp = false;
+    this.nombre="";
+    this.idEmpresa = -1;
+    this.codigo = 0;
+    this.codigoAlernativo = "";
 
 
+
+  }
+
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaCentrosDeCostos();
+   await this.getListaEmpresas();
+  }
+  async getListaCentrosDeCostos(): Promise<void> {
+    try {
+      this.centroExistente = await lastValueFrom(this.comprasService.getListaDeCentroDeCostosasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaEmpresas(): Promise<void> {
+    try {
+      this.empresas = await lastValueFrom(this.comprasService.getListaDeEmpresasAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearCentroDeCostoInsert(centro:CentroDeCosto): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearCentroDeCosto(centro));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarCentroDeCosto(id));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
@@ -125,4 +145,28 @@ export class CrearCentroDeCostoComponent implements OnInit{
 
   }
 
+  mostrarPopUpCentroCosto(){
+    this.mostrarPopUp = true;
+  }
+
+  cerrarPopUpCentroCosto(){
+    this.mostrarPopUp = false;
+  }
+
+
+  getNombreEmpresa(idEmpresa: number){
+
+    const empresa = this.empresas.find(p => p.idEmpresa === idEmpresa);
+    return empresa?.nombre.toString() ;
+  }
+
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
+
+  }
+  
 }

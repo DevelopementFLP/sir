@@ -1,41 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Empresa } from '../../../interfaces/Empresa.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-empresa',
   templateUrl: './crear-empresa.component.html',
-  styleUrls: ['../../../css/estilos.css','./crear-empresa.component.css']
+  styleUrls: ['../../../css/estilos.css','./crear-empresa.component.css'],
+  // encapsulation: ViewEncapsulation.None
 })
 export class CrearEmpresaComponent implements OnInit{
   
   nombre:string ="";
   empresasExistentes: Empresa[] = [];
-  empresaCrear: Empresa[] = [];
+  empresaCrear!: Empresa;
+  mostrarPopUp:boolean = false;
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
-    // Traer las empresas existentes (llenar array empresasExistentes)
+    await this.GetListaDeEmpresas();    
+  }
+  
+  constructor (private comprasService: GestionComprasServiceTsService) {}
 
-    this.empresasExistentes.push({
-      idEmpresa: 0,
-      nombre: 'hola'
-    })
-    this.empresasExistentes.push({
-      idEmpresa: 0,
-      nombre: 'de marco'
-    })
-    this.empresasExistentes.push({
-      idEmpresa: 0,
-      nombre: 'Holaa'
-    })
-    this.empresasExistentes.push({
-      idEmpresa: 0,
-      nombre: 'DE MARCO'
-    })
-    
+  async GetListaDeEmpresas(): Promise<void> {
+    try {
+      this.empresasExistentes = await lastValueFrom(this.comprasService.getListaDeEmpresasAsync());
+    } catch(error) {
+      console.error(error)
+    }
   }
 
-  crearEmpresa(){
+  async crearEmpresaInsert(empresa: Empresa): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearEmpresa(empresa));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarEmpresa(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+
+
+  async crearEmpresa(){
    
     if(this.nombre == ""){
       alert("Ingrese el nombre de la empresa");
@@ -49,19 +64,23 @@ export class CrearEmpresaComponent implements OnInit{
     }else{
 
       // Creo la empresa
-      this.empresaCrear = [];
-      this.empresaCrear = [];
-      this.empresaCrear.push({
+
+      this.empresaCrear = {
         idEmpresa: 0,
         nombre: this.nombre
-      })
+      }
 
-      // Insertar empresaCrear en la base de datos
-      console.log("Creo empresa");
-      
+      await this.crearEmpresaInsert(this.empresaCrear);
+      await this.iniciar();
+      this.nombre="";
+      this.mostrarPopUp = false;      
     }
 
 
+  }
+
+   iniciar(){
+     this.GetListaDeEmpresas();
   }
 
   existeEmpresa(): boolean{
@@ -76,5 +95,19 @@ export class CrearEmpresaComponent implements OnInit{
 
   }
 
+  mostrarPopUpEmpresa(){
+    this.mostrarPopUp = true;
+  }
+
+  cerrarPopUpEmpresa(){
+    this.mostrarPopUp = false;
+  }
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    await this.iniciar();
+
+  }
 
 }

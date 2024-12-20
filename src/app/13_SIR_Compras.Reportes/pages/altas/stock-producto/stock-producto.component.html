@@ -1,1 +1,61 @@
-<p>stock-producto works!</p>
+
+
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
+  
+    
+    <div class="seccion-formulario">
+        <!-- <button pButton type="button" label="Crear Empresa" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpEmpresa()"></button>    -->
+          
+        
+        <div class="titulo">
+          <h1>LISTADO DE STOCK</h1>
+          </div>
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+      <div class="tablaMostrar">
+        <p-table
+          class="tabla"
+          [value]="stockProducto!"
+          styleClass="p-datatable-striped"
+          [scrollable]="true"
+          scrollHeight="500px"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+                <th class=""><div class="columna">Producto</div></th>
+                <th class=""><div class="columna">Almacen</div></th>
+                <th class=""><div class="columna">Empresa</div></th>
+                <th class=""><div class="columna">Stock</div></th>
+                <th class=""><div class="columna">Fecha De Actualización</div></th>
+            </tr>
+          </ng-template>
+         
+          <ng-template pTemplate="body" let-stock>
+            <tr>
+                <td class="">
+                  <div class="valor">{{getNombreDesdeId(productos,stock.idProducto,'idDeProducto','nombre')}}</div>
+                </td>
+              <td class="">
+                <div class="valor">{{getNombreDesdeId(almacenes,stock.idAlmacen,'idAlmacen','nombre')}}</div>
+              </td>
+              <td class="">
+                <div class="valor">{{getNombreDesdeId(empresas,stock.idEmpresa,'idEmpresa','nombre')}}</div>
+              </td>
+              <td class="">
+                <div class="valor">{{stock.stock}}</div>
+              </td>
+              <td class="">
+                <div class="valor">{{stock.fechaActualizacion}}</div>
+              </td>
+              <td class="" >
+                
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <!-- Cierra tabla -->
+
+    </div>
+    </div>
+
+    <!-- </form> -->

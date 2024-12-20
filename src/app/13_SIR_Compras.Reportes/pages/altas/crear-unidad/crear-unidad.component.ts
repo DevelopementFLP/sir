@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Unidad } from '../../../interfaces/Unidad.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-unidad',
@@ -11,33 +13,49 @@ export class CrearUnidadComponent implements OnInit{
   codigo: string = "";
   nombre: string = "";
   unidadExiste: Unidad[] =[];
-  unidadCrear: Unidad[] = [];
+  unidadCrear!: Unidad;
+  mostrarPopUp: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     
-    this.unidadExiste.push({
-      idUnidad: 0,
-      codigo: '1',
-      nombre: 'kilo'
-    })
-    this.unidadExiste.push({
-      idUnidad: 0,
-      codigo: '2',
-      nombre: 'litro'
-    })
-    this.unidadExiste.push({
-      idUnidad: 0,
-      codigo: '3',
-      nombre: 'gramo'
-    })
-    this.unidadExiste.push({
-      idUnidad: 0,
-      codigo: '4',
-      nombre: 'mili gramo'
-    })
+    await this.iniciar();
   }
 
-  crearUnidad(){
+
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaDeUnidades();
+  }
+
+  async getListaDeUnidades(): Promise<void> {
+    try {
+      this.unidadExiste = await lastValueFrom(this.comprasService.getListaDeUnidadProductoAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearUnidadInsert(unidad: Unidad): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearUnidadProducto(unidad));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarUnidadProducto(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  
+  async crearUnidad(){
 
     if(this.validarDatos() == false)
       return;
@@ -45,16 +63,18 @@ export class CrearUnidadComponent implements OnInit{
     if(this.existeUnidad() == true)
       return;
 
-    console.log("Datos");
-
-    this.unidadCrear = [];
-    this.unidadCrear.push({
+    this.unidadCrear = {
       idUnidad: 0,
       codigo: this.codigo,
       nombre: this.nombre
-    })
+    }
 
-    console.log(this.unidadCrear);
+
+    await this.crearUnidadInsert(this.unidadCrear);
+    await this.iniciar();
+    this.nombre = "";
+    this.codigo = "";
+    this.mostrarPopUp = false;
 
   }
 
@@ -87,4 +107,20 @@ export class CrearUnidadComponent implements OnInit{
     }
     return false;
   }
+
+  mostrarPopUpUnidad(){
+    this.mostrarPopUp = true;
+  }
+  cerrarPopUpUnidad(){
+    this.mostrarPopUp = false;
+  }
+  
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
+
+  }
+
 }

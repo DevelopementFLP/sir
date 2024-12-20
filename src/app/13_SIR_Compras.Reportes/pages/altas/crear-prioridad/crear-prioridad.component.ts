@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { Prioridad } from 'src/app/13_SIR_Compras.Reportes/interfaces/Prioridad.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
 
 @Component({
   selector: 'app-crear-prioridad',
@@ -11,21 +13,52 @@ export class CrearPrioridadComponent implements OnInit {
 
   nombre!: string;
   prioridadExistente: Prioridad[] = [];
-  ngOnInit(): void {
+  prioridadCrear!: Prioridad;
+  mostrarPopUp: boolean = false;
 
-    // Cargar prioridad existente
+  async ngOnInit(): Promise<void> {
 
-    this.prioridadExistente.push({
-      idPrioridad: 0,
-      nombre: 'Alta'
-    })
-    this.prioridadExistente.push({
-      idPrioridad: 2,
-      nombre: 'Media'
-    })
+    // Cargo los estados de solicitud existentes
+
+    await this.iniciar();
+    console.log(this.prioridadExistente);
   }
 
-  crearPrioridad(){
+
+
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaDePrioridadesDeOrden();
+  }
+
+  async getListaDePrioridadesDeOrden(): Promise<void> {
+    try {
+      this.prioridadExistente = await lastValueFrom(this.comprasService.getListaDePrioridadesDeOrdenesasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearPrioridadDeOrdenInsert(prioridad: Prioridad): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearPrioridadDeOrden(prioridad));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarPrioridadDeOrden(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async crearPrioridad(){
 
 
     if(this.nombre == "" || this.nombre == undefined){
@@ -36,6 +69,16 @@ export class CrearPrioridadComponent implements OnInit {
     if(this.prioridadExiste() == true){
       return;
     }
+
+    this.prioridadCrear = {
+      idPriodidadDeOrden: 0,
+      nombre: this.nombre
+    }
+
+    await this.crearPrioridadDeOrdenInsert(this.prioridadCrear);
+    await this.iniciar();
+    this.mostrarPopUp = false;
+    this.nombre = "";
 
     console.log(this.nombre);
 
@@ -53,6 +96,22 @@ export class CrearPrioridadComponent implements OnInit {
     }
     
     return false;
+
+  }
+
+  mostrarPopUpPrioridad(){
+    this.mostrarPopUp = true;
+
+  }
+  cerrarPopUpPrioridad(){
+    this.mostrarPopUp = false;
+  }
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
 
   }
 

@@ -4,11 +4,69 @@
     
     
     <div class="seccion-formulario">
-        <form #productoForm="ngForm">
-            
+        <button pButton type="button" label="Crear Almacén" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAlmacen()"></button>   
+        <div class="titulo">
+          <h1>LISTADO DE ALMACENES</h1>
+          </div>
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla"
+      [value]="almacenExistente!"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,40]"
+      styleClass="p-datatable-striped"
+      [scrollable]="true"
+      scrollHeight="500px"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Nombre</div></th>
+          <th class=""><div class="columna">Descripción</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-almacen>
+        <tr>
+          <td class="">
+            <div class="valor">{{almacen.nombre}}</div>
+          </td>
+        
+          <td class="">
+            <div class="valor">{{almacen.descripcion}}</div>
+          </td>
+          <td class="">
+            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(almacen.idAlmacen)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- Cierra tabla -->  
+
+  <div class="popUpCrear" *ngIf="mostrarPopUp">
+
+
+    <div class="botones_cerrar_popUp">
+      <button
+        pButton
+        type="button"
+        label=""
+        icon="pi pi-times"
+        class="btn_cerrarPopUp"
+        (click)="cerrarPopUpAlmacen()"
+      ></button>
+    </div>
+
+
     <div class="titulo">
-        <h1>CREAR ALMACÉN</h1>
-        </div>
+      <h1>CREAR ALMACEN</h1>
+      </div>
+
 
     <div class="contenedor-campos">
       <label>Nombre del almacén</label>
@@ -33,10 +91,8 @@
         </textarea>
       </div>
 
-   
+
 
       <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAlmacen()"></button>   
-    </form>
+    </div>
 
-</div>
-</div>

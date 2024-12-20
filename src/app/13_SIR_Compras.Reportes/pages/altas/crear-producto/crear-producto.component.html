@@ -1,99 +1,196 @@
-
-
-<div class="contenedor-pagina">
-    
-    
-    <div class="seccion-formulario">
-        <form #productoForm="ngForm">
-            
-    <div class="titulo">
-        <h1>CREAR PRODUCTO</h1>
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
+  <div class="seccion-formulario">
+     
+      <button pButton type="button" label="Crear Producto" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpCrearProducto()"></button>
+     
+      <div class="titulo">
+        <h1>LISTADO DE PRODUCTOS</h1>
         </div>
 
-<div class="contenedor-columnas">
-    <div class="columna1">
-       
-    <div class="contenedor-campos">
-      <label>Nombre del Producto</label>
-      <input 
-          type="text" 
-          [(ngModel)]="nombre" 
-          name="nombreProducto"
-          placeholder="Ingrese nombre del producto"  
-          required> 
-    </div>
+      <!-- Tabla para ver los datos actuales antes de crear uno  -->
+      <div class="tablaMostrar">
+        <p-table
+          class="tabla" 
+          *ngIf="productoExistente.length>0; else noProducto"
+          [value]="productoExistente!"
+          [paginator]="true"
+          [rows]="10"
+          [rowsPerPageOptions]="[10,20,40]"
+          styleClass="p-datatable-striped"
+          [scrollable]="true"
+          scrollHeight="500px"
+          [totalRecords]="productoExistente.length"
+          [currentPageReportTemplate]="'{first}-{last} de {totalRecords} artículos'"
+         [showCurrentPageReport]="true">
+          <ng-template pTemplate="header">
+            <tr>
+              <th class=""><div class="columna">Nombre</div></th>
+              <th class=""><div class="columna">Unidad</div></th>
+              <th class=""><div class="columna">Código Producto</div></th>
+              <th class=""><div class="columna">Código Alernativo</div></th>
+              <th class=""><div class="columna">Código Alternativo 2</div></th>
+              <th class=""><div class="columna"></div></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-producto>
+            <tr>
+              <td class="">
+                <div class="valor">{{producto.nombre}}</div>
+              </td>
+              <td class="">
+                <div class="valor">
+                  {{getNombreDesdeId(unidades,producto.idTipoDeUnidad,'IdUnidad','nombre')}}
+                </div>
+              </td>
+              <td class="">
+                <div class="valor">{{ producto.codigoDeProducto }}</div>
+              </td>
+              <td class="">
+                <div class="valor">
+                  {{ producto.codigoDeProductoAlternativo}}
+                </div>
+              </td>
+              <td class="">
+                <div class="valor">
+                  {{ producto.codigoDeProductoAlternativo2}}
+                </div>
+              </td>
+              <td class="">
+                  <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(producto.idProducto)"></button>
+              </td>
+            </tr>
+          </ng-template>          
+        </p-table>
+      </div>
+      <!-- Cierra tabla -->
+  </div>
+</div>
 
-    <div class="contenedor-campos" *ngIf="nombre!='' || mostrarUnoEnUno==false">
+<div class="popUpCrear" *ngIf="mostrarPopUp">
+  <div class="botones_cerrar_popUp">
+    <button
+      pButton
+      type="button"
+      label=""
+      icon="pi pi-times"
+      class="btn_cerrarPopUp"
+      (click)="cerrarPopUpCrearProducto()"
+    ></button>
+  </div>
+
+  <div class="titulo tituloCrearProducto">
+    <h1>CREAR PRODUCTO</h1>
+  </div>
+
+  <div class="contenedor-columnas">
+    <div class="columna1">
+      <div class="contenedor-campos">
+        <label>Nombre del Producto</label>
+        <input
+          type="text"
+          [(ngModel)]="nombre"
+          name="nombreProducto"
+          placeholder="Ingrese nombre del producto"
+          required
+        />
+      </div>
+
+      <div
+        class="contenedor-campos"
+        *ngIf="nombre != '' || mostrarUnoEnUno == false"
+      >
         <label>Descripción del Producto</label>
-        <textarea 
-        type="text" 
-            [(ngModel)]="descripcion"
-            name="descripcion" 
-            placeholder="Ingrese una descripción" 
-            rows="3"
-            cols="30"
-            required>
+        <textarea
+          type="text"
+          [(ngModel)]="descripcion"
+          name="descripcion"
+          placeholder="Ingrese una descripción"
+          rows="3"
+          cols="30"
+          required
+        >
         </textarea>
       </div>
 
-      <div class="contenedor-campos divSelect" *ngIf="descripcion!='' || mostrarUnoEnUno==false">
+      <div
+        class="contenedor-campos divSelect"
+        *ngIf="descripcion != '' || mostrarUnoEnUno == false"
+      >
         <label>Unidad del producto</label>
-        <select 
-            class="select"
-            id="unidades" 
-            [(ngModel)]="idUnidad" 
-            name="unidades"
-            required>
-            <option *ngFor="let unidad of unidades" [value]="unidad.idUnidad">
-            {{unidad.nombre}}
-            </option>
+        <select
+          class="select"
+          id="unidades"
+          [(ngModel)]="idUnidad"
+          name="unidades"
+          required
+        >
+          <option
+            *ngFor="let unidad of unidades"
+            [value]="unidad.idUnidad"
+          >
+            {{ unidad.nombre }}
+          </option>
         </select>
-
       </div>
-      </div>
-
-      <div class="columna2">
-
-     
-
-    
-
-    <div class="contenedor-campos" *ngIf="descripcion!=''  || mostrarUnoEnUno==false">
-      <label>codigo del Producto</label>
-      <input 
-          type="text" 
-          [(ngModel)]="codigoProducto" 
-          name="codigoProducto"
-          placeholder="Ingrese el código del producto" 
-          required>
-    </div>  
-
-    <div class="contenedor-campos" *ngIf="codigoProducto!='' || mostrarUnoEnUno==false">
-        <label>Código del Producto Alernativo</label>
-        <input 
-            type="text" 
-            [(ngModel)]="codigoProductoAlternativo" 
-            name="codigoProductoAlternativo"
-            placeholder="Ingrese código alternativo" 
-            >
-      </div>
-
-      <div class="contenedor-campos" *ngIf="codigoProductoAlternativo!=''  || mostrarUnoEnUno==false">
-        <label>Código del Producto Alernativo 2</label>
-        <input 
-            type="text" 
-            [(ngModel)]="codigoProductoAlternativo2" 
-            name="codigoProductoAlternativo2"
-            placeholder="Ingrese código alternativo 2"
-            required>
-      </div>
-     
     </div>
-  
+
+    <div class="columna2">
+      <div
+        class="contenedor-campos"
+        *ngIf="descripcion != '' || mostrarUnoEnUno == false"
+      >
+        <label>codigo del Producto</label>
+        <input
+          type="text"
+          [(ngModel)]="codigoProducto"
+          name="codigoProducto"
+          placeholder="Ingrese el código del producto"
+          required
+        />
+      </div>
+
+      <div
+        class="contenedor-campos"
+        *ngIf="codigoProducto != '' || mostrarUnoEnUno == false"
+      >
+        <label>Código del Producto Alernativo</label>
+        <input
+          type="text"
+          [(ngModel)]="codigoProductoAlternativo"
+          name="codigoProductoAlternativo"
+          placeholder="Ingrese código alternativo"
+        />
+      </div>
+
+      <div
+        class="contenedor-campos"
+        *ngIf="
+          codigoProductoAlternativo != '' || mostrarUnoEnUno == false
+        "
+      >
+        <label>Código del Producto Alernativo 2</label>
+        <input
+          type="text"
+          [(ngModel)]="codigoProductoAlternativo2"
+          name="codigoProductoAlternativo2"
+          placeholder="Ingrese código alternativo 2"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <button
+    pButton
+    type="button"
+    label="Crear"
+    icon="pi pi-plus"
+    class="btn_crear"
+    (click)="crearProducto()"
+  ></button>
 </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearProducto()"></button>   
-    </form>
 
-</div>
-</div>
+<ng-template #noProducto>
+NO HAY PRODUCTOS DISPONIBLES
+</ng-template>

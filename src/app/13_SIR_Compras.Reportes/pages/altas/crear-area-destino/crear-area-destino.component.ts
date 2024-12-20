@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AreaDestino } from '../../../interfaces/AreaDestinto.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-area-destino',
@@ -10,25 +12,52 @@ export class CrearAreaDestinoComponent implements OnInit{
 
   nombre: string ="";
   areaExistente: AreaDestino[] = [];
-  crearArea: AreaDestino[] =[];
+  crearArea!: AreaDestino;
+  mostrarPopUp: boolean = false;
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
   
 
   // Cargo area existente
-  this.areaExistente.push({
-    idArea: 1,
-    nombre: 'area'
-  })
-  this.areaExistente.push({
-    idArea: 2,
-    nombre: 'area2'
-  })
-
+   await this.iniciar();
   }
 
-  crearAreaDestino(){
+
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaAreaDeDestino();
+  }
+
+  async getListaAreaDeDestino(): Promise<void> {
+    try {
+      this.areaExistente = await lastValueFrom(this.comprasService.getListaDeAreaDestinosasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearAreaDeDestinoInsert(area:AreaDestino): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearAreaDestino(area));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarAreaDestino(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async crearAreaDestino(){
 
     if(this.nombre ==""){
       alert("Ingrese el nombre del área");
@@ -39,12 +68,17 @@ export class CrearAreaDestinoComponent implements OnInit{
       return;
     
     // Inserto datos en la bd
-    this.crearArea.push({
-      idArea: 0,
+    this.crearArea = {
+      idAreaDestino: 0,
       nombre: this.nombre
-    })
+    }
 
-    console.log(this.crearArea);
+    await this.crearAreaDeDestinoInsert(this.crearArea);
+    await this.iniciar();
+
+    this.mostrarPopUp = false;
+    this.nombre = "";
+
   }
 
   existeArea(): boolean{
@@ -59,4 +93,19 @@ export class CrearAreaDestinoComponent implements OnInit{
     return false;
   }
   
+  mostrarPopUpAreaDestino(){
+    this.mostrarPopUp = true;
+  }
+  cerrarPopUpAreaDestino(){
+    this.mostrarPopUp = false;
+  }
+
+  
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
+
+  }
 }

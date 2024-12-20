@@ -4,28 +4,92 @@
     
     
     <div class="seccion-formulario">
-        <form #productoForm="ngForm">
-            
+        <button pButton type="button" label="Crear Usuario" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpUsuario()"></button>   
+        <div class="titulo">
+          <h1>LISTADO DE USUARIOS</h1>
+          </div>
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla"
+      [value]="usuarioExistente!"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,40]"
+      styleClass="p-datatable-striped"
+      [scrollable]="true"
+      scrollHeight="500px"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Nombre Completo</div></th>
+          <th class=""><div class="columna">Rol</div></th>
+          <th class=""><div class="columna">Departamento</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-usuario>
+        <tr>
+          <td class="">
+            <div class="valor">{{getNombreDesdeId(listaUsuariosSir,usuario.idUsuarioSir,'id_usuario','nombre_completo')}}</div>
+          </td>
+        
+          <td class="">
+            <div class="valor">{{getNombreDesdeId(roles,usuario.idRol,'idRol','nombre')}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{getNombreDesdeId(departamentos,usuario.idDepartamento,'idDepartamento','nombre')}}</div>
+          </td>
+          <td class="">
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(unidad.idUnidad)"></button> -->
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- Cierra tabla -->
+
+  <div class="popUpCrear" *ngIf="mostrarPopUp">
+
+
+    <div class="botones_cerrar_popUp">
+      <button
+        pButton
+        type="button"
+        label=""
+        icon="pi pi-times"
+        class="btn_cerrarPopUp"
+        (click)="cerrarPopUpUsuario()"
+      ></button>
+    </div>
+
+
     <div class="titulo">
-        <h1>CREAR USUARIO</h1>
-        </div>
+      <h1>CREAR USUARIO</h1>
+      </div>
+
+
+      <button pButton type="button" label="Seleccionar Usuario" icon="pi pi-search" class="btn_crear" (click)="mostrarPopUpUsuarios = true"></button>   
+
 
     <div class="contenedor-campos">
       <label>Nombre del Usuario</label>
       <input 
           type="text" 
-          [(ngModel)]="nombre" 
+          [(ngModel)]="nombreCompleto" 
           name="nombre"
-          placeholder="Ingrese el nombre"  
+          [disabled]="true"
           required> 
     </div>
     <div class="contenedor-campos">
-      <label>Apellido del Usuario</label>
+      <label>Correo Eléctronico</label>
       <input 
           type="text" 
-          [(ngModel)]="apellido" 
-          name="apellido"
-          placeholder="Ingrese el apellido"  
+          [(ngModel)]="correoElectronico" 
+          name="correo"
           required> 
     </div>
 
@@ -59,7 +123,58 @@
       </div>
 
       <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearUsuario()"></button>   
-    </form>
 
 </div>
-</div>
+
+
+
+
+
+
+      <!-- PopUp ver Usuarios -->
+      <div class="popUpVer" *ngIf="mostrarPopUpUsuarios">
+        <div class="botones_cerrar_popUp">
+            <button pButton type="button" label="" icon="pi pi-times" class="btn_cerrar" (click)="mostrarPopUpUsuarios=false"></button>   
+        </div>
+        <!-- <div class="contenedor__InputFiltros">
+      
+          <input type="text">
+          <input type="text">
+          <input type="text">
+          <input type="text">
+          <input type="text">
+        </div> -->
+          <p-table class="tabla"
+            [value]="listaUsuariosSir!"
+            styleClass="p-datatable-striped"
+            [scrollable]="true"
+            scrollHeight="500px"
+            >
+            <ng-template pTemplate="header">
+                <tr>             
+                    <th class="">
+                      <div class="columna">
+                        Nombre Completo                            
+                    </div>
+                  </th>
+                    <th class="">
+                      <div class="columna">
+                      Nombre de Usuario
+                    </div>
+                  </th>
+                    
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-usuario *ngIf="usuarioExistente">
+                <tr> 
+                    <td class=""><div class="valor">{{usuario.nombre_completo}}</div></td>
+                    <td class=""><div class="valor">{{usuario.nombre_usuario}}</div></td>
+                    <td class="">
+                        <button pButton type="button" label="" icon="pi pi-send"  (click)="seleccionarUsuario(usuario.id_usuario,usuario.nombre_completo)"></button>
+                    </td>                   
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+
+

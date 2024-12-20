@@ -7,15 +7,15 @@
         <!-- <form #productoForm="ngForm"> -->
             
           
-          <button pButton type="button" label="Crear Empresa" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpEmpresa()"></button>   
+          <button pButton type="button" label="Crear Rol" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpRol()"></button>   
           <div class="titulo">
-              <h1>LISTADO DE EMPRESAS</h1>
+              <h1>LISTADO DE ROLES</h1>
               </div>
           <!-- Tabla para ver los datos actuales antes de crear uno  -->
       <div class="tablaMostrar">
         <p-table
           class="tabla"
-          [value]="empresasExistentes!"
+          [value]="rolesExistentes!"
           [paginator]="true"
           [rows]="10"
           [rowsPerPageOptions]="[10,20,40]"
@@ -26,19 +26,19 @@
           <ng-template pTemplate="header">
             <tr>
                 <th class=""><div class="columna">Nombre</div></th>
-                <th class=""><div class="columna">Id Empresa</div></th>
+                <th class=""><div class="columna">Id Rol</div></th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-empresa>
+          <ng-template pTemplate="body" let-rol>
             <tr>
                 <td class="">
-                  <div class="valor">{{empresa.nombre}}</div>
+                  <div class="valor">{{rol.nombre}}</div>
                 </td>
               <td class="">
-                <div class="valor">{{empresa.idEmpresa}}</div>
+                <div class="valor">{{rol.idRol}}</div>
               </td>
               <td class="">
-                <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(empresa.idEmpresa)"></button>
+                <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(estado.idEstadoDeSolicitud)"></button> -->
               </td>
             </tr>
           </ng-template>
@@ -57,24 +57,24 @@
           label=""
           icon="pi pi-times"
           class="btn_cerrarPopUp"
-          (click)="cerrarPopUpEmpresa()"
+          (click)="cerrarPopUpRol()"
         ></button>
       </div>
 
       <div class="titulo">
-        <h1> CREAR EMPRESA</h1>
+        <h1> CREAR ROL</h1>
         </div>
 
     <div class="contenedor-campos">
-      <label>Nombre de la empresa</label>
+      <label>Nombre del Rol</label>
       <input 
           type="text" 
           [(ngModel)]="nombre" 
-          name="nombreEmpresa"
+          name="nombreRol"
           placeholder="Ingrese el Nombre"  
           required> 
     </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearEmpresa()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearRol()"></button>   
     </div>
     <!-- </form> -->

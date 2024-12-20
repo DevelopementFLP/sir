@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../../interfaces/Producto.interface';
 import { Unidad } from '../../../interfaces/Unidad.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-producto',
@@ -20,61 +22,61 @@ export class CrearProductoComponent implements OnInit{
   nombre: string ="";
   idUnidad: number = 0;
   descripcion: string = "";
-  producto:Producto[] = [];
+  productoExistente:Producto[] = [];
+  productoCrear!: Producto;
   unidades: Unidad[] =[];
   unidadSeleccionada:number=0;
+  mostrarPopUp: boolean = false;
 
   mostrarUnoEnUno: boolean = false;
  
-  ngOnInit(): void {
-    console.log("Bienvenido");
-    this.unidades.push({
-      idUnidad: 0,
-      codigo: '1',
-      nombre: 'Kilo'
-    })
+  async ngOnInit(): Promise<void> {
 
-    this.unidades.push({
-      idUnidad: 1,
-      codigo: '2',
-      nombre: 'Litro'
-    })
-
-    this.unidades.push({
-      idUnidad: 2,
-      codigo: '2',
-      nombre: 'Gramo'
-    })
-
-    this.producto.push({
-      idProducto: 0,
-      codigoProducto: '11',
-      codigoProductoAlternativo: '22',
-      codigoProductoAlternativo2: '33',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'uno',
-      idUnidad: 0,
-      descripcion: ''
-    })
-    this.producto.push({
-      idProducto: 0,
-      codigoProducto: '44',
-      codigoProductoAlternativo: '55',
-      codigoProductoAlternativo2: '66',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'dos',
-      idUnidad: 0,
-      descripcion: ''
-    })
-    
+    await this.iniciar();
   }
 
+  constructor (private comprasService: GestionComprasServiceTsService) {}
 
+  async getListaDeProductos(): Promise<void> {
+    try {
+      this.productoExistente = await lastValueFrom(this.comprasService.getListaDeProductosAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDeUnidades(): Promise<void> {
+    try {
+      this.unidades = await lastValueFrom(this.comprasService.getListaDeUnidadProductoAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearProductoInsert(producto: Producto): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearProducto(producto));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarProducto(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
   
+  async iniciar(){
+    await this.getListaDeProductos();
+    this.productoExistente = this.productoExistente.filter(p => p.activo == true);
+    await this.getListaDeUnidades();
 
-  crearProducto(){
+
+  }
+
+  async crearProducto(){
 
     if(this.validarDatos()==false){
       return;
@@ -89,18 +91,28 @@ export class CrearProductoComponent implements OnInit{
     // Ingresar producto
     // Si todo es válido lleno el array y creo el producto
 
-    this.producto = [];
-    this.producto.push({
+    this.productoCrear = {
       idProducto: 0,
-      codigoProducto: this.codigoProducto,
-      codigoProductoAlternativo: this.codigoProductoAlternativo,
-      codigoProductoAlternativo2: this.codigoProductoAlternativo2,
-      fechaCreacion: this.fechaCreacion,
-      fechaActualizacion: this.fechaActualizacion,
+      codigoDeProducto: this.codigoProducto,
+      codigoDeProductoAlternativo: this.codigoProductoAlternativo,
+      codigoDeProductoAlternativo2: this.codigoProductoAlternativo2,
+      fechaDeRegistro: new Date(),
+      fechaDeActualizacion: new Date(),
       nombre: this.nombre,
-      idUnidad: this.idUnidad,
-      descripcion: this.descripcion
-    })
+      idUnidad: Number(this.idUnidad),
+      descripcion: this.descripcion,
+      activo: true
+    }
+    console.log(this.productoCrear);
+    await this.crearProductoInsert(this.productoCrear);
+    await this.iniciar();
+    this.mostrarPopUp = false;
+    this.nombre ="";
+    this.descripcion = "";
+    this.codigoProducto ="";
+    this.codigoProductoAlternativo="";
+    this.codigoProductoAlternativo2 = "";
+    
 }
 
 
@@ -112,6 +124,11 @@ export class CrearProductoComponent implements OnInit{
     if(this.descripcion==""){
       alert("Ingrese una descripción para el producto");
       console.log(this.descripcion);
+      return false;
+    }
+
+    if(this.idUnidad <=0 ){
+      alert("Ingrese la unidad del producto");
       return false;
     }
 
@@ -139,17 +156,17 @@ export class CrearProductoComponent implements OnInit{
     let existe: boolean = false;
     
     // Verifico si existe la empresa, primero lo paso todo a minuscula por si existe pero con mayuscula o al revés
-    if(this.producto.find(e => e.codigoProducto == this.codigoProducto)){
+    if(this.productoExistente.find(e => e.codigoDeProducto == this.codigoProducto)){
       existe = true;
       alert("El código del producto ingresado ya existe");
       return true;
     }
-    if(this.producto.find(e => e.codigoProductoAlternativo == this.codigoProductoAlternativo)){
+    if(this.productoExistente.find(e => e.codigoDeProductoAlternativo == this.codigoProductoAlternativo)){
       existe = true;
       alert("El código ingresado del producto alternativo ya existe");
       return true;
     }
-    if(this.producto.find(e => e.codigoProductoAlternativo2 == this.codigoProductoAlternativo2)){
+    if(this.productoExistente.find(e => e.codigoDeProductoAlternativo2 == this.codigoProductoAlternativo2)){
       existe = true;
       alert("El código ingresado del producto alternativo 2  ya existe");
       return true;
@@ -158,6 +175,28 @@ export class CrearProductoComponent implements OnInit{
     return false;
   }
 
+  getNombreDesdeId(array: any[],id: number,nombrePropiedadId:string,nombrePropiedadNombre:string): string {
+    return this.comprasService.getNombreDesdeId(id, array, nombrePropiedadId, nombrePropiedadNombre);
+  }
 
+  getNombreUnidad(idUnidad: number){
 
+    const unidades = this.unidades.find(p => p.idUnidad === idUnidad);
+    return unidades?.nombre.toString() ;
+  }
+
+  cerrarPopUpCrearProducto(){
+    this.mostrarPopUp = false;
+  }
+
+  mostrarPopUpCrearProducto(){
+    this.mostrarPopUp = true;
+  }
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    await this.iniciar();
+
+  }
 }

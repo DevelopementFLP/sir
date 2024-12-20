@@ -1,0 +1,11 @@
+.contenedor__mostrarEnPantalla{
+    display: flex;
+    width: max-content;
+    margin-top: 1rem;
+    
+}
+.chk_MostrarEnPantall{
+    display: flex;
+    justify-content: start;
+    width: 2rem;
+}

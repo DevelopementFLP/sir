@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { EstadoDeSolicitud } from 'src/app/13_SIR_Compras.Reportes/interfaces/EstadoDeSolicitud.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
 
 @Component({
   selector: 'app-crear-estado-solicitud',
@@ -9,27 +11,60 @@ import { EstadoDeSolicitud } from 'src/app/13_SIR_Compras.Reportes/interfaces/Es
 export class CrearEstadoSolicitudComponent implements OnInit{
   
   nombre!:string;
+  color!: string;
+  orden!: number;
+  mostrarEnPantalla: boolean = true;
   estadoExistente: EstadoDeSolicitud[] = [];
-  estadoCrear: EstadoDeSolicitud[] = [];
+  estadoCrear!: EstadoDeSolicitud;
+  mostrarPopUp: boolean = true;
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
 
     // Cargo los estados de solicitud existentes
-   
-    this.estadoExistente.push({
-      idEstado: 0,
-      nombre: 'Completo'
-    })
-   
-    this.estadoExistente.push({
-      idEstado: 2,
-      nombre: 'En Progreso'
-    })
+
+    await this.iniciar();
+    console.log(this.estadoExistente);
+
+
   }
 
 
 
-  crearEstadoSolicitud(){
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaDeEstadosDeSolicitud();
+  }
+
+  async getListaDeEstadosDeSolicitud(): Promise<void> {
+    try {
+      this.estadoExistente = await lastValueFrom(this.comprasService.getListaDeEstadoDeSolicitudesasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearEstadoDeSolicitudInsert(estado: EstadoDeSolicitud): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearEstadoDeSolicitud(estado));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarEstadoDeSolicitud(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+
+  async crearEstadoSolicitud(){
+
 
     if(this.nombre == "" || this.nombre == undefined){
       alert("Ingrese el nombre del estado de solicitud");
@@ -39,15 +74,19 @@ export class CrearEstadoSolicitudComponent implements OnInit{
     if(this.estadoExiste() == true){
       return;
     }
+    this.estadoCrear = {
+      idEstadoDeSolicitud: 0,
+      nombre: this.nombre,
+      color: this.color,
+      mostrarEnPantalla: this.mostrarEnPantalla,
+      orden:0
+    }
 
-    this.estadoCrear.push({
-      idEstado: 0,
-      nombre: this.nombre
-    })
-
-    console.log(this.estadoCrear);
-
-
+    await this.crearEstadoDeSolicitudInsert(this.estadoCrear);
+    await this.iniciar();
+    this.mostrarPopUp = false;
+    this.nombre = "";
+    
   }
 
   estadoExiste(): boolean{
@@ -62,6 +101,21 @@ export class CrearEstadoSolicitudComponent implements OnInit{
     }
     
     return false;
+
+  }
+
+  mostrarPopUpEstadoSolicitud(){
+    this.mostrarPopUp = true;
+  }
+  cerrarPopUpEstadoSolicitud(){
+    this.mostrarPopUp = false;
+  }
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
 
   }
 

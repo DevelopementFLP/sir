@@ -7,7 +7,7 @@
             <p-tabPanel header="Producto">
                 <app-crear-producto></app-crear-producto>
             </p-tabPanel>
-            <p-tabPanel header="Empresa">
+            <p-tabPanel header="Empresa" >
                 <app-crear-empresa></app-crear-empresa>
             </p-tabPanel>
             <p-tabPanel header="Atributo">
@@ -34,8 +34,14 @@
             <p-tabPanel header="Prioridad">
                 <app-crear-prioridad></app-crear-prioridad>
             </p-tabPanel>
-            <p-tabPanel header="Estado de Solicitud">
+            <p-tabPanel header="Estado de Solicitud" [selected]="true">
                 <app-crear-estado-solicitud></app-crear-estado-solicitud>
+            </p-tabPanel>
+            <p-tabPanel header="Stock de Productos">
+                <app-stock-producto></app-stock-producto>
+            </p-tabPanel>
+            <p-tabPanel header="Roles">
+                <app-crear-rol></app-crear-rol>
             </p-tabPanel>
             
         </p-tabView>

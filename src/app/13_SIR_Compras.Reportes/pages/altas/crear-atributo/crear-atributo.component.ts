@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Atributos } from '../../../interfaces/Atributos.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-atributo',
@@ -12,62 +14,79 @@ export class CrearAtributoComponent implements OnInit {
   codigoAtributo: string = "";
   nombreAtributo: string ="";
   atributosExistentes: Atributos[] =[];
-  atributoCrear: Atributos[] =[];
+  atributoCrear!: Atributos;
+  mostrarPopUp: boolean = false;
 
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
    
     // Cargar el array de atributos existentes
-    
-    this.atributosExistentes.push({
-      idAtributo: 0,
-      codigoAtributo: '12',
-      nombre: 'atributo'
-    })
-    this.atributosExistentes.push({
-      idAtributo: 0,
-      codigoAtributo: '13',
-      nombre: 'atributo2'
-    })
-    this.atributosExistentes.push({
-      idAtributo: 0,
-      codigoAtributo: '14',
-      nombre: 'atributo3'
-    })
-    this.atributosExistentes.push({
-      idAtributo: 0,
-      codigoAtributo: '15',
-      nombre: 'atributo4'
-    })
+
+    await this.iniciar();
+
   }
 
+  constructor (private comprasService: GestionComprasServiceTsService) {}
 
-  crearAtributo(){
+  async getListaAtributos(): Promise<void> {
+    try {
+      this.atributosExistentes = await lastValueFrom(this.comprasService.getListaDeAtributossync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearAtributoInsert(atributo:Atributos): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearAtributo(atributo));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarAtributo(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async crearAtributo(){
 
     if(this.validarDatos()==false){
       return;
     }
-
+    
     if(this.existeAtributo()==true){
+      console.log("#");
       alert("El código del atributo ya existe, verifique");
       return;
     }else{
-
+      
       // Creo el atributo
-      console.log("Inserto array");
-      this.atributoCrear.push({
-        idAtributo: 0,
-        codigoAtributo: this.codigoAtributo,
-        nombre: this.nombreAtributo
-      })
 
-      // Inserto array en bd
+      this.atributoCrear = {
+        idAtributo: 0,
+        codigoDeAtributo: this.codigoAtributo,
+        nombre: this.nombreAtributo        
+      }
+
+      await this.crearAtributoInsert(this.atributoCrear);
+      await this.iniciar();
+      this.mostrarPopUp = false;
+      this.nombreAtributo = "";
+      this.codigoAtributo="";
 
     }
 
   }
 
+  async iniciar(){
+    await this.getListaAtributos();
+  }
   validarDatos(): boolean{
 
     if(this.nombreAtributo==""){
@@ -83,13 +102,28 @@ export class CrearAtributoComponent implements OnInit {
 
   existeAtributo(): boolean{
     let existe: boolean = false;
-    
+
     // Verifico si existe la empresa, primero lo paso todo a minuscula por si existe pero con mayuscula o al revés
-    if(this.atributosExistentes.find(e => e.codigoAtributo.toLowerCase() == this.codigoAtributo.toLowerCase())){
+    if(this.atributosExistentes.find(tr => tr.codigoDeAtributo.toLocaleLowerCase() === this.codigoAtributo.toLocaleLowerCase())){
       existe = true;
     }
 
     return existe;
+  }
+  
+  mostrarPopUpAtributo(){
+    this.mostrarPopUp = true;
+  }
+
+  cerrarPopUpAtributo(){
+    this.mostrarPopUp = false;
+  }
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
 
   }
 }

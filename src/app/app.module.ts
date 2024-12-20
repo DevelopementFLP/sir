@@ -55,6 +55,10 @@ import { StockProductoComponent } from './13_SIR_Compras.Reportes/pages/altas/st
 import { CrearUsuarioComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-usuario/crear-usuario.component';
 import { CrearPrioridadComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-prioridad/crear-prioridad.component';
 import { CrearEstadoSolicitudComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-estado-solicitud/crear-estado-solicitud.component';
+import { CrearRolComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-rol/crear-rol.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 registerLocaleData(localeEs);
 
@@ -81,7 +85,8 @@ registerLocaleData(localeEs);
     StockProductoComponent,
     CrearUsuarioComponent,
     CrearPrioridadComponent,
-    CrearEstadoSolicitudComponent
+    CrearEstadoSolicitudComponent,
+    CrearRolComponent
   ],
   imports: [
     AppRoutingModule,
@@ -107,7 +112,10 @@ registerLocaleData(localeEs);
     DispositivoModule,
     FaenaModule,
     ProduccionFichaTecnicaModule,
-    ProduccionControlDeCalidadModule
+    ProduccionControlDeCalidadModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatExpansionModule
     
   ],
   providers: [

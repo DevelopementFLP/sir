@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Almacen } from '../../../interfaces/Almacen.interface';
+import { GestionComprasServiceTsService } from 'src/app/13_SIR_Compras.Reportes/services/gestion-compras.service.ts.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-crear-almacen',
@@ -11,24 +13,51 @@ export class CrearAlmacenComponent implements OnInit{
   nombre: string = "";
   descripcion: string ="";
   almacenExistente: Almacen[] = [];
-  creaAlmacen: Almacen[] = [];
+  creaAlmacen!: Almacen;
+  mostrarPopUp: boolean = false;
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
   
-    this.almacenExistente.push({
-      idAlmacen: 0,
-      nombre: 'almacen1',
-      descripcion: 'almacen'
-    })
-    this.almacenExistente.push({
-      idAlmacen: 0,
-      nombre: 'almacen2',
-      descripcion: 'almacen'
-    })
+    await this.iniciar();
     
   }
 
-  crearAlmacen(){
+  constructor (private comprasService: GestionComprasServiceTsService) {}
+
+
+  async iniciar(){
+   await this.getListaDeAlmacenes();
+  }
+
+  async borrarFilaDelete(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarAlmacen(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  async getListaDeAlmacenes(): Promise<void> {
+    try {
+      this.almacenExistente = await lastValueFrom(this.comprasService.getListaDeAlmacenesAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async crearAlmacenInsert(almacen: Almacen): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.crearAlmacen(almacen));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+
+
+  async crearAlmacen(){
 
     if(this.validarDatos()==false)
       return;
@@ -36,15 +65,18 @@ export class CrearAlmacenComponent implements OnInit{
     if(this.existeAlmacen()==true)
       return;
 
-    this.creaAlmacen = [];
-    this.creaAlmacen.push({
+    this.creaAlmacen = {
       idAlmacen: 0,
       nombre: this.nombre,
       descripcion: this.descripcion
-    })
+    }
 
-    // Inserto array en bd
-    console.log(this.creaAlmacen);
+    await this.crearAlmacenInsert(this.creaAlmacen);
+    await this.iniciar();
+
+    this.nombre = "";
+    this.descripcion = ""
+    this.mostrarPopUp = false;
   }
 
   validarDatos(): boolean{
@@ -69,5 +101,22 @@ export class CrearAlmacenComponent implements OnInit{
       return true;
     }
     return false;
+  }
+
+  mostrarPopUpAlmacen(){
+    this.mostrarPopUp = true;
+  }
+
+  cerrarPopUpAlmacen(){
+    this.mostrarPopUp = false;
+  }
+
+
+  async borrarFila(id: number){
+
+    await this.borrarFilaDelete(id);
+    
+    await this.iniciar();
+
   }
 }

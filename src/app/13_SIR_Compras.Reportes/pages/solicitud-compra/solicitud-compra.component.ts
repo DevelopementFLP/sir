@@ -4,6 +4,16 @@ import { Producto } from '../../interfaces/Producto.interface';
 import { Unidad } from '../../interfaces/Unidad.interface';
 import { Prioridad } from '../../interfaces/Prioridad.interface';
 import { LineadeSolicitud } from '../../interfaces/LineaDeSolicitud.interface';
+import { OrdenDeSolicitud } from '../../interfaces/OrdenDeSolicitud.interface';
+import { Usuario } from '../../interfaces/Usuario.interface';
+import { GestionComprasServiceTsService } from '../../services/gestion-compras.service.ts.service';
+import { EstadoDeSolicitud } from '../../interfaces/EstadoDeSolicitud.interface';
+import { lastValueFrom } from 'rxjs';
+import { CentroDeCosto } from '../../interfaces/CentroDeCosto.interface';
+import { Empresa } from '../../interfaces/Empresa.interface';
+import { Departamento } from '../../interfaces/Departamento.interface';
+import { SessionManagerService } from 'src/app/shared/services/session-manager.service';
+import { ListaUsuariosSir } from '../../interfaces/ListaUsuariosSir.interface';
 
 
 @Component({
@@ -14,7 +24,7 @@ import { LineadeSolicitud } from '../../interfaces/LineaDeSolicitud.interface';
 export class SolicitudCompraComponent implements OnInit{
   
   mostrarProductos: boolean = false;
-  idArea!: number;
+  idArea!: number | undefined;
   areaDestino: AreaDestino[] = [];
   idProducto!: number;
   idOrden!: number;
@@ -22,122 +32,259 @@ export class SolicitudCompraComponent implements OnInit{
   nombreProducto!: string;
   nombreUnidad!: string;
   codigoProducto!: string;
-
+  idOrdenCreada!: number;
+  ordenCompraExistente: OrdenDeSolicitud[] = [];
+  solicitudExistente: LineadeSolicitud[] = [];
+  solicitudExistenteFiltrada: LineadeSolicitud[] = [];
   productosActivos: Producto[] = [];
   unidadesActivas: Unidad[] = [];
+  departamentosExistentes: Departamento[] = [];
   prioridadesActivas: Prioridad[] = [];
+  centroDeCostos: CentroDeCosto[] = [];
+  centroDeCostosFiltrados: CentroDeCosto[] = [];
+  idCentroDeCosto!: number;
+  crearLineaDeSolicitud: LineadeSolicitud[] = [];
+  lineaDeSolicitudParaCrear: LineadeSolicitud[] = [];
+  fechaNecesidad!: Date;
+  crearOrdenDeSolicitud!: OrdenDeSolicitud;
+  usuariosExistente: Usuario[] = [];
+  usuariosANotificar: Usuario[] = [];
+  idUsuarioANotificar!: number;
+  idUsuarioSolicitante: number = 4;
+  idEstadoSolicitud: number = 2;
+  estadoDeSolicitud: EstadoDeSolicitud[] = [];
   idPrioridad!: number;
-  crearSolicitud: LineadeSolicitud[] =[];
+  empresas: Empresa[] = [];
+  idEmpresa!: number;
   tablamostrar:boolean = false;
+  mostrarTodasFilas: boolean = true;
+  mostrarPopUp: boolean = false;
+  mostrarUsuarios: boolean = false;
+  idOrdenDeSolicitudDesplegar: number=-1;
+  usuarioActualSir = this.sessionManagerService.parseUsuario((this.sessionManagerService.getCurrentUser()!))
+  listaUsuariosSir: ListaUsuariosSir[] =[];
+  comentario:string ="";
+
+
+  minFecha: string = "";
   
-  ngOnInit(): void {
- 
+  async ngOnInit(): Promise<void> {      
+      await this.iniciar();
+      console.log(this.ordenCompraExistente);
+      console.log(this.empresas);
+      console.log(this.productosActivos);
+  }
 
-    // Cargar al inicio desde la bd 
-      // this.unidadesActivas
-      // this.areaDestino
-      // this.productosActivos
-      // this.prioridadesActivas
+  constructor (
+    private comprasService: GestionComprasServiceTsService,
+    private sessionManagerService: SessionManagerService) {}
+  
+    async getListaUsuariosSir(): Promise<void> {
+      try {
+        this.listaUsuariosSir = await lastValueFrom(this.comprasService.getListaDeUsuariosSirAsync());
+      } catch(error) {
+        console.error(error)
+      }
+    }
 
-    this.unidadesActivas.push({
-      idUnidad: 1,
-      codigo: '01',
-      nombre: 'Unidad 1'
-    })
+  async getListaDeUnidades(): Promise<void> {
+    try {
+      this.unidadesActivas = await lastValueFrom(this.comprasService.getListaDeUnidadProductoAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDeAreaDestino(): Promise<void> {
+    try {
+      this.areaDestino = await lastValueFrom(this.comprasService.getListaDeAreaDestinosasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDeProductos(): Promise<void> {
+    try {
+      this.productosActivos = await lastValueFrom(this.comprasService.getListaDeProductosAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDePrioridades(): Promise<void> {
+    try {
+      this.prioridadesActivas = await lastValueFrom(this.comprasService.getListaDePrioridadesDeOrdenesasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDeEstadosDeSolicitudes(): Promise<void> {
+    try {
+      this.estadoDeSolicitud = await lastValueFrom(this.comprasService.getListaDeEstadoDeSolicitudesasync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
+  async getListaDeUsuarios(): Promise<void> {
+    try {
+      this.usuariosExistente = await lastValueFrom(this.comprasService.getListaDeUsuariosAsync());
+    } catch(error) {
+      console.error(error)
+    }
+  }
 
-    this.unidadesActivas.push({
-      idUnidad: 2,
-      codigo: '02',
-      nombre: 'Unidad 2'
-    })
-    this.unidadesActivas.push({
-      idUnidad: 3,
-      codigo: '03',
-      nombre: 'Unidad 3'
-    })
-    this.unidadesActivas.push({
-      idUnidad: 4,
-      codigo: '04',
-      nombre: 'Unidad 4'
-    })
+  async crearOrdenSolicitudInsert(orden: OrdenDeSolicitud): Promise<void> {
+    try {
+      const ordenCreada = await lastValueFrom(this.comprasService.crearOrdenDeSolicitud(orden));
+      this.idOrdenCreada = -1;
+      this.idOrdenCreada = ordenCreada.idOrdenDeSolicitud;
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  async crearLineaDeSolicitudInsert(orden: LineadeSolicitud[]): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.CrearLineaDeSolicitud(orden));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
-    this.areaDestino.push({
-      idArea: 0,
-      nombre: 'Mantenimiento'
-    })
+  async iniciar(): Promise<void> {
+    const [
+      listaUnidades, 
+      listaAreaDestino, 
+      listaProductos, 
+      listaPrioridades, 
+      listaUsuarios,
+      listaEstados,
+      centroDeCosto,
+      empresas,
+      listaOrdenDeSolicitud,
+      listaLineaDeSolicitud,
+      listaDeDepartamentos,
+      listaDeUsuariosSir
+    ] = await Promise.all([
+      await lastValueFrom(this.comprasService.getListaDeUnidadProductoAsync()),
+      await lastValueFrom(this.comprasService.getListaDeAreaDestinosasync()),
+      await lastValueFrom(this.comprasService.getListaDeProductosAsync()),
+      await lastValueFrom(this.comprasService.getListaDePrioridadesDeOrdenesasync()),
+      await lastValueFrom(this.comprasService.getListaDeUsuariosAsync()),
+      await lastValueFrom(this.comprasService.getListaDeEstadoDeSolicitudesasync()),
+      await lastValueFrom(this.comprasService.getListaDeCentroDeCostosasync()),
+      await lastValueFrom(this.comprasService.getListaDeEmpresasAsync()),
+      await lastValueFrom(this.comprasService.getListaDeOrdenesDeSolicitudasync()),
+      await lastValueFrom(this.comprasService.getListaDeLineasSolicitudasync()),
+      await lastValueFrom(this.comprasService.getListaDeDepartamentosAsync()),
+      await lastValueFrom(this.comprasService.getListaDeUsuariosSirAsync())
+    ]);
 
-    this.areaDestino.push({
-      idArea: 1,
-      nombre: 'Control calidad'
-    })
-   
+    try {
+      this.unidadesActivas = listaUnidades;
+    } catch (error) {
+      console.error(error)
+    }
 
-    this.productosActivos.push({
-      idProducto: 0,
-      codigoProducto: '111',
-      codigoProductoAlternativo: '123',
-      codigoProductoAlternativo2: '123',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'Eléctrodo',
-      idUnidad: 1,
-      descripcion: ''
-    })
-    this.productosActivos.push({
-      idProducto: 1,
-      codigoProducto: '222',
-      codigoProductoAlternativo: '123',
-      codigoProductoAlternativo2: '123',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'Eléctrodo22',
-      idUnidad: 4,
-      descripcion: ''
-    })
-    this.productosActivos.push({
-      idProducto: 2,
-      codigoProducto: '333',
-      codigoProductoAlternativo: '123',
-      codigoProductoAlternativo2: '123',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'Eléctrodo2',
-      idUnidad: 2,
-      descripcion: ''
-    })
-    this.productosActivos.push({
-      idProducto: 3,
-      codigoProducto: '444',
-      codigoProductoAlternativo: '123',
-      codigoProductoAlternativo2: '123',
-      fechaCreacion: new Date(),
-      fechaActualizacion: new Date(),
-      nombre: 'Eléctrodo3',
-      idUnidad: 3,
-      descripcion: ''
-    })
+    try {
+      this.areaDestino = listaAreaDestino;
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      this.productosActivos = listaProductos;
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      this.prioridadesActivas = listaPrioridades;
+    } catch (error) {
+      console.error(error)
+    }
+
+    try {
+      this.usuariosExistente = listaUsuarios;
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      this.estadoDeSolicitud = listaEstados;
+    } catch (error) {
+      console.error(error)
+    }
+
+    
+    try {
+      this.centroDeCostos = centroDeCosto;
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      this.empresas = empresas;
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      this.ordenCompraExistente = listaOrdenDeSolicitud;
+      this.ordenCompraExistente = this.ordenCompraExistente.filter(e => e.idUsuarioSolicitante == this.idUsuarioSolicitante )
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      this.solicitudExistente = listaLineaDeSolicitud;
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      this.departamentosExistentes = listaDeDepartamentos;
+    } catch (error) {
+      console.error(error)
+    }
+    try { 
+      this.listaUsuariosSir = listaDeUsuariosSir;
+    } catch (error) {
+      console.error(error)
+    }
+    this.setMinFecha();
+  }
 
 
-    this.prioridadesActivas.push({
-      idPrioridad: 0,
-      nombre: 'Baja'
-    })
-    this.prioridadesActivas.push({
-      idPrioridad: 1,
-      nombre: 'Media'
-    })
-    this.prioridadesActivas.push({
-      idPrioridad: 2,
-      nombre: 'Alta'
-    })
+  async crearOrdenSolicitud(){
 
-    console.log(this.crearSolicitud);
+    // Creo orden de solicitud
+    this.crearOrdenDeSolicitud = {
+      fechaDecreacion: new Date(),
+      idCentroDeCosto: Number(this.idCentroDeCosto),
+      idEmpresa: Number(this.idEmpresa),
+      idEstadoDeSolicitud: Number(this.idEstadoSolicitud),
+      idOrdenDeSolicitud:0,
+      idPriodidadDeOrden: Number(this.idPrioridad),
+      idUsuarioSolicitante:Number(this.idUsuarioSolicitante),
+      fechaDeNecesidad: this.fechaNecesidad,
+      idUsuarioParaNotificar: Number(this.idUsuarioANotificar)
+    }
+    this.idOrdenCreada = -1;
+    await this.crearOrdenSolicitudInsert(this.crearOrdenDeSolicitud)
+    if(this.idOrdenCreada == -1)
+      return alert("No se pudo crear la orden");
+    
+    this.lineaDeSolicitudParaCrear.forEach(c => {
+      c.idOrdenDeSolicitud = this.idOrdenCreada;
+    });
+
+    // Crear linea de solicitud 
+  await this.crearLineaDeSolicitudInsert(this.lineaDeSolicitudParaCrear);
+    this.idProducto = 0;
+    this.nombreProducto = "";
+    this.idArea = undefined;
+    this.cantidad = 0;
+    this.idUsuarioANotificar =-1;
+    this.iniciar()
+    this.mostrarPopUp = false;
 
   }
 
-  crearOrdenSolicitud(){
-
-    console.log(this.idArea);
+  agregarProducto(){
     if(this.validarDatos() == false){
       return;
     }
@@ -145,44 +292,31 @@ export class SolicitudCompraComponent implements OnInit{
     if(this.existeProducto() == true){
       return;
     }
+   
+   this.lineaDeSolicitudParaCrear.push({
 
-    this.crearSolicitud.push({
-      idLineaDeSolicitud: 0,
-      idOrden: 0,
-      idProducto: this.idProducto,
-      idArea: Number(this.idArea),
-      cantidad: this.cantidad
-    })
+     idLineaDeSolicitud: 0,
+     idOrdenDeSolicitud: 0,
+     idProducto: this.idProducto,
+     idAreaDestino: Number(this.idArea),
+     cantidad: this.cantidad,
+     comentario: this.comentario
+   })
+
+this.idProducto = 0;
+this.nombreProducto = "";
+this.idArea = undefined;
+this.cantidad = 0;
+
+console.log(this.idEmpresa);
+
   }
 
-
-
-  getNombreUnidad(idUnidad: number){
-
-    const unidades = this.unidadesActivas.find(p => p.idUnidad === idUnidad);
-    return unidades?.nombre.toString() ;
-  }
   getUnidadDeProducto(idProducto: number): number{
 
     const producto = this.productosActivos.find(p => p.idProducto === idProducto);
+    console.log(producto?.idUnidad);
     return producto?.idUnidad || -1;
-  }
-
-  getNombreProducto(idProducto: number){
-
-    const producto = this.productosActivos.find(p => p.idProducto === idProducto);
-    return producto?.nombre;
-  }
-  getNombreAreaDestino(idArea: number){
-
-    console.log(idArea);
-    const area = this.areaDestino.find(p => p.idArea === idArea);
-    return area?.nombre;
-  }
-
-  getCodigoProductoDeId(idProducto: number){
-    const codigo = this.productosActivos.find(p => p.idProducto === idProducto);
-    return codigo?.codigoProducto;
   }
   
   seleccionarProducto(idProducto:number,nombre:string, codigoProducto:string){
@@ -205,8 +339,27 @@ export class SolicitudCompraComponent implements OnInit{
 
 
   validarDatos(): boolean{
+
+    console.log(this.idEmpresa);
+    // if(this.idEmpresa)
+
+    if(this.idEmpresa == undefined){
+      alert("Seleccione la empresa");
+      return false;
+    }
+
+    if(this.idCentroDeCosto == undefined){
+      alert("Seleccione el centro de costo");
+      return false;
+    }
+
     if(this.idPrioridad == undefined){
       alert("Seleccione la prioridad de la solicitud");
+      return false;
+    }
+
+    if(this.fechaNecesidad == undefined){
+      alert("Ingrese la fecha de necesidad");
       return false;
     }
 
@@ -224,14 +377,16 @@ export class SolicitudCompraComponent implements OnInit{
       alert("Ingrese el área de destino");
       return false
     }
+
+
+
     return true;
   }
 
   existeProducto(): boolean{
     let existe: boolean = false;
     
-    // Verifico si existe la empresa, primero lo paso todo a minuscula por si existe pero con mayuscula o al revés
-    if(this.crearSolicitud.find(e => e.idProducto == this.idProducto)){
+    if(this.lineaDeSolicitudParaCrear.find(e => e.idProducto == this.idProducto)){
       existe = true;
       alert("El producto ingresado ya está en la lista");
       return true;
@@ -240,5 +395,88 @@ export class SolicitudCompraComponent implements OnInit{
     return false;
   }
 
+  mostrarPopUpSolicitudCompra(){
+    this.mostrarPopUp = true;
+  }
 
+  cerrarPopUpSolicitudCompra(){
+    this.mostrarPopUp = false;
+  }
+
+  desplegarFila(id: number) {
+    if(this.idOrdenDeSolicitudDesplegar == id){
+      this.idOrdenDeSolicitudDesplegar = -1;
+      this.mostrarTodasFilas = true;
+    }else{
+      this.idOrdenDeSolicitudDesplegar = id;
+      this.mostrarTodasFilas = false;
+    }
+    this.solicitudExistenteFiltrada = this.solicitudExistente;
+    this.solicitudExistenteFiltrada = this.solicitudExistenteFiltrada.filter(se => se.idOrdenDeSolicitud == id);
+  }
+
+  contarLineas(id:number): number{
+
+    const ordenesFiltradas = this.solicitudExistente;
+    console.log(ordenesFiltradas.filter(se => se.idOrdenDeSolicitud == id))
+    const cantidadLineas = ordenesFiltradas.filter(se => se.idOrdenDeSolicitud == id);
+    return cantidadLineas.length;
+  }
+
+
+  getNombreDesdeId(array: any[],id: number,nombrePropiedadId:string,nombrePropiedadNombre:string): string {
+    return this.comprasService.getNombreDesdeId(id, array, nombrePropiedadId, nombrePropiedadNombre);
+  }
+
+
+  CalcularResumen(idEstado:number):number{
+
+    const ordenResumen = this.ordenCompraExistente.filter(p => p.idEstadoDeSolicitud == idEstado);
+    console.log(ordenResumen);
+    return ordenResumen.length | 0;
+
+  }
+
+  setearCentroDeCosto(idEmpresa: number){
+    this.centroDeCostosFiltrados = this.centroDeCostos;
+    this.centroDeCostosFiltrados = this.centroDeCostosFiltrados.filter(c => c.idEmpresa == idEmpresa);
+    console.log(this.fechaNecesidad);
+  }
+
+  setMinFecha() {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = ('0' + (hoy.getMonth() + 1)).slice(-2); // Meses de 01 a 12
+    const dia = ('0' + hoy.getDate()).slice(-2); // Días de 01 a 31
+
+    // Construir la fecha mínima en formato YYYY-MM-DD
+    this.minFecha = `${anio}-${mes}-${dia}`;
+  }
+
+  seleccionarUsuario(idUsuario: number,idDepartamento:number,idRol:number,idUsuarioSir: number,correoElectronico: string){
+
+    this.usuariosANotificar.push({
+      idUsuarioSolicitante: idUsuario,
+      idDepartamento: idDepartamento,
+      idRol: idRol,
+      idUsuarioSir: idUsuarioSir,
+      correoElectronico: correoElectronico
+    })
+
+    this.idUsuarioANotificar = idUsuario;
+    console.log(this.usuariosANotificar);
+    
+    this.mostrarUsuarios = false;
+  }
+
+
+  eliminarUsuarioANotificar(idUsuario:number){
+
+    this.usuariosANotificar = this.usuariosANotificar.filter(p => p.idUsuarioSolicitante!=idUsuario);
+  }
+
+  mostrarTodas(){
+    this.mostrarTodasFilas = true;
+    this.idOrdenDeSolicitudDesplegar = -1;
+  }
 }

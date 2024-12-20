@@ -1,4 +1,4 @@
 export interface Prioridad{
-    idPrioridad: number;
+    idPriodidadDeOrden: number;
     nombre: string;
 }
