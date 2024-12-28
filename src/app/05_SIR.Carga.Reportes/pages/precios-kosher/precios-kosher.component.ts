@@ -13,6 +13,7 @@ import { ConfPreciosDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces
 import { ContainerDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/ContainerDTO.interface';
 import { DatoCargaExpo } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DatoCargaExpo.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { KosherCommonService } from 'src/app/04_SIR.Exportaciones.Reportes/services/kosher-common.service';
 import { PesoBrutoContenedor } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/PesoBrutoContenedor.interface';
 import { PesoNetoContenedorComponent } from 'src/app/04_SIR.Exportaciones.Reportes/components/peso-neto-contenedor/peso-neto-contenedor.component';
 import { PrecioFaltante } from '../../interfaces/PrecioFaltante.interface';
@@ -29,7 +30,9 @@ export class PreciosKosherComponent implements OnInit {
   datosCarga: DatoCargaExpo[] = [];
   datosContenedores: ContainerDTO[] = [];
   fechaDesde!: Date;
+  fechaHasta!: Date;
   fechaDesdeStr!: string;
+  fechaHastaStr!: string;
   fechasReporte: string[] = [];
   hoy: Date = new Date();
   hoyStr: string = this.commonService.formatearFecha(this.hoy);
@@ -49,6 +52,8 @@ export class PreciosKosherComponent implements OnInit {
   preciosFaltantes: PrecioFaltante[] = [];
   selectedCargas: number[] = [];
 
+  intervaloFechasCarga: {inicio: string, fin: string}[] = [];
+
   constructor(
     private ajusteService: AjustePesoNetoService,
     private cargaService: CargaKosherService,
@@ -56,6 +61,7 @@ export class PreciosKosherComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private dialogService: DialogService,
     private messageService: MessageService,
+    private kosherCommonService: KosherCommonService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -68,14 +74,26 @@ export class PreciosKosherComponent implements OnInit {
 
   private resetearFechas(): void {
     this.fechaDesde = new Date();
+    this.fechaHasta = new Date();
     this.fechaDesdeStr = this.commonService.formatearFecha(this.fechaDesde);
+    this.fechaHastaStr = this.commonService.formatearFecha(this.fechaHasta);
     this.fechasReporte = [];
   }
 
   protected async buscarDatos(): Promise<void> {
     this.resetearDatos();
-    this.fechaDesde = this.ajustarFecha(new Date(this.fechaDesdeStr));
-    this.datosCarga = await lastValueFrom(this.cargaService.getProductosCarga(this.fechaDesde));
+
+    this.intervaloFechasCarga = this.kosherCommonService.obtenerIntervalosFechasCarga(this.fechaDesdeStr, this.fechaHastaStr);
+    
+    for(let i = 0; i < this.intervaloFechasCarga.length; i++) {
+      const intervalo = this.intervaloFechasCarga[i];
+      const fDesde = this.ajustarFecha(new Date(intervalo.inicio)); 
+      const fHasta = this.ajustarFecha(new Date(intervalo.fin));
+      const datos = await lastValueFrom(this.cargaService.getProductosCargaPorRangoFechas(fDesde, fHasta));
+      
+      this.datosCarga = this.datosCarga.concat(datos);
+    }    
+    
     this.obtenerIdsCargaYNombresContenedores();
   }
 
@@ -86,12 +104,13 @@ export class PreciosKosherComponent implements OnInit {
       container: this.datosCarga.find(dc => dc.id_Carga === id)?.container || '',
     })).filter(c => c.container).sort((a, b) => a.container.localeCompare(b.container));
   }
-
+ 
   protected hacerReporte(): void {
     this.datosCargaReporte = this.filtrarDatosPorContenedoresSeleccionados();
 
     this.datosCargaReporte.forEach(d => {
       d.productiondate = this.commonService.formatearFecha(new Date(d.productiondate));
+      d.expiredate = this.commonService.formatearFecha(new Date(d.expiredate));
     });
 
     if (this.datosCargaReporte.length > 0) {
@@ -247,9 +266,9 @@ export class PreciosKosherComponent implements OnInit {
     this.listasPrecios = await lastValueFrom(this.cargaService.getPreciosPorFecha(primeraFecha, fechas[fechas.length - 1]));
   }
 
-  private ajustarFecha(fecha: Date): Date { return new Date(fecha.setDate(fecha.getDate() + 1));}
+  private ajustarFecha(fecha: Date): Date { return new Date(fecha.setDate(fecha.getDate()));}
   protected clear(): void { }
-  protected onCambioFecha(): void { this.nombreReporte = `Packing List ${this.fechaDesdeStr}` };
+  protected onCambioFecha(): void { this.nombreReporte = `Packing List ${this.fechaDesdeStr} - ${this.fechaHastaStr}` };
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;

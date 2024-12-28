@@ -1201,7 +1201,6 @@ export class PrintService {
     const fuenteSubTitulos = { bold: true, size: 10 };
     const fuenteContainer = { bold: true, size: 10, color: { argb: 'FF2E86C1'} };
     const fuenteShippingMark = { bold: true, size: 10, color: { argb: 'FFE74C3C'} };
-    const fuenteSubTotal = { bold: true, size: 12, color: { argb: 'FF2E86C1'} };
     const fuentePProm = { bold: true, color: {argb: 'FFCD6155'} };
     const fuenteTotalGeneral = { bold: true, size: 12 };
     const fuenteMerca = { bold: true, size: 10, color: {argb: 'FFCD6155'} };
@@ -1221,14 +1220,13 @@ export class PrintService {
     const hojaDetalle = libro.addWorksheet(tituloDetalle);
     this.setLogo(libro, hojaDetalle);
     this.setTitle(libro, hojaDetalle, tituloDetalle, 'right', 16);
-    const embarqueConfig: EmbarqueConfig = dataToPrint.data.config as EmbarqueConfig;
+    const embarqueConfig: EmbarqueConfig | undefined = dataToPrint.data.config as EmbarqueConfig | undefined;
    
     hojaDetalle.getCell("B6").value = "DETALLE DE EMBARQUE ISRAEL - FRIGORÍFICO LAS PIEDRAS S.A.";
     hojaDetalle.getCell("B6").font = fuenteTitulo;
     
     hojaDetalle.getCell("O6").value = "SHIPPING MARK:";
     hojaDetalle.getCell("O6").font = fuenteShippingMark; 
-    hojaDetalle.getCell("O7").value = embarqueConfig.shippingMark;
     hojaDetalle.getCell("B8").value = "ATTN:";
     hojaDetalle.getCell("B8").font = fuenteSubTitulos;
     hojaDetalle.getCell("B9").value = "VENTA:";
@@ -1243,13 +1241,17 @@ export class PrintService {
     hojaDetalle.getCell("B13").font = fuenteSubTitulos;
     hojaDetalle.getCell("B14").value = "FECHA B/L:";
     hojaDetalle.getCell("B14").font = fuenteSubTitulos;
-    hojaDetalle.getCell("C8").value = embarqueConfig.attn;
-    hojaDetalle.getCell("C9").value = embarqueConfig.numeroVenta.toString();
     hojaDetalle.getCell("C10").value = "NECHEMIA LACHOVITZ";
-    hojaDetalle.getCell("C11").value = embarqueConfig.barco;
-    hojaDetalle.getCell("C12").value = embarqueConfig.factura;
-    hojaDetalle.getCell("C13").value = embarqueConfig.carpeta;
-    hojaDetalle.getCell("C14").value = formatDate(embarqueConfig.fechaBL, "dd/MM/yyyy", "es-UY");
+    
+    if(embarqueConfig != undefined) {
+      hojaDetalle.getCell("O7").value = embarqueConfig.shippingMark;
+      hojaDetalle.getCell("C8").value = embarqueConfig.attn;
+      hojaDetalle.getCell("C9").value = embarqueConfig.numeroVenta.toString();
+      hojaDetalle.getCell("C11").value = embarqueConfig.barco;
+      hojaDetalle.getCell("C12").value = embarqueConfig.factura;
+      hojaDetalle.getCell("C13").value = embarqueConfig.carpeta;
+      hojaDetalle.getCell("C14").value = formatDate(embarqueConfig.fechaBL, "dd/MM/yyyy", "es-UY");
+    }
 
     hojaDetalle.getCell("J8").value = "CONTAINER:";
     hojaDetalle.getCell("J8").font = fuenteSubTitulos;
@@ -2641,14 +2643,12 @@ export class PrintService {
     const fuenteTitulo:             Partial<Font>         = { bold: true, size: 10 };
     const fuenteSubtotal:           Partial<Font>         = { bold: true, size: 14, color: {argb: 'FFFFFFFF'} };
     const alineacionCentro:         Partial<Alignment>    = { vertical: 'middle', horizontal: 'center' };
-    const alineacionDerecha:        Partial<Alignment>    = { vertical: 'middle', horizontal: 'right' };
-    const alineacionIzquierda:      Partial<Alignment>    = { vertical: 'middle', horizontal: 'left' };
     const formatoNumeroDecimal:     string                = '#,##0.00';
     const formatoNumeroMillar:      string                = '#,##0';
 
     const fondoTituloX: Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFCCFFCC' }, bgColor: { argb: '00000000' }};
     const fondoTotalX:  Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0070C0' }, bgColor: { argb: '00000000' }};
-    
+
     // XFCL
     {
       const titulo: string    = 'X FCL';
@@ -2664,7 +2664,6 @@ export class PrintService {
       }
       fila--;
       hoja.getRow(fila++).getCell(columna + 1).value = `${cantidadContenedores}`;
-
 
       xfclData.forEach((xfcl, i) => {
         this.configurarCeldaTitulo(hoja, fila, columna++, `${i + 1}`, alineacionCentro, fuenteTitulo, fondoTituloX); 
@@ -2685,11 +2684,11 @@ export class PrintService {
             { columna: columna + 5, valor: reg.codigoKosher, formato: null },
             { columna: columna + 6, valor: reg.markKosher, formato: null },
             { columna: columna + 7, valor: reg.cantidadCajas, formato: formatoNumeroMillar },
-            { columna: columna + 8, valor: reg.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
-            { columna: columna + 9, valor: reg.pesoBruto.toFixed(2), formato: formatoNumeroDecimal },
-            { columna: columna + 10, valor: reg.fechaProduccion, formato: null },
+            { columna: columna + 8, valor: reg.pesoNeto, formato: formatoNumeroDecimal },
+            { columna: columna + 9, valor: reg.pesoBruto, formato: formatoNumeroDecimal },
+            { columna: columna + 10, valor: this.formatearFecha(reg.fechaProduccion), formato: null },
             { columna: columna + 11, valor: this.formatearFecha(reg.fechaExpiracion), formato: null },
-            { columna: columna + 12, valor: reg.precio.toFixed(2), formato: formatoNumeroDecimal }
+            { columna: columna + 12, valor: reg.precio / 1000 }
           ];
         
           celdas.forEach(({ columna, valor, formato }) => {
@@ -2706,8 +2705,8 @@ export class PrintService {
         const configuracionesCeldas = [
           { columna: 6, valor: xfcl.cantidadPallets, formato: formatoNumeroMillar },
           { columna: 11, valor: xfcl.cantidadCajas, formato: formatoNumeroMillar },
-          { columna: 12, valor: xfcl.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
-          { columna: 13, valor: xfcl.pesoBruto.toFixed(2), formato: formatoNumeroDecimal }
+          { columna: 12, valor: xfcl.pesoNeto, formato: formatoNumeroDecimal },
+          { columna: 13, valor: xfcl.pesoBruto, formato: formatoNumeroDecimal }
         ];
         
         configuracionesCeldas.forEach(({ columna, valor, formato }) => {
@@ -2728,8 +2727,8 @@ export class PrintService {
       const celdas = [
         { columna: 6, valor: totalGeneral.cantidadPallets, formato: formatoNumeroMillar },
         { columna: 11, valor: totalGeneral.cantidadCajas, formato: formatoNumeroMillar },
-        { columna: 12, valor: totalGeneral.pesoNeto.toFixed(2), formato: formatoNumeroDecimal },
-        { columna: 13, valor: totalGeneral.pesoBruto.toFixed(2), formato: formatoNumeroDecimal }
+        { columna: 12, valor: totalGeneral.pesoNeto, formato: formatoNumeroDecimal },
+        { columna: 13, valor: totalGeneral.pesoBruto, formato: formatoNumeroDecimal }
       ];
       
       celdas.forEach(({ columna, valor, formato }) => {
@@ -2788,12 +2787,14 @@ export class PrintService {
             { col: columna + 7, val: reg.cantidadCajas },
             { col: columna + 8, val: reg.pesoNeto },
             { col: columna + 9, val: reg.pesoBruto },
-            { col: columna + 10, val: reg.fechaProduccion },
+            { col: columna + 10, val: this.formatearFecha(reg.fechaProduccion) },
             { col: columna + 11, val: this.formatearFecha(reg.fechaExpiracion) },
-            { col: columna + 12, val: reg.precio }
+            { col: columna + 12, val: reg.precio / 1000 }
           ];
       
           valores.forEach(({ col, val }) => this.configurarCelda(hoja, fila, col, val, alineacionCentro));
+          hoja.getRow(fila).getCell(12).numFmt = formatoNumeroDecimal;
+          hoja.getRow(fila).getCell(13).numFmt = formatoNumeroDecimal;
           fila++;
         });
       
@@ -2803,12 +2804,16 @@ export class PrintService {
           { col: 11, val: xcut.cantidadCajas },
           { col: 12, val: xcut.pesoNeto },
           { col: 13, val: xcut.pesoBruto },
-          { col: 16, val: xcut.precio },
-          { col: 17, val: xcut.precio * xcut.pesoNeto }
+          { col: 16, val: xcut.precio / 1000 },
+          { col: 17, val: (xcut.precio / 1000) * xcut.pesoNeto }
         ];
       
         subtotales.forEach(({ col, val }) => this.configurarCelda(hoja, fila, col, val, alineacionCentro, fuenteSubTotalXCUT));
-      
+        hoja.getRow(fila).getCell(11).numFmt = formatoNumeroMillar;
+        hoja.getRow(fila).getCell(12).numFmt = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(13).numFmt = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(17).numFmt = formatoNumeroDecimal;
+
         columna = 4;
         fila += 2;
       });
@@ -2819,6 +2824,11 @@ export class PrintService {
       this.configurarCeldaTitulo(hoja, fila, 12, totalGeneral.pesoNeto, alineacionCentro, fuenteSubtotal, fondoTotalX);
       this.configurarCeldaTitulo(hoja, fila, 13, totalGeneral.pesoBruto, alineacionCentro, fuenteSubtotal, fondoTotalX);
       this.configurarCeldaTitulo(hoja, fila, 17, this.cargaService.sumarPreciosPorPeso(dataXCUT), alineacionCentro, fuenteSubtotal, fondoTotalX);
+
+      hoja.getRow(fila).getCell(11).numFmt = formatoNumeroMillar;
+      hoja.getRow(fila).getCell(12).numFmt = formatoNumeroDecimal;
+      hoja.getRow(fila).getCell(13).numFmt = formatoNumeroDecimal;
+      hoja.getRow(fila).getCell(17).numFmt = formatoNumeroDecimal;
 
       const columnWidths = [null, null, 15, 10, 20, 10, 12, 12, 6, 8, 15, 15, 15, 15, 15, 15, 10, 15];
       columnWidths.forEach((width, index) => {
@@ -2857,10 +2867,11 @@ export class PrintService {
         this.configurarCelda(hoja, fila, columna + 5, reg.clasificacionKosher, alineacionCentro);
         this.configurarCelda(hoja, fila, columna + 6, reg.cantidadCajas, alineacionCentro);
         this.configurarCelda(hoja, fila, columna + 7, reg.pesoNeto, alineacionCentro);
-        this.configurarCelda(hoja, fila, columna + 8, reg.fechaProduccion, alineacionCentro);
+        hoja.getRow(fila).getCell(columna + 7).numFmt = formatoNumeroDecimal;
+        this.configurarCelda(hoja, fila, columna + 8, this.formatearFecha(reg.fechaProduccion), alineacionCentro);
         this.configurarCelda(hoja, fila, columna + 9, this.formatearFecha(reg.fechaExpiracion), alineacionCentro);
         this.configurarCelda(hoja, fila, columna + 10, reg.codigoProducto, alineacionCentro);
-        this.configurarCelda(hoja, fila, columna + 11, reg.precio, alineacionCentro);
+        this.configurarCelda(hoja, fila, columna + 11, reg.precio / 1000, alineacionCentro);
     
         fila++; 
         columna = 5;
@@ -2902,10 +2913,11 @@ export class PrintService {
         hoja.getRow(fila).getCell(columna++).value = reg.pallet;
         hoja.getRow(fila).getCell(columna++).value = reg.productcode;
         hoja.getRow(fila).getCell(columna++).value = reg.boxid;
-        hoja.getRow(fila).getCell(columna++).value = reg.netweight;
-        hoja.getRow(fila).getCell(columna++).value = reg.productiondate;
+        hoja.getRow(fila).getCell(columna).value = reg.netweight;
+        hoja.getRow(fila).getCell(columna++).numFmt = formatoNumeroDecimal;
+        hoja.getRow(fila).getCell(columna++).value = this.formatearFecha(reg.productiondate);
         hoja.getRow(fila).getCell(columna++).value = this.formatearFecha(reg.expiredate);
-        hoja.getRow(fila).getCell(columna++).value = reg.precio;
+        hoja.getRow(fila).getCell(columna++).value = reg.precio / 1000;
         fila++;
         columna = 2;
       });
@@ -2936,7 +2948,7 @@ export class PrintService {
     let f = new Date(fecha);
     return formatDate(
       f.setHours(f.getHours() + 3),
-      'yyyy-MM-dd',
+      'dd/MM/yyyy',
       'es-UY'
     );
   }

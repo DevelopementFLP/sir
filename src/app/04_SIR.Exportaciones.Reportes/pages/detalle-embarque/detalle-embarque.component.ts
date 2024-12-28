@@ -1,20 +1,22 @@
+import { BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { EmbarqueConfigComponent } from '../../components/embarque-config/embarque-config.component';
-import { EmbarqueConfig } from '../../Interfaces/EmbarqueConfig.interface';
-import { ConfirmationService } from 'primeng/api';
-import { CargaKosherService } from '../../services/carga-kosher.service';
-import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
-import { BehaviorSubject, lastValueFrom, Subscription } from 'rxjs';
+import { formatDate } from '@angular/common';
+
+import { AjustePesoNetoService } from '../../services/ajuste-peso-neto.service';
 import { CargaDTO } from '../../Interfaces/CargaDTO.interface';
-import { KosherCommonService } from '../../services/kosher-common.service';
+import { CargaKosherService } from '../../services/carga-kosher.service';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { ConfirmationService } from 'primeng/api';
 import { ConfPreciosDTO } from '../../Interfaces/ConfPreciosDTO.interface';
 import { ConfProducto } from '../../Interfaces/ConfProducto.interface';
-import { DWContainer } from '../../Interfaces/DWContainer.interface';
 import { DatoCargaExpo } from '../../Interfaces/DatoCargaExpo.interface';
+import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
+import { DWContainer } from '../../Interfaces/DWContainer.interface';
+import { EmbarqueConfig } from '../../Interfaces/EmbarqueConfig.interface';
+import { EmbarqueConfigComponent } from '../../components/embarque-config/embarque-config.component';
+import { KosherCommonService } from '../../services/kosher-common.service';
 import { PesoBrutoContenedor } from '../../Interfaces/PesoBrutoContenedor.interface';
-import { AjustePesoNetoService } from '../../services/ajuste-peso-neto.service';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-embarque',
@@ -37,71 +39,64 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
   };
 
   private datosCargaSubject = new BehaviorSubject<CargaDTO>(this.defaultCargaDTO);
-
   datosCarga$ = this.datosCargaSubject.asObservable();
 
   private confProductosSubject = new BehaviorSubject<ConfProducto[]>([]);
   confProductos$ = this.confProductosSubject.asObservable();
   
-  confProductos: ConfProducto[] = [];
+  cajasCarga: DWCajaCarga[] | undefined = [];
+  cajasCargaExpo: DatoCargaExpo[] = [];
   codigosConPrecio: ConfPreciosDTO[] = [];
-
   configPopUp!: DynamicDialogRef;
+  confProductos: ConfProducto[] = [];
+  dataContainers: DWContainer[] | undefined = [];
+  datosCargaTotal: DatoCargaExpo[] = [];
   embarqueData: EmbarqueConfig | undefined;
   errorIcon: string = "pi pi-exclamation-triangle";
-
-  cajasCarga: DWCajaCarga[] | undefined = [];
-  titulos: string[] = [];
-
-  dataContainers: DWContainer[] | undefined = [];
-  fechaExpo!: Date;
-  cajasCargaExpo: DatoCargaExpo[] = [];
-
   pesosContenedores: PesoBrutoContenedor[] = [];
+  titulos: string[] = [];
   //#endregion
   
   //#region Lifecycle Hooks
   constructor(
-    private dialog: DialogService,
+    private ajusteService: AjustePesoNetoService,
+    private cargaKosherService: CargaKosherService,
     private confirmationService: ConfirmationService,
-    private ckSrvc: CargaKosherService,
-    private kcs: KosherCommonService,
-    private ajusteService: AjustePesoNetoService
+    private commonService: CommonService,
+    private dialogService: DialogService,
+    private kosherCommonService: KosherCommonService,
   ) {}
 
   ngOnInit(): void {
-    this.titulos = this.kcs.getTitulosReporte();
+    this.titulos = this.kosherCommonService.getTitulosReporte();
   }
 
   ngOnDestroy(): void {
-    if (this.datosCargaSub) {
-      this.datosCargaSub.unsubscribe();
-    }
-    if (this.confProductosSub) {
-      this.confProductosSub.unsubscribe();
-    }
+    this.unsubscribe(this.datosCargaSub);
+    this.unsubscribe(this.confProductosSub);
+  }
+
+  private unsubscribe(subscrition: Subscription | null) {
+    if(subscrition) subscrition.unsubscribe();
   }
   //#endregion
 
   //#region Reporte
   checkHacerReporteDetalleEmbarque(): void {
-    if(this.embarqueData == undefined) {
+    if (!this.embarqueData) {
       this.mostrarMensaje(
         'No se configuraron los datos del embarque.<br/>¿Deseas continuar de todos modos?', 
         'Datos de embarque', 
         this.errorIcon,
         true,
-        "Sí, lo configuraré después",
-        "No, configurar ahora"
+        'Sí, lo configuraré después',
+        'No, configurar ahora'
       )
-      .then(async () => {
-        await this.hacerReporte();
-      })
-      .catch(() => {
-        this.mostrarConfig();
-      })
-    } else
-      this.hacerReporte();
+      .then(() => this.hacerReporte())
+      .catch(() => this.mostrarConfig());
+      return;
+    }
+    this.hacerReporte();
   }
 
   private async hacerReporte(): Promise<void> {
@@ -118,40 +113,52 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
 
     try {
       this.datosCargaSub = this.datosCarga$.subscribe(async datosCarga => {
-          if (datosCarga) {
-              try {
-                  this.cajasCarga = [];
-                  this.dataContainers = await lastValueFrom(
-                    this.ckSrvc.getDataByContainer(
-                      datosCarga.idCarga,
-                      datosCarga.contenedores
-                    )
-                  );
-                  if(this.dataContainers.length > 0) {
-                    this.fechaExpo = this.dataContainers[0].exportdate;
-                    this.cajasCargaExpo = await lastValueFrom(this.ckSrvc.getProductosCarga(this.fechaExpo));
-                  }
-                  
-                  this.cajasCargaExpo = this.filtrarContenedoresPorIdsCarga(datosCarga.idCarga);
-                  this.cajasCargaExpo = this.ajusteService.setPesoBrutoPorContenedor(this.cajasCargaExpo, this.pesosContenedores);
-                  this.cajasCarga = this.mapContenedoresCajasCarga();
-                  
-                  if (this.cajasCarga && this.cajasCarga.length > 0) {
-                      this.titulos = this.kcs.getTitulosReporte();
-                      this.confProductosSub = this.confProductos$.subscribe(async () => {
-                          this.confProductos = await lastValueFrom(this.ckSrvc.getConfProductos());
-                      });
-                  } else {
-                      handleError("No hay información de cajas asociada al identificador de carga, contenedores y precios seleccionados.");
-                  }
-              } catch (error) {
-                  handleError();
+        if (datosCarga) {
+          try {
+            this.cajasCarga = [];
+            this.dataContainers = await lastValueFrom(
+              this.cargaKosherService.getDataByContainer(
+                datosCarga.idCarga,
+                datosCarga.contenedores
+              )
+            );
+            if (this.dataContainers.length > 0) {
+              const fechas = Array.from(new Set(this.dataContainers.map(d => d.exportdate))).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+              let fechaDesdeStr: string = this.commonService.formatearFecha(fechas[0]);
+              let fechaHastaStr: string = this.commonService.formatearFecha(fechas[fechas.length - 1]);
+              let intervaloFechasCarga: { inicio: string, fin: string }[] = [];
+
+              intervaloFechasCarga = this.kosherCommonService.obtenerIntervalosFechasCarga(fechaDesdeStr, fechaHastaStr);
+
+              for (let i = 0; i < intervaloFechasCarga.length; i++) {
+                const intervalo = intervaloFechasCarga[i];
+                const fDesde = this.commonService.ajustarFecha(new Date(intervalo.inicio));
+                const fHasta = this.commonService.ajustarFecha(new Date(intervalo.fin));
+                const datos = await lastValueFrom(this.cargaKosherService.getProductosCargaPorRangoFechas(fDesde, fHasta));
+                this.cajasCargaExpo = this.cajasCargaExpo.concat(datos);
               }
+            }
+
+            this.cajasCargaExpo = this.filtrarContenedoresPorIdsCarga(datosCarga.idCarga);
+            this.cajasCargaExpo = this.ajusteService.setPesoBrutoPorContenedor(this.cajasCargaExpo, this.pesosContenedores);
+            this.cajasCarga = this.mapContenedoresCajasCarga();
+
+            if (this.cajasCarga && this.cajasCarga.length > 0) {
+              this.titulos = this.kosherCommonService.getTitulosReporte();
+              this.confProductosSub = this.confProductos$.subscribe(async () => {
+                this.confProductos = await lastValueFrom(this.cargaKosherService.getConfProductos());
+              });
+            } else {
+              handleError("No hay información de cajas asociada al identificador de carga, contenedores y precios seleccionados.");
+            }
+          } catch (error) {
+            handleError();
           }
+        }
       });
-  } catch (error) {
+    } catch (error) {
       handleError();
-  }
+    }
   }
 
   private filtrarContenedoresPorIdsCarga(ids: number[]): DatoCargaExpo[] {
@@ -159,8 +166,7 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
   } 
 
   private mapContenedoresCajasCarga(): DWCajaCarga[] {
-    var cajasCarga: DWCajaCarga[] = [];
-
+    var cajasCarga: DWCajaCarga[] = [];    
     this.cajasCargaExpo.forEach(caja => {
       var cajaCarga: DWCajaCarga;
       cajaCarga = {
@@ -206,8 +212,6 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
     if(!this.habilitarReporte) {
           this.embarqueData = undefined;
           this.labelConfigurar = 'Configurar datos del embarque (No configurado)'
-          //this.kcs.setComision(this.embarqueData!.comision)
-          //this.titulos = this.kcs.getTitulosReporte();
     } else this.hacerReporte();
   }
 
@@ -219,8 +223,8 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
     this.codigosConPrecio = $precios;
   }
 
-  getConfProductos(productos: ConfProducto[]): void {
-    this.kcs.setConfProductos(productos)
+  setConfProductos(productos: ConfProducto[]): void {
+    this.kosherCommonService.setConfProductos(productos)
   }
 
   getPesosContenedores(pesos: PesoBrutoContenedor[]): void {
@@ -228,7 +232,7 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
   }
 
   mostrarConfig(): void {
-    this.configPopUp = this.dialog.open(EmbarqueConfigComponent, {
+    this.configPopUp = this.dialogService.open(EmbarqueConfigComponent, {
       header: 'Configurar datos del embarque',
       data: {
         config: this.embarqueData
@@ -244,8 +248,8 @@ export class DetalleEmbarqueComponent implements OnInit, OnDestroy {
         try {
           this.embarqueData = result as EmbarqueConfig;
           this.labelConfigurar = 'Configurar datos del embarque (Listo)'
-          this.kcs.setComision(this.embarqueData.comision)
-          this.titulos = this.kcs.getTitulosReporte();
+          this.kosherCommonService.setComision(this.embarqueData.comision)
+          this.titulos = this.kosherCommonService.getTitulosReporte();
          } catch (error) {
             console.error("ERROR: ", error);
          }

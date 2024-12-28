@@ -45,4 +45,6 @@ export class CommonService {
     );
   }
 
+  ajustarFecha(fecha: Date): Date { return new Date(fecha.setDate(fecha.getDate()));}
+
 }

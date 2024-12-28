@@ -249,9 +249,7 @@ export class AdminPreciosComponent implements OnInit {
             );
             this.dialogRef.close('Agregado');
             this.dialogRef.destroy();
-
-            if (this.errores.length > 0) {
-            }
+            
           } catch (error) {
             this.hayErrores = true;
             this.mostrarMensaje(
@@ -298,7 +296,7 @@ export class AdminPreciosComponent implements OnInit {
                   if (codProdValue != undefined) {
                     if (this.insertarPrecios.find(p => p.codigo_Producto === codProdValue && this.comSrvc.formatearFecha(p.fecha_Produccion) === this.comSrvc.formatearFecha(fechaProduccion)) != undefined)
                       this.errores.push(
-                        `El código ${codProdValue} para la fecha ${fechaProduccion} se encuentra más de una vez. Se guardó la primera ocurrencia.`
+                        `El código ${codProdValue} para la fecha ${this.comSrvc.formatearFecha(fechaProduccion)} se encuentra más de una vez. Se guardó la primera ocurrencia.`
                       );
                     else {
                       const precioValue = info.precio;

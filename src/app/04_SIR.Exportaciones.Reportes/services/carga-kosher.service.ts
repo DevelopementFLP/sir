@@ -90,6 +90,14 @@ export class CargaKosherService {
     return this.http.get<DatoCargaExpo[]>(urlCargaExpo);
   }
 
+  getProductosCargaPorRangoFechas(fechaInicioExpo: Date, fechaFinExpo: Date): Observable<DatoCargaExpo[]> {
+    const fechaInicioExpoStr: string = fechaInicioExpo.toISOString().split('T')[0];
+    const fechaFinExpoStr: string = fechaFinExpo.toISOString().split('T')[0];
+    const urlCargaExpo: string = urlProductosCarga.replace("fd", fechaInicioExpoStr).replace("fh", fechaFinExpoStr);
+    
+    return this.http.get<DatoCargaExpo[]>(urlCargaExpo);
+  }
+
   //#region ConfProductos
   getConfiguracionProductosKosher(): Observable<ConfiguracionProductoKosher[]> {
     return this.http.get<ConfiguracionProductoKosher[]>(urlGetConfiguracionProductosKosher);

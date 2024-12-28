@@ -38,15 +38,15 @@ export class CargaService {
 
       return precios.map(precio => {
         const dataPorPrecio: RegistroConPrecio[] = data.filter(d => d.precio === precio);
-
+        const dataOrdenadaPorFecha = dataPorPrecio.sort((a, b) => a.productiondate.localeCompare(b.productiondate));
         return {
           cantidadCajas: dataPorPrecio.length,
           clasificacionKosher: dataPorPrecio[0].clasificacion,
           codigoKosher: dataPorPrecio[0].codigoKosher,
           codigoProducto: dataPorPrecio[0].productcode,
           contenedor: dataPorPrecio[0].container,
-          fechaExpiracion: dataPorPrecio[0].expiredate,
-          fechaProduccion: dataPorPrecio[0].productiondate,
+          fechaExpiracion: dataOrdenadaPorFecha[0].expiredate,
+          fechaProduccion: dataOrdenadaPorFecha[0].productiondate,
           idPallet: id,
           markKosher: dataPorPrecio[0].mark,
           pesoNeto: dataPorPrecio.reduce((acc, item) => acc + item.netweight, 0),
@@ -103,7 +103,7 @@ export class CargaService {
  
   sumarPreciosPorPeso(precioData: PrecioData[]): number {
     return precioData.reduce((suma, pd) => 
-      suma + pd.data.reduce((subtotal, d) => subtotal + d.precio * d.pesoNeto, 0)
+      suma + pd.data.reduce((subtotal, d) => subtotal + (d.precio / 1000) * d.pesoNeto, 0)
     , 0);
   }
   

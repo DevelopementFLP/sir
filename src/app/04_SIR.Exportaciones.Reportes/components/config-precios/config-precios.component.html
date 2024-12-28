@@ -5,13 +5,18 @@
             <hr>
         </div>
         <p-tabView #tabView>
-            <p-tabPanel header="Fecha y contenedores" *ngIf="esUsuarioExpo || esDetalle()">
+            <p-tabPanel header="Seleccion de fecha y contenedores" *ngIf="esUsuarioExpo || esDetalle()">
                 <div class="container__selection">
                     <div class="main_container">
                         <div class="fechas__container">
                             <div>
-                                <label for="fechaDesde">Fecha de carga:&nbsp;</label>
+                                <label for="fechaDesde">Primera fecha de carga:&nbsp;</label>
                                 <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaDesdeStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
+                            </div>
+                            -
+                            <div>
+                                <label for="fechaDesde">Última fecha de carga:&nbsp;</label>
+                                <input type="date" name="fechaDesde" id="fechaDesde" [(ngModel)]="fechaHastaStr" (ngModelChange)="onCambioFecha()" [max]="hoyStr">
                             </div>
                             <button pButton type="button" name="btnReporte" label="Buscar contenedores" class="p-button-sm" icon="pi pi-search" (click)="buscarDatos()"></button>
                             <button pButton type="button" name="btnReiniciar" label="Reiniciar" class="p-button-sm p-button-secondary" icon="pi pi-refresh" (click)="reiniciar()"></button>
@@ -37,7 +42,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="main--btn" *ngIf="mostrarPrecios">
                             <button pButton type="button" name="btnReporte" label="Ok" class="p-button-sm" icon="pi pi-check" (click)="hacerReporte()"></button>

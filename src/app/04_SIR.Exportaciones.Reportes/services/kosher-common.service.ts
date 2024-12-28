@@ -201,4 +201,45 @@ export class KosherCommonService {
     return d;
   }
 
+  obtenerIntervalosFechasCarga(rangoInicial: string, rangoFinal: string): {inicio: string, fin: string}[] {
+    const fechaInicio = new Date(`${rangoInicial}T00:00:00`);
+    const fechaFinal = new Date(`${rangoFinal}T00:00:00`);
+    const intervalos: {inicio: string, fin: string}[] = [];
+
+    if(fechaInicio > fechaFinal) {
+      throw new Error("La fecha inicial no puede ser posterior a la fecha final.");
+    }
+
+    let inicioActual = new Date(fechaInicio);
+
+    while (inicioActual <= fechaFinal) {
+      const finActual = new Date(inicioActual);
+      finActual.setDate(finActual.getDate() + 3);
+
+      if(finActual > fechaFinal) {
+        intervalos.push({
+          inicio: this.formatoFecha(inicioActual),
+          fin: this.formatoFecha(fechaFinal)
+        });
+        break;
+      }
+
+      intervalos.push({
+        inicio: this.formatoFecha(inicioActual),
+        fin: this.formatoFecha(finActual)
+      });
+
+      inicioActual.setDate(inicioActual.getDate() + 4);
+    }
+
+    return intervalos;
+  }
+
+  private formatoFecha(fecha: Date): string {
+    const dia = fecha.getDate().toString().padStart(2,'0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear();
+    return `${anio}-${mes}-${dia}`;
+  }
+
 }
