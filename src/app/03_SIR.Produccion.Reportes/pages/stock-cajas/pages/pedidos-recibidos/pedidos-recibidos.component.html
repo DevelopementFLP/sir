@@ -43,11 +43,11 @@
                 <th class=""><div class="columna">N° Pedido</div></th>
                 <th class=""><div class="columna">Fecha</div></th>
                 <th class=""><div class="columna">Prior. Caja</div></th>
+                <th class=""><div class="columna">Cajas Armadas</div></th>
                 <th class=""><div class="columna">Diseño</div></th>
                 <th class=""><div class="columna">Tamaño</div></th>
                 <th class=""><div class="columna">Tipo</div></th>
                 <th class=""><div class="columna">Cajas Solicitadas</div></th>
-                <!-- <th class=""><div class="columna">Cajas Armadas</div></th> -->
                 <th class=""><div class="columna">Saldo</div></th>
                 <th class=""><div class="columna">Acción</div></th>
             </tr>
@@ -61,6 +61,7 @@
                 <!-- <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.prioridad_Pedido_Padre}}</div></td> -->
                 <!-- <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.id_Pedido_Padre}}</div></td> -->
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.prioridad}}</div></td>
+                <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{getCantidadCajasStock(pedido.idCaja)}}</div></td>
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.diseno}}</div></td>
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.tamano}}</div></td>
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor" >{{pedido.tipo}}</div></td>

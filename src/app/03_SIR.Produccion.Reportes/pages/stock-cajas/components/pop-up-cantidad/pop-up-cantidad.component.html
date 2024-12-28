@@ -88,10 +88,21 @@
                 <button class="botonNumerico" (click)="botonNumerico(0)">0</button>
             </div>
 
-            <div class="masmenos">
+            <!-- Botón naranja de suma/resta para activar suma o menos -->
+            <!-- <div class="masmenos">
                 <button class="botonNumerico btnSumaResta" [ngClass]="{'activoSumar':activoSumar, 'activoRestar': activoRestar} " (click)="valorSumaResta()">+/-</button>
-            </div>
+            </div> -->
         </div>
    
 </div>
     
+
+<!-- Cuadro de Diálogo -->
+<div id="confirmDialogPedidoCaja" class="dialog">
+    <div class="dialog-content">
+      <h2>Error en la cantidad</h2>
+      <p>{{mensaje}}</p>
+      <button (click)="closeDialog()">Cancelar</button>
+      <button (click)="aceptarDialog()">Aceptar</button>
+    </div>
+  </div>

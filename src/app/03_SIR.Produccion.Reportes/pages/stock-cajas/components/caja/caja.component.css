@@ -477,6 +477,11 @@
     justify-content: center;
 }
 
+.editarFecha{
+    display: flex;
+    flex-direction: column;
+}
+
 /*  Para celular */
 @media (max-width: 768px) {
     .stockOProduccion

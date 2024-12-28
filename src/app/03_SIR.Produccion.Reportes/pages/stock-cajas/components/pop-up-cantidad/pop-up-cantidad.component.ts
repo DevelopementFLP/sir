@@ -21,10 +21,43 @@ export class PopUpCantidadComponent{
 
   nueva_cantidad: number = 0;
 
+  mensaje: string ="";
 
+  openDialog(): void {
+    const dialog = document.getElementById('confirmDialogPedidoCaja');
+    if (dialog) {
+      dialog.style.display = 'flex'; // Muestra el diálogo
+      
+    }
+  }
 
+  closeDialog(): void {
+    const dialog = document.getElementById('confirmDialogPedidoCaja');
+    if (dialog) {
+      dialog.style.display = 'none'; // Oculta el diálogo
+    }
+  }
+  aceptarDialog(): void {
+    const dialog = document.getElementById('confirmDialogPedidoCaja');
+    if (dialog) {
+      // Envia cantidad aceptando el dialogo
+      this.cantidadSeleccionada.emit(this.cantidad);
+      this.cantidad=0;
+      dialog.style.display = 'none'; // Oculta el diálogo
+
+    }
+  }
 
 enviarCantidad(){
+
+  
+  if(this.cantidad>=1000){
+   
+      this.mensaje = "El número de cajas es Mayor o igual a 1000 ¿desea continuar? ";
+      // alert("El saldo necesario es de "+saldo+" cajas, ingrese una cantidad igual o menor a la cantidad necesaria");
+      this.openDialog();
+      return;
+  }
   this.cantidadSeleccionada.emit(this.cantidad);
   this.cantidad=0;
 }
@@ -56,10 +89,7 @@ cancelar(){
       input.value = "0";
     }
 
-    if(valor>10000){
-      alert("Ingrese una cantidad menor a 10000");
-      input.value="0"
-    }
+    
     
   }
 

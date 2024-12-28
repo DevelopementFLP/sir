@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { StockCajasService } from '../../services/stock-cajas.service';
 import { Pedido } from '../../interfaces/Pedido.interface';
 import { lastValueFrom } from 'rxjs';
@@ -12,11 +12,10 @@ import { formatDate } from '@angular/common';
 import { PedidoPadre } from '../../interfaces/PedidoPadre.interface';
 import { PedidoPadreMostrar } from '../../interfaces/PedidoPadreMostrar.interface';
 
-
 @Component({
   selector: 'app-pedidos-activos',
   templateUrl: './pedidos-activos.component.html',
-  styleUrls: ['./pedidos-activos.component.css']
+  styleUrls: ['./pedidos-activos.component.css'],
 })
 export class PedidosActivosComponent implements OnInit, OnDestroy {
 
@@ -64,6 +63,8 @@ export class PedidosActivosComponent implements OnInit, OnDestroy {
 
   habilitadoFecha: boolean = true;
 
+
+  @Output() idPedidoPadre = new EventEmitter<number>();
   async ngOnInit(): Promise<void> {
     await this.iniciar();    
     this.intervalId = setInterval(async () => {
@@ -81,7 +82,6 @@ constructor (private stockService: StockCajasService) {}
 
 
   async iniciar(){
-
 
   await this.GetPedidosAsync();
   await this.GetPedidosPadreAsync();
@@ -175,6 +175,7 @@ constructor (private stockService: StockCajasService) {}
   }
 
   async DeletePedido(idPedido:number): Promise<void> {
+    
     try {
       await lastValueFrom(this.stockService.DeletePedido(idPedido));
     } catch(error) {
@@ -290,8 +291,9 @@ constructor (private stockService: StockCajasService) {}
    
     this.pedidosPadre!.sort((a, b) => a.prioridad_Pedido_Padre - b.prioridad_Pedido_Padre);
 
+
     this.pedidosActivosMostrar = this.pedidosMostrar;
-    this.pedidosActivosMostrar!.sort((a,b) => a.prioridad - b.prioridad);
+    this.pedidosActivosMostrar!.sort((a,b) => b.prioridad - a.prioridad).sort((a, b) => {return new Date(a.fecha_Pedido).getTime() <= new Date(b.fecha_Pedido).getTime() ? -1 : 1});
 
     
     this.pedidosPadreMostrar = [];
@@ -311,6 +313,10 @@ constructor (private stockService: StockCajasService) {}
       }
         
       });
+
+      this.pedidosPadreMostrar!.sort((a,b) => b.prioridad_Pedido_Padre - a.prioridad_Pedido_Padre);
+      this.pedidosPadreMostrar!.sort((a, b) => {return new Date(a.fecha_pedido).getTime() <= new Date(b.fecha_pedido).getTime() ? -1 : 1});
+
       
       
       if(this.filtroFecha==0){
@@ -376,11 +382,6 @@ constructor (private stockService: StockCajasService) {}
   async cancelarPedido(idPedido: number){
 
     this.idPedidoBorrar = idPedido;
-
-
-  
-
-
     this.openDialogEliminarPedidoCaja();
 
   }
@@ -446,6 +447,7 @@ constructor (private stockService: StockCajasService) {}
   }
 
   cerrarPopUpVerPedidos(){
+    this.habilitadoGuardarCambiosPedido = true;
     this.mostrarPopUp=false;
     this.isWorking = false;
   }
@@ -645,6 +647,30 @@ if(this.pedidosActualizar){
     return idpedido?.length ?? 0;
   }
 
+  getCantidadEntregados(idPedidoPadre: number): number {
 
+    const pedidos2 = this.pedidos;
+    const idpedido = pedidos2?.filter(t => t.id_Pedido_Padre == idPedidoPadre);
 
+    let cantidadEntregadosTotal = 0;
+    let cantidadSolicitadaTotal = 0;
+
+  idpedido!.forEach(p => {
+    const cantidadFaltan = this.pedidosMostrar?.find(t => t.idPedido === p.id_Pedido);
+    cantidadSolicitadaTotal = cantidadSolicitadaTotal + p.stock_Pedido;
+    cantidadEntregadosTotal = cantidadEntregadosTotal + cantidadFaltan!.cantidadEntregados;
+  });
+    // let TotalPorcentaje = Math.round((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal)
+    let TotalPorcentaje = ((cantidadEntregadosTotal * 100) / cantidadSolicitadaTotal).toFixed(2);
+  
+    return Number(TotalPorcentaje);
+  
+  }
+
+  EnviarIdPedidoPadre(){
+
+    this.idPedidoPadre.emit(this.idPedidoPadreVer)
+
+  }
+  
 }

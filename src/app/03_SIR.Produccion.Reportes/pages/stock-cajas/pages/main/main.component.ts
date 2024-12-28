@@ -7,4 +7,21 @@ import { Component } from '@angular/core';
 })
 export class MainComponent {
 
+
+  fullscreen() {
+    const elem = document.documentElement; // Esto selecciona toda la página
+  
+    // Verificar si la API de pantalla completa está disponible
+    if (elem.requestFullscreen) {
+  
+      elem.requestFullscreen();
+    }
+    if (document.exitFullscreen) {
+
+      document.exitFullscreen();
+    }
+}
+
+
+
 }

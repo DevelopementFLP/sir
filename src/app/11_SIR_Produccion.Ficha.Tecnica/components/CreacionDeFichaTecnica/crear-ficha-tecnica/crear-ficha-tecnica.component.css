@@ -2,11 +2,10 @@ body, html {
     height: 100%; 
     margin: 0; 
     padding: 1rem;
-    background-color: #f1ebea; 
+    background-color: #868687; 
     display: flex;
     justify-content: center;
-    align-items: center;
-    
+    align-items: baseline;
 }
 
 p{
@@ -17,17 +16,21 @@ p{
 h1, h2, h3{
     margin: 0 !important;
     font-size: 15px; 
+    text-align: center;
+    font: small-caps 150%/200% serif; 
+    color: white;
 }
 
 
+
 .contenido-de-pagina{
-    width: 1000px; /* Ancho A4 */
+    /*width: 1000px; /* Ancho A4 */
+    width: 1000px;
     height: 1123px; /* Alto A4 */
     padding: 1rem;
     background-color: white; /* Fondo blanco para el formulario */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow: auto; /* Para permitir el desplazamiento si es necesario */
-    font-size: 11px; 
+    overflow: auto; 
+    font-size: 11px;     
 }
 
 /* Encabezados */
@@ -40,29 +43,45 @@ h1, h2, h3{
 
 .grid-encabezado-seccion-1,
 .grid-encabezado-seccion-2,
-.grid-encabezado-seccion-3 {
+.grid-encabezado-seccion-3,
+.grid-encabezado-seccion-4 {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
+    margin-bottom: 0.2rem;
 }
 
-.grid-encabezado-seccion-1 input,
 .grid-encabezado-seccion-2 p-dropdown,
-.grid-encabezado-seccion-3 p-dropdown {
+.grid-encabezado-seccion-3 p-dropdown 
+.grid-encabezado-seccion-4 p-dropdown {
     flex-grow: 1;
-    padding: 0.5rem;
-    margin-left: 0.5rem;
+    margin-right: 2rem;
+}
+
+.grid-encabezado-seccion-1 input{
+    flex-grow: 1;
     margin-right: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+    font-size: 16px; 
+    transition: border-color 0.3s; 
 }
 
 .grid-encabezado-seccion-1 h2,
 .grid-encabezado-seccion-2 h2,
-.grid-encabezado-seccion-3 h2 {
+.grid-encabezado-seccion-3 h2 
+.grid-encabezado-seccion-4 h2 {
     font-size: 1rem; 
     margin: 0;
 }
 
+.boton-borrar {
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    color: #ff0000; 
+}
 
 .grid-items-seccion{
     border: 1px solid black;
@@ -78,6 +97,7 @@ h1, h2, h3{
     text-align: center;
 }
 
+
 .boton-de-carga-de-imagen input {
     display: none; /* Oculta el input */
 }
@@ -90,30 +110,29 @@ h1, h2, h3{
 
 /* Seccion 1 */
 
+
 .grid-container-seccion-1{
     display: grid;
     grid-template-columns: 20% auto auto 20%;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
-    font-weight: bold;
-    font-style: italic;
 }
-
-
 
 .caj-1{
     grid-column: 1;
     grid-row: 1 / 5;
-    font-weight: bold;
-    font-style: italic;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
 }
 
 .caj-2{
     grid-column: 2;
     grid-column: 2 /4;
-    font-weight: bold;
-    font-style: italic;
+}
+
+.caj-2 h1{
+    color: black;
 }
 
 .caj-3{
@@ -123,8 +142,6 @@ h1, h2, h3{
     justify-content: center; 
     align-items: center; 
 }
-
-
 
 .caj-3 img{
     max-width: 100%;
@@ -151,8 +168,8 @@ h1, h2, h3{
     grid-template-columns: 20% auto;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
-    font-style: italic;
+    
+    
 }
 
 .caj-1-sec-2{
@@ -205,9 +222,9 @@ h1, h2, h3{
     grid-template-columns: 20% auto auto 20%;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
+    
     text-align: start;
-    font-style: italic;
+    
 }
 
 .caj-1-sec-3{
@@ -298,7 +315,7 @@ h1, h2, h3{
 .grid-container-seccion-4{
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;    
+        
 }
 
 .caj-1-sec-4{
@@ -308,7 +325,7 @@ h1, h2, h3{
 .grid-container-imagenes-sec-4 {
     display: grid;
     /* grid-template-columns: auto auto auto;  */
-    padding: 0.5rem;
+    
 }
 
 .grid-item-imagenes-sec-4{
@@ -328,8 +345,8 @@ h1, h2, h3{
 .grid-container-seccion-5{    
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
-    font-style: italic;
+    
+    
 }
 
 .caj-1-sec-5{
@@ -344,7 +361,7 @@ h1, h2, h3{
 .grid-container-imagenes-sec-5 {
     display: grid;
     /* grid-template-columns: repeat(3, 1fr);  */
-    padding: 0.5rem;
+    
 }
 
 .grid-item-imagenes-sec-5{
@@ -365,9 +382,9 @@ h1, h2, h3{
     grid-template-columns: 20% auto 20% auto;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
+    
     text-align: start;
-    font-style: italic;
+    
 }
 
 .caj-1-sec-6{
@@ -385,7 +402,7 @@ h1, h2, h3{
 .grid-container-seccion-7{
     display: grid;
     grid-template-columns: 50% auto auto;    
-    padding: 0.5rem;
+    
     text-align: start;
 }
 
@@ -492,6 +509,10 @@ h1, h2, h3{
     grid-column: 2 / 4;
 }
 
+.caj-9-sec-7 input {
+    width: 100%;
+}
+
 
  /* SECCION 8 */
 
@@ -500,9 +521,7 @@ h1, h2, h3{
     grid-template-columns: 20% auto 25% 18%;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
     text-align: start;
-    font-style: italic;
 }
 
 .caj-1-sec-8{
@@ -643,14 +662,18 @@ h1, h2, h3{
 
 .caj-20-sec-8{
     grid-column: 3;
-    /* grid-row: 10; */
     background-color: #d3ebf2;
     font-weight: bold;
 }
 
 .caj-21-sec-8{
     grid-column: 3;
-    /* grid-row: 11; */
+    background-color: #d3ebf2;
+    font-weight: bold;
+}
+
+.caj-22-sec-8{
+    grid-column: 3;
     background-color: #d3ebf2;
     font-weight: bold;
 }
@@ -754,8 +777,8 @@ h1, h2, h3{
     grid-template-columns: 60% auto auto;
     margin: 0 auto;     
     text-align: center;
-    padding: 0.5rem;
-    font-style: italic;
+    
+    
 }
 
 .caj-1-sec-9{
@@ -763,16 +786,16 @@ h1, h2, h3{
     grid-row: 1;
     text-align: center;
     background-color: #858383; 
-    font-weight: bold;
-    font-style: italic;
+    color: white;
 }
+
 
 .caj-2-sec-9{
     text-align: center;
     grid-column: 1;
     grid-row: 3;
     background-color: #858383; 
-    font-weight: bold;
+    color: white;
 }
 
 .caj-3-sec-9{
@@ -780,7 +803,7 @@ h1, h2, h3{
     grid-column: 2;
     grid-row: 3;
     background-color: #858383; 
-    font-weight: bold;
+    color: white;
 }
 
 .caj-4-sec-9{
@@ -788,10 +811,21 @@ h1, h2, h3{
     grid-column: 3;
     grid-row: 3;
     background-color: #858383; 
-    font-weight: bold;
+    color: white;
 }
 
 .caj-5-sec-9{
     grid-column: 1 / 4;
     grid-row: 2;
+    display: flex;           
+    justify-content: center; 
+    align-items: center;
+}
+
+.observacion-input {
+    width: 100%;
+    height: 100px;
+    font-size: 24px;         
+    font-weight: bold;       
+    text-align: center;   
 }

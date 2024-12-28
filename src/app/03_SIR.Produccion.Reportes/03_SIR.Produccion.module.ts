@@ -38,6 +38,16 @@ import { SplitterModule } from 'primeng/splitter';
 import { RendimientosComponent } from "./pages/rendimientos/rendimientos.component";
 import { RendimientoViewerComponent } from "./pages/rendimientos/components/rendimiento-viewer/rendimiento-viewer.component";
 import { ComparativoViewerComponent } from "./pages/rendimientos/components/comparativo-viewer/comparativo-viewer.component";
+import { ComparativoCodigosComponent } from './components/comparativo-codigos/comparativo-codigos.component';
+import { NuevoGrupoComponent } from './components/nuevo-grupo/nuevo-grupo.component';
+import { ComparativoCodigosPageComponent } from './pages/comparativo-codigos-page/comparativo-codigos-page.component';
+import { EscapeKeyDirective } from './directives/escape-key.directive';
+import { DashboardFichaTecnicaComponent } from './pages/dashboard-ficha-tecnica/dashboard-ficha-tecnica.component';
+import { NoDataComponent } from './pages/dashboard-ficha-tecnica/components/no-data/no-data.component';
+import { ProduccionFichaTecnicaModule } from "../11_SIR_Produccion.Ficha.Tecnica/11_SIR_Produccion.Ficha.Tecnica.module";
+import { DisplaySoundComponent } from './pages/dashboard-ficha-tecnica/components/display-sound/display-sound.component';
+import { EditarPedidoComponent } from './pages/stock-cajas/pages/editar-pedido/editar-pedido.component';
+import { CrearCajaComponent } from './pages/stock-cajas/pages/crear-caja/crear-caja.component';
 
 
 
@@ -76,7 +86,16 @@ import { ComparativoViewerComponent } from "./pages/rendimientos/components/comp
         ReporteCuotaDisplayComponent,
         RendimientosComponent,
         RendimientoViewerComponent,
-        ComparativoViewerComponent
+        ComparativoViewerComponent,
+        ComparativoCodigosComponent,
+        NuevoGrupoComponent,
+        ComparativoCodigosPageComponent,
+        EscapeKeyDirective,
+        DashboardFichaTecnicaComponent,
+        NoDataComponent,
+        DisplaySoundComponent,
+        EditarPedidoComponent,
+        CrearCajaComponent
     ],
     exports: [
         MainPageComponent
@@ -87,7 +106,8 @@ import { ComparativoViewerComponent } from "./pages/rendimientos/components/comp
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
-        SplitterModule
+        SplitterModule,
+        ProduccionFichaTecnicaModule
     ]
 })
 

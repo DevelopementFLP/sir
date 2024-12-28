@@ -1,3 +1,18 @@
-.contenedor-general{
-    padding: 2rem;
+/* Estilo personalizado para que las pestañas se distribuyan en dos filas */
+.p-tabview-nav {
+    display: flex;
+    flex-wrap: wrap; /* Hace que las pestañas se acomoden en varias filas */
+}
+
+.p-tabview-nav .p-tabview-nav-item {
+    width: 50%; /* Hace que cada pestaña ocupe el 50% del ancho, creando dos columnas */
+    box-sizing: border-box; /* Asegura que el padding y border no alteren el ancho */
+}
+
+.p-tabview-nav .p-tabview-nav-item:nth-child(odd) {
+    padding-right: 5px; /* Ajusta el espaciado entre las columnas */
+}
+
+.p-tabview-nav .p-tabview-nav-item:nth-child(even) {
+    padding-left: 5px; /* Ajusta el espaciado entre las columnas */
 }

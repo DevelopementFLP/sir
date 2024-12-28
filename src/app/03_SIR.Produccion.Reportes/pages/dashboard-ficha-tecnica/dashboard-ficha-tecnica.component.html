@@ -1,0 +1,75 @@
+<div class="contenedor" tabindex="0">
+    <div class="contenedor__titulo">
+        <div class="titulo__fecha-produccion titulo">
+            <div class="fecha__titulo">Día de producción:</div>
+            <div class="fecha__valor">{{hoy | date:'dd-MM-yyyy'}}</div>
+        </div>
+        <div class="titulo-desosado titulo">
+            <div class="desosado__titulo">Desosado:</div>
+            <div class="desosado__valor">Marel</div>
+        </div>
+        <div class="titulo-especie titulo">
+            <div class="especie__titulo">Especie:</div>
+            <div class="especie__valor">Vacuno</div>
+        </div>
+    </div>
+    <dash-no-data [mensaje]="mensajeNoData" *ngIf="productosActivosFicha.length === 0" />
+    <div class="contenedor__regions" *ngIf="productosActivosFicha.length">
+        <div class="regions__productos">
+           <div 
+                class="productos__producto" 
+                *ngFor="let producto of productosActivosFicha; let i = index"
+                (click)="onProductoClick(i)"
+                [class.activo]="indiceActual === i">
+                <div class="producto__codigo">{{producto.code}}</div>
+                <div class="producto__nombre">{{producto.name}}</div>
+            </div>
+        </div>
+        <div class="regions__ficha">
+            <div class="ficha__encabezado">
+                <button
+                        id="btn-actualizar"
+                        tooltipPosition="right" 
+                        pButton 
+                        type="button" 
+                        label="Actualizar"
+                        icon="pi pi-refresh" 
+                        class="p-button-sm p-button-info p-button-text p-button" (click)="setData()">
+                        </button>
+                <div class="ficha__titulo">
+                    <div class="titulo--display">Ficha técnica</div>
+                    <div class="titulo--display--tv">Detalles del producto</div>
+                </div>
+            </div>
+            <div class="ficha__detalles">
+                <div class="detalles__ft">
+                    <div *ngIf="mustShowFichaTecnica">
+                        <div class="detelles_ft--no-ft" *ngIf="currentFt === null">{{fichaTecnicaSeleccionada}}</div>
+                        <modal-ver-ficha-tecnica [ficha]="currentFt"/>
+                    </div>
+                </div>
+                <div class="detalles__ft--tv">
+                    <div class="tv__imagenes">
+                        <div id="imgCut" class="animacion__slideright imagen">
+                            <img [src]="'data:image/png;base64,' + imagenAreaCorte" class="imagen__corte" />
+                        </div>
+                        <div class="img__divider"></div>
+                        <div id="imgPrimaryPacking" class="animacion__slideleft imagen">
+                            <img [src]="'data:image/png;base64,' + imagenAreaEnvase" class="imagen__etiqueta" />
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<audio #notificacion>
+    <source src="../../../../assets/sound/dash_ficha_tecnica/notificacion_dash_ft.mp3">
+</audio>
+
+<display-sound
+    *ngIf="showPlayingSound"
+    [playSound]="playingSound"
+    class="display__sound"
+/>

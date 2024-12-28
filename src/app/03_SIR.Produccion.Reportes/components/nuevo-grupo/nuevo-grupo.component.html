@@ -1,0 +1,83 @@
+<div escapeKey (escapePressed)="handleEscape()" class="main__container">
+    <div class="selection__container">
+        <div class="searcher__container">
+            <div class="name__input">
+                <input id="nameInput" type="text" [(ngModel)]="nombreGrupo" placeholder="Ingresa el nombre del grupo" />
+            </div>
+            <div class="searcher__options">
+                <select [(ngModel)]="productoSeleccionado" (change)="onProductoSeleccionado()">
+                    <option *ngFor="let producto of productosFiltrados" [ngValue]="producto">
+                        {{ producto.codigo }} - {{ producto.nombre }}
+                    </option>
+                </select>
+                <button
+                    #btnAgregarProducto 
+                    pButton
+                    [disabled]="!productoSeleccionado"
+                    type="button" 
+                    class="btn__ok p-button-sm p-button-success"
+                    icon="pi pi-plus"
+                    (click)="agregarProducto()">
+                </button>
+            </div>
+        </div>
+        <div class="list__container">
+            <button
+                        [disabled]="productosSeleccionados.length === 0"
+                        pTooltip="Eliminar todos los productos"
+                        tooltipPosition="left" 
+                        pButton 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only"
+                        (click)="confirmarEliminacion($event, 0)"
+                        ></button>
+            <div class="product__list">
+                <div class="list__title">Productos agregados</div>
+                <div class="list">
+                    <div *ngFor="let producto of productosSeleccionados; let i = index" class="producto__display">
+                        <div class="producto__codigo">{{producto.codigo}}</div>
+                        <div class="producto__nombre">{{producto.nombre}}</div>
+                        <div>
+                            <button
+                            pTooltip="Eliminar '{{producto.codigo}}'"
+                            tooltipPosition="left" 
+                            pButton 
+                            type="button" 
+                            icon="pi pi-trash" 
+                            class="p-button-sm p-element p-ripple p-button-rounded p-button-danger p-button-text p-button p-component p-button-icon-only"
+                            (click)="confirmarEliminacion($event, 1, i)"
+                            ></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <hr>
+        <div class="botones">
+            <button 
+                pButton
+                [disabled]="!validadDatos()" 
+                type="button" 
+                name="btnReporte" 
+                label="Confirmar este grupo" 
+                class="btn__ok p-button-sm p-button-secondary" 
+                icon="pi pi-plus"
+                (click)="guardarCambios()">
+            </button>
+            <button    
+                pButton     
+                type="button" 
+                name="btnCancelar" 
+                label="Cancelar" 
+                class="p-button-sm p-button-danger" 
+                icon="pi pi-times"
+                (click)="cancelar()">
+            </button>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog />

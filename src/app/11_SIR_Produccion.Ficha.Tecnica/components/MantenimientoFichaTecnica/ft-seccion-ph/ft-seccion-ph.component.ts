@@ -34,14 +34,14 @@ export class FtSeccionPhComponent implements OnInit {
     const nuevoPh: FtPhDTO = { 
       idPh: 0,  
       nombre: '', 
-      valor: 0
+      valor: ''
     };
 
     Swal.fire({
       title: 'Crear Nuevo pH',
       html: `
         <input id="nombrePh" class="swal2-input" placeholder="Nombre">
-        <input id="valor" type="number" class="swal2-input" placeholder="Valor">
+        <input id="valor" type="text" class="swal2-input" placeholder="Valor">
       `,
       focusConfirm: false,
       showCancelButton: true,
@@ -61,7 +61,7 @@ export class FtSeccionPhComponent implements OnInit {
         }
 
         nuevoPh.nombre = resultado.value.nombrePh;
-        nuevoPh.valor = parseFloat(resultado.value.valor);
+        nuevoPh.valor = resultado.value.valor;
 
         this._FtPhService.CrearPh(nuevoPh).subscribe({
           next: () => {

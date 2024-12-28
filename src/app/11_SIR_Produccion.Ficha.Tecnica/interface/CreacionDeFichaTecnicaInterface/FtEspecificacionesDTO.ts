@@ -8,9 +8,9 @@ export interface FtEspecificacionesPlantillaDTO {
     hematomas: string; 
     huesosCartilagos: string; 
     elementosExtraños: string; 
-    idColor: number; 
-    idOlor: number; 
-    idPh: number; 
+    idColor: string; 
+    idOlor: string; 
+    idPh: string; 
     aerobiosMesofilosTotales: string; 
     enterobacterias: string; 
     stec0157: string; 
@@ -20,5 +20,6 @@ export interface FtEspecificacionesPlantillaDTO {
     pseudomonas: string; 
     escherichiaColi: string; 
     coliformesTotales: string; 
+    coliformesFecales: string; 
   }
   

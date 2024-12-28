@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
+import { FtAspectosGeneralesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtAspectosGeneralesDTO';
+import { FtEspecificacionesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtEspecificacionesDTO';
 import { FtAlergenosDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Alergenos/FtAlergenosDTO';
 import { FtColorDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Colores/FtColorDTO';
 import { FtCondicionDeAlmacenamientoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/CondicionDeAlmacenamiento/FtCondicionAlmacenamientoDTO';
+import { FtDestinoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Destinos/FtDestinoDTO';
 import { FtMarcaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Marcas/FtMarcaDTO';
 import { FtOlorDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Olor/FtOlorDTO';
 import { FtPhDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Ph/FtPhDTO';
@@ -13,16 +16,9 @@ import { FtTipoDeUsoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interfac
 import { FtVidaUtilDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/VidaUtil/FtVidaUtilDTO';
 import { FtAspectosGeneralesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtAspectosGenerales.service';
 import { FtEspecificacionesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtEspecificaciones.service';
-import { FtAlergenosService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtAlergenos/FtAlergenos.service';
-import { FtColorService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtColor/FtColor.service';
-import { FtCondicionAlmacenamientoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtCondicionAlmacenamiento/FtCondicionAlmacenamiento.service';
-import { FtMarcaService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtMarcas/FtMarcaService.service';
-import { FtOlorService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtOlor/FtOlor.service';
-import { FtPhService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtPh/FtPh.service';
-import { FtPresentacionDeEnvaseService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtPresentacionDeEnvase/FtPresentacionDeEnvase.service';
-import { FtTipoDeEnvaseService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtTipoDeEnvase/FtTipoDeEnvase.service';
-import { FtTipoDeUsoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtTipoDeUso/FtTipoDeUso.service';
-import { FtVidaUtilService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtVidaUtil/FtVidaUtil.service';
+import { FtPrecargaDeDatosService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPrecargaDeDatos/FtPrecargaDeDatos.service';
+
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'component-crear-plantilla-ficha-tecnica',
@@ -31,73 +27,68 @@ import { FtVidaUtilService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/servi
 })
 export class CrearPlantillaFichaTecnicaComponent {
 
+  private aspectosGeneralesCargados = false;
+  private especificacionesCargadas = false;
+
+  public accionSeleccionada: string = 'crear';
+  public mostrarInputsEditar: boolean = false;
+
+   public seccionSeleccionada: string = '';
+   public descripcionDePlantilla: string = '';
+
+  seccionesDePlantilla = [
+    { label: 'Aspectos Generales', value: 'formularioAspectosGenerales' },
+    { label: 'Especificaciones', value: 'formularioDeEspecificaciones' }
+  ];
+
+  public plantillaSeleccionada: any;
+
   public formularioAspectosGenerales: FormGroup;
   public formularioEspecificaciones: FormGroup;
-  public seccionSeleccionada: string = '';
+  
+  public listaDeAspectosGeneralesPlantilla: FtAspectosGeneralesPlantillaDTO[] = [];
+
+  public nombrePlantilla: string = "";
+  public nombreDeProducto: string = "";
 
   //!Seccion General
   public listaDeMarcas: FtMarcaDTO[] = [];
-  //public listaDeDestinos: FtDestinoDTo[] = [];
   public listaDeTiposDeUso: FtTipoDeUsoDTO[] = [];
   public listaDeAlergenos: FtAlergenosDTO[] = [];
   public listaDeCondicionesAlmacenamiento: FtCondicionDeAlmacenamientoDTO[] = [];
   public listaDeVidaUtil: FtVidaUtilDTO[] = [];
   public listaDeTiposDeEnvase: FtTipoDeEnvaseDTO[] = [];
   public listaDePresentacionesDeEnvase: FtPresentacionDeEnvaseDTO[] = [];
-
+  public listaDeDestinos: FtDestinoDTO[] = [];
 
   //!Seccion Especificaciones
   public listaDeColores: FtColorDTO[] = [];
   public listaDeOlores: FtOlorDTO[] = [];
   public listaDePh: FtPhDTO[] = [];
 
-  ngOnInit(): void {
-    this.CargarMarcas();
-    this.CargarColores(); 
-    this.CargarOlores();
-    this.CargarPh();
-    //this.CargarDestinos();
-    this.CargarTiposDeUso();
-    this.CargarAlergenos();
-    this.CargarCondicionesAlmacenamiento();
-    this.CargarVidaUtil();
-    this.CargarTiposDeEnvase();
-    this.CargarPresentacionesDeEnvase();
-  }
-  
 
   constructor(
     private formulario: FormBuilder,
     private _FtAspectosGeneralesService: FtAspectosGeneralesService,
     private _FtEspecificacionesService: FtEspecificacionesService,
-
-    private _FtColorService: FtColorService,
-    private _FtOloresService: FtOlorService,
-    private _FtPhService: FtPhService,
-    private _FtMarcasService: FtMarcaService,
-    //private _FtDestinoService: FtDestinoService,
-    private _FtTipoUsoService: FtTipoDeUsoService,
-    private _FtAlergenoService: FtAlergenosService,
-    private _FtCondicionAlmacenamientoService: FtCondicionAlmacenamientoService,
-    private _FtVidaUtilService: FtVidaUtilService,
-    private _FtTipoEnvaseService: FtTipoDeEnvaseService,
-    private _FtPresentacionEnvaseService: FtPresentacionDeEnvaseService
+    private _FtPrecargaDeDatos: FtPrecargaDeDatosService
   ) {
+
     this.formularioAspectosGenerales = this.formulario.group({
-      seccionDePlantilla: [''], // Agregado
+      seccionDePlantilla: [''], 
       nombre: ['', Validators.required],
+      nombreDeProducto: ['', Validators.required],
       idMarca: [null, Validators.required],
-      //idDestino: [null, Validators.required], // Descomentado para que sea requerido
       idDestino: '1',
       idTipoDeUso: [null, Validators.required],
       idAlergeno: [null, Validators.required],
-      idCondicionAlmacenamiento: [null, Validators.required], // Corregido el nombre
+      idCondicionAlmacenamiento: [null, Validators.required], 
       idVidaUtil: [null, Validators.required],
       idTipoDeEnvase: [null, Validators.required],
       idPresentacionDeEnvase: [null, Validators.required],
       pesoPromedio: [null, [Validators.required, Validators.min(0)]],
       unidadesPorCaja: [null, [Validators.required, Validators.min(1)]],
-      dimensiones: ['', Validators.required] // Agregado
+      dimensiones: ['', Validators.required]
     });
     
 
@@ -112,7 +103,9 @@ export class CrearPlantillaFichaTecnicaComponent {
       idColor: [null, Validators.required], 
       idOlor: [null, Validators.required],
       idPh: [null, Validators.required], 
-      aerobiosMesofilosTotales: ['', Validators.required], 
+
+      aerobiosMesofilosTotales: ['Inicio/Start <5,0x10⁴   Fin/end <1,0x10⁷'], 
+      enviarAerobiosMesofilosTotales: [true], 
 
       enterobacterias: ['<1x10³'], 
       enviarEnterobacterias: [true], 
@@ -135,20 +128,70 @@ export class CrearPlantillaFichaTecnicaComponent {
       escherichiaColi: ['m= 5x102  /  M 5x103'], 
       enviarEscherichiaColi: [true], 
 
-      coliformesTotales: ['<5x10¹'], 
+      coliformesTotales: ['<1x10³'], 
       enviarColiformes: [true], 
+
+      coliformesFecales: ['<5x10¹'], 
+      enviarColiformesFecales: [true], 
     });
   }    
 
+  public GenerarListasDeCampos(datosDeLista: string) {
+    if (this.seccionSeleccionada === 'formularioAspectosGenerales') {
+        if (!this.aspectosGeneralesCargados) {
+            this._FtPrecargaDeDatos.CargarAspectosGenerales();
+            this.aspectosGeneralesCargados = true; 
+        }
+
+        switch (datosDeLista) {
+            case 'marcas':
+                return this._FtPrecargaDeDatos.listaDeMarcas;
+            case 'tiposDeUso':
+                return this._FtPrecargaDeDatos.listaDeTiposDeUso;
+            case 'alergeno':
+                return this._FtPrecargaDeDatos.listaDeAlergenos;
+            case 'condicionDeAlmacenamiento':
+                return this._FtPrecargaDeDatos.listaDeCondicionesAlmacenamiento;
+            case 'vidaUtil':
+                return this._FtPrecargaDeDatos.listaDeVidaUtil;
+            case 'tipoDeEnvase':
+                return this._FtPrecargaDeDatos.listaDeTiposDeEnvase;
+            case 'presentacionDeEnvase':
+                return this._FtPrecargaDeDatos.listaDePresentacionesDeEnvase;
+            default:
+                return [];
+        }
+    } else if (this.seccionSeleccionada === 'formularioDeEspecificaciones') {
+        if (!this.especificacionesCargadas) {
+            this._FtPrecargaDeDatos.CargarEspecificaciones();
+            this.especificacionesCargadas = true; 
+        }
+
+        switch (datosDeLista) {
+            case 'colores':
+                return this._FtPrecargaDeDatos.listaDeColores;
+            case 'olores':
+                return this._FtPrecargaDeDatos.listaDeOlores;
+            case 'ph':
+                return this._FtPrecargaDeDatos.listaDePh;
+            default:
+                return [];
+        }
+    }
+    return [];
+  }
+
+
   public EnviarFormularioAspectosGenerales(): void {
+
     let nuevaPlantilla: any;
 
     if ( this.formularioAspectosGenerales.valid) {
       nuevaPlantilla = {
-        seccionDePlantilla: 'Formularo Aspectos Generales',
+        seccionDePlantilla: 'AspectosGenerales',
         nombre: this.formularioAspectosGenerales.value.nombre,
+        nombreDeProducto: this.formularioAspectosGenerales.value.nombreDeProducto,
         idMarca: this.formularioAspectosGenerales.value.idMarca,
-        idDestino: this.formularioAspectosGenerales.value.idDestino, 
         idTipoDeUso: this.formularioAspectosGenerales.value.idTipoDeUso,
         idAlergeno: this.formularioAspectosGenerales.value.idAlergeno,
         idCondicionAlmacenamiento: this.formularioAspectosGenerales.value.idCondicionAlmacenamiento,
@@ -159,7 +202,6 @@ export class CrearPlantillaFichaTecnicaComponent {
         unidadesPorCaja: this.formularioAspectosGenerales.value.unidadesPorCaja,
         dimensiones: this.formularioAspectosGenerales.value.dimensiones,
       };
-      console.log('formularioAspectosGenerales:', nuevaPlantilla);
       
     } else {
       console.error('Formulario inválido o sección no seleccionada');
@@ -167,22 +209,34 @@ export class CrearPlantillaFichaTecnicaComponent {
 
     this._FtAspectosGeneralesService.CrearPlantillaAspectosGenerales(nuevaPlantilla).subscribe(
       (response: ApiResponse) => {
-        console.log('Respuesta de la API:', response);
-        // Aquí puedes manejar la respuesta de la API
+        
+        Swal.fire({
+                    title: 'Exito',
+                    text: 'Formulario enviado correctamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });                
+                this.formularioAspectosGenerales.reset();
+                this.seccionSeleccionada = '';
       },
       (error) => {
         console.error('Error al enviar a la API:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al enviar el formulario. Intente nuevamente.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
       }
     );
   }
-
 
   public EnviarFormularioEspecificaciones(): void {
     let nuevaPlantilla: any;
 
     if (this.formularioEspecificaciones.valid) {
       nuevaPlantilla = {
-          seccionDePlantilla: 'Formulario Especificaciones',
+          seccionDePlantilla: 'Especificaciones',
           nombre: this.formularioEspecificaciones.value.nombre,
           grasaVisible: this.formularioEspecificaciones.value.grasaVisible,
           espesorCobertura: this.formularioEspecificaciones.value.espesorCobertura,
@@ -193,192 +247,229 @@ export class CrearPlantillaFichaTecnicaComponent {
           idColor: this.formularioEspecificaciones.value.idColor,
           idOlor: this.formularioEspecificaciones.value.idOlor,
           idPh: this.formularioEspecificaciones.value.idPh,
-          aerobiosMesofilosTotales: this.formularioEspecificaciones.value.aerobiosMesofilosTotales,
-          enterobacterias: this.formularioEspecificaciones.value.enviarEnterobacterias ? this.formularioEspecificaciones.value.enterobacterias : 'no aplica',
-          stec0157: this.formularioEspecificaciones.value.enviarStec ? this.formularioEspecificaciones.value.stec0157 : 'no aplica',
-          stecNo0157: this.formularioEspecificaciones.value.enviarNoStec ? this.formularioEspecificaciones.value.stecNo0157 : 'no aplica',
-          salmonella: this.formularioEspecificaciones.value.enviarSalmonella ? this.formularioEspecificaciones.value.salmonella : 'no aplica',
-          estafilococos: this.formularioEspecificaciones.value.enviarEstafilococos ? this.formularioEspecificaciones.value.estafilococos : 'no aplica',
-          pseudomonas: this.formularioEspecificaciones.value.enviarPseudomonas ? this.formularioEspecificaciones.value.pseudomonas : 'no aplica',
-          escherichiaColi: this.formularioEspecificaciones.value.enviarEscherichiaColi ? this.formularioEspecificaciones.value.escherichiaColi : 'no aplica',
-          coliformesTotales: this.formularioEspecificaciones.value.enviarColiformes ? this.formularioEspecificaciones.value.coliformesTotales : 'no aplica'
+          aerobiosMesofilosTotales: this.formularioEspecificaciones.value.enviarAerobiosMesofilosTotales ? this.formularioEspecificaciones.value.aerobiosMesofilosTotales : 'NO APLICA',
+          enterobacterias: this.formularioEspecificaciones.value.enviarEnterobacterias ? this.formularioEspecificaciones.value.enterobacterias : 'NO APLICA',
+          stec0157: this.formularioEspecificaciones.value.enviarStec ? this.formularioEspecificaciones.value.stec0157 : 'NO APLICA',
+          stecNo0157: this.formularioEspecificaciones.value.enviarNoStec ? this.formularioEspecificaciones.value.stecNo0157 : 'NO APLICA',
+          salmonella: this.formularioEspecificaciones.value.enviarSalmonella ? this.formularioEspecificaciones.value.salmonella : 'NO APLICA',
+          estafilococos: this.formularioEspecificaciones.value.enviarEstafilococos ? this.formularioEspecificaciones.value.estafilococos : 'NO APLICA',
+          pseudomonas: this.formularioEspecificaciones.value.enviarPseudomonas ? this.formularioEspecificaciones.value.pseudomonas : 'NO APLICA',
+          escherichiaColi: this.formularioEspecificaciones.value.enviarEscherichiaColi ? this.formularioEspecificaciones.value.escherichiaColi : 'NO APLICA',
+          coliformesTotales: this.formularioEspecificaciones.value.enviarColiformes ? this.formularioEspecificaciones.value.coliformesTotales : 'NO APLICA',
+          coliformesFecales: this.formularioEspecificaciones.value.enviarColiformesFecales ? this.formularioEspecificaciones.value.coliformesFecales : 'NO APLICA'
       };
 
-        console.log('Formulario Especificaciones:', nuevaPlantilla);
-
-        // Llama al servicio para crear la plantilla de especificaciones
         this._FtEspecificacionesService.CrearPlantillaEspecificaiones(nuevaPlantilla).subscribe(
             (response: ApiResponse) => {
-                console.log('Respuesta de la API:', response);
-                // Aquí puedes manejar la respuesta de la API
+                
+              Swal.fire({
+                title: 'Exito',
+                text: 'Formulario enviado correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+              });           
+              this.nombrePlantilla = '';     
+              this.seccionSeleccionada = '';
+
             },
             (error) => {
-                console.error('Error al enviar a la API:', error);
+
+              Swal.fire({
+                  title: 'Error',
+                  text: 'Hubo un problema al enviar el formulario. Intente nuevamente.',
+                  icon: 'error',
+                  confirmButtonText: 'Aceptar'
+              });
             }
           );
         } else {
           console.error('Formulario inválido o sección no seleccionada');
-      }    
+       }    
   }
 
-  //!Precarga de datos generales 
 
-  private CargarMarcas(){
-    this._FtMarcasService.GetListaDeMarcasFichaTecnica().subscribe({
-      next: (response) => {
-          this.listaDeMarcas = response.resultado.map((ph: FtMarcaDTO) => ({
-              idMarca: ph.idMarca, 
-              nombre: ph.descripcion 
-          }));
-      },
-      error: (error) => {
-          console.error('Error al obtener las Marcas', error);
-      }
-    });
-  }
-  
-  // private CargarDestinos(): void {
-  //   this._FtDestinoService.GetListaDeDestinosFichaTecnica().subscribe({
-  //     next: (response) => {
-  //       this.listaDeDestinos = response.resultado.map((destino: FtDestinoDTO) => ({
-  //         idDestino: destino.idDestino,
-  //         descripcion: destino.descripcion
-  //       }));
-  //     },
-  //     error: (error) => {
-  //       console.error('Error al obtener los destinos', error);
-  //     }
-  //   });
-  // }
-  
-  private CargarTiposDeUso(): void {
-    this._FtTipoUsoService.GetListaDeTiposDeUsoFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeTiposDeUso = response.resultado.map((tipoUso: FtTipoDeUsoDTO) => ({
-          idTipoDeUso: tipoUso.idTipoDeUso,
-          descripcion: tipoUso.descripcion
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener los tipos de uso', error);
-      }
-    });
-  }
-  
-  private CargarAlergenos(): void {
-    this._FtAlergenoService.GetListaDeAlergenosFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeAlergenos = response.resultado.map((alergeno: FtAlergenosDTO) => ({
-          idAlergeno: alergeno.idAlergeno,
-          descripcion: alergeno.descripcion          
-        }));
-        
-      },
-      error: (error) => {
-        console.error('Error al obtener los alérgenos', error);
-      }
-    });
-  }
-  
-  private CargarCondicionesAlmacenamiento(): void {
-    this._FtCondicionAlmacenamientoService.GetListaDeCondicionesFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeCondicionesAlmacenamiento = response.resultado.map((condicion: FtCondicionDeAlmacenamientoDTO) => ({
-          idCondicionDeAlmacenamiento: condicion.idCondicionDeAlmacenamiento,
-          descripcion: condicion.descripcion
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener las condiciones de almacenamiento', error);
-      }
-    });
-  }
-  
-  private CargarVidaUtil(): void {
-    this._FtVidaUtilService.GetListaDeVidaUtilFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeVidaUtil = response.resultado.map((vidaUtil: FtVidaUtilDTO) => ({
-          idVidaUtil: vidaUtil.idVidaUtil,
-          nombre: vidaUtil.nombre
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener la vida útil', error);
-      }
-    });
-  }
-  
-  private CargarTiposDeEnvase(): void {
-    this._FtTipoEnvaseService.GetListaDeTiposDeEnvaseFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeTiposDeEnvase = response.resultado.map((tipoEnvase: FtTipoDeEnvaseDTO) => ({
-          idTipoDeEnvase: tipoEnvase.idTipoDeEnvase,
-          descripcion: tipoEnvase.descripcion
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener los tipos de envase', error);
-      }
-    });
-  }
-  
-  private CargarPresentacionesDeEnvase(): void {
-    this._FtPresentacionEnvaseService.GetListaDePresentacionesDeEnvaseFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDePresentacionesDeEnvase = response.resultado.map((presentacion: FtPresentacionDeEnvaseDTO) => ({
-          idPresentacionDeEnvase: presentacion.idPresentacionDeEnvase,
-          descripcion: presentacion.descripcion
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener las presentaciones de envase', error);
-      }
-    });
-  }
-  
-
-  //!Precarga aspectos generales
- 
-
-  private CargarColores(): void {
-    this._FtColorService.GetListaDeColoresFichaTecnica().subscribe({
-      next: (response) => {
-        this.listaDeColores = response.resultado.map((color: FtColorDTO) => ({
-          idColor: color.idColor,
-          descripcion: color.descripcion
-        }));
-      },
-      error: (error) => {
-        console.error('Error al obtener los colores', error);
-      }
-    });
-  }
-
-  private CargarOlores(): void {
-      this._FtOloresService.GetListaDeOloresFichaTecnica().subscribe({
-        next: (response) => {
-            this.listaDeOlores = response.resultado.map((olor: FtOlorDTO) => ({
-                idOlor: olor.idOlor, 
-                descripcion: olor.descripcion 
-            }));
+  public BuscarPlantillaDeAspectosGenerales(): void {
+    if (this.descripcionDePlantilla) {
+      this._FtAspectosGeneralesService.BuscarPlantillaDeAspectosGenerales(this.descripcionDePlantilla).subscribe(
+        (response: ApiResponse) => {
+          if (response.esCorrecto) {
+            this.plantillaSeleccionada = response.resultado; 
+            // Aquí puedes asignar los valores a los formularios si lo deseas
+            this.formularioAspectosGenerales.patchValue({
+              seccionDePlantilla: this.plantillaSeleccionada.seccionDePlantilla,
+              nombre: this.plantillaSeleccionada.nombre,
+              nombreDeProducto: this.plantillaSeleccionada.nombreDeProducto,
+              idMarca: this.plantillaSeleccionada.idMarca,
+              idTipoDeUso: this.plantillaSeleccionada.idTipoDeUso,
+              idAlergeno: this.plantillaSeleccionada.idAlergeno,
+              idCondicionAlmacenamiento: this.plantillaSeleccionada.idCondicionAlmacenamiento,
+              idVidaUtil: this.plantillaSeleccionada.idVidaUtil,
+              idTipoDeEnvase: this.plantillaSeleccionada.idTipoDeEnvase,
+              idPresentacionDeEnvase: this.plantillaSeleccionada.idPresentacionDeEnvase,
+              pesoPromedio: this.plantillaSeleccionada.pesoPromedio,
+              unidadesPorCaja: this.plantillaSeleccionada.unidadesPorCaja,
+              dimensiones: this.plantillaSeleccionada.dimensiones,                            
+            });
+            console.log(response.resultado);
+          } else {
+            Swal.fire('Error', response.mensaje!, 'error'); 
+          }
         },
-        error: (error) => {
-            console.error('Error al obtener los olores', error);
+        error => {
+          Swal.fire('Error', 'Error al buscar la plantilla', 'error');
         }
-    }); 
+      );
+    } else {
+      Swal.fire('Advertencia', 'Por favor, ingrese una descripción para buscar.', 'warning');
+    }
   }
 
-  private CargarPh(){
-    this._FtPhService.GetListaDePhFichaTecnica().subscribe({
-      next: (response) => {
-          this.listaDePh = response.resultado.map((ph: FtPhDTO) => ({
-              idPh: ph.idPh, 
-              nombre: ph.nombre 
-          }));
-      },
-      error: (error) => {
-          console.error('Error al obtener los PHs', error);
-      }
-    });
+
+  public EditarPlantillaDeAspectosGenerales(): void {
+
+    if (!this.plantillaSeleccionada) {
+      Swal.fire('Error', 'Por favor, primero busca una plantilla. o cambia la accion a editar', 'error');
+      return; 
+    }
+
+    if (this.formularioAspectosGenerales.valid) {
+      const plantillaEditada: FtAspectosGeneralesPlantillaDTO = {
+        idPlantilla: this.plantillaSeleccionada.idPlantilla, 
+        seccionDePlantilla: 'AspectosGenerales',
+        nombre: this.formularioAspectosGenerales.value.nombre,
+        nombreDeProducto: this.formularioAspectosGenerales.value.nombreDeProducto,
+        idMarca: this.formularioAspectosGenerales.value.idMarca,
+        idTipoDeUso: this.formularioAspectosGenerales.value.idTipoDeUso,
+        idAlergeno: this.formularioAspectosGenerales.value.idAlergeno,
+        idCondicionAlmacenamiento: this.formularioAspectosGenerales.value.idCondicionAlmacenamiento,
+        idVidaUtil: this.formularioAspectosGenerales.value.idVidaUtil,
+        idTipoDeEnvase: this.formularioAspectosGenerales.value.idTipoDeEnvase,
+        idPresentacionDeEnvase: this.formularioAspectosGenerales.value.idPresentacionDeEnvase,
+        pesoPromedio: this.formularioAspectosGenerales.value.pesoPromedio,
+        unidadesPorCaja: this.formularioAspectosGenerales.value.unidadesPorCaja,
+        dimensiones: this.formularioAspectosGenerales.value.dimensiones,
+      };
+  
+      this._FtAspectosGeneralesService.EditarCamposDeAspectosGenerales(plantillaEditada).subscribe(
+        (response: ApiResponse) => {
+          if (response.esCorrecto) {
+            Swal.fire('Éxito', 'La plantilla se editó correctamente.', 'success');
+            // Limpiar el formulario o realizar otras acciones si es necesario
+          } else {
+            Swal.fire('Error', response.mensaje!, 'error');
+          }
+        },
+        error => {
+          Swal.fire('Error', 'Hubo un problema al editar la plantilla.', 'error');
+        }
+      );
+    } else {
+      Swal.fire('Advertencia', 'Por favor, completa todos los campos requeridos.', 'warning');
+    }
+  }
+
+  public BuscarPlantillaDeEspecificaciones(): void {
+    if (this.descripcionDePlantilla) {
+      this._FtEspecificacionesService.BuscarPlantillaDeEspecificaciones(this.descripcionDePlantilla).subscribe(
+        (response: ApiResponse) => {
+          console.log(response.esCorrecto)
+          if (response.esCorrecto) {
+            this.plantillaSeleccionada = response.resultado;
+  
+            // Asignar los valores a los formularios
+            this.formularioEspecificaciones.patchValue({
+              seccionDePlantilla: this.plantillaSeleccionada.seccionDePlantilla,
+              nombre: this.plantillaSeleccionada.nombre,
+              grasaVisible: this.plantillaSeleccionada.grasaVisible,
+              espesorCobertura: this.plantillaSeleccionada.espesorCobertura,
+              ganglios: this.plantillaSeleccionada.ganglios,
+              hematomas: this.plantillaSeleccionada.hematomas,
+              huesosCartilagos: this.plantillaSeleccionada.huesosCartilagos,
+              elementosExtraños: this.plantillaSeleccionada.elementosExtraños,
+              idColor: this.plantillaSeleccionada.idColor,
+              idOlor: this.plantillaSeleccionada.idOlor,
+              idPh: this.plantillaSeleccionada.idPh,
+              aerobiosMesofilosTotales: this.plantillaSeleccionada.aerobiosMesofilosTotales,
+              enterobacterias: this.plantillaSeleccionada.enterobacterias,
+              stec0157: this.plantillaSeleccionada.stec0157,
+              stecNo0157: this.plantillaSeleccionada.stecNo0157,
+              salmonella: this.plantillaSeleccionada.salmonella,
+              estafilococos: this.plantillaSeleccionada.estafilococos,
+              pseudomonas: this.plantillaSeleccionada.pseudomonas,
+              escherichiaColi: this.plantillaSeleccionada.escherichiaColi,
+              coliformesTotales: this.plantillaSeleccionada.coliformesTotales,
+              coliformesFecales: this.plantillaSeleccionada.coliformesFecales,
+            });
+          } else {
+            Swal.fire('Error', response.mensaje!, 'error');
+          }
+        },
+        error => {
+          Swal.fire('Error', 'Error al buscar la plantilla', 'error');
+        }
+      );
+    } else {
+      Swal.fire('Advertencia', 'Por favor, ingrese una descripción para buscar.', 'warning');
+    }
+  }
+  
+
+  public EditarFormularioEspecificaciones(): void {
+    
+    if (!this.plantillaSeleccionada) {
+      Swal.fire('Error', 'Por favor, primero busca una plantilla. o cambia la accion a editar', 'error');
+      return; 
+    }
+
+    if (this.formularioEspecificaciones.valid) {
+      const plantillaEditada: FtEspecificacionesPlantillaDTO = {
+        idPlantilla: this.plantillaSeleccionada.idPlantilla, 
+        seccionDePlantilla: 'Especificaciones',
+        nombre: this.formularioEspecificaciones.value.nombre,
+        grasaVisible: this.formularioEspecificaciones.value.grasaVisible,
+        espesorCobertura: this.formularioEspecificaciones.value.espesorCobertura,
+        ganglios: this.formularioEspecificaciones.value.ganglios,
+        hematomas: this.formularioEspecificaciones.value.hematomas,
+        huesosCartilagos: this.formularioEspecificaciones.value.huesosCartilagos,
+        elementosExtraños: this.formularioEspecificaciones.value.elementosExtraños,
+        idColor: this.formularioEspecificaciones.value.idColor,
+        idOlor: this.formularioEspecificaciones.value.idOlor,
+        idPh: this.formularioEspecificaciones.value.idPh,
+        aerobiosMesofilosTotales: this.formularioEspecificaciones.value.aerobiosMesofilosTotales,
+        enterobacterias: this.formularioEspecificaciones.value.enviarEnterobacterias ? this.formularioEspecificaciones.value.enterobacterias : 'NO APLICA',
+        stec0157: this.formularioEspecificaciones.value.enviarStec ? this.formularioEspecificaciones.value.stec0157 : 'NO APLICA',
+        stecNo0157: this.formularioEspecificaciones.value.enviarNoStec ? this.formularioEspecificaciones.value.stecNo0157 : 'NO APLICA',
+        salmonella: this.formularioEspecificaciones.value.enviarSalmonella ? this.formularioEspecificaciones.value.salmonella : 'NO APLICA',
+        estafilococos: this.formularioEspecificaciones.value.enviarEstafilococos ? this.formularioEspecificaciones.value.estafilococos : 'NO APLICA',
+        pseudomonas: this.formularioEspecificaciones.value.enviarPseudomonas ? this.formularioEspecificaciones.value.pseudomonas : 'NO APLICA',
+        escherichiaColi: this.formularioEspecificaciones.value.enviarEscherichiaColi ? this.formularioEspecificaciones.value.escherichiaColi : 'NO APLICA',
+        coliformesTotales: this.formularioEspecificaciones.value.enviarColiformes ? this.formularioEspecificaciones.value.coliformesTotales : 'NO APLICA',
+        coliformesFecales: this.formularioEspecificaciones.value.coliformesFecales ? this.formularioEspecificaciones.value.coliformesFecales : 'NO APLICA',
+      };
+  
+      this._FtEspecificacionesService.EditarCamposDeEspecificaciones(plantillaEditada).subscribe(
+        (response: ApiResponse) => {
+          Swal.fire({
+            title: 'Éxito',
+            text: 'Formulario editado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          });
+          // Reiniciar el formulario y secciones
+          this.formularioEspecificaciones.reset();
+          this.seccionSeleccionada = '';
+        },
+        (error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al editar el formulario. Intente nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      );
+    } else {
+      console.error('Formulario inválido o sección no seleccionada');
+    }
   }
 }

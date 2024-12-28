@@ -21,11 +21,34 @@
         Seleccione una opción del menú
     </div>
 
+    <!-- El usuario 10 es el empaque -->
     <div *ngSwitchCase="'10'" class="menu menu_Crear_Pedido">
-        <button class="btn_menu" routerLink="./crearPedido">Crear Pedido</button>
-        <button class="btn_menu" routerLink="./verStock">Consultar Stock</button>
-        <button class="btn_menu" routerLink="./pedidosActivos">Pedidos Activos</button>
+        
+        <div class="DIV">
+            <div class="menu_titulo">EMPAQUE</div>
+            <button class="btn_menu" routerLink="./crearPedido">Crear Pedido</button>
+            <button class="btn_menu" routerLink="./verStock">Consultar Stock</button>
+            <button class="btn_menu" routerLink="./pedidosActivos">Pedidos Activos</button>
+        </div>
+        <br>
+
+        <div class="DIV">
+
+            <div class="menu_titulo">ARMADOR</div>
+            <!-- Menú armador -->
+            <button class="btn_menu pedidos_recibidos" routerLink="./pedidosRecibidos">Pedidos Recibidos</button>
+        </div>
+        <br> 
+        <div class="div">
+
+            
+            <div class="menu_titulo">ENTREGADOR</div>
+            <!-- Menú Entregador -->
+            <button class="btn_menu entregador" routerLink="./cajasEntregar">Entregar Cajas</button>
+            <button class="btn_menu entregador" routerLink="./entregaNoSolicitada">Entrega No Solicitada</button>
+        </div>
     </div>
+
 
     <br>
 
@@ -58,12 +81,13 @@
         <br>
             <button class="btn_menu" routerLink="./cajasEntregar">Entregar Cajas</button>
             <button class="btn_menu" routerLink="./entregaNoSolicitada">Entrega No Solicitada</button>
+            <button class="btn_menu" routerLink="./crearCaja">Crear Caja</button>
         
 
 
     </div>
 
-
+   
 </div>
 
  <!-- <app-cajas-entregar></app-cajas-entregar> -->

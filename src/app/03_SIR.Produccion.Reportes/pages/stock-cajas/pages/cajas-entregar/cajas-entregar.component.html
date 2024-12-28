@@ -31,12 +31,12 @@
                 <th class=""><div class="columna">Img</div></th>
                 <th class=""><div class="columna">N° Pedido</div></th>
                 <th class=""><div class="columna">Prioridad</div></th>
+                <th class=""><div class="columna">Cantidad Disponible</div></th>
                 <th class=""><div class="columna">Diseño</div></th>
                 <th class=""><div class="columna">Tamaño</div></th>
                 <th class=""><div class="columna">Tipo</div></th>
                 <th class=""><div class="columna">Cantidad Solicitada</div></th>
                 <th class=""><div class="columna">Saldo</div></th>
-                <th class=""><div class="columna">Cantidad Disponible</div></th>
                 <th class=""><div class="columna">Acción</div></th>
             </tr>
         </ng-template>
@@ -47,12 +47,12 @@
                 <td class="img" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="img_caja"><img src="{{getUrlCaja(pedido.idCaja)}}" (click)="setUrlPopUpGrande(getUrlCaja(pedido.idCaja))" class="img_Url"></div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.id_Pedido_Padre}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.prioridad}}</div></td>
+                <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{getCantidadCajasStock(pedido.idCaja)}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.diseno}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.tamano}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.tipo}}</div></td>
                 <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.cantidadArmar}}</div></td>   
                 <td class=""[ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{pedido.cantidadArmar - pedido.cantidadArmado}}</div></td>
-                <td class="" [ngClass]="clasePedidos(pedido.id_Pedido_Padre)"><div class="valor">{{getCantidadCajasStock(pedido.idCaja)}}</div></td>
                 <td [ngClass]="clasePedidos(pedido.id_Pedido_Padre)">
                     <div class="container_btn_confirmar">
 
@@ -107,7 +107,7 @@
 
 
 <!-- Cuadro de Diálogo -->
-<div id="confirmDialogPedidoCaja" class="dialog">
+<div id="confirmDialogPedidoCajaa" class="dialog">
     <div class="dialog-content">
       <h2>Error en la cantidad</h2>
       <p>{{mensaje}}</p>

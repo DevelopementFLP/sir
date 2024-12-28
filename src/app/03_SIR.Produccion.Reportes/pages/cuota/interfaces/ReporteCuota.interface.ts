@@ -1,3 +1,4 @@
+import { DWEntrada } from "./DWEntrada.interface";
 import { LoteEntradaDTO } from "./LoteEntradaDTO.interface";
 import { SalidaDTO } from "./SalidaDTO.interface";
 

@@ -1,3 +1,13 @@
+* {
+    padding: 0;
+}
+
+.main__container {
+    width: 100%;
+    position: relative;
+    padding: 1rem;
+}
+
 .fechas__container {
     align-items: center;
     background-color: white;
@@ -15,4 +25,14 @@
     flex-direction: row;
     max-width: 1800px;
     overflow-x: scroll;
+}
+
+.divider {
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.divider__hr {
+    margin: 0;
+    margin-bottom: 0.5rem;
 }

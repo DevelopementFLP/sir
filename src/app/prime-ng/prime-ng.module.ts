@@ -6,6 +6,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
+import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
@@ -23,6 +24,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
+import { 
+  ProgressBarModule } from 'primeng/progressbar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SidebarModule } from 'primeng/sidebar';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -39,6 +42,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ButtonModule,
     CalendarModule,
     CardModule,
+    CarouselModule,
     ChartModule,
     CheckboxModule,
     ChipModule,
@@ -56,6 +60,7 @@ import { TooltipModule } from 'primeng/tooltip';
     MultiSelectModule,
     PanelMenuModule,
     PasswordModule,
+    ProgressBarModule,
     RadioButtonModule,
     SelectButtonModule,
     SidebarModule,
