@@ -6,6 +6,10 @@
                 <div class="faltantes--mensaje">
                     <h3>Los siguientes códigos no están en la lista de códigos.</h3>
                 </div>
+                <div *ngIf="showDialog">
+                    <a routerLink="/principal/carga/configuracionPreciosKosher" (click)="close()">Ir a configuración de productos</a>
+                </div>
+                <br>
                 <div *ngFor="let codigo of noCodigos">
                     <p><b>{{codigo}}</b></p>
                 </div>
@@ -15,6 +19,10 @@
                 <div class="faltantes--mensaje">
                     <h3>Faltan precios para los siguientes códigos y fechas</h3>
                 </div>
+                <div *ngIf="showDialog">
+                    <a routerLink="/principal/carga/configuracionPreciosKosher" (click)="close()">Ir a configuración de productos</a>
+                </div>
+                <br>
                 <div *ngFor="let codigo of noCodigosPrecios">
                     <p><b>{{codigo.codigo }}</b>: <i>{{codigo.fecha | date:'dd-MM-yyyy'}}</i></p>
                 </div>

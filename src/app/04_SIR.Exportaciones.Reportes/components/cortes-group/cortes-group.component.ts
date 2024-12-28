@@ -74,8 +74,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
     this.dataCortes = this.agruparData(this.datosCortesKosher);
     this.dataMenudencias = this.agruparData(this.datosMenudenciasKosher);
 
-    this.setListasPrecios();
-
+    this.setListasPrecios();    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,7 +84,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
         this.embarqueData.forEach(d => {
           this.setDatosKosher(d);
       });
-
+      
       if(this.errorNoCodigo.length == 0 && this.errorNoPrecio.length == 0) {
         this.dataAgrupada = this.ckcs.setDatosAgrupados(this.datosKosher);
         this.totalPallets = this.ckcs.getTotalPalletsByContainer(this.dataAgrupada);
@@ -318,7 +317,7 @@ export class CortesGroupComponent implements OnInit, OnChanges, OnDestroy {
 }
 
   mostrarExcel(): boolean {
-    return this.dataConfig != undefined && this.datosKosher.length > 0;
+    return this.datosKosher.length > 0; // && this.dataConfig != undefined;
   }
 
   mostrarDialogoErrores(): void {

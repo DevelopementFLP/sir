@@ -1,79 +1,100 @@
-import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { lastValueFrom } from 'rxjs';
-import { ContainerDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/ContainerDTO.interface';
-import { CargaKosherService } from 'src/app/04_SIR.Exportaciones.Reportes/services/carga-kosher.service';
-import { CommonService } from 'src/app/shared/services/common.service';
-import { DatoCargaExpo } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DatoCargaExpo.interface';
-import { PesoBrutoContenedor } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/PesoBrutoContenedor.interface';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { CargaDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/CargaDTO.interface';
-import { PesoNetoContenedorComponent } from 'src/app/04_SIR.Exportaciones.Reportes/components/peso-neto-contenedor/peso-neto-contenedor.component';
+
 import { AjustePesoNetoService } from 'src/app/04_SIR.Exportaciones.Reportes/services/ajuste-peso-neto.service';
-import { ConfPreciosDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/ConfPreciosDTO.interface';
-import { RegistroConPrecio } from '../../interfaces/RegistroConPrecio.interface';
-import { ConfiguracionProductoKosher } from '../../interfaces/ConfiguracionProductoKosher.interface';
-import { PrecioFaltante } from '../../interfaces/PrecioFaltante.interface';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { CargaDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/CargaDTO.interface';
+import { CargaKosherService } from 'src/app/04_SIR.Exportaciones.Reportes/services/carga-kosher.service';
 import { CodigoPrecioFaltanteComponent } from 'src/app/04_SIR.Exportaciones.Reportes/components/codigo-precio-faltante/codigo-precio-faltante.component';
+import { CommonService } from 'src/app/shared/services/common.service';
+import { ConfiguracionProductoKosher } from '../../interfaces/ConfiguracionProductoKosher.interface';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfPreciosDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/ConfPreciosDTO.interface';
+import { ContainerDTO } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/ContainerDTO.interface';
+import { DatoCargaExpo } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/DatoCargaExpo.interface';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { KosherCommonService } from 'src/app/04_SIR.Exportaciones.Reportes/services/kosher-common.service';
+import { PesoBrutoContenedor } from 'src/app/04_SIR.Exportaciones.Reportes/Interfaces/PesoBrutoContenedor.interface';
+import { PesoNetoContenedorComponent } from 'src/app/04_SIR.Exportaciones.Reportes/components/peso-neto-contenedor/peso-neto-contenedor.component';
+import { PrecioFaltante } from '../../interfaces/PrecioFaltante.interface';
+import { RegistroConPrecio } from '../../interfaces/RegistroConPrecio.interface';
 
 
 @Component({
   selector: 'packing-list',
   templateUrl: './precios-kosher.component.html',
   styleUrls: ['./precios-kosher.component.css'],
-  providers: [ DialogService, ConfirmationService, MessageService ]
+  providers: [DialogService, ConfirmationService, MessageService]
 })
 export class PreciosKosherComponent implements OnInit {
-  fechaDesde!:        Date;
-  fechaDesdeStr!:     string;
-  fechasReporte:      Date[] = [];
-  hoy:                Date            = new Date();
-  hoyStr:             string          = this.formatearFecha(this.hoy);
-  datosCarga:         DatoCargaExpo[] = [];
-  datosContenedores:  ContainerDTO[]  = [];
-
-  dropdownOpen: boolean = false;
-  selectedCargas:         number[]        = [];
-  mostrarReporte:         boolean         = false; 
-  datosCargaReporte:      DatoCargaExpo[] = [];
-  pesosBrutosContenedor:  PesoBrutoContenedor[] = [];
-
-  pesosDialogRef!:  DynamicDialogRef;
-  datoCargaDto!:    CargaDTO;
-  listasPrecios:    ConfPreciosDTO[] = [];
-  datosCajasPrecio: RegistroConPrecio[] = [];
-  configProductos:  ConfiguracionProductoKosher[] = [];
+  datosCarga: DatoCargaExpo[] = [];
+  datosContenedores: ContainerDTO[] = [];
+  fechaDesde!: Date;
+  fechaHasta!: Date;
+  fechaDesdeStr!: string;
+  fechaHastaStr!: string;
+  fechasReporte: string[] = [];
+  hoy: Date = new Date();
+  hoyStr: string = this.commonService.formatearFecha(this.hoy);
 
   codigosFaltantes: string[] = [];
+  configProductos: ConfiguracionProductoKosher[] = [];
+  datoCargaDto!: CargaDTO;
+  datosCajasPrecio: RegistroConPrecio[] = [];
+  datosCargaReporte: DatoCargaExpo[] = [];
+  dropdownOpen: boolean = false;
+  idReporte: number = 10;
+  listasPrecios: ConfPreciosDTO[] = [];
+  mostrarReporte: boolean = false;
+  nombreReporte: string = 'Packing List';
+  pesosBrutosContenedor: PesoBrutoContenedor[] = [];
+  pesosDialogRef!: DynamicDialogRef;
   preciosFaltantes: PrecioFaltante[] = [];
+  selectedCargas: number[] = [];
 
-  nombreReporte:  string = 'Packing List';
-  idReporte:      number = 10;
+  intervaloFechasCarga: {inicio: string, fin: string}[] = [];
 
   constructor(
-    private cargaService: CargaKosherService,
-    private dialogService: DialogService,
     private ajusteService: AjustePesoNetoService,
+    private cargaService: CargaKosherService,
+    private commonService: CommonService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
-  ) {}
-  
+    private dialogService: DialogService,
+    private messageService: MessageService,
+    private kosherCommonService: KosherCommonService
+  ) { }
+
   async ngOnInit(): Promise<void> {
-    this.resetearFechas();    
+    this.resetearFechas();
+  }
+
+  protected async reiniciar(): Promise<void> {
+    window.location.reload();
   }
 
   private resetearFechas(): void {
-    this.fechaDesde     = new Date();
-    this.fechaDesdeStr  = this.formatearFecha(this.fechaDesde);
-    this.fechasReporte  = [];
+    this.fechaDesde = new Date();
+    this.fechaHasta = new Date();
+    this.fechaDesdeStr = this.commonService.formatearFecha(this.fechaDesde);
+    this.fechaHastaStr = this.commonService.formatearFecha(this.fechaHasta);
+    this.fechasReporte = [];
   }
 
   protected async buscarDatos(): Promise<void> {
     this.resetearDatos();
-    this.fechaDesde = this.ajustarFecha(new Date(this.fechaDesdeStr)); 
-    this.datosCarga = await lastValueFrom(this.cargaService.getProductosCarga(this.fechaDesde));
-    this.obtenerIdsCargaYNombresContenedores(); 
+
+    this.intervaloFechasCarga = this.kosherCommonService.obtenerIntervalosFechasCarga(this.fechaDesdeStr, this.fechaHastaStr);
+    
+    for(let i = 0; i < this.intervaloFechasCarga.length; i++) {
+      const intervalo = this.intervaloFechasCarga[i];
+      const fDesde = this.ajustarFecha(new Date(intervalo.inicio)); 
+      const fHasta = this.ajustarFecha(new Date(intervalo.fin));
+      const datos = await lastValueFrom(this.cargaService.getProductosCargaPorRangoFechas(fDesde, fHasta));
+      
+      this.datosCarga = this.datosCarga.concat(datos);
+    }    
+    
+    this.obtenerIdsCargaYNombresContenedores();
   }
 
   private obtenerIdsCargaYNombresContenedores(): void {
@@ -83,14 +104,16 @@ export class PreciosKosherComponent implements OnInit {
       container: this.datosCarga.find(dc => dc.id_Carga === id)?.container || '',
     })).filter(c => c.container).sort((a, b) => a.container.localeCompare(b.container));
   }
-  
+ 
   protected hacerReporte(): void {
     this.datosCargaReporte = this.filtrarDatosPorContenedoresSeleccionados();
+
     this.datosCargaReporte.forEach(d => {
-      d.productiondate = this.formatearFecha(new Date(d.productiondate));
+      d.productiondate = this.commonService.formatearFecha(new Date(d.productiondate));
+      d.expiredate = this.commonService.formatearFecha(new Date(d.expiredate));
     });
 
-    if(this.datosCargaReporte.length > 0) {
+    if (this.datosCargaReporte.length > 0) {
       this.fechasReporte = this.setRangoFechas(this.datosCargaReporte);
       this.datoCargaDto = this.setDatosCarga();
       this.mostrarConfiguracionPesoBruto(this.datoCargaDto);
@@ -102,13 +125,13 @@ export class PreciosKosherComponent implements OnInit {
   }
 
   private resetearDatos(): void {
-    this.codigosFaltantes       = [];
-    this.datosCarga             = [];
-    this.datosCargaReporte      = [];
-    this.mostrarReporte         = false;
-    this.pesosBrutosContenedor  = [];
-    this.selectedCargas         = [];
-    this.preciosFaltantes       = [];
+    this.codigosFaltantes = [];
+    this.datosCarga = [];
+    this.datosCargaReporte = [];
+    this.mostrarReporte = false;
+    this.pesosBrutosContenedor = [];
+    this.selectedCargas = [];
+    this.preciosFaltantes = [];
   }
 
   private setDatosCarga(): CargaDTO {
@@ -116,7 +139,7 @@ export class PreciosKosherComponent implements OnInit {
       .filter(d => this.selectedCargas.includes(d.id_Carga))
       .map(d => d.container)
       .join(',');
-    
+
     return { idCarga: this.selectedCargas, contenedores };
   }
 
@@ -134,20 +157,37 @@ export class PreciosKosherComponent implements OnInit {
 
     this.pesosDialogRef.onClose.subscribe(async (res) => {
       if (res === undefined) return;
-    
+
       this.pesosBrutosContenedor = res;
       this.datosCargaReporte = this.ajusteService.setPesoBrutoPorContenedor(this.datosCargaReporte, this.pesosBrutosContenedor);
-      
+
       await this.setListasPrecios(this.fechasReporte);
-    
-      if (this.listasPrecios.length === 0) return;
-    
+
+      if (this.listasPrecios.length === 0) {
+        const fechas = this.fechasReporte.map(f => formatDate(f, 'dd/MM/yyyy', 'es-UY')).join(", ");
+        const mensajeAlerta = `No se encuentran listas de precios para las fechas de producción de esta carga.
+                              <br><br>
+                              Rango de fechas de producción: ${fechas}
+                              <br><br>
+                              <a href="/principal/carga/configuracionPreciosKosher" routerLink="['principal/carga/configuracionPreciosKosher]">Agregar lista de precios</a>`;
+        this.mensajeAlerta(mensajeAlerta);
+        return;
+      }
+
       await this.getConfiguracionProductos();
-    
-      if (this.configProductos.length === 0) return;
-    
+
+      if (this.configProductos.length === 0) {
+        const mensajeAlerta = `Parece que no hay ningún producto Kosher.
+                              <br><br>
+                              <a href="/principal/carga/configuracionPreciosKosher" routerLink="['principal/carga/configuracionPreciosKosher]>Ir a la configuración</a> para agregar.
+                              <br><br>
+                              Si el problema persiste, notifique al equipo de Sistemas.`;
+        this.mensajeAlerta(mensajeAlerta);
+        return;
+      };
+
       this.setPreciosParaCodigos();
-    
+
       if (this.codigosFaltantes.length > 0) {
         console.error("Códigos faltantes:", this.codigosFaltantes);
         this.mostrarCodigoPrecioFaltante();
@@ -167,7 +207,6 @@ export class PreciosKosherComponent implements OnInit {
     try {
       this.configProductos = await lastValueFrom(this.cargaService.getConfiguracionProductosKosher());
     } catch (error) {
-      console.error("Error al obtener la configuración de productos:", error);
       this.mensajeAlerta("Error al obtener la configuración de productos. Código de error 0x211007");
     }
   }
@@ -180,68 +219,56 @@ export class PreciosKosherComponent implements OnInit {
       const mark = confProd?.markKosher ?? '';
       const clasificacion = confProd?.clasificacionKosher ?? '';
       const codigoKosher = confProd?.codigoKosher ?? '';
-      
+
       if (precio == 0 && !this.preciosFaltantes.some(p => p.codigo === caja.productcode && p.fecha === famc)) {
-        this.preciosFaltantes.push({codigo: caja.productcode, fecha: famc!});
+        this.preciosFaltantes.push({ codigo: caja.productcode, fecha: famc! });
       }
 
       if (!confProd && !this.codigosFaltantes.includes(caja.productcode)) {
         this.codigosFaltantes.push(caja.productcode);
       }
-      
+
       return { ...caja, precio, mark, clasificacion, codigoKosher };
     })
-    .sort((a, b) => a.id_Pallet - b.id_Pallet);;
+      .sort((a, b) => a.id_Pallet - b.id_Pallet);;
   }
-  
+
 
   private fechaAnteriorMasCercana(fecha: string): string | undefined {
     const fechasPrecios = Array.from(new Set(this.listasPrecios.map(l => l.fecha_Produccion)));
-    const fechaEncontrada = fechasPrecios.reverse().find(f => this.esFechaMasGrande(fecha, this.formatearFecha(f)));
-    
-    return fechaEncontrada ? this.formatearFecha(fechaEncontrada) : undefined;
+    const fechaEncontrada = fechasPrecios.reverse().find(f => this.esFechaMasGrande(fecha, this.commonService.formatearFecha(f)));
+
+    return fechaEncontrada ? this.commonService.formatearFecha(fechaEncontrada) : undefined;
   }
 
   private esFechaMasGrande(fecha1: string, fecha2: string): boolean {
     return new Date(fecha1) >= new Date(fecha2);
   }
 
-  private precioParaCaja(codigo: string, fecha: string): ConfPreciosDTO | undefined {    
-    return this.listasPrecios.find(p => p.codigo_Producto == codigo && this.formatearFecha(p.fecha_Produccion) == fecha);
+  private precioParaCaja(codigo: string, fecha: string): ConfPreciosDTO | undefined {
+    return this.listasPrecios.find(p => p.codigo_Producto == codigo && this.commonService.formatearFecha(p.fecha_Produccion) == fecha);
   }
 
-  private setRangoFechas(datos: DatoCargaExpo[]): Date[] {
-    const fechas = datos.map(d => new Date(d.productiondate)).sort((a, b) => a.getTime() - b.getTime());
+  private setRangoFechas(datos: DatoCargaExpo[]): string[] {
+    const fechas = datos.map(d => d.productiondate).sort((a, b) => a.localeCompare(b));
     return [fechas[0], fechas[fechas.length - 1]];
   }
 
-  private async setListasPrecios(fechas: Date[]): Promise<void> {
-    const fechaFormateada = this.formatearFecha(fechas[0]);
+  private async setListasPrecios(fechas: string[]): Promise<void> {    
+    const fechaFormateada = fechas[0];
     const primeraFecha = await lastValueFrom(this.cargaService.getPrimeraFechaPrecios(fechaFormateada));
-    if((primeraFecha === "")){
-      console.error(`No se encuentra una lista de precios para la fecha de producción ${fechaFormateada}`);
+
+    if ((primeraFecha === "")) {
       this.mensajeAlerta(`No se encuentra una lista de precios para la fecha de producción ${fechaFormateada}`);
       return;
     }
     
-    this.listasPrecios = await lastValueFrom(this.cargaService.getPreciosPorFecha(fechaFormateada, this.formatearFecha(fechas[fechas.length - 1])));
+    this.listasPrecios = await lastValueFrom(this.cargaService.getPreciosPorFecha(primeraFecha, fechas[fechas.length - 1]));
   }
 
-  protected onCambioFecha(): void { this.nombreReporte = `Packing List ${this.fechaDesdeStr}` };
-  protected clear(): void {}
-  
-  private formatearFecha(fecha: Date): string {
-    let f = new Date(fecha);
-    return formatDate(
-      f.setHours(f.getHours() + 3),
-      'yyyy-MM-dd',
-      'es-UY'
-    );
-  }
-
-  private ajustarFecha(fecha: Date): Date {
-    return new Date(fecha.setDate(fecha.getDate() + 1));
-  }
+  private ajustarFecha(fecha: Date): Date { return new Date(fecha.setDate(fecha.getDate()));}
+  protected clear(): void { }
+  protected onCambioFecha(): void { this.nombreReporte = `Packing List ${this.fechaDesdeStr} - ${this.fechaHastaStr}` };
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -250,9 +277,9 @@ export class PreciosKosherComponent implements OnInit {
   toggleSelection(cargaId: number) {
     const index = this.selectedCargas.indexOf(cargaId);
     if (index > -1) {
-        this.selectedCargas.splice(index, 1);
+      this.selectedCargas.splice(index, 1);
     } else {
-        this.selectedCargas.push(cargaId);
+      this.selectedCargas.push(cargaId);
     }
   }
 
@@ -267,7 +294,7 @@ export class PreciosKosherComponent implements OnInit {
       rejectIcon: "none",
       accept: () => {
         this.messageService.add({
-          
+
         })
       },
       key: 'mensajeDialog'
@@ -278,7 +305,8 @@ export class PreciosKosherComponent implements OnInit {
     this.dialogService.open(CodigoPrecioFaltanteComponent, {
       data: {
         noCodigos: this.codigosFaltantes,
-        noPrecios: this.preciosFaltantes
+        noPrecios: this.preciosFaltantes,
+        mostrarEnlace: true
       },
       header: "Códigos y precios faltantes",
       dismissableMask: false,

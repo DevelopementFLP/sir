@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -34,5 +35,16 @@ export class CommonService {
     const numberPattern = /^-?\d+(\.\d+)?$/;
     return numberPattern.test(value);
   }
+
+  formatearFecha(fecha: Date): string {
+    let f = new Date(fecha);
+    return formatDate(
+      f.setHours(f.getHours() + 3),
+      'yyyy-MM-dd',
+      'es-UY'
+    );
+  }
+
+  ajustarFecha(fecha: Date): Date { return new Date(fecha.setDate(fecha.getDate()));}
 
 }

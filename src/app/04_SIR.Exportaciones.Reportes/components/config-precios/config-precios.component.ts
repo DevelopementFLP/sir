@@ -27,7 +27,6 @@ import { ContainerDTO } from '../../Interfaces/ContainerDTO.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DWCajaCarga } from '../../Interfaces/DWCajaCarga.interface';
 import { DWContainer } from '../../Interfaces/DWContainer.interface';
-import { formatDate } from '@angular/common';
 import { KosherCommonService } from '../../services/kosher-common.service';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { MultiSelect } from 'primeng/multiselect';
@@ -152,6 +151,8 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
 
   idUsuario: number = 0;
   isDialogOpen: boolean = false;
+
+  intervaloFechasCarga: {inicio: string, fin: string}[] = [];
   //#endregion
 
   //#region constructor
@@ -423,8 +424,9 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       this.isDialogOpen = false;
       if (result !== undefined) {
         try {
-          await this.getCodigosConPrecio();
-          await this.getFechasListasPrecios();
+          // await this.getCodigosConPrecio();
+          // await this.getFechasListasPrecios();
+          await this.ngOnInit();
         } catch (error) {
           console.error('ERROR: ', error);
         }
@@ -455,7 +457,6 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Funciones auxiliares
-
   private getUrl(): string {
     return window.location.href;
   }
@@ -487,7 +488,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   todoListo(pesosContenedores: PesoBrutoContenedor[]): void {
-    if (pesosContenedores.length > 0) {
+    if (pesosContenedores.length > 0) { 
       this.procederConReporte(true);
       this.pesosContenedoresEmmiter.emit(pesosContenedores);
       this.getCodigosPrecio.emit(this.precios);
@@ -554,7 +555,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
       })
       .catch((error) => {
         console.log(error);
-      });
+      });      
   }
 
   private ordenarArray(array: string[]): string[] {
@@ -718,9 +719,11 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   selectedCargas: number[] = [];
   datosContenedores: ContainerDTO[] = [];
   fechaDesde!: Date;
+  fechaHasta!: Date;
   fechaDesdeStr!: string;
+  fechaHastaStr!: string;
   hoy: Date = new Date();
-  hoyStr: string = this.formatearFecha(this.hoy);
+  hoyStr: string = this.cs.formatearFecha(this.hoy);
   datosCarga: DatoCargaExpo[] = [];
   datosCargaReporte: DatoCargaExpo[] = [];
   datoCargaDto!:    CargaDTO;
@@ -739,11 +742,12 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   protected async hacerReporte(): Promise<void> {
-    this.datosCargaReporte = this.filtrarDatosPorContenedoresSeleccionados();
+    this.datosCargaReporte = this.filtrarDatosPorContenedoresSeleccionados(); 
+    
 
     if (this.datosCargaReporte.length > 0) {
       this.datosCargaReporte.forEach((d) => {
-        d.productiondate = this.formatearFecha(new Date(d.productiondate));
+        d.productiondate = this.cs.formatearFecha(new Date(d.productiondate));
       });
 
       this.mostrarPrecios = true;
@@ -762,25 +766,29 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
 
   protected async buscarDatos(): Promise<void> {
     this.resetearDatos();
-    this.fechaDesde = this.ajustarFecha(new Date(this.fechaDesdeStr));
-    this.datosCarga = await lastValueFrom(
-      this.cargaService.getProductosCarga(this.fechaDesde)
-    );
-   
+    this.intervaloFechasCarga = this.ckcs.obtenerIntervalosFechasCarga(this.fechaDesdeStr, this.fechaHastaStr);
+
+    for(let i = 0; i < this.intervaloFechasCarga.length; i++) {
+      const intervalo = this.intervaloFechasCarga[i];
+      const fDesde = this.ajustarFecha(new Date(intervalo.inicio)); 
+      const fHasta = this.ajustarFecha(new Date(intervalo.fin)); 
+      const datos = await lastValueFrom(this.cargaService.getProductosCargaPorRangoFechas(fDesde, fHasta));
+      
+      this.datosCarga = this.datosCarga.concat(datos);
+    }
+    
     this.mostrarPrecios = this.datosCarga.length > 0;
     
     this.obtenerIdsCargaYNombresContenedores();
   }
 
   protected onCambioFecha(): void {}
-  private formatearFecha(fecha: Date): string {
-    let f = new Date(fecha);
-    return formatDate(f.setHours(f.getHours() + 3), 'yyyy-MM-dd', 'es-UY');
-  }
 
   private resetearFechas(): void {
     this.fechaDesde = new Date();
-    this.fechaDesdeStr = this.formatearFecha(this.fechaDesde);
+    this.fechaHasta = new Date();
+    this.fechaDesdeStr = this.cs.formatearFecha(this.fechaDesde);
+    this.fechaHastaStr = this.cs.formatearFecha(this.fechaHasta);
   }
 
   private resetearDatos(): void {
@@ -791,7 +799,7 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   private ajustarFecha(fecha: Date): Date {
-    return new Date(fecha.setDate(fecha.getDate() + 1));
+    return new Date(fecha.setDate(fecha.getDate()));
   }
 
   private obtenerIdsCargaYNombresContenedores(): void {
@@ -809,9 +817,11 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
   }
 
   private filtrarDatosPorContenedoresSeleccionados(): DatoCargaExpo[] {
-    return this.datosCarga.filter((d) =>
+    const data = 
+     this.datosCarga.filter((d) =>
       this.selectedCargas.includes(d.id_Carga)
     );
+    return data;
   }
 
   private setDatosCarga(): CargaDTO {
@@ -822,6 +832,11 @@ export class ConfigPreciosComponent implements OnInit, OnDestroy {
     
     return { idCarga: this.selectedCargas, contenedores };
   }
+
+  protected async reiniciar(): Promise<void> {
+    window.location.reload();
+  }
+
   //#endregion
 
 

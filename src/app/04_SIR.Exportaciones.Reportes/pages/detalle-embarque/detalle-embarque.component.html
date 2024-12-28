@@ -7,16 +7,16 @@
                 (getDatosCarga)="getDatosCarga($event)"
                 (habilitarReporte)="habilitar($event)"
                 (getCodigosPrecio)="getPrecios($event)"
-                (getCodigosKosher)="getConfProductos($event)"
+                (getCodigosKosher)="setConfProductos($event)"
                 (pesosContenedoresEmmiter)="getPesosContenedores($event)"
             />
         </div>
-        <div class="data--buttons" *ngIf="habilitarReporte">
+        <!-- <div class="data--buttons" *ngIf="habilitarReporte">
             <button
                 (click)="mostrarConfig()" pButton type="button" [label]="labelConfigurar" icon="pi pi-cog"
                 class="p-button-sm p-button-warning btn-config">
             </button>
-        </div>
+        </div> -->
         <div class="data--reporte" *ngIf="habilitarReporte">
             <cortes-group
                 [productosKosher]="confProductos"
