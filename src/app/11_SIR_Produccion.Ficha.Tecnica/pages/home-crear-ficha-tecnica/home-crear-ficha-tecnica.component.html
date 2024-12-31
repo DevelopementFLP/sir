@@ -10,21 +10,21 @@
                                 routerLink="./listaDeFichasTecnicas">
                         </button>
                 
-                        <button pButton 
+                        <button pButton *ngIf="esUsuarioAdmin"
                                 label="Crear Ficha Técnica" 
                                 icon="pi pi-align-justify" 
                                 class="p-button-violet p-button-rounded"
                                 routerLink="./crearFichaTecnica">
                         </button>
 
-                        <button pButton 
+                        <button pButton *ngIf="esUsuarioAdmin"
                                 label="Lista de Plantilas" 
                                 icon="pi pi-file" 
                                 class="p-button-info p-button-rounded"
                                 routerLink="./listaDePlantillas">
                         </button>
                 
-                        <button pButton 
+                        <button pButton *ngIf="esUsuarioAdmin"
                                 label="Crear Plantilla" 
                                 icon="pi pi-file" 
                                 class="p-button-info p-button-rounded"
@@ -32,7 +32,7 @@
                         </button>
 
                 
-                        <button pButton 
+                        <button pButton *ngIf="esUsuarioAdmin"
                                 label="Crear Producto" 
                                 icon="pi pi-bookmark" 
                                 class="p-button-warning p-button-rounded"

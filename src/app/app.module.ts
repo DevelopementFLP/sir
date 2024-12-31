@@ -64,6 +64,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
+
 registerLocaleData(localeEs);
 
 @NgModule({

@@ -77,6 +77,7 @@ export class ModalDispositivoComponent implements OnInit {
       this._tipoDispositivoService.getTiposDispositivo().subscribe({
         next: (data) => {
           if(data.resultado) this.listaDeTiposDispositivos = data.resultado
+          console.log(data.resultado)
         },
         error:(e) =>{}
       })
@@ -113,6 +114,8 @@ export class ModalDispositivoComponent implements OnInit {
       idFormato: this.formularioDispositivo.value.idFormato,  
      
     }
+
+    console.log(_dispositivo)
 
     if(this.datosDispositivo == null){
 

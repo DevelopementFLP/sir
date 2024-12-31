@@ -46,4 +46,6 @@ export interface FtFichaTecnicaDTO {
     elaboradoPor?: string;
     aprobadoPor?: string;
     fechaCreacion?: string;
+
+    archivoPdf?: string;
 }

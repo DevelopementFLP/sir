@@ -288,43 +288,6 @@ export class CrearPlantillaFichaTecnicaComponent {
   }
 
 
-  public BuscarPlantillaDeAspectosGenerales(): void {
-    if (this.descripcionDePlantilla) {
-      this._FtAspectosGeneralesService.BuscarPlantillaDeAspectosGenerales(this.descripcionDePlantilla).subscribe(
-        (response: ApiResponse) => {
-          if (response.esCorrecto) {
-            this.plantillaSeleccionada = response.resultado; 
-            // Aquí puedes asignar los valores a los formularios si lo deseas
-            this.formularioAspectosGenerales.patchValue({
-              seccionDePlantilla: this.plantillaSeleccionada.seccionDePlantilla,
-              nombre: this.plantillaSeleccionada.nombre,
-              nombreDeProducto: this.plantillaSeleccionada.nombreDeProducto,
-              idMarca: this.plantillaSeleccionada.idMarca,
-              idTipoDeUso: this.plantillaSeleccionada.idTipoDeUso,
-              idAlergeno: this.plantillaSeleccionada.idAlergeno,
-              idCondicionAlmacenamiento: this.plantillaSeleccionada.idCondicionAlmacenamiento,
-              idVidaUtil: this.plantillaSeleccionada.idVidaUtil,
-              idTipoDeEnvase: this.plantillaSeleccionada.idTipoDeEnvase,
-              idPresentacionDeEnvase: this.plantillaSeleccionada.idPresentacionDeEnvase,
-              pesoPromedio: this.plantillaSeleccionada.pesoPromedio,
-              unidadesPorCaja: this.plantillaSeleccionada.unidadesPorCaja,
-              dimensiones: this.plantillaSeleccionada.dimensiones,                            
-            });
-            console.log(response.resultado);
-          } else {
-            Swal.fire('Error', response.mensaje!, 'error'); 
-          }
-        },
-        error => {
-          Swal.fire('Error', 'Error al buscar la plantilla', 'error');
-        }
-      );
-    } else {
-      Swal.fire('Advertencia', 'Por favor, ingrese una descripción para buscar.', 'warning');
-    }
-  }
-
-
   public EditarPlantillaDeAspectosGenerales(): void {
 
     if (!this.plantillaSeleccionada) {
@@ -368,51 +331,7 @@ export class CrearPlantillaFichaTecnicaComponent {
     }
   }
 
-  public BuscarPlantillaDeEspecificaciones(): void {
-    if (this.descripcionDePlantilla) {
-      this._FtEspecificacionesService.BuscarPlantillaDeEspecificaciones(this.descripcionDePlantilla).subscribe(
-        (response: ApiResponse) => {
-          console.log(response.esCorrecto)
-          if (response.esCorrecto) {
-            this.plantillaSeleccionada = response.resultado;
-  
-            // Asignar los valores a los formularios
-            this.formularioEspecificaciones.patchValue({
-              seccionDePlantilla: this.plantillaSeleccionada.seccionDePlantilla,
-              nombre: this.plantillaSeleccionada.nombre,
-              grasaVisible: this.plantillaSeleccionada.grasaVisible,
-              espesorCobertura: this.plantillaSeleccionada.espesorCobertura,
-              ganglios: this.plantillaSeleccionada.ganglios,
-              hematomas: this.plantillaSeleccionada.hematomas,
-              huesosCartilagos: this.plantillaSeleccionada.huesosCartilagos,
-              elementosExtraños: this.plantillaSeleccionada.elementosExtraños,
-              idColor: this.plantillaSeleccionada.idColor,
-              idOlor: this.plantillaSeleccionada.idOlor,
-              idPh: this.plantillaSeleccionada.idPh,
-              aerobiosMesofilosTotales: this.plantillaSeleccionada.aerobiosMesofilosTotales,
-              enterobacterias: this.plantillaSeleccionada.enterobacterias,
-              stec0157: this.plantillaSeleccionada.stec0157,
-              stecNo0157: this.plantillaSeleccionada.stecNo0157,
-              salmonella: this.plantillaSeleccionada.salmonella,
-              estafilococos: this.plantillaSeleccionada.estafilococos,
-              pseudomonas: this.plantillaSeleccionada.pseudomonas,
-              escherichiaColi: this.plantillaSeleccionada.escherichiaColi,
-              coliformesTotales: this.plantillaSeleccionada.coliformesTotales,
-              coliformesFecales: this.plantillaSeleccionada.coliformesFecales,
-            });
-          } else {
-            Swal.fire('Error', response.mensaje!, 'error');
-          }
-        },
-        error => {
-          Swal.fire('Error', 'Error al buscar la plantilla', 'error');
-        }
-      );
-    } else {
-      Swal.fire('Advertencia', 'Por favor, ingrese una descripción para buscar.', 'warning');
-    }
-  }
-  
+   
 
   public EditarFormularioEspecificaciones(): void {
     

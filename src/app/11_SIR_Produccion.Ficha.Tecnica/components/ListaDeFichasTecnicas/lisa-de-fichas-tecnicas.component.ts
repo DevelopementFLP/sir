@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FtFichaTecnicaDTO } from '../../interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
 import { FtFichaTecnicaService } from '../../service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
 
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'component-lisa-de-fichas-tecnicas',
@@ -12,14 +13,19 @@ import { Router } from '@angular/router';
 })
 export class LisaDeFichasTecnicasComponent {
 
+  @ViewChild('dt') table: Table | undefined;
+
   public fichaTecnica: FtFichaTecnicaDTO[] = []; 
   public fichaSeleccionada: FtFichaTecnicaDTO | null = null;
   public modalEditarFichaTecnicaActivo = false;
   public modalVerFichaTecnicaActivo = false; 
   public loading = true; 
 
-  public mostrarBotonesSegunRuta: boolean = false; 
+  public esUsuarioAdmin: boolean = false; 
   rutaActual: string = ''; 
+
+  public page: number = 1;  // Página inicial
+  public size: number = 10; // Tamaño de la página
 
   constructor(
     private fichaTecnicaService: FtFichaTecnicaService,
@@ -27,19 +33,19 @@ export class LisaDeFichasTecnicasComponent {
   ) { }
 
   ngOnInit(): void {
-    // Detectar la ruta actual y mostrar los botones según la ruta
-    this.router.events.subscribe(() => {
-      this.mostrarBotonesSegunRuta = this.router.url.includes('CrearProductoFichaTecnica');
-      // Guardamos la ruta actual para aplicar diferentes estilos si es necesario
-      this.rutaActual = this.router.url;
-    });
+
+    const usuario = JSON.parse(localStorage.getItem('actualUser') || '{}');
+    console.log(usuario);
+    if (usuario && usuario.id_usuario == 27 || usuario.id_perfil == 1) {
+      this.esUsuarioAdmin = true; 
+    }
   
     this.ObtenerFichasTecnicas();
   }
 
 
   public ObtenerFichasTecnicas(): void {
-    this.loading = true; // Asegúrate de que el loading esté en true cuando se haga la llamada
+    this.loading = true; 
   
     this.fichaTecnicaService.GetListaDeFichasTecnicas().subscribe(response => {
       if (response.esCorrecto) {
@@ -74,14 +80,22 @@ export class LisaDeFichasTecnicasComponent {
   // Método para cerrar el modal
   public CerrarModalEditarFichaTecnica() {
     this.modalEditarFichaTecnicaActivo = false;
-    this.ObtenerFichasTecnicas();
   }
 
   // Método que se llama cuando el modal se cierra después de la edición
-  public EscucharCierreDeModal(event: boolean): void {
-    if (event) {
+  public EscucharCierreDeModal(event: boolean, fichaActualizada: FtFichaTecnicaDTO | null): void {
+    if (event && fichaActualizada) {
+
+      const index = this.fichaTecnica.findIndex(ficha => ficha.idFichaTecnica === fichaActualizada.idFichaTecnica);
+      if (index !== -1) {
+        this.fichaTecnica[index] = fichaActualizada;  
+        if (this.table) {
+          this.table.reset();  
+        }
+      }
+      this.modalEditarFichaTecnicaActivo = false;  
+    } else if (!event) {
       this.modalEditarFichaTecnicaActivo = false;
-      this.ObtenerFichasTecnicas();
     }
   }
   
@@ -101,8 +115,7 @@ export class LisaDeFichasTecnicasComponent {
 
     // Obtener el código de producto hasta el primer espacio
     const codigoCorto = codigoDeProducto.split(' ')[0];
-
-
+    
     Swal.fire({
       title: '¿Estás seguro?',
       text: "No podrás recuperar esta ficha técnica una vez eliminada.",

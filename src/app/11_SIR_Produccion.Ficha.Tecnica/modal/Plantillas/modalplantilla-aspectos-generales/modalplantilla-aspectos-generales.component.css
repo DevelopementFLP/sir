@@ -1,20 +1,25 @@
-/* Estilos para la grid-container */
-.grid-container {
-    display: grid;
-    gap: 16px; /* Espacio entre las celdas */
+
+.modal-content {
     padding: 20px;
-    font-size: 14px; /* Aumentamos el tamaño de la fuente para una mejor legibilidad */
+    font-family: Arial, sans-serif;
 }
 
-/* Estilo para cada item dentro de la grid */
+
+.grid-container-seccion {
+    display: grid;
+    gap: 16px; 
+    padding: 10px;
+    font-size: 14px; 
+}
+
 .grid-items {
     display: flex;
     flex-direction: column;
 }
 
-.grid-items label {
+.grid-items p {
     font-weight: bold;
-    margin-bottom: 6px; 
+    margin-bottom: 6px;
 }
 
 .input-field {
@@ -23,12 +28,11 @@
     border-radius: 4px;
     font-size: 14px;
     width: 100%;
-    box-sizing: border-box; 
-    margin-bottom: 12px; 
+    box-sizing: border-box;
+    margin-bottom: 12px;
 }
 
-/* Estilo base para el botón */
-.btn-editar {
+.btn-edit {
     padding: 10px 20px;
     background-color: #528a51;
     color: white;
@@ -36,28 +40,73 @@
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s, opacity 0.3s;
+    font-size: 14px;
 }
 
-/* Efecto cuando el botón es hover */
-.btn-editar:hover {
+.btn-edit:hover {
     background-color: #0056b3;
 }
 
-/* Estilo cuando el botón está deshabilitado */
-.btn-editar:disabled {
-    background-color: #ccc; 
-    color: #999;  
-    cursor: not-allowed;  
-    opacity: 0.6;  
+.btn-edit:disabled {
+    background-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
-.input-container {
+
+select.input-field {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.grid-items p {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+
+.p-footer {
     display: flex;
-    align-items: center;
-    justify-content: space-between; /* Alinea los elementos de manera que haya espacio entre el input y el checkbox */
+    justify-content: flex-end;
+    padding: 10px;
 }
 
-.input-field {
-    flex-grow: 1; /* Esto hace que el campo de texto ocupe todo el espacio disponible */
-    margin-right: 10px; /* Añade un pequeño espacio entre el input y el checkbox */
+select.input-field {
+    background-color: #f9f9f9;
+}
+
+
+.tabla-de-datos {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.p-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.p-table th, .p-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.p-table th {
+    background-color: #f5f5f5;
+    text-align: left;
+}
+
+.p-button {
+    font-size: 14px;
+}
+
+.acciones button {
+    margin-left: 10px;
 }

@@ -18,6 +18,7 @@ export class CrearProductoFichaTecnicaComponent {
   public productoEncontrado: boolean = false;
   public buscaronUnProducto: boolean = false;
 
+  public idProducto: number = 0;
   public codigoProducto: string | null = null;
   public nombreProducto: string | null = null;
   public descripcionProducto: string | null = null;
@@ -33,8 +34,8 @@ export class CrearProductoFichaTecnicaComponent {
             next: (response) => {
                 if (response.esCorrecto && response.resultado) {
                     const producto = response.resultado;
+                    this.idProducto = producto.idProducto;
 
-                    // Asignar los IDs a las variables correspondientes
                     this.codigoProducto = producto.codigoProducto;
                     this.nombreProducto = producto.nombre;
                     this.descripcionProducto = producto.nombreDeProductoParaFicha;
@@ -45,7 +46,7 @@ export class CrearProductoFichaTecnicaComponent {
                     this.buscaronUnProducto = true;
                     this.productoBuscado = '';
                 } else {
-                    // Mostrar un Sweet Alert con una opción para crear el producto
+
                     Swal.fire({
                         title: 'Producto no encontrado',
                         text: `El producto con ID: ${this.productoBuscado} no existe. ¿Deseas crearlo?`,
@@ -117,7 +118,7 @@ export class CrearProductoFichaTecnicaComponent {
       }
   
       const nuevoProducto = {
-          idProducto: 0,  // El ID se genera automáticamente en la base de datos.
+          idProducto: 0,  
           codigoProducto: this.codigoProducto!,
           nombre: this.nombreProducto!,
           nombreDeProductoParaFicha: this.descripcionProducto! || '',
@@ -138,7 +139,42 @@ export class CrearProductoFichaTecnicaComponent {
           }
       });
     }
+
+    public EliminarProducto() {
+      if (!this.idProducto) {
+          this._sweetAlertComponent.AlertaErrorgenerica("Error", "No se ha seleccionado ningún producto.");
+          return;
+      }
   
+      // Confirmar si el usuario desea eliminar el producto
+      Swal.fire({
+          title: '¿Estás seguro?',
+          text: `¿Deseas eliminar el producto con el código: ${this.idProducto}?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, Eliminar',
+          cancelButtonText: 'No, Cancelar'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Llamamos al servicio para eliminar el producto
+              this._productoService.EliminarProducto(this.idProducto!).subscribe({
+                  next: (response) => {
+                      if (response.esCorrecto) {
+                          this._sweetAlertComponent.AlertaSuccessgenerica("Producto Eliminado", "El producto ha sido eliminado exitosamente.");
+                          this.LimpiarFormulario();  
+                      } else {
+                          this._sweetAlertComponent.AlertaErrorgenerica("Error", "No se pudo eliminar el producto.");
+                      }
+                  },
+                  error: (error) => {
+                      this._sweetAlertComponent.AlertaErrorgenerica("Error", `Error al eliminar el producto: ${error.message}`);
+                  }
+              });
+          }
+      });
+  }  
 
     public LimpiarFormulario() {
         this.nombreProducto = null;

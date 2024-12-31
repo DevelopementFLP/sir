@@ -10,7 +10,7 @@ export interface FtAspectosGeneralesPlantillaDTO {
   idVidaUtil: number;
   idTipoDeEnvase: number;
   idPresentacionDeEnvase: number;
-  pesoPromedio: number;
-  unidadesPorCaja: number;
+  pesoPromedio: string;
+  unidadesPorCaja: string;
   dimensiones: string;
 }

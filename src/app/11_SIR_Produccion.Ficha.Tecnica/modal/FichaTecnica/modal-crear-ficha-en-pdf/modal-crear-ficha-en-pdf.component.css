@@ -1,0 +1,141 @@
+/* Contenedor principal */
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Estilo del input */
+.input-codigo {
+    padding: 0.8rem 1.5rem;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 320px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    margin-bottom: 1rem; 
+}
+
+.nombre-de-product{
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.botones-de-accion{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+/* Estilo para la lista de códigos */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    color: #333;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+.select-de-destino{
+    margin-bottom: 1rem;
+}
+
+
+
+
+/* .seccion-de-imagenes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+} */
+
+/* 
+.grid-encabezado-seccion-3 {
+    margin: 2rem 0 2rem 0;
+}
+
+p-dropdown {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+
+.grid-items-seccion {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.caj-3-sec-2 {
+    text-align: center;
+}
+
+.cajas-de-datos {
+    font-size: 16px;
+    text-align: center;
+    color: #555;
+}
+
+.imagen-con-boton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.imagen-con-boton img {
+    max-width: 700px;
+    max-height: 700px;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.boton-de-carga-de-imagen {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.boton-de-carga-de-imagen i {
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+.boton-de-carga-de-imagen input {
+    display: none;
+}
+
+
+.seccion-de-imagenes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    gap: 1rem;  /* Espaciado entre botones 
+}
+
+p-fileUpload {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 1rem;
+} */

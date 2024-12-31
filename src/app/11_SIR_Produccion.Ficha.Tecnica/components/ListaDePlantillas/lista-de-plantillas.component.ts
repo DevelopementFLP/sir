@@ -115,16 +115,95 @@ export class ListaDePlantillasComponent implements OnInit {
     this.modalEditarPlantillaEspecificacionesActivo = false;
   }
 
-  // Método que se llama cuando el modal se cierra después de la edición
-  public EscucharCierreDeModal(event: boolean): void {
-    if (event) {
+
+  public EscucharCierreDeModal(tipoModal: string): void {
+    if (tipoModal === 'aspectosGenerales') {
       this.modalEditarPlantillaAspectosGeneralesActivo = false;
-      this.CargarPlantillas(); 
+      this.ObtenerPlantillasAspectosGenerales();
+      this.tipoPlantillaSeleccionado = 'aspectosGenerales'; 
+    } else if (tipoModal === 'especificaciones') {
+      // Si el modal cerrado es de Especificaciones
+      this.modalEditarPlantillaEspecificacionesActivo = false;
+      this.ObtenerPlantillasEspecificaciones();
+      this.tipoPlantillaSeleccionado = 'especificaciones'; 
+    } else {
+     
+      this.modalEditarPlantillaAspectosGeneralesActivo = false;
+      this.modalEditarPlantillaEspecificacionesActivo = false;
+      this.resultadoDePlantillaSeleccionada = []; 
+      this.tipoPlantillaSeleccionado = 'aspectosGenerales'; 
     }
   }
+  
 
-  public EliminarPlantilla(idPlantilla: number) {
-    console.log(`Eliminando plantilla con ID: ${idPlantilla}`);
+  public EliminarPlantilla(idPlantilla: number): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "No podrás recuperar esta plantilla una vez eliminada.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.tipoPlantillaSeleccionado === 'aspectosGenerales') {
+
+          this._plantillaAspectosGeneralesService.EliminarAspectoGeneral(idPlantilla).subscribe(response => {
+            if (response.esCorrecto) {
+              this.ObtenerPlantillasAspectosGenerales();
+              Swal.fire(
+                'Eliminado!',
+                'La plantilla de aspectos generales ha sido eliminada.',
+                'success'
+              );
+            } else {
+              console.error('Error al eliminar ficha técnica de Aspectos Generales: ', response.mensaje);
+              Swal.fire(
+                'Error',
+                'Hubo un problema al eliminar la plantilla de aspectos generales.',
+                'error'
+              );
+            }
+          }, error => {
+            console.error('Error de conexión al eliminar ficha técnica de Aspectos Generales: ', error);
+            Swal.fire(
+              'Error',
+              'Hubo un problema al eliminar la plantilla de aspectos generales.',
+              'error'
+            );
+          });
+        } else if (this.tipoPlantillaSeleccionado === 'especificaciones') {
+
+          this._plantillaEspecificacionesService.EliminarEspecificaciones(idPlantilla).subscribe(response => {
+            if (response.esCorrecto) {
+              this.ObtenerPlantillasEspecificaciones();  
+              Swal.fire(
+                'Eliminado!',
+                'La plantilla de especificaciones ha sido eliminada.',
+                'success'
+              );
+            } else {
+              console.error('Error al eliminar ficha técnica de Especificaciones: ', response.mensaje);
+              Swal.fire(
+                'Error',
+                'Hubo un problema al eliminar la plantilla de especificaciones.',
+                'error'
+              );
+            }
+          }, error => {
+            console.error('Error de conexión al eliminar ficha técnica de Especificaciones: ', error);
+            Swal.fire(
+              'Error',
+              'Hubo un problema al eliminar la plantilla de especificaciones.',
+              'error'
+            );
+          });
+        }
+      }
+    });
   }
+  
 
 }

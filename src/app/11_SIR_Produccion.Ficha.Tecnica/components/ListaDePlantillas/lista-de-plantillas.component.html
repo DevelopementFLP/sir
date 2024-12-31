@@ -1,14 +1,14 @@
 <body>
   <div *ngIf="loading">Cargando plantillas...</div>
   
-  <!-- Selector para elegir entre Aspectos Generales y Especificaciones -->
+
   <div class="selector-plantillas">
     <label for="tipoPlantilla">Selecciona el tipo de plantilla:</label>
     <select id="tipoPlantilla" [(ngModel)]="tipoPlantillaSeleccionado" (change)="CargarPlantillas()">
       <option value="aspectosGenerales">Aspectos Generales</option>
       <option value="especificaciones">Especificaciones</option>
     </select>
-  </div>
+  </div>  
 
   <div class="contenedor-de-pagina">
     <p-table 
@@ -23,7 +23,10 @@
 
       <ng-template pTemplate="header">
         <tr>
-          <th>ID</th>
+          <th pSortableColumn="idPlantilla">
+            ID
+            <p-sortIcon field="idPlantilla"></p-sortIcon> 
+          </th>
           <th>
             Nombre de Plantilla
             <p-columnFilter type="text" field="nombre" display="menu" />
@@ -59,7 +62,7 @@
 
     <!-- Modal para Especificaciones -->
     <p-dialog [(visible)]="modalEditarPlantillaEspecificacionesActivo" [style]="{width: '80%'}" header="Editar Especificaciones" [closable]="false">
-      <modal-plantilla-especificaciones></modal-plantilla-especificaciones>
+      <modal-plantilla-especificaciones [plantilla]="plantillasEspecificacionesSeleccionada" (modalCerrado)="EscucharCierreDeModal($event)"></modal-plantilla-especificaciones>
       <p-footer>
         <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalEditarPlantilla()"></button>
       </p-footer>

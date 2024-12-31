@@ -5,7 +5,7 @@ body {
 }
 
 .contenedor-de-pagina {
-  width: 80%; 
+  width: 90%; 
   display: flex;
   flex-direction: column;
   justify-content: center; 
@@ -19,12 +19,38 @@ body {
   margin-bottom: 2rem; 
 }
 
+.selector-plantillas {
+  margin-left: 6rem;
+}
+
 .selector-plantillas label {
   font-size: 16px;
   font-weight: 600;
   margin-right: 10px;
   color: #fff;
 }
+
+.selector-plantillas select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.selector-plantillas select:hover {
+  border-color: #528a51; /* Color verde similar a los botones */
+}
+
+.selector-plantillas select:focus {
+  border-color: #0056b3; /* Azul de enfoque para resaltar el campo */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 
 .contenedor-de-pagina p-table .acciones {
   text-align: right; 

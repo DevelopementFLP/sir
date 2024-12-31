@@ -7,6 +7,15 @@ import { Component } from '@angular/core';
 })
 export class HomeCrearProductoFichaTecnicaComponent {
 
+  public esUsuarioAdmin: boolean = false; 
   
+  ngOnInit(): void {
+
+  const usuario = JSON.parse(localStorage.getItem('actualUser') || '{}');
+  
+  if (usuario && usuario.id_usuario == 27 || usuario.id_perfil == 1) {
+      this.esUsuarioAdmin = true; 
+    }
+  }
 
 }

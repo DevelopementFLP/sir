@@ -755,24 +755,55 @@ h1, h2, h3{
     width: 100%;
     max-width: 400px;  
     margin: 0 auto;
-  }
-  
-  .icono-no-ficha {
+}
+
+.icono-no-ficha {
     font-size: 3rem;  
     color: #e74c3c;  
     margin-bottom: 10px;  
-  }
-  
-  .mensaje-no-ficha {
+}
+
+.mensaje-no-ficha {
     font-size: 1.2rem;
     color: #555;
     margin: 0;
     padding: 0;
     font-weight: bold;  
-  }
+}
   
-  .mensaje-no-ficha strong {
+.mensaje-no-ficha strong {
     color: #e74c3c;  
-  }
+}
   
+  /* Estilo del botón de descarga */
+.btn-download {
+    margin-top: 1.5rem;
+    padding: 12px 20px; /* Tamaño más grande */
+    background-color: #3498db; /* Fondo azul brillante */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Transición suave */
+    text-align: center;
+}
+
+.btn-download:hover {
+    background-color: #2980b9; /* Cambio de color en hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra al pasar el cursor */
+}
+
+.btn-download:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.6); /* Sombra en foco */
+}
+
+/* Botón deshabilitado */
+.btn-download:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
 

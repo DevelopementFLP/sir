@@ -10,11 +10,13 @@ import { FtProductoService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/servi
 
 import { FtFichaTecnicaService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtFichaTecnica/FtFichaTecnica.service';
 
-import Swal from 'sweetalert2';
 import { FtFichaTecnicaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtFichaTecnicaDTO';
 import { FtDestinosService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/MantenimientoFichaTecnicaServicios/FtDestinos/FtDestinos.service';
 import { FtDestinoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/MantenimientoFichaTecnicaInterface/Destinos/FtDestinoDTO';
 import { FtEspecificacionesService } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/service/CreacionDeFichaTecnicaServicios/FtPlantilla/FtEspecificaciones.service';
+
+import Swal from 'sweetalert2';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'component-crear-ficha-tecnica',
@@ -22,6 +24,8 @@ import { FtEspecificacionesService } from 'src/app/11_SIR_Produccion.Ficha.Tecni
   styleUrls: ['./crear-ficha-tecnica.component.css']
 })
 export class CrearFichaTecnicaComponent {
+
+  public modalCargarPdf = false;
     
   public contadorDePasadas: number = 0;
   public listaDeProductosParaCargar: string[] = [];
@@ -415,10 +419,12 @@ export class CrearFichaTecnicaComponent {
         observacion: this.observacionDelProducto || '',
         elaboradoPor: this.elaboradoPor || '', 
         aprobadoPor: this.aprobadoPor || '', 
-        fechaCreacion: this.fechaDelDia || '', 
+        fechaCreacion: this.fechaDelDia || '',
     };
 
-    this._FtFichaTecnicaService.CrearFichaTecnica(fichaTecnica).subscribe(
+    const emptyFile = new File([], ''); // Crea un archivo vacío
+
+    this._FtFichaTecnicaService.CrearFichaTecnica(fichaTecnica, emptyFile ).subscribe(
         response => {
             if (response.esCorrecto) {   
                 
@@ -561,6 +567,21 @@ export class CrearFichaTecnicaComponent {
             console.error('Error en la solicitud:', error);
             Swal.fire('Error', 'Error al crear imágenes', 'error');
         });
+  }
+
+  public AbrirModalCargarPdf(){
+      this.modalCargarPdf = true;
+  }
+
+  public CerrarModalCargarPdf(){
+    this.modalCargarPdf = false;
+  }
+
+  // Método que se llama cuando el modal se cierra después de la edición
+  public EscucharCierreDeModal(event: boolean): void {
+    if (event) {
+      this.modalCargarPdf = false;
+    }
   }
 
   public LimpiarCampos() {

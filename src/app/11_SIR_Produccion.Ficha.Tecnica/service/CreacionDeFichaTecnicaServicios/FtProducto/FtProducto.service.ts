@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { FtProductoDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtProductoDTO';
-import { urlCrearProductosFichaTecnica, urlEditarProductosFichaTecnica, urlGetProductoFiltradoFichaTecnica } from 'src/settings';
+import { urlCrearProductosFichaTecnica, urlEditarProductosFichaTecnica, urlEliminarProductosFichaTecnica, urlGetProductoFiltradoFichaTecnica } from 'src/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +27,12 @@ export class FtProductoService {
 
   public EditarProducto(modelo: FtProductoDTO): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(`${urlEditarProductosFichaTecnica}`, modelo);
+  }
+
+  public EliminarProducto(idProducto: number): Observable<ApiResponse> {
+    let params = new HttpParams()
+    .set('idProducto', idProducto)
+    return this.http.delete<ApiResponse>(`${urlEliminarProductosFichaTecnica}`, {params});
   }
 
 }

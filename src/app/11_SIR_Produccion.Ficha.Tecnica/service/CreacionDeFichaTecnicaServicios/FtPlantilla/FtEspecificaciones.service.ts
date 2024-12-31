@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { FtEspecificacionesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtEspecificacionesDTO';
-import { urlBuscarPlantillaDeEspecificaciones, urlCrearPlantillaEspecificacionesFichaTecnica, urlEditarPlantillaDeEspecificaciones, urlGetResponseEspecificacionesPlantilla, urlListaEspecificacionesPlantilla } from 'src/settings';
+import { urlCrearPlantillaEspecificacionesFichaTecnica, urlEditarPlantillaDeEspecificaciones, urlEliminarEspecificaciones, urlGetResponseEspecificacionesPlantilla, urlListaEspecificacionesPlantilla } from 'src/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +22,6 @@ export class FtEspecificacionesService {
     return this.http.post<ApiResponse>(`${urlCrearPlantillaEspecificacionesFichaTecnica}`, modelo);
   }
 
-  public BuscarPlantillaDeEspecificaciones(nombreDePlantilla: string): Observable<ApiResponse> {
-    let params = new HttpParams()
-    .set('nombreDePlantilla', nombreDePlantilla)
-    return this.http.get<ApiResponse>(`${urlBuscarPlantillaDeEspecificaciones}`, { params });
-  }
-
   public EditarCamposDeEspecificaciones(modelo: FtEspecificacionesPlantillaDTO): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(`${urlEditarPlantillaDeEspecificaciones}`, modelo);
   }
@@ -36,6 +30,11 @@ export class FtEspecificacionesService {
     let params = new HttpParams()
     .set('idPlantilla', idPlantilla)
     return this.http.get<ApiResponse>(`${urlGetResponseEspecificacionesPlantilla}`, { params });
+  }
+
+  public EliminarEspecificaciones(idPlantilla: number): Observable<ApiResponse> {
+    const params = new HttpParams().set('idPlantilla', idPlantilla.toString());
+    return this.http.delete<ApiResponse>(`${urlEliminarEspecificaciones}`, { params });
   }
 
 }

@@ -63,9 +63,6 @@ export class ModalformatoComponent {
       errorLectura: this.formularioFormatos.value.errorLectura,
     }
 
-    console.log(_formato)
-    
-
     if(this.datosFormato == null){
 
       this._formatoServicio.createFormatoDispositivo(_formato).subscribe({
