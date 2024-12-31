@@ -1,1 +1,237 @@
-<p>modalplantilla-especificaciones works!</p>
+<!-- Modal Plantilla Aspectos Generales -->
+<div class="modal-content">
+    <div class="modal-body">
+    
+      <!-- Nombre de Plantilla -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Nombre de Plantilla</p>
+          <input [(ngModel)]="nombre" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Nombre de Plantilla">
+        </div>
+      </div>
+    
+      <!-- Grasa Visible -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Grasa Visible</p>
+          <input [(ngModel)]="grasaVisible" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Grasa Visible">
+        </div>
+      </div>
+    
+      <!-- Espesor Cobertura -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Espesor Cobertura</p>
+          <input [(ngModel)]="espesorCobertura" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Espesor Cobertura">
+        </div>
+      </div>
+    
+      <!-- Color -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Color</p>
+          <select [(ngModel)]="idColor" (ngModelChange)="VerificarCambios()" class="input-field">
+            <option *ngFor="let color of colores" [value]="color.idColor">{{ color.nombre }}</option>
+          </select>
+        </div>
+      </div>
+    
+      <!-- Olor -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Olor</p>
+          <select [(ngModel)]="idOlor" (ngModelChange)="VerificarCambios()" class="input-field">
+            <option *ngFor="let olor of olores" [value]="olor.idOlor">{{ olor.nombre }}</option>
+          </select>
+        </div>
+      </div>
+    
+      <!-- pH -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>pH</p>
+          <select [(ngModel)]="idPh" (ngModelChange)="VerificarCambios()" class="input-field">
+            <option *ngFor="let ph of phs" [value]="ph.idPh">{{ ph.nombre }}</option>
+          </select>
+        </div>
+      </div>
+    
+      <!-- Ganglios -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Ganglios</p>
+          <input [(ngModel)]="ganglios" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Ganglios">
+        </div>
+      </div>
+    
+      <!-- Hematomas -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Hematomas</p>
+          <input [(ngModel)]="hematomas" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Hematomas">
+        </div>
+      </div>
+    
+      <!-- Huesos y Cartílagos -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Huesos y Cartílagos</p>
+          <input [(ngModel)]="huesosCartilagos" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Huesos y Cartílagos">
+        </div>
+      </div>
+    
+      <!-- Elementos Extraños -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Elementos Extraños</p>
+          <input [(ngModel)]="elementosExtranos" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Elementos Extraños">
+        </div>
+      </div>
+
+      <!-- Aerobios Mesófilos Totales -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Aerobios Mesófilos Totales</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="aerobiosMesofilosTotales" [disabled]="!enviarAerobiosMesofilosTotales" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Aerobios Mesófilos Totales">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarAerobiosMesofilosTotales" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enterobacterias -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Enterobacterias</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="enterobacterias" [disabled]="!enviarEnterobacterias" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Enterobacterias">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarEnterobacterias" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEC 0157 -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>STEC 0157</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="stec0157" [disabled]="!enviarSTEC0157" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="STEC 0157">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarSTEC0157" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEC No 0157 -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>STEC No 0157</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="stecNo0157" [disabled]="!enviarSTECNo0157" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="STEC No 0157">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarSTECNo0157" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Salmonella -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Salmonella</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="salmonella" [disabled]="!enviarSalmonella" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Salmonella">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarSalmonella" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estafilococos -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Estafilococos</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="estafilococos" [disabled]="!enviarEstafilococos" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Estafilococos">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarEstafilococos" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pseudomonas -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Pseudomonas</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="pseudomonas" [disabled]="!enviarPseudomonas" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Pseudomonas">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarPseudomonas" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Escherichia Coli -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Escherichia Coli</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="escherichiaColi" [disabled]="!enviarEscherichiaColi" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Escherichia Coli">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarEscherichiaColi" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coliformes Totales -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Coliformes Totales</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="coliformesTotales" [disabled]="!enviarColiformesTotales" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Coliformes Totales">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarColiformesTotales" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coliformes Fecales -->
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+          <p>Coliformes Fecales</p>
+          <div class="input-checkbox-container">
+            <input [(ngModel)]="coliformesFecales" [disabled]="!enviarColiformesFecales" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Coliformes Fecales">
+            <label class="checkbox-container">
+              <input type="checkbox" [(ngModel)]="enviarColiformesFecales" (ngModelChange)="VerificarCambios()" />
+            </label>
+          </div>
+        </div>
+    </div>
+
+
+    
+    <!-- Botón Editar -->
+    <div class="grid-container-seccion">
+      <div class="grid-items caj-2">
+        <button 
+          [disabled]="!seModificoAlgunCampo" 
+          (click)="EditarPlantilla()" 
+          class="btn-edit">
+          Editar
+        </button>
+      </div>
+    </div>
+    
+  </div>
+</div>
+  

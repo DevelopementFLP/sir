@@ -402,16 +402,20 @@ export class ReporteAbastoComponent {
   
     listaDeDatos.forEach(lectura => {
       if (lectura.clasificacion && !isNaN(lectura.peso)) {
-        if (!sumaPorClasificacion[lectura.clasificacion]) {
-          sumaPorClasificacion[lectura.clasificacion] = { totalPeso: 0, totalUnidades: 0 };
+        const clasificacionPrimeraPalabra = lectura.clasificacion.split(' ')[0];
+
+        if (!sumaPorClasificacion[clasificacionPrimeraPalabra]) {
+          sumaPorClasificacion[clasificacionPrimeraPalabra] = { totalPeso: 0, totalUnidades: 0 };
         }
-        sumaPorClasificacion[lectura.clasificacion].totalPeso += lectura.peso;
-        sumaPorClasificacion[lectura.clasificacion].totalUnidades += 1; 
+  
+        sumaPorClasificacion[clasificacionPrimeraPalabra].totalPeso += lectura.peso;
+        sumaPorClasificacion[clasificacionPrimeraPalabra].totalUnidades += 1;
       }
     });
   
-    return sumaPorClasificacion;    
+    return sumaPorClasificacion;
   }
+  
 
 
   public AgregarEstilosEncabezados(workSheet : ExcelJS.Worksheet, row: number){

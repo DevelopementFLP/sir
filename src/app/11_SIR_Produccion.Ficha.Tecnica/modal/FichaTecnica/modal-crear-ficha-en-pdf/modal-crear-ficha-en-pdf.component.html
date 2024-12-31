@@ -1,0 +1,146 @@
+<div>
+
+    <div class="input-container">
+        <input 
+          [(ngModel)]="codigoProducto" 
+          placeholder="Ingrese el código del producto" 
+          class="input-codigo" />        
+    </div>
+    
+    <div class="botones-de-accion">
+        <p-button (click)="AgregarCodigo()">Agregar Producto</p-button>        
+        <p-button *ngIf="listaCodigos.length > 0" (click)="LimpiarCampos()"  icon="pi pi-trash"></p-button>
+    </div>
+    
+    <div *ngIf="listaCodigos.length > 0">
+        <h3>Códigos Agregados:</h3>
+        <ul>
+            <li *ngFor="let codigo of listaCodigos">{{ codigo }}</li>            
+        </ul>
+    </div>
+
+    <div *ngIf="nombreDeProducto" class="nombre-de-product">
+        <div class="grid-items-seccion caj-3-sec-2">
+            <p>Nombre / Name</p>
+        </div> 
+        <div class="grid-items-seccion cajas-de-datos">
+            <p> {{ nombreDeProducto }}</p>
+        </div>  
+    </div>
+    
+
+    <div class="select-de-destino" >
+        <p-dropdown 
+            [(ngModel)]="seleccionDeDestino" 
+            [options]="listaDeDestinos" 
+            optionLabel="nombre" 
+            placeholder="Seleccione un Destino">
+        </p-dropdown>
+    </div>
+
+    <div class="selector-de-pdf">
+        <p-fileUpload         
+            #fileUpload 
+            name="pdf"
+            url="tu-url-de-upload"
+            (onSelect)="SeleccionarPdf($event)"
+            accept=".pdf"
+            chooseLabel="Seleccionar PDF"
+            [showUploadButton]="false" 
+            [showCancelButton]="false">
+        </p-fileUpload>
+    </div>
+
+
+    <!-- <div>
+        <div class="encabezado-de-campo" >
+            <div class="titulo-seccion">
+                <h1>CORTE / CUT</h1>
+            </div>
+        </div>
+    
+        <div class="seccion-de-imagenes" >
+            <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaCorte">
+                <input type="file" (change)="MostrarImagenSeleccionada($event, 2)" accept="image/*">
+                <i class="pi pi-upload"></i>
+            </label>
+            <div *ngIf="urlImagenCorte" class="imagen-con-boton">
+                <img [src]="urlImagenCorte" alt="Imagen" />
+                <button (click)="BorrarImagen(2)" aria-label="Eliminar imagen" class="boton-borrar">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </div>      
+        </div>
+    </div>
+
+    <div>
+        <div class="encabezado-de-campo">
+            <div class="titulo-seccion">
+                <h1>ENVASE PRIMARIO / PRIMARY PACKING</h1>
+            </div>
+        </div>
+    
+        <div class="seccion-de-imagenes">
+            <label class="boton-de-carga-de-imagen" *ngIf="!imagenSeleccionadaAreaEnvase">
+                <input type="file" (change)="MostrarImagenSeleccionada($event, 3)" accept="image/*">
+                <i class="pi pi-upload"></i> 
+            </label>
+            <div *ngIf="urlImagenEnvase" class="imagen-con-boton">
+                <img [src]="urlImagenEnvase" alt="Imagen Envase Primario" />
+                <button (click)="BorrarImagen(3)" aria-label="Eliminar imagen" class="boton-borrar">
+                    <i class="pi pi-trash"></i> 
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="encabezado-de-campo">
+            <div class="titulo-seccion">
+                <h1>ENVASE SECUNDARIO / SECONDARY PACKING</h1>
+            </div>
+        </div>
+    
+        <div class="seccion-de-imagenes">
+            <div>
+                <label class="boton-de-carga-de-imagen" *ngIf="!urlImagenEnvaseSecundario">
+                    <input type="file" (change)="MostrarImagenSeleccionada($event, 4)" accept="image/*">
+                    <i class="pi pi-upload"></i> 
+                </label>
+                <div *ngIf="urlImagenEnvaseSecundario" class="imagen-con-boton">
+                    <img [src]="urlImagenEnvaseSecundario" alt="Imagen Envase Secundario" />
+                    <button (click)="BorrarImagen(4)" aria-label="Eliminar imagen" class="boton-borrar">
+                        <i class="pi pi-trash"></i> 
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="encabezado-de-campo">
+            <div class="titulo-seccion">
+                <h1>ETIQUETA</h1>
+            </div>
+        </div>
+    
+        <div>
+            <div class="seccion-de-imagenes">
+                <label class="boton-de-carga-de-imagen" *ngIf="!urlImagenEnvaseSecundario2">
+                    <input type="file" (change)="MostrarImagenSeleccionada($event, 5)" accept="image/*">
+                    <i class="pi pi-upload"></i> 
+                </label>
+                <div *ngIf="urlImagenEnvaseSecundario2" class="imagen-con-boton">
+                    <img [src]="urlImagenEnvaseSecundario2" alt="Imagen Envase Secundario 2" />
+                    <button (click)="BorrarImagen(5)" aria-label="Eliminar imagen" class="boton-borrar">
+                        <i class="pi pi-trash"></i> 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    
+    <div class="seccion-de-imagenes" style="margin-top: 1rem;">            
+        <p-button (click)="CrearFichaTecnica()">Crear Ficha Tecnica</p-button>
+    </div>
+
+</div>
+  

@@ -1,0 +1,123 @@
+
+.modal-content {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+
+.grid-container-seccion {
+    display: grid;
+    gap: 16px; 
+    padding: 10px;
+    font-size: 14px; 
+}
+
+.grid-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-items p {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.input-field {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.btn-edit {
+    padding: 10px 20px;
+    background-color: #528a51;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, opacity 0.3s;
+    font-size: 14px;
+}
+
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-edit:disabled {
+    background-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+select.input-field {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.grid-items p {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+
+.p-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+select.input-field {
+    background-color: #f9f9f9;
+}
+
+
+.tabla-de-datos {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.p-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.p-table th, .p-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.p-table th {
+    background-color: #f5f5f5;
+    text-align: left;
+}
+
+.p-button {
+    font-size: 14px;
+}
+
+.acciones button {
+    margin-left: 10px;
+}
+
+
+.input-checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+  
+.checkbox-container {
+    margin-left: 10px; 
+}

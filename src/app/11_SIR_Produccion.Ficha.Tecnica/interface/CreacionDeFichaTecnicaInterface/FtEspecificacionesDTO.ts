@@ -8,9 +8,9 @@ export interface FtEspecificacionesPlantillaDTO {
     hematomas: string; 
     huesosCartilagos: string; 
     elementosExtraños: string; 
-    idColor: string; 
-    idOlor: string; 
-    idPh: string; 
+    idColor: number; 
+    idOlor: number; 
+    idPh: number; 
     aerobiosMesofilosTotales: string; 
     enterobacterias: string; 
     stec0157: string; 

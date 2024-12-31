@@ -23,6 +23,7 @@ export class ModalVerFichaTecnicaComponent {
   }
   
   public loadingDePdf: boolean = false;
+  public pdfBase64: string | null = null; 
 
   //!Imagenes
   public logoGenerico: string = "assets/images/logos/logo_ficha_tecnica_1.png"
@@ -91,85 +92,112 @@ export class ModalVerFichaTecnicaComponent {
       // Asignar el idFichaTecnica al recibir nuevos datos de ficha
       this.codigoDeProducto = this.ficha.codigoDeProducto!;
       this.BuscarFichaTecnica(this.codigoDeProducto);
-      console.log(this.codigoDeProducto)
     }
   }
 
 
   public async BuscarFichaTecnica(codigoDeProducto: string) {
 
-    this.LimpiarDatos();
-
+    this.LimpiarDatos(); // Limpia los datos previos
+  
     this._ftFichaTecnicaService.BuscarFichaTecnica(codigoDeProducto).subscribe(
       (response: ApiResponse) => {
         if (response.esCorrecto && response.resultado.length > 0) {
-          console.log(response.resultado);
-          
+  
           const fichaTecnica = response.resultado[0];
-          
-          // Campos de la ficha - Aspectos Generales
-          this.idFichaTecnica = fichaTecnica.idFichaTecnica;
-          this.codigoDeProducto = fichaTecnica.codigoDeProducto;
-          this.descripcionDeProducto = fichaTecnica.descripcionDeProducto;
-          this.nombreDeProducto = fichaTecnica.nombreDeProducto;
-          this.descripcionLargaDeProducto = fichaTecnica.descripcionLargaDeProducto;
-          this.marca = fichaTecnica.marca;
-          this.destino = fichaTecnica.destino; 
-          this.tipoDeUso = fichaTecnica.tipoDeUso;  
-          this.alimentacion = 'Pendiente'; 
-          this.alergeno = fichaTecnica.alergeno;
-          this.condicionAlmacenamiento = fichaTecnica.condicionAlmacenamiento;
-          this.vidaUtil = fichaTecnica.vidaUtil;
-          this.tipoDeEnvase = fichaTecnica.tipoDeEnvase;
-          this.presentacionDeEnvase = fichaTecnica.presentacionDeEnvase;
-          this.pesoPromedio = fichaTecnica.pesoPromedio || 0;
-          this.unidadesPorCaja = fichaTecnica.unidadesPorCaja || 0;
-          this.dimensiones = fichaTecnica.dimensiones;
   
-          // Campos de Especificaciones
-          this.grasaVisible = fichaTecnica.grasaVisible;
-          this.espesorCobertura = fichaTecnica.espesorCobertura;
-          this.ganglios = fichaTecnica.ganglios;
-          this.hematomas = fichaTecnica.hematomas;
-          this.huesosCartilagos = fichaTecnica.huesosCartilagos;
-          this.idioma = fichaTecnica.idioma;
-          this.elementosExtranos = fichaTecnica.elementosExtranos;
-  
-          // Calidad microbiológica
-          this.color = fichaTecnica.color;
-          this.olor = fichaTecnica.olor;
-          this.ph = fichaTecnica.ph;
-          this.aerobiosMesofilosTotales = fichaTecnica.aerobiosMesofilosTotales;
-          this.enterobacterias = fichaTecnica.enterobacterias;
-          this.stec0157 = fichaTecnica.stec0157;
-          this.stecNo0157 = fichaTecnica.stecNo0157;
-          this.salmonella = fichaTecnica.salmonella;
-          this.estafilococos = fichaTecnica.estafilococos;
-          this.pseudomonas = fichaTecnica.pseudomonas;
-          this.escherichiaColi = fichaTecnica.escherichiaColi;
-          this.coliformesTotales = fichaTecnica.coliformesTotales;
-          this.coliformesFecales = fichaTecnica.coliformesFecales;
-  
-          // Campos de Plantilla
-          this.observacionDelProducto = fichaTecnica.observacion || '';
-          this.elaboradoPor = fichaTecnica.elaboradoPor || 'Departamento de Produccion';
-          this.aprobadoPor = fichaTecnica.aprobadoPor || 'Jefe de Desosado';
-          this.fechaDelDia = fichaTecnica.fechaCreacion || '';
+          if (fichaTecnica.archivoPdf && fichaTecnica.archivoPdf !== '') {
 
+            this.pdfBase64 = fichaTecnica.archivoPdf;
 
-          this.BuscarImagenPorCodigo(codigoDeProducto);
-          
-        } 
+          } else {
+
+            this.idFichaTecnica = fichaTecnica.idFichaTecnica;
+            this.codigoDeProducto = fichaTecnica.codigoDeProducto;
+            this.descripcionDeProducto = fichaTecnica.descripcionDeProducto;
+            this.nombreDeProducto = fichaTecnica.nombreDeProducto;
+            this.descripcionLargaDeProducto = fichaTecnica.descripcionLargaDeProducto;
+            this.marca = fichaTecnica.marca;
+            this.destino = fichaTecnica.destino;
+            this.tipoDeUso = fichaTecnica.tipoDeUso;
+            this.alimentacion = 'Pendiente';
+            this.alergeno = fichaTecnica.alergeno;
+            this.condicionAlmacenamiento = fichaTecnica.condicionAlmacenamiento;
+            this.vidaUtil = fichaTecnica.vidaUtil;
+            this.tipoDeEnvase = fichaTecnica.tipoDeEnvase;
+            this.presentacionDeEnvase = fichaTecnica.presentacionDeEnvase;
+            this.pesoPromedio = fichaTecnica.pesoPromedio || 0;
+            this.unidadesPorCaja = fichaTecnica.unidadesPorCaja || 0;
+            this.dimensiones = fichaTecnica.dimensiones;
+  
+            // Campos de Especificaciones
+            this.grasaVisible = fichaTecnica.grasaVisible;
+            this.espesorCobertura = fichaTecnica.espesorCobertura;
+            this.ganglios = fichaTecnica.ganglios;
+            this.hematomas = fichaTecnica.hematomas;
+            this.huesosCartilagos = fichaTecnica.huesosCartilagos;
+            this.idioma = fichaTecnica.idioma;
+            this.elementosExtranos = fichaTecnica.elementosExtranos;
+  
+            // Calidad microbiológica
+            this.color = fichaTecnica.color;
+            this.olor = fichaTecnica.olor;
+            this.ph = fichaTecnica.ph;
+            this.aerobiosMesofilosTotales = fichaTecnica.aerobiosMesofilosTotales;
+            this.enterobacterias = fichaTecnica.enterobacterias;
+            this.stec0157 = fichaTecnica.stec0157;
+            this.stecNo0157 = fichaTecnica.stecNo0157;
+            this.salmonella = fichaTecnica.salmonella;
+            this.estafilococos = fichaTecnica.estafilococos;
+            this.pseudomonas = fichaTecnica.pseudomonas;
+            this.escherichiaColi = fichaTecnica.escherichiaColi;
+            this.coliformesTotales = fichaTecnica.coliformesTotales;
+            this.coliformesFecales = fichaTecnica.coliformesFecales;
+            this.observacionDelProducto = fichaTecnica.observacion || '';
+            this.elaboradoPor = fichaTecnica.elaboradoPor || 'Departamento de Produccion';
+            this.aprobadoPor = fichaTecnica.aprobadoPor || 'Jefe de Desosado';
+            this.fechaDelDia = fichaTecnica.fechaCreacion || '';
+            
+            this.BuscarImagenPorCodigo(codigoDeProducto);
+          }
+        } else {
+          console.log('No se encontró ficha técnica para este producto');
+        }
       },
       (error) => {
         console.error('Error en la solicitud:', error);
       }
     );
-    
+  }
+  
+  public DescargarArchivoPdfConvertido(base64: string): void {
+
+    base64 = base64.replace('data:application/pdf;base64,', '');
+  
+    const byteArray = new Uint8Array(
+      atob(base64)
+        .split('')
+        .map((char) => char.charCodeAt(0))
+    );
+  
+    const file = new Blob([byteArray], { type: 'application/pdf' });
+  
+    const fileUrl = URL.createObjectURL(file);
+  
+    const fileName = 'Ficha_Tecnica_' + this.codigoDeProducto + '.pdf';
+  
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.target = '_blank';
+    link.href = fileUrl;
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
   
 
-    public async BuscarImagenPorCodigo(codigoDeProducto: string) {
+  public async BuscarImagenPorCodigo(codigoDeProducto: string) {
 
       // Obtener el código de producto hasta el primer espacio
       const codigoCorto = codigoDeProducto.split(' ')[0];
@@ -212,7 +240,7 @@ export class ModalVerFichaTecnicaComponent {
           console.error("Error al buscar las imágenes: ", error);
           this.ResetearImagenes();
       }
-    }
+  }
 
   // Método para resetear las imágenes
   private ResetearImagenes() {
@@ -225,33 +253,47 @@ export class ModalVerFichaTecnicaComponent {
 
   public async GenerarPDF() {
     this.loadingDePdf = true;
-    
+
     const data = document.getElementById('contenidoFichaTecnica');
-        if (data) {
-            const canvas = await html2canvas(data, { scale: 3 });
-            const imgData = canvas.toDataURL('image/jpeg', 0.7) // el png no se puee comprimir
-            const pdf = new jsPDF('p', 'mm', 'a4');
+    if (data) {
+        // Generar la imagen del HTML usando html2canvas
+        const canvas = await html2canvas(data, { scale: 4 });
+        const imgData = canvas.toDataURL('image/jpeg', 0.7);
 
-            const margin = 2;
+        // Crear un nuevo PDF con tamaño personalizado (por ejemplo, 210 mm de ancho x 600 mm de alto)
+        const pdfWidth = 310;  // Ancho en mm
+        const pdfHeight = 550; // Alto en mm
 
-            const imgWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+        const pdf = new jsPDF('p', 'mm', [pdfWidth, pdfHeight]);  // Definimos el tamaño de página personalizado
 
-            const imgHeight = canvas.height * imgWidth / canvas.width;
+        // Obtener el tamaño de la imagen generada por html2canvas
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
 
-            const maxHeight = pdf.internal.pageSize.getHeight() - margin * 2; 
-            const scaleFactor = imgHeight > maxHeight ? maxHeight / imgHeight : 1;
+        // Calcular el factor de escala para ajustar la imagen al tamaño de la página
+        const scaleFactor = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-            pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight * scaleFactor);
+        // Calcular las dimensiones finales de la imagen manteniendo la proporción
+        const finalWidth = imgWidth * scaleFactor;
+        const finalHeight = imgHeight * scaleFactor;
 
-            const nombreArchivo = `FT - ${this.destino} - ${this.nombreDeProducto} - ${this.codigoDeProducto}_${this.fechaDelDia}.pdf`;
-            pdf.save(nombreArchivo);
+        // Calcular las posiciones para centrar la imagen en la página
+        const xOffset = (pdfWidth - finalWidth) / 2;  // Centrado horizontal
+        const yOffset = (pdfHeight - finalHeight) / 2;  // Centrado vertical
 
-            this.loadingDePdf = false;
-        } else {
-            console.error('No se encontró el elemento para exportar a PDF.');
-            this.loadingDePdf = false; 
-        }
+        // Añadir la imagen al PDF centrada
+        pdf.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
+
+        // Guardar el archivo PDF
+        const nombreArchivo = `FT - ${this.destino} - ${this.nombreDeProducto} - ${this.codigoDeProducto}_${this.fechaDelDia}.pdf`;
+        pdf.save(nombreArchivo);
+
+        this.loadingDePdf = false;
+    } else {
+        console.error('No se encontró el elemento para exportar a PDF.');
+        this.loadingDePdf = false;
     }
+}
 
 
   public LimpiarDatos() {
@@ -303,11 +345,12 @@ export class ModalVerFichaTecnicaComponent {
     this.elaboradoPor = 'Departamento de Produccion';
     this.aprobadoPor = 'Jefe de Desosado';
     this.fechaDelDia = '';
+
+    this.loadingDePdf = false;
+    this.pdfBase64 = null;
   
     // Limpiar imágenes
     this.ResetearImagenes();
   }
-
-  
   
 }

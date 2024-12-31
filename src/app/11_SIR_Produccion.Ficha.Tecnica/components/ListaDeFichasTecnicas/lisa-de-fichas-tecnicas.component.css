@@ -1,12 +1,6 @@
 body {
-  height: 100%; 
-  padding: 1rem;
+  padding: 1rem;  
   background-color: #868687; 
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
 }
 
 th, td {
@@ -41,10 +35,9 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Media Queries para dispositivos pequeños */
 @media (max-width: 768px) {
   .contenedor-de-pagina {
-    width: 100%; 
+    width: 90%; 
   }
 
   table {
@@ -65,22 +58,30 @@ button:hover {
   }
 }
 
-/* Estilo específico cuando estamos en la ruta 'CrearProductoFichaTecnica' */
+/* Estilo para 'CrearProductoFichaTecnica' */
 .crear-ficha {
-  width: 90%;
+  width: 90%;              
+  height: 90vh;          
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
-  text-align: center; 
+  justify-content: flex-start; 
+  align-items: center;       
+  text-align: center;
+  padding: 0;              
+  margin: 0;              
+  overflow: hidden;        
+}
+
+.crear-ficha p-table {
+  width: 100%;               
+  height: calc(100vh - 20px); 
+  overflow: auto;          
+  table-layout: fixed;       
 }
 
 .crear-ficha p-table .acciones {
-  text-align: right; 
-}
-
-/* Estilo específico cuando estamos en la ruta 'GenerarFichaTecnica' */
-.generar-ficha {
-  width: 100%;
-  height: 100vh;
+  display: flex; 
+  justify-content: flex-end; 
+  gap: 8px; 
+  margin-top: 10px; 
 }

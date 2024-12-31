@@ -42,6 +42,7 @@ import { ProduccionFichaTecnicaModule } from './11_SIR_Produccion.Ficha.Tecnica/
 import { ProduccionControlDeCalidadModule } from './12_SIR_Produccion.ControlDeCalidad/12_Sir_Produccion_ControlDeCalidad.module';
 import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
 
+
 registerLocaleData(localeEs);
 
 @NgModule({
@@ -53,7 +54,7 @@ registerLocaleData(localeEs);
     UserComponent,
     ReportesComponent,
     WelcomeComponent,
-    SolicitudCompraComponent
+    SolicitudCompraComponent,
   ],
   imports: [
     AppRoutingModule,

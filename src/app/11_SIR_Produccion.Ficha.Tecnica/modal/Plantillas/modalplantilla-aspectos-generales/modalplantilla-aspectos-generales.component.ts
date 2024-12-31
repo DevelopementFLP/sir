@@ -25,7 +25,9 @@ import { FtVidaUtilDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface
 export class ModalplantillaAspectosGeneralesComponent {
 
   @Input() plantilla: FtAspectosGeneralesPlantillaDTO | null = null;
-  @Output() modalCerrado: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() modalCerrado: EventEmitter<string> = new EventEmitter<string>();
+
+  public variableDeModal: string = 'aspectosGenerales';
 
   public seModificoAlgunCampo: boolean = false;
 
@@ -50,8 +52,8 @@ export class ModalplantillaAspectosGeneralesComponent {
   public idVidaUtil: number = 0;
   public idTipoDeEnvase: number = 0;
   public idPresentacionDeEnvase: number = 0;
-  public pesoPromedio: number = 0;
-  public unidadesPorCaja: number = 0;
+  public pesoPromedio: string = '';
+  public unidadesPorCaja: string = '';
   public dimensiones: string = '';
 
   constructor(
@@ -66,7 +68,7 @@ export class ModalplantillaAspectosGeneralesComponent {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.plantilla && changes['plantilla'] && this.plantilla.idPlantilla !== undefined) {
+    if (changes['plantilla'] && this.plantilla && this.plantilla.idPlantilla !== undefined) {
       this.idPlantilla = this.plantilla.idPlantilla;
       this.CargarDatosPlantilla(this.plantilla);
       this.CargarOpcionesSelect();      
@@ -86,8 +88,8 @@ export class ModalplantillaAspectosGeneralesComponent {
     this.idVidaUtil = plantilla.idVidaUtil || 0;
     this.idTipoDeEnvase = plantilla.idTipoDeEnvase || 0;
     this.idPresentacionDeEnvase = plantilla.idPresentacionDeEnvase || 0;
-    this.pesoPromedio = plantilla.pesoPromedio || 0;
-    this.unidadesPorCaja = plantilla.unidadesPorCaja || 0;
+    this.pesoPromedio = plantilla.pesoPromedio || '';
+    this.unidadesPorCaja = plantilla.unidadesPorCaja || '';
     this.dimensiones = plantilla.dimensiones?.trim() || 'NO APLICA';
   
     // Asignar las marcas
@@ -150,13 +152,27 @@ export class ModalplantillaAspectosGeneralesComponent {
   
 
   private CargarOpcionesSelect(): void {
+    // Inicializamos las listas vacías para asegurar que no haya datos previos
+    this.marcas = [];
+    this.tiposDeUso = [];
+    this.alergenos = [];
+    this.condicionesDeAlmacenamiento = [];
+    this.vidasUtil = [];
+    this.tiposDeEnvase = [];
+    this.presentacionesDeEnvase = [];
+  
 
-    
-    // Llamamos al servicio para obtener la lista de marcas
     this._marcasService.GetListaDeMarcasFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
-          this.marcas = response.resultado;  
+          this.marcas = response.resultado;
+  
+          if (this.idMarca > 0) {
+            const marcaSeleccionada = this.marcas.find(marca => marca.idMarca === this.idMarca);
+            if (marcaSeleccionada) {
+              this.idMarca = marcaSeleccionada.idMarca;
+            }
+          }
         } else {
           console.error('No se encontraron marcas.');
         }
@@ -171,6 +187,13 @@ export class ModalplantillaAspectosGeneralesComponent {
       (response) => {
         if (response && response.resultado) {
           this.tiposDeUso = response.resultado;
+  
+          if (this.idTipoDeUso > 0) {
+            const tipoDeUsoSeleccionado = this.tiposDeUso.find(tipo => tipo.idTipoDeUso === this.idTipoDeUso);
+            if (tipoDeUsoSeleccionado) {
+              this.idTipoDeUso = tipoDeUsoSeleccionado.idTipoDeUso;
+            }
+          }
         } else {
           console.error('No se encontraron tipos de uso.');
         }
@@ -180,11 +203,18 @@ export class ModalplantillaAspectosGeneralesComponent {
       }
     );
   
-    // Llamamos al servicio para obtener la lista de alergenos
+
     this._alergenoService.GetListaDeAlergenosFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
           this.alergenos = response.resultado;
+  
+          if (this.idAlergeno > 0) {
+            const alergenoSeleccionado = this.alergenos.find(alergeno => alergeno.idAlergeno === this.idAlergeno);
+            if (alergenoSeleccionado) {
+              this.idAlergeno = alergenoSeleccionado.idAlergeno;
+            }
+          }
         } else {
           console.error('No se encontraron alergenos.');
         }
@@ -194,11 +224,17 @@ export class ModalplantillaAspectosGeneralesComponent {
       }
     );
   
-    // Llamamos al servicio para obtener la lista de condiciones de almacenamiento
     this._condicionService.GetListaDeCondicionesFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
           this.condicionesDeAlmacenamiento = response.resultado;
+  
+          if (this.idCondicionAlmacenamiento > 0) {
+            const condicionSeleccionada = this.condicionesDeAlmacenamiento.find(condicion => condicion.idCondicionDeAlmacenamiento === this.idCondicionAlmacenamiento);
+            if (condicionSeleccionada) {
+              this.idCondicionAlmacenamiento = condicionSeleccionada.idCondicionDeAlmacenamiento;
+            }
+          }
         } else {
           console.error('No se encontraron condiciones de almacenamiento.');
         }
@@ -208,11 +244,18 @@ export class ModalplantillaAspectosGeneralesComponent {
       }
     );
   
-    // Llamamos al servicio para obtener la lista de vida útil
+
     this._vidaUtilService.GetListaDeVidaUtilFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
           this.vidasUtil = response.resultado;
+  
+          if (this.idVidaUtil > 0) {
+            const vidaSeleccionada = this.vidasUtil.find(vida => vida.idVidaUtil === this.idVidaUtil);
+            if (vidaSeleccionada) {
+              this.idVidaUtil = vidaSeleccionada.idVidaUtil;
+            }
+          }
         } else {
           console.error('No se encontraron vidas útiles.');
         }
@@ -222,11 +265,18 @@ export class ModalplantillaAspectosGeneralesComponent {
       }
     );
   
-    // Llamamos al servicio para obtener la lista de tipos de envase
+
     this._tipoDeEnvase.GetListaDeTiposDeEnvaseFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
           this.tiposDeEnvase = response.resultado;
+  
+          if (this.idTipoDeEnvase > 0) {
+            const tipoDeEnvaseSeleccionado = this.tiposDeEnvase.find(envase => envase.idTipoDeEnvase === this.idTipoDeEnvase);
+            if (tipoDeEnvaseSeleccionado) {
+              this.idTipoDeEnvase = tipoDeEnvaseSeleccionado.idTipoDeEnvase;
+            }
+          }
         } else {
           console.error('No se encontraron tipos de envase.');
         }
@@ -235,24 +285,32 @@ export class ModalplantillaAspectosGeneralesComponent {
         console.error('Error al cargar los tipos de envase:', error);
       }
     );
-
-     this._presentacionDeEnvaseService.GetListaDePresentacionesDeEnvaseFichaTecnica().subscribe(
+  
+    this._presentacionDeEnvaseService.GetListaDePresentacionesDeEnvaseFichaTecnica().subscribe(
       (response) => {
         if (response && response.resultado) {
           this.presentacionesDeEnvase = response.resultado;
+  
+          if (this.idPresentacionDeEnvase > 0) {
+            const presentacionSeleccionada = this.presentacionesDeEnvase.find(presentacion => presentacion.idPresentacionDeEnvase === this.idPresentacionDeEnvase);
+            if (presentacionSeleccionada) {
+              this.idPresentacionDeEnvase = presentacionSeleccionada.idPresentacionDeEnvase;
+            }
+          }
         } else {
-          console.error('No se encontraron tipos de envase.');
+          console.error('No se encontraron presentaciones de envase.');
         }
       },
       (error) => {
-        console.error('Error al cargar los tipos de envase:', error);
+        console.error('Error al cargar las presentaciones de envase:', error);
       }
     );
   }
   
+  
 
   public VerificarCambios(): void {
-    // Verificar si algún campo ha sido modificado
+    // Verificar si algún campo ha sido modificado comparando los valores con los de la plantilla
     this.seModificoAlgunCampo = (
       this.seccionDePlantilla !== this.plantilla?.seccionDePlantilla ||
       this.nombreDePlantilla !== this.plantilla?.nombre ||
@@ -268,9 +326,18 @@ export class ModalplantillaAspectosGeneralesComponent {
       this.unidadesPorCaja !== this.plantilla?.unidadesPorCaja ||
       this.dimensiones !== this.plantilla?.dimensiones
     );
+    
+    // Si cualquier valor es diferente, se considera que el formulario ha sido modificado
+    if (this.seModificoAlgunCampo) {
+      console.log('Se detectaron cambios en los campos.');
+    } else {
+      console.log('No se detectaron cambios en los campos.');
+    }
   }
+  
 
   public async EditarPlantilla(): Promise<void> {
+    // Crear el objeto con los datos actualizados para enviar al servicio
     const plantillaActualizada: FtAspectosGeneralesPlantillaDTO = {
       idPlantilla: this.idPlantilla,
       seccionDePlantilla: this.seccionDePlantilla,
@@ -287,9 +354,9 @@ export class ModalplantillaAspectosGeneralesComponent {
       unidadesPorCaja: this.unidadesPorCaja,
       dimensiones: this.dimensiones,
     };
-
-    // Verificar si todos los campos requeridos están completos
-    if (!this.nombreDePlantilla || !this.nombreDeProducto || !this.idMarca || !this.idTipoDeUso || !this.idCondicionAlmacenamiento || !this.idVidaUtil) {
+  
+    // Verificar si todos los campos obligatorios están completos
+    if (!this.nombreDePlantilla || !this.nombreDeProducto ) {
       Swal.fire('Advertencia', 'Por favor, completa todos los campos requeridos.', 'warning');
       return;
     }
@@ -298,36 +365,19 @@ export class ModalplantillaAspectosGeneralesComponent {
     this._aspectosGeneralesService.EditarCamposDeAspectosGenerales(plantillaActualizada).subscribe(
       (response) => {
         if (response.esCorrecto) {
-          Swal.fire('Éxito', 'La plantilla de aspectos generales se actualizó correctamente.', 'success');
-          this.LimpiarCampos();
-          this.modalCerrado.emit(true);
+          Swal.fire('Éxito', 'La plantilla de aspectos generales se actualizó correctamente.', 'success');     
+          this.modalCerrado.emit(this.variableDeModal);
         } else {
           Swal.fire('Error', response.mensaje || 'Ocurrió un error al actualizar la plantilla.', 'error');
-          this.LimpiarCampos();
+          this.modalCerrado.emit(this.variableDeModal);
         }
       },
       (error) => {
         console.error('Error al editar la plantilla:', error);
-        this.LimpiarCampos();
+        Swal.fire('Error', 'Ocurrió un error al actualizar la plantilla.', 'error');
+        this.modalCerrado.emit(this.variableDeModal);
       }
     );
   }
-
-  private LimpiarCampos(): void {
-    this.seccionDePlantilla = '';
-    this.nombreDePlantilla = '';
-    this.nombreDeProducto = '';
-    this.idMarca = 0;
-    this.idTipoDeUso = 0;
-    this.idAlergeno = 0;
-    this.idCondicionAlmacenamiento = 0;
-    this.idVidaUtil = 0;
-    this.idTipoDeEnvase = 0;
-    this.idPresentacionDeEnvase = 0;
-    this.pesoPromedio = 0;
-    this.unidadesPorCaja = 0;
-    this.dimensiones = '';
-    this.seModificoAlgunCampo = false;
-  }
-  
+   
 }

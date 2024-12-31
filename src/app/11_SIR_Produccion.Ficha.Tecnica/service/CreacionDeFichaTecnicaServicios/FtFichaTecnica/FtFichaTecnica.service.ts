@@ -18,8 +18,15 @@ export class FtFichaTecnicaService {
     return this.http.get<ApiResponse>(`${urlListaDeFichasTecnicas}`);
   }
   
-  public CrearFichaTecnica(modelo: FtFichaTecnicaDTO): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${urlCrearFichaTecnica}`, modelo);
+
+  public CrearFichaTecnica(modelo: FtFichaTecnicaDTO, archivoPdf: File): Observable<ApiResponse> {
+    const formData = new FormData();
+
+    formData.append('modelo', JSON.stringify(modelo)); 
+
+    formData.append('archivoPdf', archivoPdf);
+
+    return this.http.post<ApiResponse>(`${urlCrearFichaTecnica}`, formData);
   }
 
   public BuscarFichaTecnica(codigoDeProducto: string): Observable<ApiResponse> {
@@ -28,9 +35,18 @@ export class FtFichaTecnicaService {
     return this.http.get<ApiResponse>(`${urlBuscarFichaTecnica}`, { params });
   }
 
-  public EditarFichaTecnica(modelo: FtFichaTecnicaDTO): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${urlEditarFichaTecnica}`, modelo);
+  public EditarFichaTecnica(modelo: FtFichaTecnicaDTO, archivoPdf?: File): Observable<ApiResponse> {
+    const formData = new FormData();
+  
+    formData.append('modelo', JSON.stringify(modelo));
+  
+    if (archivoPdf) {
+      formData.append('archivoPdf', archivoPdf);
+    }
+  
+    return this.http.put<ApiResponse>(`${urlEditarFichaTecnica}`, formData);
   }
+  
 
   public EliminarFichaTecnica(id: number, codigoDeProducto: string): Observable<ApiResponse> {
     let params = new HttpParams()

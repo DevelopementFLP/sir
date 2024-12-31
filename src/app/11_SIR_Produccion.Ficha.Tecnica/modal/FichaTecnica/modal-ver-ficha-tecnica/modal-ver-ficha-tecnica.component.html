@@ -184,11 +184,11 @@
 
             <div class="grid-container-seccion-5" >
                 <div class="grid-items-seccion caj-1-sec-5">
-                    <h1>ENVASE / PACKING</h1>
+                    <h1>ENVASE PRIMARIO / PRIMARY PACKING</h1>
                 </div>
-                <div class="grid-items-seccion caj-2-sec-5">
-                    <p>Envase primario con etiqueta interna / Primary packing with internal label</p>
-                </div>
+                <!-- <div class="grid-items-seccion caj-2-sec-5">
+                    <p>Envase primario / Primary packing</p>
+                </div> -->
             </div>
 
             <div class="grid-container-imagenes-sec-5" >
@@ -233,7 +233,7 @@
                 </div>
                 
                 <div class="grid-items-seccion caj-2-sec-7">
-                    <p>Peso Promedio / Avg. Weight</p>
+                    <p>Peso Promedio KG / Avg. Weight</p>
                 </div>
 
                 <div class="grid-items-seccion caj-5-sec-7">
@@ -482,8 +482,16 @@
         <i class="pi pi-exclamation-triangle"></i>
       </div>
       <p class="mensaje-no-ficha">
-        No se encontró la ficha técnica para el producto con código <strong>{{codigoDeProducto}}</strong>.
+        No se puede visualizar la ficha tecnica
       </p>
+      <div *ngIf="pdfBase64">
+        <!-- Si el PDF está disponible, muestra el mensaje de descarga -->
+        <p>Puede descargar el PDF aquí:</p>
+        <button (click)="DescargarArchivoPdfConvertido(pdfBase64)" class="btn-download">
+          Descargar PDF
+        </button>
+      </div>
     </div>
 </ng-template>
+  
   

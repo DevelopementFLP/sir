@@ -41,7 +41,7 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Formato</mat-label>
-                    <mat-select formControlName="idTipo"> 
+                    <mat-select formControlName="idFormato"> 
                         <mat-option *ngFor="let item of ListaFormatos " [value]="item.idFormato">
                             {{item.idFormato}}
                         </mat-option>
@@ -64,13 +64,14 @@
             <mat-grid-tile>
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo</mat-label>
-                    <mat-select formControlName="idFormato"> 
+                    <mat-select formControlName="idTipo">
                         <mat-option *ngFor="let item of listaDeTiposDispositivos" [value]="item.idTipo">
-                            {{item.nombre}}
+                            {{ item.nombre }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-grid-tile>
+            
 
 
             <mat-grid-tile>

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/09_SIR.Dispositivos.Apps/Interfaces/response-API';
 import { FtAspectosGeneralesPlantillaDTO } from 'src/app/11_SIR_Produccion.Ficha.Tecnica/interface/CreacionDeFichaTecnicaInterface/FtAspectosGeneralesDTO';
-import { urlBuscarPlantillaDeAspectosGenerales, urlCrearPlantillaAspectosGeneralesFichaTecnica, urlEditarAspectosGeneralesPlantilla, urlGetResponseAspectosGeneralesPlantilla, urlListaAspectosGeneralesPlantilla } from 'src/settings';
+import { urlCrearPlantillaAspectosGeneralesFichaTecnica, urlEditarAspectosGeneralesPlantilla, urlEliminarAspectoGeneral, urlGetResponseAspectosGeneralesPlantilla, urlListaAspectosGeneralesPlantilla } from 'src/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +17,6 @@ export class FtAspectosGeneralesService {
 
   public GetListaAspectosGenerales(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${urlListaAspectosGeneralesPlantilla}`);
-  }
-
-  public BuscarPlantillaDeAspectosGenerales(descripcionDePlantilla: string): Observable<ApiResponse> {
-    let params = new HttpParams()
-    .set('descripcionDePlantilla', descripcionDePlantilla)
-    return this.http.get<ApiResponse>(`${urlBuscarPlantillaDeAspectosGenerales}`, { params });
   }
 
   public CrearPlantillaAspectosGenerales(modelo: FtAspectosGeneralesPlantillaDTO): Observable<ApiResponse> {
@@ -39,6 +33,10 @@ export class FtAspectosGeneralesService {
     return this.http.get<ApiResponse>(`${urlGetResponseAspectosGeneralesPlantilla}`, { params });
   }
 
-
+  // Eliminar un aspecto general
+  public EliminarAspectoGeneral(idPlantilla: number): Observable<ApiResponse> {
+    const params = new HttpParams().set('idPlantilla', idPlantilla.toString());
+    return this.http.delete<ApiResponse>(`${urlEliminarAspectoGeneral}`, { params });
+  }
 
 }

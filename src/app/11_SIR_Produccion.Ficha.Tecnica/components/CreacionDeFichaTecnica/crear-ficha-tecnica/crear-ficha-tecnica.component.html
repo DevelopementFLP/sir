@@ -83,6 +83,7 @@
         <!-- SECCION 2 -->
 
         <div class="grid-container-seccion-2" *ngIf="listaDeProductosParaCargar.length > 0">
+
             <div class="grid-items-seccion caj-1-sec-2">
                 <h1>FICHA TÉCNICA / DATA SHEET</h1>
             </div>   
@@ -126,7 +127,9 @@
         </div>
 
         <!-- SECCION 3 -->
-        <div *ngIf="seleccionDeAspectosGenerales">
+        <!-- <div *ngIf="seleccionDeAspectosGenerales"> -->
+        <div>
+            
             <div >
                 <div class="grid-container-seccion-3" >
                     <div class="grid-items-seccion caj-1-sec-3">
@@ -181,7 +184,6 @@
                             [value]="alergeno" />
                     </div>  
 
-
                     <div class="grid-items-seccion caj-6-sec-3">
                         <p>Condiciones de almacenamiento / Storage conditions</p>
                     </div> 
@@ -193,7 +195,6 @@
                             [(ngModel)]="almacenamiento" 
                             [value]="almacenamiento" />
                     </div>  
-
 
                     <div class="grid-items-seccion caj-7-sec-3">
                         <p>Vida útil / Shelf life</p>
@@ -238,11 +239,11 @@
 
             <div class="grid-container-seccion-5" >
                 <div class="grid-items-seccion caj-1-sec-5">
-                    <h1>ENVASE / PACKING</h1>
+                    <h1>ENVASE PRIMARIO / PRIMARY PACKING</h1>
                 </div>
-                <div class="grid-items-seccion caj-2-sec-5">
-                    <p>Envase primario con etiqueta interna / Primary packing with internal label</p>
-                </div>
+                <!-- <div class="grid-items-seccion caj-2-sec-5">
+                    <p>Envase primario / Primary packing</p>
+                </div> -->
             </div>
 
             <div class="grid-container-imagenes-sec-5" >
@@ -298,7 +299,7 @@
                 </div>
                 
                 <div class="grid-items-seccion caj-2-sec-7">
-                    <p>Peso Promedio / Avg. Weight</p>
+                    <p>Peso Promedio KG / Avg. Weight</p>
                 </div>
 
                 <div class="grid-items-seccion caj-6-sec-7">
@@ -479,11 +480,17 @@
                     <p>{{ olor }}</p>
                 </div>
     
+                <!-- Campo pH -->
                 <div class="grid-items-seccion caj-12-sec-8">
                     <p>pH</p>
                 </div>
-                <div class="grid-items-seccion caj-datos-9-sec-8">
-                    <p>{{ ph }}</p>
+
+                <div class="grid-items-seccion caj-datos-9-sec-8" *ngIf="ph !== 'NO APLICA'">
+                    <input 
+                        style="width: 100%; height: 100%;" 
+                        type="text" 
+                        [(ngModel)]="ph" 
+                        [value]="ph" />
                 </div>
     
                 <div class="grid-items-seccion caj-13-sec-8" *ngIf="aerobiosMesofilosTotales !== 'NO APLICA'">
@@ -644,6 +651,18 @@
         <div class="grid-container-seccion-10" style="margin-top: 1rem;">            
             <p-button (click)="CrearFichaTecnica()">Crear Ficha Tecnica</p-button>
         </div>
+
+        <div class="grid-container-seccion-10" style="margin-top: 1rem;">            
+            <p-button (click)="AbrirModalCargarPdf()">Cargar PDF</p-button>
+        </div>
     </div>
+
+    <!-- Modal para Cargar PDF -->
+    <p-dialog [(visible)]="modalCargarPdf" [style]="{width: '80%'}" header="Cargar Ficha Tecnica en PDF" [closable]="false">
+        <modal-crear-ficha-en-pdf [abriElModal]="modalCargarPdf" (modalCerrado)="EscucharCierreDeModal($event)"></modal-crear-ficha-en-pdf>
+        <p-footer>
+          <button pButton label="Cerrar" icon="pi pi-times" (click)="CerrarModalCargarPdf()"></button>
+        </p-footer>
+    </p-dialog>
   
 </body>

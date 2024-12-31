@@ -93,7 +93,7 @@
       <div class="grid-container-seccion">
           <div class="grid-items caj-2">
               <p>Peso Promedio</p>
-              <input [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Peso Promedio" type="number">
+              <input [(ngModel)]="pesoPromedio" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Peso Promedio" type="text">
           </div>
       </div>
 
@@ -101,7 +101,7 @@
       <div class="grid-container-seccion">
           <div class="grid-items caj-2">
               <p>Unidades por Caja</p>
-              <input [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Unidades por Caja" type="number">
+              <input [(ngModel)]="unidadesPorCaja" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Unidades por Caja" type="text">
           </div>
       </div>
 
@@ -112,6 +112,17 @@
               <input [(ngModel)]="dimensiones" (ngModelChange)="VerificarCambios()" class="input-field" placeholder="Dimensiones" type="text">
           </div>
       </div>
+
+      <div class="grid-container-seccion">
+        <div class="grid-items caj-2">
+            <button 
+              [disabled]="!seModificoAlgunCampo" 
+              (click)="EditarPlantilla()" 
+              class="btn-edit">
+                Editar
+            </button>
+        </div>
+    </div>
 
   </div>
 
