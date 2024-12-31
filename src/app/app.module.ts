@@ -59,6 +59,10 @@ import { CrearRolComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-r
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { VerProductosComponent } from './13_SIR_Compras.Reportes/pages/altas/ver-productos/ver-productos.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 registerLocaleData(localeEs);
 
@@ -86,7 +90,8 @@ registerLocaleData(localeEs);
     CrearUsuarioComponent,
     CrearPrioridadComponent,
     CrearEstadoSolicitudComponent,
-    CrearRolComponent
+    CrearRolComponent,
+    VerProductosComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -115,7 +120,11 @@ registerLocaleData(localeEs);
     ProduccionControlDeCalidadModule,
     MatPaginatorModule,
     MatTableModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    FormsModule,
     
   ],
   providers: [

@@ -15,6 +15,8 @@ export class CrearAlmacenComponent implements OnInit{
   almacenExistente: Almacen[] = [];
   creaAlmacen!: Almacen;
   mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
 
   async ngOnInit(): Promise<void> {
   
@@ -54,6 +56,14 @@ export class CrearAlmacenComponent implements OnInit{
       
     }
   }
+  async editarAlmacen(almacen: Almacen): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarAlmacen(almacen));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
 
 
@@ -61,6 +71,19 @@ export class CrearAlmacenComponent implements OnInit{
 
     if(this.validarDatos()==false)
       return;
+
+
+if(this.estaEditando == true){
+  this.creaAlmacen = {
+    idAlmacen: this.filaSeleccionada.idAlmacen,
+    nombre: this.nombre,
+    descripcion: this.descripcion
+  }
+
+  await this.editarAlmacen(this.creaAlmacen);
+} else{
+
+
 
     if(this.existeAlmacen()==true)
       return;
@@ -72,11 +95,14 @@ export class CrearAlmacenComponent implements OnInit{
     }
 
     await this.crearAlmacenInsert(this.creaAlmacen);
+  }
     await this.iniciar();
 
     this.nombre = "";
     this.descripcion = ""
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.filaSeleccionada = null;
   }
 
   validarDatos(): boolean{
@@ -109,14 +135,38 @@ export class CrearAlmacenComponent implements OnInit{
 
   cerrarPopUpAlmacen(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre = "";
+    this.descripcion = "";
   }
 
 
-  async borrarFila(id: number){
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  
+  async borrarFila(){
 
-    await this.borrarFilaDelete(id);
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el almacén?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarFilaDelete(this.filaSeleccionada.idAlmacen);
+    this.filaSeleccionada = null;
     
     await this.iniciar();
 
+  }
+
+  editarFila(){
+    this.estaEditando = true;
+    this.nombre = this.filaSeleccionada.nombre;
+    this.descripcion = this.filaSeleccionada.descripcion;
+    this.mostrarPopUp = true;
   }
 }

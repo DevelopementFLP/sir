@@ -5,9 +5,18 @@
     
     <div class="seccion-formulario">           
         <button pButton type="button" label="Crear Área de Destino" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAreaDestino()"></button>   
-        <div class="titulo">
-          <h1>LISTADO DE ÁREA DE DESTINO</h1>
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE ÁREA DE DESTINO</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
           </div>
+
+
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
   <div class="tablaMostrar">
     <p-table
@@ -19,6 +28,9 @@
       styleClass="p-datatable-striped"
       [scrollable]="true"
       scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -27,7 +39,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-area>
-        <tr>
+        <tr [pSelectableRow]="area" [class.selected-row]="filaSeleccionada === area">
           <td class="">
             <div class="valor">{{area.nombre}}</div>
           </td>
@@ -36,7 +48,7 @@
             <div class="valor">{{area.idAreaDestino}}</div>
           </td>
           <td class="">
-            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(area.idAreaDestino)"></button>
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(area.idAreaDestino)"></button> -->
           </td>
         </tr>
       </ng-template>
@@ -63,8 +75,9 @@
     </div>
 
 
-    <div class="titulo">
-      <h1>CREAR ÁREA DE DESTINO</h1>
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR ÁREA DE DESTINO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR ÁREA DE DESTINO</h1>
       </div>
 
     <div class="contenedor-campos">
@@ -79,5 +92,6 @@
 
    
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAreaDestino()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAreaDestino()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearAreaDestino()" *ngIf="estaEditando"></button>   
     </div>

@@ -1,9 +1,10 @@
 .titulo{
     margin-top: 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 2rem;
     margin-bottom: 1rem;
+
 }
 h1 {
     color: #333; /* Color del texto */
@@ -74,7 +75,21 @@ button {
 
 .columna,
 .valor{
-text-align: center;
+    text-align: start;
+    justify-content: flex-start;
+    align-self: flex-start;
+    padding: 0.2rem;
+}
+
+.columna{
+    margin-left: 0.4rem;
+    padding: 0rem;
+}
+
+.valor{
+    align-items: flex-start;
+    margin-left: 1rem;
+    width: max-content;
 }
 
 .popUpCrear{
@@ -89,8 +104,7 @@ text-align: center;
     left: 50%;
     z-index: 1000; /* Z-index alto para asegurar que esté sobre otros elementos */
     transform: translate(-50%, -50%);
-    background-color: white;
-    /* background-color: rgba(255, 255, 255, 0.568); Color de fondo del popup */
+    background-image: linear-gradient(to top, #ffffff 0%, #fcfcfc 100%);
     border: 1px solid #ccc; /* Borde del popup */
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
@@ -164,3 +178,24 @@ input:focus, select:focus {
     border-color: #007BFF;
     outline: none;
 }
+
+.selected-row {
+    background-color: #d9f7be; /* Color de fondo para la fila seleccionada */
+    font-weight: bold;
+  }
+
+  .contenedor__botones{
+    display: flex;
+    align-self: center;
+    margin-left: auto;
+    gap: 0.2rem;
+  }
+
+  .contenedor__tituloBotones{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .tituloPopUp{
+    justify-content: center;
+  }

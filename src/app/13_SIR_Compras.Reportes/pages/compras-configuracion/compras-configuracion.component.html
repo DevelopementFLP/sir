@@ -4,8 +4,8 @@
             <div>Configuraciones generales</div>
         </div> -->
         <p-tabView>
-            <p-tabPanel header="Producto">
-                <app-crear-producto></app-crear-producto>
+            <p-tabPanel header="Listado Productos" [selected]="true">
+                <app-ver-productos></app-ver-productos>
             </p-tabPanel>
             <p-tabPanel header="Empresa" >
                 <app-crear-empresa></app-crear-empresa>
@@ -34,7 +34,7 @@
             <p-tabPanel header="Prioridad">
                 <app-crear-prioridad></app-crear-prioridad>
             </p-tabPanel>
-            <p-tabPanel header="Estado de Solicitud" [selected]="true">
+            <p-tabPanel header="Estado de Solicitud" >
                 <app-crear-estado-solicitud></app-crear-estado-solicitud>
             </p-tabPanel>
             <p-tabPanel header="Stock de Productos">

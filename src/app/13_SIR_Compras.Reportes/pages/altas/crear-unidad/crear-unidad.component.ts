@@ -15,6 +15,8 @@ export class CrearUnidadComponent implements OnInit{
   unidadExiste: Unidad[] =[];
   unidadCrear!: Unidad;
   mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
 
   async ngOnInit(): Promise<void> {
     
@@ -45,6 +47,14 @@ export class CrearUnidadComponent implements OnInit{
       
     }
   }
+  async editarUnidad(unidad: Unidad): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarUnidadProducto(unidad));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
   async borrarFilaDelete(id: number): Promise<void> {
     try {
@@ -60,6 +70,20 @@ export class CrearUnidadComponent implements OnInit{
     if(this.validarDatos() == false)
       return;
 
+
+    if(this.estaEditando == true){
+
+      this.unidadCrear = {
+        idUnidad: this.filaSeleccionada.idUnidad,
+        codigo: this.codigo,
+        nombre: this.nombre
+      }
+      await this.editarUnidad(this.unidadCrear);
+    } else{
+
+    
+
+
     if(this.existeUnidad() == true)
       return;
 
@@ -71,10 +95,13 @@ export class CrearUnidadComponent implements OnInit{
 
 
     await this.crearUnidadInsert(this.unidadCrear);
+  }
     await this.iniciar();
     this.nombre = "";
     this.codigo = "";
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.filaSeleccionada = null;
 
   }
 
@@ -113,14 +140,38 @@ export class CrearUnidadComponent implements OnInit{
   }
   cerrarPopUpUnidad(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre = "";
+    this.codigo = "";
   }
   
-  async borrarFila(id: number){
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  async borrarFila(){
 
-    await this.borrarFilaDelete(id);
-    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar la unidad?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarFilaDelete(this.filaSeleccionada.idUnidad);
     await this.iniciar();
+    this.filaSeleccionada = null;
 
+  }
+
+
+  editarFila(){
+    console.log(this.filaSeleccionada);
+    this.estaEditando = true;
+    this.nombre = this.filaSeleccionada.nombre;
+    this.codigo = this.filaSeleccionada.codigo
+    this.mostrarPopUp = true;
   }
 
 }

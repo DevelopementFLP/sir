@@ -5,9 +5,18 @@
     
     <div class="seccion-formulario">
         <button pButton type="button" label="Crear Usuario" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpUsuario()"></button>   
-        <div class="titulo">
-          <h1>LISTADO DE USUARIOS</h1>
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE USUARIOS</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
           </div>
+
+
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
   <div class="tablaMostrar">
     <p-table
@@ -19,25 +28,32 @@
       styleClass="p-datatable-striped"
       [scrollable]="true"
       scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
     >
       <ng-template pTemplate="header">
         <tr>
           <th class=""><div class="columna">Nombre Completo</div></th>
           <th class=""><div class="columna">Rol</div></th>
           <th class=""><div class="columna">Departamento</div></th>
+          <th class=""><div class="columna">Correo Electrónico</div></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-usuario>
-        <tr>
+        <tr [pSelectableRow]="usuario" [class.selected-row]="filaSeleccionada === usuario">
           <td class="">
             <div class="valor">{{getNombreDesdeId(listaUsuariosSir,usuario.idUsuarioSir,'id_usuario','nombre_completo')}}</div>
           </td>
-        
+
           <td class="">
             <div class="valor">{{getNombreDesdeId(roles,usuario.idRol,'idRol','nombre')}}</div>
           </td>
           <td class="">
             <div class="valor">{{getNombreDesdeId(departamentos,usuario.idDepartamento,'idDepartamento','nombre')}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{usuario.correoElectronico}}</div>
           </td>
           <td class="">
             <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(unidad.idUnidad)"></button> -->
@@ -46,10 +62,8 @@
       </ng-template>
     </p-table>
   </div>
-
   </div>
   </div>
-
   <!-- Cierra tabla -->
 
   <div class="popUpCrear" *ngIf="mostrarPopUp">
@@ -67,22 +81,22 @@
     </div>
 
 
-    <div class="titulo">
-      <h1>CREAR USUARIO</h1>
-      </div>
-
-
-      <button pButton type="button" label="Seleccionar Usuario" icon="pi pi-search" class="btn_crear" (click)="mostrarPopUpUsuarios = true"></button>   
-
-
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR USUARIO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR USUARIO</h1>
+    </div>
+      
+    
+    <button pButton type="button" label="Seleccionar Usuario" icon="pi pi-search" class="btn_crear" (click)="mostrarPopUpUsuarios = true"></button>   
+    
     <div class="contenedor-campos">
       <label>Nombre del Usuario</label>
       <input 
-          type="text" 
-          [(ngModel)]="nombreCompleto" 
-          name="nombre"
-          [disabled]="true"
-          required> 
+      type="text" 
+      [(ngModel)]="nombreCompleto" 
+      name="nombre"
+      [disabled]="true"
+      required> 
     </div>
     <div class="contenedor-campos">
       <label>Correo Eléctronico</label>
@@ -122,7 +136,8 @@
 
       </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearUsuario()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearUsuario()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearUsuario()" *ngIf="estaEditando"></button>   
 
 </div>
 

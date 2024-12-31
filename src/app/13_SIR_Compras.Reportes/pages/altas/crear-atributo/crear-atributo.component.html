@@ -6,9 +6,17 @@
     <div class="seccion-formulario">
         <button pButton type="button" label="Crear Atributo" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAtributo()"></button>   
 
-        <div class="titulo">
-          <h1>LISTADO DE ATRIBUTOS</h1>
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE ATRIBUTOS</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="eliminarFila()"></button>
+              </div>
           </div>
+
+
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
   <div class="tablaMostrar">
     <p-table
@@ -20,6 +28,9 @@
       styleClass="p-datatable-striped"
       [scrollable]="true"
       scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -28,7 +39,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-atributo>
-        <tr>
+        <tr [pSelectableRow]="atributo" [class.selected-row]="filaSeleccionada === atributo">
           <td class="">
             <div class="valor">{{atributo.nombre}}</div>
           </td>
@@ -36,7 +47,7 @@
             <div class="valor">{{atributo.codigoDeAtributo}}</div>
           </td>
           <td class="">
-            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(atributo.idAtributo)"></button>
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(atributo.idAtributo)"></button> -->
           </td>
         </tr>
       </ng-template>
@@ -61,8 +72,9 @@
     </div>
 
 
-    <div class="titulo">
-      <h1>CREAR ATRIBUTO</h1>
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR ATRIBUTO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR ATRIBUTO</h1>
       </div>
 
       
@@ -87,6 +99,7 @@
           required> 
     </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAtributo()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAtributo()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Actualizar" icon="pi pi-plus" class="btn_crear" (click)="crearAtributo()" *ngIf="estaEditando"></button>   
    
   </div>

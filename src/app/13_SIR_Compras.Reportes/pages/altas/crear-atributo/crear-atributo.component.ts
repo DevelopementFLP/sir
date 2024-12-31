@@ -16,6 +16,8 @@ export class CrearAtributoComponent implements OnInit {
   atributosExistentes: Atributos[] =[];
   atributoCrear!: Atributos;
   mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
 
 
 
@@ -36,6 +38,17 @@ export class CrearAtributoComponent implements OnInit {
       console.error(error)
     }
   }
+
+
+    async editarAtributo(atributo: Atributos): Promise<void> {
+      try {
+        await lastValueFrom(this.comprasService.editarAtributo(atributo));
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+
 
   async crearAtributoInsert(atributo:Atributos): Promise<void> {
     try {
@@ -60,6 +73,23 @@ export class CrearAtributoComponent implements OnInit {
       return;
     }
     
+
+
+    if(this.estaEditando == true){
+      this.atributoCrear = {
+        idAtributo: this.filaSeleccionada.idAtributo,
+        codigoDeAtributo: this.codigoAtributo,
+        nombre: this.nombreAtributo
+      }
+      console.log(this.atributoCrear);
+
+      await this.editarAtributo(this.atributoCrear);
+
+    }else{
+      
+    
+
+
     if(this.existeAtributo()==true){
       console.log("#");
       alert("El código del atributo ya existe, verifique");
@@ -75,12 +105,15 @@ export class CrearAtributoComponent implements OnInit {
       }
 
       await this.crearAtributoInsert(this.atributoCrear);
+    }
+  }
       await this.iniciar();
       this.mostrarPopUp = false;
+      this.estaEditando = false;
       this.nombreAtributo = "";
       this.codigoAtributo="";
+      this.filaSeleccionada = null;
 
-    }
 
   }
 
@@ -117,13 +150,43 @@ export class CrearAtributoComponent implements OnInit {
 
   cerrarPopUpAtributo(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+
+    this.nombreAtributo = "";
+    this.codigoAtributo ="";
   }
 
-  async borrarFila(id: number){
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  
+  async eliminarFila(){
 
-    await this.borrarFilaDelete(id);
-    
-    await this.iniciar();
+    if(this.filaSeleccionada.idAtributo){
+      const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el Atributo?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+      // Si da cancelar sale de la función, de lo contrario sigue el código
+      if(!confirmaEliminar)
+        return;
+
+      await this.borrarFilaDelete(this.filaSeleccionada.idAtributo); 
+      await this.iniciar();
+      this.filaSeleccionada = null;
+    }
 
   }
+
+
+
+  editarFila(){
+    this.estaEditando = true;
+    this.nombreAtributo = this.filaSeleccionada.nombre;
+    this.codigoAtributo = this.filaSeleccionada.codigoDeAtributo;
+    this.mostrarPopUp = true;
+  }
+
 }

@@ -1,196 +1,245 @@
-<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
-  <div class="seccion-formulario">
-     
-      <button pButton type="button" label="Crear Producto" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpCrearProducto()"></button>
-     
-      <div class="titulo">
-        <h1>LISTADO DE PRODUCTOS</h1>
-        </div>
 
-      <!-- Tabla para ver los datos actuales antes de crear uno  -->
-      <div class="tablaMostrar">
-        <p-table
-          class="tabla" 
-          *ngIf="productoExistente.length>0; else noProducto"
-          [value]="productoExistente!"
-          [paginator]="true"
-          [rows]="10"
-          [rowsPerPageOptions]="[10,20,40]"
-          styleClass="p-datatable-striped"
-          [scrollable]="true"
-          scrollHeight="500px"
-          [totalRecords]="productoExistente.length"
-          [currentPageReportTemplate]="'{first}-{last} de {totalRecords} artículos'"
-         [showCurrentPageReport]="true">
-          <ng-template pTemplate="header">
-            <tr>
-              <th class=""><div class="columna">Nombre</div></th>
-              <th class=""><div class="columna">Unidad</div></th>
-              <th class=""><div class="columna">Código Producto</div></th>
-              <th class=""><div class="columna">Código Alernativo</div></th>
-              <th class=""><div class="columna">Código Alternativo 2</div></th>
-              <th class=""><div class="columna"></div></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-producto>
-            <tr>
-              <td class="">
-                <div class="valor">{{producto.nombre}}</div>
-              </td>
-              <td class="">
-                <div class="valor">
-                  {{getNombreDesdeId(unidades,producto.idTipoDeUnidad,'IdUnidad','nombre')}}
-                </div>
-              </td>
-              <td class="">
-                <div class="valor">{{ producto.codigoDeProducto }}</div>
-              </td>
-              <td class="">
-                <div class="valor">
-                  {{ producto.codigoDeProductoAlternativo}}
-                </div>
-              </td>
-              <td class="">
-                <div class="valor">
-                  {{ producto.codigoDeProductoAlternativo2}}
-                </div>
-              </td>
-              <td class="">
-                  <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(producto.idProducto)"></button>
-              </td>
-            </tr>
-          </ng-template>          
-        </p-table>
-      </div>
-      <!-- Cierra tabla -->
-  </div>
-</div>
 
-<div class="popUpCrear" *ngIf="mostrarPopUp">
-  <div class="botones_cerrar_popUp">
-    <button
-      pButton
-      type="button"
-      label=""
-      icon="pi pi-times"
-      class="btn_cerrarPopUp"
-      (click)="cerrarPopUpCrearProducto()"
-    ></button>
-  </div>
 
+<div class="contenedor__pagina">
+  <button pButton type="button" label="Volver" icon="pi pi-arrow-left" class="btn_volver p-button-text" routerLink="../configuraciones"></button>
+  
   <div class="titulo tituloCrearProducto">
     <h1>CREAR PRODUCTO</h1>
   </div>
 
-  <div class="contenedor-columnas">
-    <div class="columna1">
-      <div class="contenedor-campos">
-        <label>Nombre del Producto</label>
-        <input
-          type="text"
-          [(ngModel)]="nombre"
-          name="nombreProducto"
-          placeholder="Ingrese nombre del producto"
-          required
-        />
-      </div>
+  <div class="contenedor__columnas__boton">
+ 
+  <div class="contenedor__campos">
+    <div class="contenedor-columnas">
+      <div class="columna1">
+        <div class="contenedor-campos">
+          <div class="nombreColumna">Nombre</div>
+          <input
+            type="text"
+            [(ngModel)]="nombre"
+            name="nombreProducto"
+            placeholder="Ingrese nombre del producto"
+            required
+          />
+        </div>
 
-      <div
-        class="contenedor-campos"
-        *ngIf="nombre != '' || mostrarUnoEnUno == false"
-      >
-        <label>Descripción del Producto</label>
-        <textarea
-          type="text"
-          [(ngModel)]="descripcion"
-          name="descripcion"
-          placeholder="Ingrese una descripción"
-          rows="3"
-          cols="30"
-          required
-        >
-        </textarea>
-      </div>
+        
 
-      <div
-        class="contenedor-campos divSelect"
-        *ngIf="descripcion != '' || mostrarUnoEnUno == false"
-      >
-        <label>Unidad del producto</label>
-        <select
-          class="select"
-          id="unidades"
-          [(ngModel)]="idUnidad"
-          name="unidades"
-          required
-        >
-          <option
-            *ngFor="let unidad of unidades"
-            [value]="unidad.idUnidad"
+        <div
+          class="contenedor-campos divSelect">
+          <div class="nombreColumna">Unidad</div>
+          <select
+            class="select"
+            id="unidades"
+            [(ngModel)]="idUnidad"
+            name="unidades"
+            required
           >
-            {{ unidad.nombre }}
-          </option>
-        </select>
-      </div>
-    </div>
+            <option
+              *ngFor="let unidad of unidades"
+              [value]="unidad.idUnidad"
+            >
+              {{ unidad.nombre }}
+            </option>
+          </select>
+        </div>
+      <!-- </div> -->
 
-    <div class="columna2">
-      <div
-        class="contenedor-campos"
-        *ngIf="descripcion != '' || mostrarUnoEnUno == false"
-      >
-        <label>codigo del Producto</label>
-        <input
-          type="text"
-          [(ngModel)]="codigoProducto"
-          name="codigoProducto"
-          placeholder="Ingrese el código del producto"
-          required
-        />
-      </div>
+      <!-- <div class="columna2"> -->
+        <div
+          class="contenedor-campos"
+          *ngIf="descripcion != '' || mostrarUnoEnUno == false">
+          <div class="nombreColumna">Código SIR</div>
+          <input
+            type="text"
+            [(ngModel)]="codigoProducto"
+            name="codigoProducto"
+            placeholder="Ingrese el código SIR"
+            required
+          />
+        </div>
 
-      <div
-        class="contenedor-campos"
-        *ngIf="codigoProducto != '' || mostrarUnoEnUno == false"
-      >
-        <label>Código del Producto Alernativo</label>
-        <input
-          type="text"
-          [(ngModel)]="codigoProductoAlternativo"
-          name="codigoProductoAlternativo"
-          placeholder="Ingrese código alternativo"
-        />
-      </div>
+        <div
+          class="contenedor-campos"
+          *ngIf="codigoProducto != '' || mostrarUnoEnUno == false">
+          <div class="nombreColumna">Código PSIG</div>
+          <input
+            type="text"
+            [(ngModel)]="codigoProductoAlternativo"
+            name="codigoProductoAlternativo"
+            placeholder="Ingrese código PSIG"
+          />
+        </div>
 
-      <div
-        class="contenedor-campos"
-        *ngIf="
-          codigoProductoAlternativo != '' || mostrarUnoEnUno == false
-        "
-      >
-        <label>Código del Producto Alernativo 2</label>
-        <input
-          type="text"
-          [(ngModel)]="codigoProductoAlternativo2"
-          name="codigoProductoAlternativo2"
-          placeholder="Ingrese código alternativo 2"
-          required
-        />
-      </div>
-    </div>
+        <div
+          class="contenedor-campos">
+          <div class="nombreColumna">Código FIX</div>
+          <input
+            type="text"
+            [(ngModel)]="codigoProductoAlternativo2"
+            name="codigoProductoAlternativo2"
+            placeholder="Ingrese código FIX"
+            required
+          />
+        </div>
+
+        <div
+          class="contenedor-campos">
+          <div class="nombreColumna"> Descripción </div>
+          <textarea
+            type="text"
+            [(ngModel)]="descripcion"
+            name="descripcion"
+            placeholder="Ingrese una descripción"
+            rows="1"
+            cols="30"
+            required
+          >
+          </textarea> 
+        </div>
+
+        <div class="divider__horizontal">
+
+        </div>
+
+        <button *ngIf="!estaEditando"
+        pButton
+        type="button"
+        label="Guardar"
+        icon="pi pi-save"
+        class="btn_crear"
+        (click)="crearProducto()"
+        ></button>
+        <button *ngIf="estaEditando"
+        pButton
+        type="button"
+        label="Editar Producto"
+        icon="pi pi-pencil"
+        class="btn_crear"
+        (click)="editarProducto()"
+        ></button>
   </div>
 
-  <button
-    pButton
-    type="button"
-    label="Crear"
-    icon="pi pi-plus"
-    class="btn_crear"
-    (click)="crearProducto()"
-  ></button>
+  <div class="divider__vertical">
+
+  </div>
+  <div class="contenedor__atributos-columna2">
+
+
+    <div class="atributos__titulo">
+      <div class="atributos__titulo-valor">
+        Atributos
+      </div>
+    </div>
+
+
+    <div class="contenedor__DropDrown">
+
+    <div class="dropDown">
+
+   
+    <p-dropdown [options]="listaDeAtributosExistentesFiltro" [(ngModel)]="atributoSelecionado" (ngModelChange)="seleccionarAtributo(atributoSelecionado!.nombre,atributoSelecionado!.idAtributo,dropdownValor)" optionLabel="nombre" [filter]="true" filterBy="nombre"
+    [showClear]="true" placeholder="Seleccionar Atributo"
+    class="drowDownLista"
+    >
+    <ng-template pTemplate="selectedItem" class="drowDownLista" >
+      <div *ngIf="atributoSelecionado">
+        <div>{{atributoSelecionado.nombre}}</div>
+      </div>
+    </ng-template>
+    <ng-template let-atributo pTemplate="item">
+      <div>
+        <div>{{atributo.nombre}}</div>
+      </div>
+    </ng-template>
+  </p-dropdown>
+
+</div>
+  
+<div class="dropDown">
+  <p-dropdown 
+  #dropdownValor
+    [options]="listaDeAtributosValorFiltro" 
+    [(ngModel)]="ValorSeleccionado" 
+    (onFilter)="onFilter($event)" 
+    (onChange)="agregarAtributoProductoDesdeTabla(ValorSeleccionado!.valor,dropdownValor)" 
+    optionLabel="valor" 
+    [filter]="true" 
+    filterBy="valor"
+    [showClear]="true" 
+    placeholder="Seleccionar Valor"
+    class="drowDownLista"
+    [disabled]="!atributoSelecionado"
+    >
+    
+    <ng-template pTemplate="selectedItem">
+      <div *ngIf="atributoSelecionado">
+        <div>{{ ValorSeleccionado!.valor }}</div>
+      </div>
+    </ng-template>
+    
+    <ng-template let-valor pTemplate="item">
+      <div>
+        <div>{{ valor.valor }}</div>
+      </div>
+    </ng-template>
+
+    <!-- Template para mostrar opción "Agregar" -->
+    <ng-template pTemplate="footer">
+      <div *ngIf="mostrarAgregar">
+        <button pButton type="button" label="Agregar: {{ textoFiltro }}" (click)="agregarAtributoProductoDesdeTabla(textoFiltro,dropdownValor)"></button>
+      </div>
+    </ng-template>
+  </p-dropdown>
+</div>
+
 </div>
 
 
-<ng-template #noProducto>
-NO HAY PRODUCTOS DISPONIBLES
-</ng-template>
+    <div class="atributosAgregados">
+      <!-- Tabla para ver los atributos que va agregando  -->
+      <div class="tablaAtributosAgregados" *ngIf="listaAtributosAgregados.length>0">
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla" 
+      [value]="listaAtributosAgregados!"
+      [scrollable]="true"
+      scrollHeight="500px">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Atributo</div></th>
+          <th class=""><div class="columna">Valor</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-atributo>
+        <tr>
+
+          <td class="">
+            <div class="valor">{{getNombreDesdeId(listaDeAtributosExistentes,atributo.idAtributo,'idAtributo','nombre')}}</div>
+          </td>
+
+          <td class="">
+            <div class="valor">{{atributo.valor}}</div>
+          </td>
+          <td class="">
+          
+              <button pButton type="button" label="" icon="pi pi-trash" class="btn_eliminar" (click)="eliminarAtributoListaAgregado(atributo.idAtributo, atributo.idProductoAtributo)"></button>
+
+          
+          </td>
+        </tr>
+      </ng-template>          
+    </p-table>
+  </div>
+  <!-- Cierra tabla -->
+</div>
+
+</div>
+
+
+  </div>
+    </div>
+  </div>
+</div>
+</div>

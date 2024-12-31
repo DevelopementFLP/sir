@@ -13,6 +13,8 @@ export class CrearAreaDestinoComponent implements OnInit{
   nombre: string ="";
   areaExistente: AreaDestino[] = [];
   crearArea!: AreaDestino;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
   mostrarPopUp: boolean = false;
 
 
@@ -47,6 +49,14 @@ export class CrearAreaDestinoComponent implements OnInit{
       
     }
   }
+  async editarAreaDeDestino(area:AreaDestino): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarAreaDestino(area));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
 
   async borrarFilaDelete(id: number): Promise<void> {
@@ -64,6 +74,19 @@ export class CrearAreaDestinoComponent implements OnInit{
       return;
     }
 
+
+    if(this.estaEditando == true){
+
+
+      this.crearArea = {
+        idAreaDestino: this.filaSeleccionada.idAreaDestino,
+        nombre: this.nombre
+      }
+      await this.editarAreaDeDestino(this.crearArea);
+    } else{
+
+   
+
     if(this.existeArea()==true)
       return;
     
@@ -74,10 +97,13 @@ export class CrearAreaDestinoComponent implements OnInit{
     }
 
     await this.crearAreaDeDestinoInsert(this.crearArea);
+  }
     await this.iniciar();
 
     this.mostrarPopUp = false;
     this.nombre = "";
+    this.filaSeleccionada = null;
+    this.estaEditando = false;
 
   }
 
@@ -98,14 +124,37 @@ export class CrearAreaDestinoComponent implements OnInit{
   }
   cerrarPopUpAreaDestino(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre ="";
+
   }
 
   
-  async borrarFila(id: number){
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  
+  async borrarFila(){
 
-    await this.borrarFilaDelete(id);
-    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el área de destino?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarFilaDelete(this.filaSeleccionada.idAreaDestino);
     await this.iniciar();
+    this.filaSeleccionada = null;
 
   }
+
+  editarFila(){
+    this.estaEditando = true;
+    this.nombre = this.filaSeleccionada.nombre;
+    this.mostrarPopUp = true;
+  }
+
 }

@@ -14,7 +14,8 @@ import { Empresa } from '../../interfaces/Empresa.interface';
 import { Departamento } from '../../interfaces/Departamento.interface';
 import { SessionManagerService } from 'src/app/shared/services/session-manager.service';
 import { ListaUsuariosSir } from '../../interfaces/ListaUsuariosSir.interface';
-
+import { ArchivoAdjuntoLineaDeSolicitud } from '../../interfaces/ArchivoAdjuntoLineaDeSolicitud.interface';
+import { ArchivosAdjuntos } from '../../interfaces/ArchivosAdjuntos.interface';
 
 @Component({
   selector: 'app-solicitud-compra',
@@ -33,7 +34,9 @@ export class SolicitudCompraComponent implements OnInit{
   nombreUnidad!: string;
   codigoProducto!: string;
   idOrdenCreada!: number;
+  lineasCreadas: LineadeSolicitud[] = []
   ordenCompraExistente: OrdenDeSolicitud[] = [];
+  ordenCompraExistenteFiltro: OrdenDeSolicitud[] = [];
   solicitudExistente: LineadeSolicitud[] = [];
   solicitudExistenteFiltrada: LineadeSolicitud[] = [];
   productosActivos: Producto[] = [];
@@ -53,6 +56,7 @@ export class SolicitudCompraComponent implements OnInit{
   idUsuarioSolicitante: number = 4;
   idEstadoSolicitud: number = 2;
   estadoDeSolicitud: EstadoDeSolicitud[] = [];
+  estadosMostrarDashboard: EstadoDeSolicitud [] = [];
   idPrioridad!: number;
   empresas: Empresa[] = [];
   idEmpresa!: number;
@@ -60,19 +64,39 @@ export class SolicitudCompraComponent implements OnInit{
   mostrarTodasFilas: boolean = true;
   mostrarPopUp: boolean = false;
   mostrarUsuarios: boolean = false;
+  mostrarPopUpCambiarEstado: boolean = false;
+  mostrarPopUpVerArchivoAdjunto: boolean = false;
   idOrdenDeSolicitudDesplegar: number=-1;
   usuarioActualSir = this.sessionManagerService.parseUsuario((this.sessionManagerService.getCurrentUser()!))
   listaUsuariosSir: ListaUsuariosSir[] =[];
   comentario:string ="";
+  idEstadoCambiar!: number;
+  archivoAdjuntoOrden!: File | null;
+  archivoAdjuntoLineaDeSolicitud!: File | null;
+  archivoLinea: File | null = null; /* Para poder resetear el archivo después de agregar el producto*/
+  archivoAdjunto!: File | null;
+  archivosAdjuntos: ArchivoAdjuntoLineaDeSolicitud[] =[];
+  getArchivoAdjunto: ArchivosAdjuntos[] =[];
+  listaArchivosAdjuntos: ArchivosAdjuntos [] = [];
 
+  ordenVerTieneAdjunto: boolean = false;
+  lineaVerTieneAdjunto: boolean = false;
+  archivosAdjuntosLineas: ArchivosAdjuntos[] = [];
+  archivoAdjuntoImagen!: string | null;
+  nombreArchivoOrdenSolicitud: string | null = null;
+  nombreArchivoLineaDeSolicitud: string | null = null;
+  etiquetaArchivoOrden = 'Subir archivo';
+  etiquetaArchivoLinea = 'Subir archivo';
+
+
+  estaEditandoOrden: boolean = false;
 
   minFecha: string = "";
   
+
+
   async ngOnInit(): Promise<void> {      
       await this.iniciar();
-      console.log(this.ordenCompraExistente);
-      console.log(this.empresas);
-      console.log(this.productosActivos);
   }
 
   constructor (
@@ -86,6 +110,7 @@ export class SolicitudCompraComponent implements OnInit{
         console.error(error)
       }
     }
+
 
   async getListaDeUnidades(): Promise<void> {
     try {
@@ -140,14 +165,76 @@ export class SolicitudCompraComponent implements OnInit{
       
     }
   }
-  async crearLineaDeSolicitudInsert(orden: LineadeSolicitud[]): Promise<void> {
+  async crearArchivoAdjunto(idOrden:number,seccion:number,archivoAdjunto: File): Promise<void> {
     try {
-      await lastValueFrom(this.comprasService.CrearLineaDeSolicitud(orden));
+
+    await lastValueFrom(this.comprasService.crearArchivoAdjunto(idOrden,seccion,archivoAdjunto));
+
     } catch (error) {
       console.error(error);
       
     }
   }
+  async editarArchivoAdjunto(idOrden:number,seccion:number,archivoAdjunto: File): Promise<void> {
+    try {
+
+    await lastValueFrom(this.comprasService.editarArchivoAdjunto(idOrden,seccion,archivoAdjunto));
+
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+  async crearLineaDeSolicitudInsert(orden: LineadeSolicitud[]): Promise<void> {
+    try {
+      this.lineasCreadas = await lastValueFrom(this.comprasService.CrearLineaDeSolicitud(orden));
+      console.log(this.lineasCreadas);
+
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
+   async editarOrdenDeSolicitud(orden: OrdenDeSolicitud): Promise<void> {
+      try {
+        await lastValueFrom(this.comprasService.editarOrdenDeSolicitud(orden));
+      } catch(error) {
+        console.error(error)
+      }
+    }
+   async editarLineaDeSolicitud(linea: LineadeSolicitud[]): Promise<void> {
+      try {
+        await lastValueFrom(this.comprasService.EditarLineaDeSolicitud(linea));
+      } catch(error) {
+        console.error(error)
+      }
+    }
+
+    async eliminarOrdenDeSolicitud(idOrdenDeSolicitud:number): Promise<void> {
+      try {
+        await lastValueFrom(this.comprasService.eliminarOrdenDeSolicutd(idOrdenDeSolicitud));
+      } catch(error) {
+        console.error(error)
+      }
+    }
+    async eliminarLineaDeSolicitud(idLinea:number): Promise<void> {
+      try {
+        await lastValueFrom(this.comprasService.EliminarLineaDeSolicitud(idLinea));
+      } catch(error) {
+        console.error(error)
+      }
+    }
+    async getListaDeArchivosAdjuntos(idReferencia:number,seccion:number): Promise<void> {
+      try {
+        this.getArchivoAdjunto = await lastValueFrom(this.comprasService.getListaDeArchivosAdjuntos(idReferencia,seccion));
+      } catch(error) {
+        console.error(error)
+      }
+    }
+
+
 
   async iniciar(): Promise<void> {
     const [
@@ -209,6 +296,9 @@ export class SolicitudCompraComponent implements OnInit{
     }
     try {
       this.estadoDeSolicitud = listaEstados;
+      this.estadosMostrarDashboard = this.estadoDeSolicitud.filter(e => e.mostrarEnPantalla==true);
+      // Ordeno los estados por su orden en base de datos
+      this.estadosMostrarDashboard = this.estadosMostrarDashboard.sort((a,b) => a.orden - b.orden);
     } catch (error) {
       console.error(error)
     }
@@ -226,7 +316,8 @@ export class SolicitudCompraComponent implements OnInit{
     }
     try {
       this.ordenCompraExistente = listaOrdenDeSolicitud;
-      this.ordenCompraExistente = this.ordenCompraExistente.filter(e => e.idUsuarioSolicitante == this.idUsuarioSolicitante )
+      this.ordenCompraExistente = this.ordenCompraExistente.filter(e => e.idUsuarioSolicitante == this.idUsuarioSolicitante);
+      this.ordenCompraExistenteFiltro = this.ordenCompraExistente;
     } catch (error) {
       console.error(error)
     }
@@ -246,45 +337,175 @@ export class SolicitudCompraComponent implements OnInit{
       console.error(error)
     }
     this.setMinFecha();
+
   }
 
 
   async crearOrdenSolicitud(){
 
-    // Creo orden de solicitud
-    this.crearOrdenDeSolicitud = {
-      fechaDecreacion: new Date(),
-      idCentroDeCosto: Number(this.idCentroDeCosto),
-      idEmpresa: Number(this.idEmpresa),
-      idEstadoDeSolicitud: Number(this.idEstadoSolicitud),
-      idOrdenDeSolicitud:0,
-      idPriodidadDeOrden: Number(this.idPrioridad),
-      idUsuarioSolicitante:Number(this.idUsuarioSolicitante),
-      fechaDeNecesidad: this.fechaNecesidad,
-      idUsuarioParaNotificar: Number(this.idUsuarioANotificar)
-    }
-    this.idOrdenCreada = -1;
-    await this.crearOrdenSolicitudInsert(this.crearOrdenDeSolicitud)
-    if(this.idOrdenCreada == -1)
-      return alert("No se pudo crear la orden");
-    
-    this.lineaDeSolicitudParaCrear.forEach(c => {
-      c.idOrdenDeSolicitud = this.idOrdenCreada;
-    });
 
-    // Crear linea de solicitud 
-  await this.crearLineaDeSolicitudInsert(this.lineaDeSolicitudParaCrear);
+
+    // Creo orden de solicitud
+    
+    if(this.estaEditandoOrden == false){
+      this.crearOrdenDeSolicitud = {
+        fechaDecreacion: new Date(),
+        idCentroDeCosto: Number(this.idCentroDeCosto),
+        idEmpresa: Number(this.idEmpresa),
+        idEstadoDeSolicitud: Number(this.idEstadoSolicitud),
+        idOrdenDeSolicitud:0,
+        idPriodidadDeOrden: Number(this.idPrioridad),
+        idUsuarioSolicitante:Number(this.idUsuarioSolicitante),
+        fechaDeNecesidad: this.fechaNecesidad,
+        idUsuarioParaNotificar: Number(this.idUsuarioANotificar)
+      }
+      this.idOrdenCreada = -1;
+      
+      await this.crearOrdenSolicitudInsert(this.crearOrdenDeSolicitud)
+      if(this.idOrdenCreada == -1)
+        return alert("No se pudo crear la orden");
+      
+      this.lineaDeSolicitudParaCrear.forEach(c => {
+        c.idOrdenDeSolicitud = this.idOrdenCreada;
+      });
+      
+      // Inserto dato adjunto a la órden
+      console.log(this.archivoAdjuntoOrden);
+      if(this.archivoAdjuntoOrden)
+      await this.crearArchivoAdjunto(this.idOrdenCreada,1,this.archivoAdjuntoOrden);
+      
+      
+      // Crear linea de solicitud 
+      await this.crearLineaDeSolicitudInsert(this.lineaDeSolicitudParaCrear);
+      
+
+      //  Inserto dato adjunto a las líneas
+        console.log(this.archivosAdjuntos);
+        this.archivosAdjuntos.forEach(async c => {
+
+        let lineas = this.lineasCreadas.find(lc => lc.idProducto == c.idProducto);
+        let idLinea = lineas?.idLineaDeSolicitud;
+        console.log(idLinea);
+        await this.crearArchivoAdjunto(idLinea!,2,c.archivoAdjunto);
+        
+      });
+      
+
+      this.comprasService.mostrarMensajeExito('¡La órden se creó correctamente!')
+      
+    }else{
+      
+      //  Está editando la orden por lo tanto solo actualizo
+      
+      this.crearOrdenDeSolicitud = {
+        fechaDecreacion: new Date(),
+        idCentroDeCosto: Number(this.idCentroDeCosto),
+        idEmpresa: Number(this.idEmpresa),
+        idEstadoDeSolicitud: Number(this.idEstadoSolicitud),
+        idOrdenDeSolicitud:Number(this.idOrdenDeSolicitudDesplegar),
+        idPriodidadDeOrden: Number(this.idPrioridad),
+        idUsuarioSolicitante:Number(this.idUsuarioSolicitante),
+        fechaDeNecesidad: this.fechaNecesidad,
+        idUsuarioParaNotificar: Number(this.idUsuarioANotificar)
+      }
+      
+      await this.editarOrdenDeSolicitud(this.crearOrdenDeSolicitud);
+      //  Si carga un archivo actualizo el adjunto
+      if(this.archivoAdjuntoOrden){
+        console.log(this.archivoAdjuntoOrden);
+        console.log(this.idOrdenDeSolicitudDesplegar);
+        console.log("Edito archivo");
+        await this.editarArchivoAdjunto(this.idOrdenDeSolicitudDesplegar,1,this.archivoAdjuntoOrden);
+      }
+      
+      
+      
+      // Creo orden de solicitud solo si agregó nuevo
+      
+      // Si es mayor es porque agregó más líneas
+      if(this.lineaDeSolicitudParaCrear.length>this.solicitudExistenteFiltrada.length){
+        
+        // Filtro la solicitud para agregar solo las líneas que no están agregadas
+        let lineaSolicitudParaCrearFiltrada = this.lineaDeSolicitudParaCrear;
+        
+        this.lineaDeSolicitudParaCrear.forEach(l => {
+          
+          this.solicitudExistenteFiltrada.forEach(s => {
+            
+            if(l.idProducto == s.idProducto){
+              lineaSolicitudParaCrearFiltrada = lineaSolicitudParaCrearFiltrada.filter(p => p.idProducto != l.idProducto);
+            }
+        
+          });
+          
+        });
+        
+        
+        
+        lineaSolicitudParaCrearFiltrada.forEach(c => {
+          c.idOrdenDeSolicitud = this.idOrdenDeSolicitudDesplegar;
+          c.idLineaDeSolicitud = 0;
+        });
+        await this.crearLineaDeSolicitudInsert(lineaSolicitudParaCrearFiltrada); 
+        
+         //  Inserto dato adjunto a las líneas
+         console.log(this.archivosAdjuntos);
+         this.archivosAdjuntos.forEach(async c => {
+ 
+         let lineas = this.lineasCreadas.find(lc => lc.idProducto == c.idProducto);
+         let idLinea = lineas?.idLineaDeSolicitud;
+         console.log(idLinea);
+         await this.crearArchivoAdjunto(idLinea!,2,c.archivoAdjunto);
+         
+       });
+        
+        
+        
+      }
+      
+    }
+    this.comprasService.mostrarMensajeExito('¡La órden se editó correctamente!')
+    
+    //  Poner esto en una función de limpiar campos
+    this.archivoAdjuntoOrden = null;
+    this.archivoAdjuntoLineaDeSolicitud = null;
+    this.archivosAdjuntos = [];
+    
+    await this.iniciar()
+    this.solicitudExistenteFiltrada = this.solicitudExistente;
+    this.solicitudExistenteFiltrada = this.solicitudExistenteFiltrada.filter(se => se.idOrdenDeSolicitud == this.idOrdenDeSolicitudDesplegar);
+    this.limpiarCampos();
+    this.cargarArchivosAdjuntos();
+  }
+
+  limpiarCampos(){
     this.idProducto = 0;
     this.nombreProducto = "";
     this.idArea = undefined;
     this.cantidad = 0;
     this.idUsuarioANotificar =-1;
-    this.iniciar()
+    this.estaEditandoOrden = false;
+    this.idEmpresa = -1;
+    this.idCentroDeCosto = -1;
+    this.idPrioridad = -1;
+    this.fechaNecesidad = new Date();
+    this.idUsuarioANotificar =-1;
+    this.usuariosANotificar = [];
     this.mostrarPopUp = false;
-
+    this.archivoAdjunto = null;
+    this.archivoAdjuntoOrden = null;
+    this.archivoLinea = null;
+    this.nombreArchivoLineaDeSolicitud = "";
+    this.nombreArchivoOrdenSolicitud = "";
+    this.etiquetaArchivoOrden = "Subir Archivo";
+    this.etiquetaArchivoLinea = "Subir Archivo";
   }
 
   agregarProducto(){
+
+
+
+
     if(this.validarDatos() == false){
       return;
     }
@@ -303,19 +524,29 @@ export class SolicitudCompraComponent implements OnInit{
      comentario: this.comentario
    })
 
+
+   if(this.archivoLinea){
+    console.log("agrego adjunto");
+    this.archivosAdjuntos.push({
+      idProducto: this.idProducto,
+      archivoAdjunto: this.archivoAdjuntoLineaDeSolicitud!
+    })
+   }
+   
+
 this.idProducto = 0;
 this.nombreProducto = "";
 this.idArea = undefined;
 this.cantidad = 0;
-
-console.log(this.idEmpresa);
-
+this.comentario = "";
+this.archivoLinea = null;
+this.etiquetaArchivoLinea = "Subir Archivo"
+this.nombreArchivoLineaDeSolicitud = "";
   }
 
   getUnidadDeProducto(idProducto: number): number{
 
     const producto = this.productosActivos.find(p => p.idProducto === idProducto);
-    console.log(producto?.idUnidad);
     return producto?.idUnidad || -1;
   }
   
@@ -377,6 +608,10 @@ console.log(this.idEmpresa);
       alert("Ingrese el área de destino");
       return false
     }
+    if(this.usuariosANotificar.length<=0){
+      alert("Ingrese el usuario a notificar");
+      return false
+    }
 
 
 
@@ -401,9 +636,11 @@ console.log(this.idEmpresa);
 
   cerrarPopUpSolicitudCompra(){
     this.mostrarPopUp = false;
+    this.estaEditandoOrden = false;
+    this.limpiarCampos();
   }
 
-  desplegarFila(id: number) {
+  async desplegarFila(id: number) {
     if(this.idOrdenDeSolicitudDesplegar == id){
       this.idOrdenDeSolicitudDesplegar = -1;
       this.mostrarTodasFilas = true;
@@ -413,6 +650,12 @@ console.log(this.idEmpresa);
     }
     this.solicitudExistenteFiltrada = this.solicitudExistente;
     this.solicitudExistenteFiltrada = this.solicitudExistenteFiltrada.filter(se => se.idOrdenDeSolicitud == id);
+
+    // this.tieneAdjuntoOrden(id);
+    this.cargarArchivosAdjuntos();
+
+
+
   }
 
   contarLineas(id:number): number{
@@ -430,10 +673,19 @@ console.log(this.idEmpresa);
 
 
   CalcularResumen(idEstado:number):number{
+console.log(idEstado);
 
-    const ordenResumen = this.ordenCompraExistente.filter(p => p.idEstadoDeSolicitud == idEstado);
-    console.log(ordenResumen);
-    return ordenResumen.length | 0;
+    if(idEstado==-1){
+
+      const ordenResumen = this.ordenCompraExistente;
+      return ordenResumen.length | 0;
+    }else{
+
+      
+      const ordenResumen = this.ordenCompraExistente.filter(p => p.idEstadoDeSolicitud == idEstado);
+      console.log(ordenResumen);
+      return ordenResumen.length | 0;
+    }
 
   }
 
@@ -463,9 +715,7 @@ console.log(this.idEmpresa);
       correoElectronico: correoElectronico
     })
 
-    this.idUsuarioANotificar = idUsuario;
-    console.log(this.usuariosANotificar);
-    
+    this.idUsuarioANotificar = idUsuario;   
     this.mostrarUsuarios = false;
   }
 
@@ -478,5 +728,225 @@ console.log(this.idEmpresa);
   mostrarTodas(){
     this.mostrarTodasFilas = true;
     this.idOrdenDeSolicitudDesplegar = -1;
+    this.ordenVerTieneAdjunto = false;
   }
+
+
+  obtenerColorEstado(idEstado: number): string{
+
+    const estado = this.estadoDeSolicitud.find(c => c.idEstadoDeSolicitud == idEstado);   
+    return estado ? estado.color || "" : '';
+  }
+
+  async eliminarProductoASolicitar(idProducto: number, idLinea: number){
+
+    if(this.estaEditandoOrden){
+
+      
+        const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+       
+        // Si da cancelar sale de la función, de lo contrario sigue el código
+        if(!confirmaEliminar)
+          return;
+
+
+
+      // Elimino la orden de la base de datos
+      await this.eliminarLineaDeSolicitud(idLinea);
+      this.lineaDeSolicitudParaCrear = this.lineaDeSolicitudParaCrear.filter(c => c.idProducto!= idProducto);
+      await this.iniciar();
+      // Actualizo el array solicitudes filtradas
+      this.solicitudExistenteFiltrada = this.solicitudExistente;
+      this.solicitudExistenteFiltrada = this.solicitudExistenteFiltrada.filter(se => se.idOrdenDeSolicitud == this.idOrdenDeSolicitudDesplegar);
+    }else{
+      this.lineaDeSolicitudParaCrear = this.lineaDeSolicitudParaCrear.filter(c => c.idProducto != idProducto);
+    }
+  }
+
+  async actualizarEstado(){
+
+    const ordenActualizar = this.ordenCompraExistente.find(c => c.idOrdenDeSolicitud == this.idOrdenDeSolicitudDesplegar);
+    if(ordenActualizar){
+      ordenActualizar.idEstadoDeSolicitud = Number(this.idEstadoCambiar);
+      await this.editarOrdenDeSolicitud(ordenActualizar);
+
+
+      // Verificar primero si no existe ya un archivo para esta orden con la seccion 3(sección para presupuesto aprobado)
+
+      
+      if(this.archivoAdjuntoOrden){
+        
+        this.getArchivoAdjunto =[];
+        await this.getListaDeArchivosAdjuntos(this.idOrdenDeSolicitudDesplegar,3);
+        if(this.getArchivoAdjunto.length<=0){ 
+          await this.crearArchivoAdjunto(this.idOrdenDeSolicitudDesplegar,3,this.archivoAdjuntoOrden);
+        }else{
+          await this.editarArchivoAdjunto(this.idOrdenDeSolicitudDesplegar,3,this.archivoAdjuntoOrden);
+        }
+      }
+        
+      await this.cargarArchivosAdjuntos();
+      await this.iniciar()
+      this.mostrarPopUpCambiarEstado = false;
+      this.comprasService.mostrarMensajeExito('La Órden Se Actualizó Correctamente');
+    }
+
+
+
+  }
+
+  async eliminarOrden(){
+
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar la Órden?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+
+    await this.eliminarOrdenDeSolicitud(this.idOrdenDeSolicitudDesplegar);
+    await this.iniciar();
+    this.mostrarTodasFilas = true;
+    this.idOrdenDeSolicitudDesplegar = -1;
+
+    this.comprasService.mostrarMensajeExito('Órden eliminada con éxito');
+  }
+
+
+  editarOrden(){
+    
+    
+    this.estaEditandoOrden = true;
+    this.mostrarPopUp = true;
+    const ordenEditar = this.ordenCompraExistente.find(p => p.idOrdenDeSolicitud == this.idOrdenDeSolicitudDesplegar);
+    const usuario = this.usuariosExistente.find(c => c.idUsuarioSolicitante == ordenEditar?.idUsuarioSolicitante);
+    this.idEmpresa = Number(ordenEditar?.idEmpresa);
+    this.centroDeCostosFiltrados = this.centroDeCostos.filter(c => c.idEmpresa == this.idEmpresa);
+    this.idCentroDeCosto = Number(ordenEditar?.idCentroDeCosto);
+    this.idPrioridad = Number(ordenEditar?.idPriodidadDeOrden);
+    this.fechaNecesidad = ordenEditar!.fechaDeNecesidad;
+    this.idUsuarioANotificar = ordenEditar!.idUsuarioParaNotificar;
+    this.usuariosANotificar.push({
+      idUsuarioSolicitante: Number(ordenEditar?.idUsuarioParaNotificar),
+      idDepartamento: Number(usuario?.idDepartamento),
+      idRol: Number(usuario?.idRol),
+      idUsuarioSir: Number(usuario?.idUsuarioSir),
+      correoElectronico: usuario!.correoElectronico
+    })
+    
+    this.lineaDeSolicitudParaCrear = this.solicitudExistente.filter(s => s.idOrdenDeSolicitud == ordenEditar?.idOrdenDeSolicitud);
+
+  }
+ 
+ 
+  seleccionarArchivoLineaDeSolicitud(event: Event): void {
+  const input = event.target as HTMLInputElement;
+
+  if (input.files && input.files.length > 0) {
+    this.archivoAdjuntoLineaDeSolicitud = input.files[0]; // Obtiene el primer archivo seleccionado
+    this.nombreArchivoLineaDeSolicitud = input.files[0].name;
+    this.etiquetaArchivoLinea = "Archivo Cargado";
+    console.log('Archivo seleccionado:', this.archivoAdjuntoLineaDeSolicitud);
+  }
+}
+
+  async tieneAdjuntoOrden(idReferencia:number): Promise<boolean>{
+
+    this.getArchivoAdjunto =[];
+    await this.getListaDeArchivosAdjuntos(idReferencia,1);
+
+    if(this.getArchivoAdjunto.length>0){
+      let urlimagen = this.getArchivoAdjunto.find(c => c.idReferencia == idReferencia);
+      this.archivoAdjuntoImagen = urlimagen?.archivoAdjunto || '';
+      this.ordenVerTieneAdjunto = true;
+      return true;
+    }else{
+      this.ordenVerTieneAdjunto = false;
+      return false;
+    }
+  }
+
+  async cargarArchivosAdjuntos(){
+
+
+
+    this.getArchivoAdjunto =[];
+    this.listaArchivosAdjuntos =[];
+    await this.getListaDeArchivosAdjuntos(this.idOrdenDeSolicitudDesplegar,1);
+    if(this.getArchivoAdjunto.length>0){
+      let lista = this.getArchivoAdjunto;
+      this.listaArchivosAdjuntos.push(...lista);  
+
+    }    
+    
+    for (const s of this.solicitudExistenteFiltrada) {
+      await this.getListaDeArchivosAdjuntos(s.idLineaDeSolicitud,2); 
+      let lista = this.getArchivoAdjunto;
+      this.listaArchivosAdjuntos.push(...lista);     
+    }
+    
+    console.log(this.listaArchivosAdjuntos);
+
+    // Adjuntos presupuesto aprobado
+    this.getArchivoAdjunto =[];
+    await this.getListaDeArchivosAdjuntos(this.idOrdenDeSolicitudDesplegar,3);
+    if(this.getArchivoAdjunto.length>0){
+      let lista = this.getArchivoAdjunto;
+      this.listaArchivosAdjuntos.push(...lista);  
+    }    
+    console.log(this.listaArchivosAdjuntos);
+  }
+
+  // Consulto si tiene un archivo adjunto para mostrar el botón de adjunto o no
+  tieneAdjunto(idReferencia: number, seccion: number): boolean{
+
+    let linea = this.listaArchivosAdjuntos.find(c => c.idReferencia == idReferencia && c.seccion == seccion);
+    if(linea?.archivoAdjunto){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  verAdjunto(idReferencia:number,seccion:number){
+  
+    let adjunto = this.listaArchivosAdjuntos.find(l => l.idReferencia == idReferencia && l.seccion == seccion);
+    if(adjunto?.idArchivoAdjunto){
+      this.archivoAdjuntoImagen = adjunto?.archivoAdjunto || '';
+      this.mostrarPopUpVerArchivoAdjunto = true;  
+    }
+  }
+
+
+  filtrarOdenesPorEstado(idEstado:number){
+
+    if(idEstado == -1){
+
+      this.ordenCompraExistenteFiltro = this.ordenCompraExistente;
+    }
+    else{
+
+      this.ordenCompraExistenteFiltro = this.ordenCompraExistente.filter(oc => oc.idEstadoDeSolicitud == idEstado);
+    }
+
+  }
+
+  abrirSelectorDeArchivo(idArchivo:string): void {
+    const fileInput = document.getElementById(idArchivo) as HTMLInputElement;
+    fileInput?.click(); // Simula el clic en el input file
+  }
+
+
+  seleccionarArchivoOrdenDeSolicitud(event: Event): void {
+    const input = event.target as HTMLInputElement;
+  
+    if (input.files && input.files.length > 0) {
+      this.archivoAdjuntoOrden = input.files[0]; // Obtiene el primer archivo seleccionado
+      this.nombreArchivoOrdenSolicitud = input.files[0].name; // Guarda el nombre del archivo seleccionado
+      console.log('Archivo seleccionado:', this.archivoAdjuntoOrden);
+      this.etiquetaArchivoOrden = 'Archivo cargado';
+    }
+  }
+ 
+
+  
+
 }

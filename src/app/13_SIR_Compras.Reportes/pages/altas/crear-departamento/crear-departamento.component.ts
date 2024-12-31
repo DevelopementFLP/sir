@@ -16,6 +16,8 @@ export class CrearDepartamentoComponent implements OnInit{
   departamentoExistente: Departamento[] = [];
   departamentoCrear!: Departamento;
   mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
   
   ngOnInit(): void {
 
@@ -45,14 +47,22 @@ export class CrearDepartamentoComponent implements OnInit{
       
     }
   }
+  async editarDepartamento(departamento:Departamento): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarDepartamento(departamento));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
-  // async borrarFilaDelete(id: number): Promise<void> {
-  //   try {
-  //     await lastValueFrom(this.comprasService.EliminarD(id));
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  async borrarDepartamento(id: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarDepartamento(id));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async crearDepartamento(){
    
@@ -60,10 +70,23 @@ export class CrearDepartamentoComponent implements OnInit{
       return;
     }
 
-    if(this.existeDepartamento() == true){
-      return;
+    
+    
+    if(this.estaEditando == true){
+      
+      this.departamentoCrear = {
+        idDepartamento: this.filaSeleccionada.idDepartamento,
+        codigo: this.codigoDepartamento,
+        nombre: this.nombreDepartamento
+      }
+      await this.editarDepartamento(this.departamentoCrear);
     }else{
+      
+      if(this.existeDepartamento() == true){
+        return;
 
+      }else{
+      
 
       //  Inserto valor en bd
 
@@ -72,15 +95,19 @@ export class CrearDepartamentoComponent implements OnInit{
         codigo: this.codigoDepartamento,
         nombre: this.nombreDepartamento
       }
-      this.mostrarPopUp = false; 
-      this.nombreDepartamento = "";
-      this.codigoDepartamento ="";
-
+      
       await this.crearDepartamentoInsert(this.departamentoCrear);
-      await this.iniciar();
-
-
+      
     }
+  }
+
+    await this.iniciar();
+    this.mostrarPopUp = false; 
+    this.nombreDepartamento = "";
+    this.codigoDepartamento ="";
+    this.estaEditando = false;
+    this.filaSeleccionada = null;
+
 
   }
 
@@ -124,6 +151,9 @@ export class CrearDepartamentoComponent implements OnInit{
   }
   cerrarPopUpDepartamento(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombreDepartamento ="";
+    this.codigoDepartamento = "";
   }
 
   // async borrarFila(id: number){
@@ -133,4 +163,31 @@ export class CrearDepartamentoComponent implements OnInit{
   //   await this.iniciar();
 
   // }
+
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+
+  async borrarFila(){
+
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el Departamento?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarDepartamento(this.filaSeleccionada.idDepartamento);
+    await this.iniciar();
+    this.filaSeleccionada = null;
+
+  }
+
+  editarFila(){
+    this.estaEditando = true;
+    this.nombreDepartamento = this.filaSeleccionada.nombre;
+    this.codigoDepartamento = this.filaSeleccionada.codigo;
+    this.mostrarPopUp = true;
+  }
 }

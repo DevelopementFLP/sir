@@ -6,9 +6,18 @@
     <div class="seccion-formulario">
 
         <button pButton type="button" label="Crear Centro de Costo" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpCentroCosto()"></button>   
-        <div class="titulo">
-          <h1>LISTADO DE CENTROS DE COSTO</h1>
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE CENTROS DE COSTO</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
           </div>
+
+
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
   <div class="tablaMostrar">
     <p-table
@@ -20,6 +29,9 @@
       styleClass="p-datatable-striped"
       [scrollable]="true"
       scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -30,7 +42,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-centro>
-        <tr>
+        <tr [pSelectableRow]="centro" [class.selected-row]="filaSeleccionada === centro">
           <td class="">
             <div class="valor">{{centro.nombre}}</div>
           </td>
@@ -44,7 +56,7 @@
             <div class="valor">{{centro.codigoAlternativo}}</div>
           </td>
           <td class="">
-            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(centro.idCentroDeCosto)"></button>
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(centro.idCentroDeCosto)"></button> -->
           </td>
         </tr>
       </ng-template>
@@ -71,8 +83,9 @@
     </div>
 
 
-    <div class="titulo">
-      <h1>CREAR CENTRO DE COSTO</h1>
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR CENTRO DE COSTO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR CENTRO DE COSTO</h1>
       </div>
     <div class="contenedor-campos">
       <label>Nombre del Centro</label>
@@ -119,6 +132,7 @@
           required> 
     </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearCentroDeCosto()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearCentroDeCosto()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearCentroDeCosto()" *ngIf="estaEditando"></button>   
     <!-- </form> -->
   </div>

@@ -16,10 +16,13 @@ button {
 .btn_cerrar{
     background-color: red;
 }
+
+
 .contenedor__btn_crear{
     align-self: end;
     margin-bottom: 0.2rem;
 }
+
 
 .contenedorProducto{
     display: flex;
@@ -85,13 +88,6 @@ button {
     max-width: 90vw; /* Ajusta el ancho máximo al 90% del ancho de la ventana */
     max-height: 90vh; /* Ajusta la altura máxima al 90% del alto de la ventana */
     /* overflow: auto;  */
-  }
-
-  .valor,
-  .columna{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
   }
 
   .contenedor__FiltroColumna{
@@ -185,30 +181,9 @@ button {
     border-bottom-right-radius: 5px;
 }
 
-.resumen__1,
-.color-par,
-.color-cero {
+.resumen__1 {
     background-color: #d4e6f1;
     color: #154360;
-}
-
-.resumen__2,
-.color-impar,
-.color-uno {
-    background-color: #d1f2eb;
-    color: #0e6251;
-}
-
-.resumen__3,
-.color-dos {
-    background-color: #f6ddcc;
-    color: #6e2c00;
-}
-
-.resumen__4,
-.color-tres {
-    background-color: #e8daef;
-    color: #5b2c6f; 
 }
 
 .btn_crear_orden{
@@ -256,8 +231,28 @@ button {
 }
 .titulo{
     margin-top: 0rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
+    justify-content: start;
+    margin-right: auto;
+    align-self: center;
 }
+
+.contenedor__tituloBotones{
+    display: flex;
+    margin: 1rem 1rem 0rem 1rem;
+}
+
+.btn_eliminarUsuario{
+    color: red;
+}
+
+.contenedor__botonesActualizar{
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+    align-self: center;
+}
+
 .subTitulo{
     display: flex;
     justify-content: center;
@@ -273,7 +268,7 @@ margin-top: 0rem;
 .select{
     margin: 0rem;
     padding: 0rem;
-    height: 3rem;
+    height: 2rem;
     width: max-content;
     min-width: 6rem;
     text-align: center;
@@ -294,25 +289,11 @@ margin-top: 0rem;
 }
 
 .btn_mostrarUsuarios{
-    margin-top: 1rem;
-}
-.btn_eliminarUsuario{
-    margin-left: 1rem;
-    background-color: red;
+    /* margin-top: 1rem; */
+    height: 2rem;
 }
 
-.columna {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* justify-content: flex-start; */
-  }
-  .valor{
-    align-items: flex-start;
-    margin-left: 1rem;
-    /* justify-content: flex-start; */
 
-  }
 .columnaExpandida {
     display: flex;
     flex-direction: column;
@@ -331,6 +312,8 @@ margin-top: 0rem;
   .btn_verTodas{
     margin-top: 2rem;
     margin-left: 2rem;
+    background-color: rgb(8, 139, 139);    
+
   }
 
 .tablaMostrarExpandida{
@@ -363,3 +346,153 @@ margin-top: 0rem;
     margin-left: 1rem;
     margin-right: 1rem;
 }
+
+
+
+.contenedor__usuarioANotificar{
+    margin-top: auto;
+}
+
+.contenedor__estado{
+    display: flex;
+    align-self: center;
+    margin-top: 2rem;
+
+}
+.popUpActualizarEstado{
+    width: 50%;
+    height: 50%;
+}
+.btn_ActualizarEstado{
+    margin-top: 2.4rem;
+}
+
+
+.popUpConfirmarEliminar{
+    width: max-content;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+}
+.contenedor__botones_PopUpConfirmarEliminar{
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    gap: 1rem;
+    margin-top: 4rem;
+}
+.btn_eliminarConfirmar{
+    background-color: red;
+}
+.btn_eliminarCancelar{
+    background-color: #0e6251;
+}
+.subTituloEliminarOrden{
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    font-size: 1rem;
+}
+
+.contenedor__adjuntos{
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    /* justify-items: center; */
+}
+.lblAdjunto{
+    display: flex;
+    align-self: center;
+}
+
+.contenedor__imagen{
+    display: flex;
+    width: 80%;
+    height: 80%;
+    margin-top: 1rem;
+    align-self: center;
+    justify-content: center;
+    
+}
+
+.img{
+    width: 20rem;
+    height: 20rem;
+    display: flex;
+    justify-content: center;
+}
+.contenedor__mostrarArchivoAdjunto{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 2rem;
+  
+    /* Flotante */
+    position: fixed; /* Posición fija en la ventana del navegador */
+    top: 50%;
+    left: 50%;
+    z-index: 1000; /* Z-index alto para asegurar que esté sobre otros elementos */
+    transform: translate(-50%, -50%);
+    background-color: white;
+    /* background-color: rgba(255, 255, 255, 0.568); Color de fondo del popup */
+    border: 1px solid #ccc; /* Borde del popup */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
+    padding: 20px; /* Espaciado interno del popup */
+    /*max-width: 400px; /* Ancho máximo del popup */
+    overflow-y: auto; /* Scroll vertical si el contenido es largo */
+    max-width: 90vw; /* Ajusta el ancho máximo al 90% del ancho de la ventana */
+    max-height: 90vh; /* Ajusta la altura máxima al 90% del alto de la ventana */
+    /* overflow: auto;  */
+  }
+
+  .contenedor__noExistenOrdenes{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+
+  }
+
+  .contenedor__UsuarioANotificar__ArchivoAdjunto{
+    display: flex;
+  }
+
+  .input-file{
+    display: none; /* Oculta el input file original */
+  }
+  
+  .archivo-seleccionado {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .btn_subirArchivo{
+    height: 2rem;
+  }
+
+  .archivoAdjunto{
+    display: flex;
+  }
+
+  
+  .logo-cargado {
+    color: green;
+    /* background-color: green; */
+    transition: color 0.3s ease;
+  }
+
+  .contenedor__tabla__usuarios{
+    height: 2rem;
+    /* background-color: red; */
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+  }
+  .valorUsuario {
+    margin: 0; /* Asegúrate de que no haya márgenes que desplacen el texto */
+    text-align: center; /* Centra el texto horizontalmente */
+    display: flex; /* Aplica flexbox al contenedor */
+    align-items: center; /* Centra el contenido verticalmente */
+  }

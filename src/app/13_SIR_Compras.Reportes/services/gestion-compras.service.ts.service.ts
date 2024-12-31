@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Producto } from '../interfaces/Producto.interface';
-import { urlCrearAlmacen, urlCrearAreaDestino, urlCrearAtributo, urlCrearCentroDeCosto, urlCrearDepartamento, urlCrearEmpresa, urlCrearEstadoDeSolicitud, urlCrearLineaDeSolicitud, urlCrearOrdenDeSolicitud, urlCrearPrioridadDeOrden, urlCrearProducto, urlCrearRolDeUsuario, urlCrearUnidadProducto, urlCrearUsuario, urlEditarAlmacen, urlEditarAreaDestino, urlEditarAtributo, urlEditarCentroDeCosto, urlEditarDepartamento, urlEditarEmpresa, urlEditarEstadoDeSolicitud, urlEditarLineaDeSolicitud, urlEditarOrdenDeSolicitud, urlEditarPrioridadDeOrden, urlEditarProducto, urlEditarRolDeUsuario, urlEditarUnidadProducto, urlEditarUsuario, urlEliminarAlmacen, urlEliminarAreaDestino, urlEliminarAtributo, urlEliminarCentroDeCosto, urlEliminarEmpresa, urlEliminarEstadoDeSolicitud, urlEliminarLineaDeSolicitud, urlEliminarOrdenDeSolicitud, urlEliminarPrioridadDeOrden, urlEliminarProducto, urlEliminarUnidadProducto, urlInsertPedido, urlListaDeAlmacenes, urlListaDeAreaDestinos, urlListaDeAtributos, urlListaDeCentroDeCostos, urlListaDeDepartamentos, urlListaDeEmpresas, urlListaDeEstadoDeSolicitudes, urlListaDeLineasDeSolicitud, urlListaDeOrdenesDeSolicitud, urlListaDePrioridadesDeOrden, urlListaDeProductos, urlListaDeRolesDeUsuario, urlListaDeUnidadProducto, urlListaDeUsuarios, urlUsuarios } from 'src/settings';
+import { urlCrearAlmacen, urlCrearArchivoAdjunto, urlCrearAreaDestino, urlCrearAtributo, urlCrearCentroDeCosto, urlCrearDepartamento, urlCrearEmpresa, urlCrearEstadoDeSolicitud, urlCrearLineaDeSolicitud, urlCrearOrdenDeSolicitud, urlCrearPrioridadDeOrden, urlCrearProducto, urlCrearProductoAtributo, urlCrearRolDeUsuario, urlCrearUnidadProducto, urlCrearUsuario, urlEditarAlmacen, urlEditarArchivoAdjunto, urlEditarAreaDestino, urlEditarAtributo, urlEditarCentroDeCosto, urlEditarDepartamento, urlEditarEmpresa, urlEditarEstadoDeSolicitud, urlEditarLineaDeSolicitud, urlEditarOrdenDeSolicitud, urlEditarPrioridadDeOrden, urlEditarProducto, urlEditarProductoAtributo, urlEditarRolDeUsuario, urlEditarUnidadProducto, urlEditarUsuario, urlEliminarAlmacen, urlEliminarAreaDestino, urlEliminarAtributo, urlEliminarCentroDeCosto, urlEliminarDepartamento, urlEliminarEmpresa, urlEliminarEstadoDeSolicitud, urlEliminarLineaDeSolicitud, urlEliminarOrdenDeSolicitud, urlEliminarPrioridadDeOrden, urlEliminarProducto, urlEliminarProductoAtributo, urlEliminarRolDeUsuario, urlEliminarUnidadProducto, urlEliminarUsuario, urlInsertPedido, urlListaArchivosAdjuntos, urlListaDeAlmacenes, urlListaDeAreaDestinos, urlListaDeAtributos, urlListaDeCentroDeCostos, urlListaDeDepartamentos, urlListaDeEmpresas, urlListaDeEstadoDeSolicitudes, urlListaDeLineasDeSolicitud, urlListaDeOrdenesDeSolicitud, urlListaDePrioridadesDeOrden, urlListaDeProductoAtributo, urlListaDeProductos, urlListaDeRolesDeUsuario, urlListaDeUnidadProducto, urlListaDeUsuarios, urlUsuarios } from 'src/settings';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Almacen } from '../interfaces/Almacen.interface';
 import { Unidad } from '../interfaces/Unidad.interface';
 import { Usuario } from '../interfaces/Usuario.interface';
@@ -17,11 +17,28 @@ import { Prioridad } from '../interfaces/Prioridad.interface';
 import { OrdenDeSolicitud } from '../interfaces/OrdenDeSolicitud.interface';
 import { LineadeSolicitud } from '../interfaces/LineaDeSolicitud.interface';
 import { ListaUsuariosSir } from '../interfaces/ListaUsuariosSir.interface';
+import { ProductoAtributo } from '../interfaces/ProductoAtributo.interface';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { ArchivosAdjuntos } from '../interfaces/ArchivosAdjuntos.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionComprasServiceTsService {
+
+  productoEditar!: Producto | null;
+
+
+  setProductoEditar(product: Producto) {
+    this.productoEditar = product;
+  }
+
+  getProductoEditar() {
+    this.productoEditar;
+    let producto = this.productoEditar;
+    this.productoEditar = null;
+    return producto;
+  }
 
 
   getNombreDesdeId(
@@ -53,8 +70,8 @@ export class GestionComprasServiceTsService {
     return this.http.post<number>(urlCrearAlmacen,almacen);
   }
 
-  editarAlmacen(almacen: Almacen[]): Observable<Almacen[]> {
-    return this.http.put<Almacen[]>(urlEditarAlmacen,almacen);
+  editarAlmacen(almacen: Almacen): Observable<Almacen> {
+    return this.http.put<Almacen>(urlEditarAlmacen,almacen);
   }
 
   eliminarAlmacen(idAlmacen: number): Observable<void> {
@@ -70,8 +87,8 @@ crearUnidadProducto(unidad: Unidad): Observable<number> {
   return this.http.post<number>(urlCrearUnidadProducto,unidad);
 }
 
-editarUnidadProducto(unidad: Unidad[]): Observable<Unidad[]> {
-  return this.http.put<Unidad[]>(urlEditarUnidadProducto,unidad);
+editarUnidadProducto(unidad: Unidad): Observable<Unidad> {
+  return this.http.put<Unidad>(urlEditarUnidadProducto,unidad);
 }
 
 eliminarUnidadProducto(idUnidad: number): Observable<void> {
@@ -88,8 +105,11 @@ crearUsuario(usuario: Usuario): Observable<number> {
   return this.http.post<number>(urlCrearUsuario,usuario);
 }
 
-editarUsuario(usuario: Usuario[]): Observable<Usuario[]> {
-  return this.http.put<Usuario[]>(urlEditarUsuario,usuario);
+editarUsuario(usuario: Usuario): Observable<Usuario> {
+  return this.http.put<Usuario>(urlEditarUsuario,usuario);
+}
+eliminarUsuario(idUsuario: number): Observable<void> {
+  return this.http.delete<void>(`${urlEliminarUsuario}?IdUsuarioSolicitante=${idUsuario}`);
 }
 
 // Rol de Usuario
@@ -102,8 +122,12 @@ crearRolDeUsuario(rol: Rol): Observable<number> {
   return this.http.post<number>(urlCrearRolDeUsuario,rol);
 }
 
-editarRolDeUsuario(rol: Rol[]): Observable<Rol[]> {
-  return this.http.put<Rol[]>(urlEditarRolDeUsuario,rol);
+editarRolDeUsuario(rol: Rol): Observable<Rol> {
+  return this.http.put<Rol>(urlEditarRolDeUsuario,rol);
+}
+
+eliminarRolDeUsuario(idRol: number): Observable<void> {
+  return this.http.delete<void>(`${urlEliminarRolDeUsuario}?IdRol=${idRol}`);
 }
 
 // Departamento de Usuario
@@ -116,8 +140,12 @@ crearDepartamento(departamento: Departamento): Observable<number> {
   return this.http.post<number>(urlCrearDepartamento,departamento);
 }
 
-editarDepartamento(departamento: Departamento[]): Observable<Departamento[]> {
-  return this.http.put<Departamento[]>(urlEditarDepartamento,departamento);
+editarDepartamento(departamento: Departamento): Observable<Departamento> {
+  return this.http.put<Departamento>(urlEditarDepartamento,departamento);
+}
+
+eliminarDepartamento(idDepartamento: number): Observable<void> {
+  return this.http.delete<void>(`${urlEliminarDepartamento}?IdDepartamento=${idDepartamento}`);
 }
 
 // Producto
@@ -126,12 +154,12 @@ getListaDeProductosAsync(): Observable<Producto[]> {
   return this.http.get<Producto[]>(urlListaDeProductos);
 }
 
-crearProducto(producto: Producto): Observable<number> {
-  return this.http.post<number>(urlCrearProducto,producto);
+crearProducto(producto: Producto): Observable<Producto> {
+  return this.http.post<Producto>(urlCrearProducto,producto);
 }
 
-editarProducto(producto: Producto[]): Observable<Producto[]> {
-  return this.http.put<Producto[]>(urlEditarProducto,producto);
+editarProducto(producto: Producto): Observable<Producto> {
+  return this.http.put<Producto>(urlEditarProducto,producto);
 }
 
 eliminarProducto(idProducto: number): Observable<void> {
@@ -148,8 +176,8 @@ crearEmpresa(empresa: Empresa): Observable<void> {
   return this.http.post<void>(urlCrearEmpresa,empresa);
 }
 
-editarEmpresa(empresa: Empresa[]): Observable<Empresa[]> {
-  return this.http.put<Empresa[]>(urlEditarEmpresa,empresa);
+editarEmpresa(empresa: Empresa): Observable<Empresa> {
+  return this.http.put<Empresa>(urlEditarEmpresa,empresa);
 }
 
 eliminarEmpresa(idEmpresa: number): Observable<void> {
@@ -166,13 +194,33 @@ crearAtributo(atributo: Atributos): Observable<number> {
   return this.http.post<number>(urlCrearAtributo,atributo);
 }
 
-editarAtributo(atributo: Atributos[]): Observable<Atributos[]> {
-  return this.http.put<Atributos[]>(urlEditarAtributo,atributo);
+editarAtributo(atributo: Atributos): Observable<Atributos> {
+  return this.http.put<Atributos>(urlEditarAtributo,atributo);
 }
 
 eliminarAtributo(idAtributo: number): Observable<void> {
   return this.http.delete<void>(`${urlEliminarAtributo}?IdAtributo=${idAtributo}`);
 }
+
+
+// Producto Atributo
+
+getListaDeProductoAtributo(): Observable<ProductoAtributo[]> {
+  return this.http.get<ProductoAtributo[]>(urlListaDeProductoAtributo);
+}
+
+crearProductoAtributoAtributoInsert(productoAtributo: ProductoAtributo): Observable<number> {
+  return this.http.post<number>(urlCrearProductoAtributo,productoAtributo);
+}
+
+editarProductoAtributo(atributo: ProductoAtributo[]): Observable<ProductoAtributo[]> {
+  return this.http.put<ProductoAtributo[]>(urlEditarProductoAtributo,atributo);
+}
+
+eliminarProductoAtributo(idProductoAtributo: number): Observable<void> {
+  return this.http.delete<void>(`${urlEliminarProductoAtributo}?IdProductoAtributo=${idProductoAtributo}`);
+}
+
 
 // Centro de Costo
 
@@ -184,8 +232,8 @@ crearCentroDeCosto(centro: CentroDeCosto): Observable<number> {
   return this.http.post<number>(urlCrearCentroDeCosto,centro);
 }
 
-editarCentroDeCosto(centro: CentroDeCosto[]): Observable<CentroDeCosto[]> {
-  return this.http.put<CentroDeCosto[]>(urlEditarCentroDeCosto,centro);
+editarCentroDeCosto(centro: CentroDeCosto): Observable<CentroDeCosto> {
+  return this.http.put<CentroDeCosto>(urlEditarCentroDeCosto,centro);
 }
 
 eliminarCentroDeCosto(idCentro: number): Observable<void> {
@@ -199,12 +247,12 @@ getListaDeAreaDestinosasync(): Observable<AreaDestino[]> {
   return this.http.get<AreaDestino[]>(urlListaDeAreaDestinos);
 }
 
-crearAreaDestino(id: AreaDestino): Observable<number> {
-  return this.http.post<number>(urlCrearAreaDestino,id);
+crearAreaDestino(areaDestino: AreaDestino): Observable<number> {
+  return this.http.post<number>(urlCrearAreaDestino,areaDestino);
 }
 
-editarAreaDestino(id: CentroDeCosto[]): Observable<CentroDeCosto[]> {
-  return this.http.put<CentroDeCosto[]>(urlEditarAreaDestino,id);
+editarAreaDestino(areaDestino: AreaDestino): Observable<AreaDestino> {
+  return this.http.put<AreaDestino>(urlEditarAreaDestino,areaDestino);
 }
 
 eliminarAreaDestino(id: number): Observable<void> {
@@ -276,17 +324,88 @@ getListaDeLineasSolicitudasync(): Observable<LineadeSolicitud[]> {
   return this.http.get<LineadeSolicitud[]>(urlListaDeLineasDeSolicitud);
 }
 
-CrearLineaDeSolicitud(linea: LineadeSolicitud[]): Observable<LineadeSolicitud> {
-  return this.http.post<LineadeSolicitud>(urlCrearLineaDeSolicitud,linea);
+CrearLineaDeSolicitud(linea: LineadeSolicitud[]): Observable<LineadeSolicitud[]> {
+  return this.http.post<LineadeSolicitud[]>(urlCrearLineaDeSolicitud,linea);
 }
 
 
-EditarLineaDeSolicitud(linea: LineadeSolicitud): Observable<LineadeSolicitud> {
+EditarLineaDeSolicitud(linea: LineadeSolicitud[]): Observable<LineadeSolicitud> {
   return this.http.put<LineadeSolicitud>(urlEditarLineaDeSolicitud,linea);
 }
 
 EliminarLineaDeSolicitud(idLinea: number): Observable<void> {
   return this.http.delete<void>(`${urlEliminarLineaDeSolicitud}?idLineaDeSolicitud=${idLinea}`);
 }
+
+
+
+// Archivos adjuntos
+
+
+getListaDeArchivosAdjuntos(idReferencia: number, seccion: number): Observable<ArchivosAdjuntos[]> {
+  return this.http.get<ArchivosAdjuntos[]>(`${urlListaArchivosAdjuntos}?IdReferencia=${idReferencia}&Seccion=${seccion}`);
+}
+
+
+
+crearArchivoAdjunto(orden: number, seccion: number, archivoAdjunto: File): Observable<void> {
+  const archivoAdjuntoEnviar = new FormData();
+  archivoAdjuntoEnviar.append('IdReferencia', orden.toString()); 
+  archivoAdjuntoEnviar.append('Seccion', seccion.toString()); 
+  archivoAdjuntoEnviar.append('archivoAdjunto', archivoAdjunto);
+  return this.http.post<void>(`${urlCrearArchivoAdjunto}`, archivoAdjuntoEnviar);
+}
+
+editarArchivoAdjunto(orden: number, seccion: number, archivoAdjunto: File): Observable<void> {
+  const archivoAdjuntoEnviar = new FormData();
+  archivoAdjuntoEnviar.append('IdReferencia', orden.toString()); 
+  archivoAdjuntoEnviar.append('Seccion', seccion.toString()); 
+  archivoAdjuntoEnviar.append('archivoAdjunto', archivoAdjunto);
+  return this.http.put<void>(`${urlEditarArchivoAdjunto}`, archivoAdjuntoEnviar);
+}
+
+
+
+// Sweet Alert
+
+mostrarAlertaBasica(titulo:string,mensaje:string,icono:SweetAlertIcon) {
+
+  Swal.fire(titulo, mensaje, icono);
+}
+
+mostrarMensajeExito(titulo:string){
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: titulo,
+    showConfirmButton: false,
+    timer: 1500
+  });
+
+}
+mostrarMensajeDeError(titulo:string){
+  Swal.fire({
+    position: "center",
+    icon: "error",
+    title: titulo,
+    showConfirmButton: true
+  });
+
+}
+mostrarConfirmacion(titulo:string,texto:string,icono:SweetAlertIcon,btnCancelar:boolean,txtBtnConfirmar:string,txtBotonCancelar:string): Promise<boolean> {
+  return Swal.fire({
+    title: titulo,
+    text: texto,
+    icon: icono,
+    showCancelButton: btnCancelar,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: txtBtnConfirmar,
+    cancelButtonText: txtBotonCancelar
+
+  }).then((result) => result.isConfirmed);
+
+}
+
 
 }

@@ -5,9 +5,18 @@
     
     <div class="seccion-formulario">
         <button pButton type="button" label="Crear Almacén" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAlmacen()"></button>   
-        <div class="titulo">
-          <h1>LISTADO DE ALMACENES</h1>
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE ALMACENES</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
           </div>
+
+
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
   <div class="tablaMostrar">
     <p-table
@@ -19,6 +28,10 @@
       styleClass="p-datatable-striped"
       [scrollable]="true"
       scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
+      
     >
       <ng-template pTemplate="header">
         <tr>
@@ -27,7 +40,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-almacen>
-        <tr>
+        <tr [pSelectableRow]="almacen" [class.selected-row]="filaSeleccionada === almacen">
           <td class="">
             <div class="valor">{{almacen.nombre}}</div>
           </td>
@@ -36,7 +49,6 @@
             <div class="valor">{{almacen.descripcion}}</div>
           </td>
           <td class="">
-            <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(almacen.idAlmacen)"></button>
           </td>
         </tr>
       </ng-template>
@@ -63,8 +75,9 @@
     </div>
 
 
-    <div class="titulo">
-      <h1>CREAR ALMACEN</h1>
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR ALMACEN</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR ALMACEN</h1>
       </div>
 
 
@@ -93,6 +106,7 @@
 
 
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAlmacen()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAlmacen()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearAlmacen()" *ngIf="estaEditando"></button>   
     </div>
 

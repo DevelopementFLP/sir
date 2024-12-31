@@ -78,6 +78,8 @@ import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solici
 import { ListaDePlantillasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDePlantillas/lista-de-plantillas.component';
 import { ComprasConfiguracionComponent } from './13_SIR_Compras.Reportes/pages/compras-configuracion/compras-configuracion.component';
 import { MenuComprasComponent } from './13_SIR_Compras.Reportes/pages/menu-compras/menu-compras.component';
+import { CrearProductoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-producto/crear-producto.component';
+import { VerProductosComponent } from './13_SIR_Compras.Reportes/pages/altas/ver-productos/ver-productos.component';
 
 
 
@@ -123,6 +125,8 @@ const routes: Routes = [
     { path: 'compras', component: MenuComprasComponent, children: [
       { path: 'solicitudDeCompra', component: SolicitudCompraComponent },
       { path: 'configuraciones', component: ComprasConfiguracionComponent },
+      { path: 'crearProducto', component: CrearProductoComponent },
+      { path: 'verProductos', component: VerProductosComponent },
       { path: '**', redirectTo: 'solicitudDeCompra', pathMatch: 'full'},
     ] },
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},

@@ -15,6 +15,8 @@ export class CrearEmpresaComponent implements OnInit{
   empresasExistentes: Empresa[] = [];
   empresaCrear!: Empresa;
   mostrarPopUp:boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
   
   async ngOnInit(): Promise<void> {
 
@@ -39,6 +41,14 @@ export class CrearEmpresaComponent implements OnInit{
       
     }
   }
+  async editarEmpresaBd(empresa: Empresa): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarEmpresa(empresa));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
   async borrarFilaDelete(id: number): Promise<void> {
     try {
@@ -48,41 +58,54 @@ export class CrearEmpresaComponent implements OnInit{
     }
   }
   
-
-
+  
   async crearEmpresa(){
-   
+    
     if(this.nombre == ""){
       alert("Ingrese el nombre de la empresa");
       return;
     }
-
+    
     // Verificar en la bd si ese nombre existe ya
     if(this.existeEmpresa() == true){
       alert("Esa empresa ya existe con ese nombre");
       return;
     }else{
-
+      
       // Creo la empresa
-
-      this.empresaCrear = {
-        idEmpresa: 0,
-        nombre: this.nombre
+      
+      if(this.estaEditando == true){
+        this.empresaCrear = {
+          idEmpresa: this.filaSeleccionada.idEmpresa ,
+          nombre: this.nombre
+        }
+        
+        await this.editarEmpresaBd(this.empresaCrear);
+        
+      }else{
+        
+        
+        this.empresaCrear = {
+          idEmpresa: 0,
+          nombre: this.nombre
+        } 
+        await this.crearEmpresaInsert(this.empresaCrear);
+        
       }
-
-      await this.crearEmpresaInsert(this.empresaCrear);
       await this.iniciar();
       this.nombre="";
+      this.estaEditando = false;
+      this.filaSeleccionada = null;
       this.mostrarPopUp = false;      
     }
-
-
+    
+    
   }
-
-   iniciar(){
-     this.GetListaDeEmpresas();
+  
+  iniciar(){
+    this.GetListaDeEmpresas();
   }
-
+  
   existeEmpresa(): boolean{
     let existe: boolean = false;
     
@@ -90,24 +113,47 @@ export class CrearEmpresaComponent implements OnInit{
     if(this.empresasExistentes.find(e => e.nombre.toLowerCase() == this.nombre.toLowerCase())){
       existe = true;
     }
-
+    
     return existe;
-
+    
   }
-
+  
   mostrarPopUpEmpresa(){
     this.mostrarPopUp = true;
   }
-
+  
+  
   cerrarPopUpEmpresa(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre ="";
+  }
+  
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  async borrarFila(){
+    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar la empresa?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarFilaDelete(this.filaSeleccionada.idEmpresa);
+    await this.iniciar();
+    this.filaSeleccionada = null;
+
   }
 
-  async borrarFila(id: number){
-
-    await this.borrarFilaDelete(id);
-    await this.iniciar();
-
+  editarFila(){
+    this.estaEditando = true;
+    this.nombre = this.filaSeleccionada.nombre;
+    this.mostrarPopUp = true;
   }
 
 }
+

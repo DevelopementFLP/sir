@@ -1,31 +1,61 @@
-<div class="contenedor-pagina">
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp || mostrarPopUpCambiarEstado || mostrarPopUpVerArchivoAdjunto}">
+  
+ 
     <div class="seccion-formulario">
+
       <div class="contenedorResumen" *ngIf="mostrarTodasFilas">
-        <div class="resumen resumen__1" *ngFor="let estado of estadoDeSolicitud; let i = index" 
-        [ngClass]="{'color-cero': i == 0,'color-uno': i == 1,'color-dos': i == 2,'color-tres': i == 3,'color-par': i % 2 === 0 && i>4, 'color-impar': i % 2 !== 0 && i>4}">
+        <div class="resumen resumen__1" *ngFor="let estado of estadosMostrarDashboard; let i = index"
+        [style.background]="obtenerColorEstado(estado.idEstadoDeSolicitud)"
+        (click)="filtrarOdenesPorEstado(estado.idEstadoDeSolicitud)"
+        >
           <div>
           {{estado.nombre | uppercase }}:
-          </div> 
+          </div>
           <div class="resumen__valor">
             {{CalcularResumen(estado.idEstadoDeSolicitud)}}
+          </div>
+        </div>
+
+        <div class="resumen resumen__1"
+        (click)="filtrarOdenesPorEstado(-1)"
+        >
+          <div>
+          TODAS:
+          </div>
+          <div class="resumen__valor">
+            {{CalcularResumen(-1)}}
           </div>
         </div>
       </div>
         <button pButton type="button" label="Crear Orden de Solicitud" icon="pi pi-plus" class="btn_mostrarPopUp btn_orden_solicitud" (click)="mostrarPopUpSolicitudCompra()" *ngIf="mostrarTodasFilas" ></button>
         <button pButton type="button" label="Ver Todas Las Órdenes" icon="pi pi-search" class="btn_mostrarPopUp btn_verTodas" (click)="mostrarTodas()" *ngIf="!mostrarTodasFilas" ></button>
-       
-        <div class="titulo" *ngIf="mostrarTodasFilas">
-          <h1>LISTADO DE ÓRDENES</h1>
+        
+        <div class="contenedor__tituloBotones">
+          
+          <div class="titulo" *ngIf="mostrarTodasFilas">
+            <h1>LISTADO DE ÓRDENES</h1>
           </div>
-        <div class="titulo" *ngIf="!mostrarTodasFilas">
-          <h1>DETALLE DE LA ÓRDEN N° {{idOrdenDeSolicitudDesplegar}}</h1>
+
+          <!-- <div class="titulo" *ngIf="!mostrarTodasFilas">
+            <h1>DETALLE DE LA ÓRDEN N° {{idOrdenDeSolicitudDesplegar}}</h1>
+          </div> -->
+
+          <div class="contenedor__botonesActualizar">
+            <button pButton type="button" label="Cambiar Estado" icon="pi pi-sync" [disabled]="idOrdenDeSolicitudDesplegar==-1" (click)="mostrarPopUpCambiarEstado=true"></button>
+            <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="idOrdenDeSolicitudDesplegar==-1" (click)="editarOrden()"></button>
+            <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_eliminar" [disabled]="idOrdenDeSolicitudDesplegar==-1" (click)="eliminarOrden()" ></button>
           </div>
-       
+          
+          
+        </div>
+        
+        
         <!-- Tabla para ver los datos actuales antes de crear uno  -->
 <div class="tablaMostrar">
   <p-table
+    *ngIf="ordenCompraExistenteFiltro.length>0;else noExistenOrdenes"
     class="tabla"
-    [value]="ordenCompraExistente!"
+    [value]="ordenCompraExistenteFiltro!"
     styleClass="p-datatable-striped"
     [scrollable]="true"
     scrollHeight="500px"
@@ -53,7 +83,7 @@
         </td>
 
         <td class="">
-          <div class="valor">{{getNombreDesdeId(estadoDeSolicitud,orden.idEstadoDeSolicitud,'idEstadoDeSolicitud','nombre')}}</div>
+          <div class="valor" [style.background]="obtenerColorEstado(orden.idEstadoDeSolicitud)" [style.color]="'#ffffff'">{{getNombreDesdeId(estadoDeSolicitud,orden.idEstadoDeSolicitud,'idEstadoDeSolicitud','nombre')}}</div>
         </td>
 
         <td class="">
@@ -71,16 +101,34 @@
         <td class="">
           <div class="valor">{{orden.fechaDecreacion | date:'dd/MM/yyyy'}}</div>
         </td>
+
+        <td class="" *ngIf="tieneAdjunto(orden.idOrdenDeSolicitud,1) && !mostrarTodasFilas">
+          <div class="valor"><button pButton type="button" label="" icon="pi pi-paperclip" (click)="verAdjunto(orden.idOrdenDeSolicitud,1)" class="p-button-text"></button>
+          </div>
+        </td>
+        <td class="" *ngIf="tieneAdjunto(orden.idOrdenDeSolicitud,3) && !mostrarTodasFilas ">
+          <div class="valor"><button pButton type="button" label="" icon="pi pi-paperclip" (click)="verAdjunto(orden.idOrdenDeSolicitud,3)" class="p-button-text" ></button>
+          </div>
+        </td>
         
-       
         <td class="">
-          <button pButton type="button" label="Ver" icon="pi pi-search" (click)="desplegarFila(orden.idOrdenDeSolicitud)" *ngIf="mostrarTodasFilas"></button>
+          <button pButton type="button" label="" icon="pi pi-eye" (click)="desplegarFila(orden.idOrdenDeSolicitud)" *ngIf="mostrarTodasFilas" class="p-button-outlined p-button-lg " ></button>
         </td>
       </tr>
-      
+
     </ng-template>
+
+    
   </p-table>
 </div>
+
+<ng-template #noExistenOrdenes>
+  <div class="contenedor__noExistenOrdenes">
+
+  
+  NO SE ENCONTRARON ORDENES
+</div>  
+</ng-template>
 
 <div class="label_detalleLineas" *ngIf="!mostrarTodasFilas">
   LÍNEAS DE LA ÓRDEN
@@ -98,6 +146,7 @@
         <th class=""><div class="columnaExpandida">Producto</div></th>
         <th class=""><div class="columnaExpandida">Cantidad</div></th>
         <th class=""><div class="columnaExpandida">Area</div></th>
+        <th class=""><div class="columnaExpandida">Comentario</div></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-solicitud>
@@ -113,6 +162,20 @@
         <td class="">
           <div class="valorExpandida">{{getNombreDesdeId(areaDestino,solicitud.idAreaDestino, 'idAreaDestino','nombre')}}</div>
         </td>      
+        <td class="">
+          <div class="valorExpandida">{{solicitud.comentario}}</div>
+        </td>   
+
+        <td class="" *ngIf="tieneAdjunto(solicitud.idLineaDeSolicitud,2)">
+          <div class="valor">
+            <button pButton type="button" label="" icon="pi pi-paperclip"  (click)="verAdjunto(solicitud.idLineaDeSolicitud,2)" class="p-button-text"></button>
+
+          </div>
+        </td>
+        <td class="" [colSpan]="2">
+          <div class="valor">
+          </div>
+        </td>
       </tr>
     </ng-template>
   </p-table>
@@ -123,6 +186,8 @@
 
 
 </div>
+</div>
+
 </div>
 
 <!-- Cierra tabla -->
@@ -149,6 +214,8 @@
     <div class="subTitulo">
       INFORMACIÓN DE LA ORDEN:
     </div>
+
+
     <div class="contenedor__PrioridadCentroDeCosto">
     
       <div class="contenedor-campos divSelect prioridad">
@@ -197,47 +264,49 @@
     
           </div>
 
-          <div class="contenedor-campos divSelect prioridad fechaDeNecesidad">
+          <div class="contenedor-campos divSelect prioridad">
             <label>Fecha De Necesidad</label>
-            <input type="date" [attr.min] = "minFecha" [(ngModel)]="fechaNecesidad" >
+            <input type="date" [attr.min] = "minFecha" [(ngModel)]="fechaNecesidad" class="select">
     
           </div>
-          
 
+          <div class="contenedor-campos divSelect prioridad">
 
- <!--  -->
+            <label>Archivo Adjunto</label>
+            <input type="file"
+            (change)="seleccionarArchivoOrdenDeSolicitud($event)"
+            class="select input-file"
+            id="fileInputOrden"
+              >
+              <div class="archivoAdjunto">
+                <button
+                pTooltip="{{nombreArchivoOrdenSolicitud}}"
+                pButton
+                type="button"
+                [label]="etiquetaArchivoOrden"
+                icon="pi pi-upload"
+                class="btn_subirArchivo p-button-text"
+                (click)="abrirSelectorDeArchivo('fileInputOrden')"
+                [ngClass]="{'logo-cargado':nombreArchivoOrdenSolicitud}"
+                ></button>
+              </div>
+          </div>
 
- <div class="contenedor-campos divSelect prioridad ">
- 
-  <mat-accordion>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Usuario a Notificar
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <div>
-        
-        <tr *ngFor="let usuario of usuariosANotificar"> 
-          <td class=""><div class="valor">{{getNombreDesdeId(listaUsuariosSir,usuario.idUsuarioSir,'id_usuario','nombre_completo')}}</div></td>
-          <td class=""><div class="valor">{{usuario.idDepartamento}}</div></td>
-          <td class="">
-              <button pButton type="button" label="" icon="pi pi-trash" class="btn_eliminarUsuario" (click)="eliminarUsuarioANotificar(usuario.idUsuarioSolicitante)"></button>
-          </td>                   
-      </tr>
-      <button pButton type="button" label="" icon="pi pi-plus" (click)="mostrarUsuarios=true" class="btn_mostrarUsuarios" *ngIf="usuariosANotificar.length==0"></button>       
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-
+  <div class="contenedor-campos divSelect prioridad">
+  <label>Usuario a Notificar</label>
+  <div class="contenedor__tabla__usuarios">
+    <tr *ngFor="let usuario of usuariosANotificar"> 
+      <td class=""><div class="valorUsuario">{{getNombreDesdeId(listaUsuariosSir,usuario.idUsuarioSir,'id_usuario','nombre_completo')}}</div></td>
+      <td class="">
+        <button pButton type="button" label="" icon="pi pi-trash" class="btn_eliminarUsuario p-button-text" (click)="eliminarUsuarioANotificar(usuario.idUsuarioSolicitante)"></button>
+      </td>                   
+    </tr>
+    <button pButton type="button" label="" icon="pi pi-plus" (click)="mostrarUsuarios=true" class="btn_mostrarUsuarios" *ngIf="usuariosANotificar.length==0"></button>       
+  </div>
 </div>
-
-
-
- <!--  -->
-              
+                  
     </div>
+
         
     <div class="subTitulo SubTituloASolicitar">
       PRODUCTOS A SOLICITAR:
@@ -274,24 +343,56 @@
             required
             > 
       </div>
-   
-
+      
+      
       <div class="contenedor-campos divSelect">
-     
+        
         <div class="divArea">        
           <label>Area de Destino</label>
           <select 
+          class="select"
+          id="areaDeDestino" 
+          [(ngModel)]="idArea" 
+          name="area"
+          required>
+          <option *ngFor="let area of areaDestino" [value]="area.idAreaDestino">
+            {{area.nombre}}
+          </option>
+        </select>
+      </div>
+      
+      <div class="contenedor-campos">
+          <label>Comentario</label>
+          <input 
+              type="text" 
               class="select"
-              id="areaDeDestino" 
-              [(ngModel)]="idArea" 
-              name="area"
-              required>
-              <option *ngFor="let area of areaDestino" [value]="area.idAreaDestino">
-              {{area.nombre}}
-              </option>
-          </select>
+              [(ngModel)]="comentario" 
+              name="cantidadProducto"
+              placeholder="Ingrese Comentario"  
+              required
+              > 
         </div>
-        
+      <div class="contenedor-campos">
+
+          <label>Archivo Adjunto</label>
+            <input type="file"
+            (change)="seleccionarArchivoLineaDeSolicitud($event)"
+            [(ngModel)]="archivoLinea"
+            class="input-file"
+            id = "FileInputLinea"
+            >
+            <button
+            pTooltip="{{nombreArchivoLineaDeSolicitud}}"
+            pButton
+            type="button"
+            [label]="etiquetaArchivoLinea"
+            icon="pi pi-upload"
+            [ngClass]="{'logo-cargado':nombreArchivoLineaDeSolicitud}"
+            class="btn_subirArchivo p-button-text"
+            (click)="abrirSelectorDeArchivo('FileInputLinea')"
+          ></button>
+        </div>
+
         <div class="contenedor__btn_crear">
 
           <button pButton type="button" label="Agregar Producto" icon="pi pi-plus" class="btn_crear" (click)="agregarProducto()"></button>   
@@ -314,27 +415,30 @@
         >
         <ng-template pTemplate="header">
             <tr>             
+                <th class=""><div class="columna">Código Producto</div></th>
                 <th class=""><div class="columna">Nombre</div></th>
                 <th class=""><div class="columna">Unidad</div></th>
-                <th class=""><div class="columna">Código Producto</div></th>
                 <th class=""><div class="columna">Cantidad</div></th>
                 <th class=""><div class="columna">Área de Destino</div></th>
+                <th class=""><div class="columna">Comentario</div></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-producto *ngIf="lineaDeSolicitudParaCrear">
             <tr> 
+              <td  class=""><div class="valor">{{getNombreDesdeId(productosActivos,producto.idProducto,'idProducto','codigoDeProducto')}}</div></td>
                 <td class=""><div class="valor">{{getNombreDesdeId(productosActivos,producto.idProducto,'idProducto','nombre')}}</div></td>
                 <td class=""><div class="valor">{{getNombreDesdeId(unidadesActivas,getUnidadDeProducto(producto.idProducto),'idUnidad','nombre')}}</div></td>
-                <td class=""><div class="valor">{{getNombreDesdeId(productosActivos,producto.idProducto,'idProducto','codigoDeProducto')}}</div></td>
                 <td class=""><div class="valor">{{producto.cantidad}}</div></td>
                 <td class=""><div class="valor">{{getNombreDesdeId(areaDestino,producto.idAreaDestino,'idAreaDestino','nombre')}}</div></td>
+                <td class=""><div class="valor">{{producto.comentario}}</div></td>
                 <td class="">
-                    <!-- <button pButton type="button" label="" icon="pi pi-send"  (click)="seleccionarProducto(producto.idProducto,producto.nombre)"></button> -->
-                </td>                   
+                    <button pButton type="button" label="" icon="pi pi-trash" (click)="eliminarProductoASolicitar(producto.idProducto,producto.idLineaDeSolicitud)" class="btn_eliminar" ></button>
+                </td>
             </tr>
         </ng-template>
     </p-table>
-    <button pButton type="button"  class="btn_crear_orden" label="Crear Orden" icon="pi pi-plus" *ngIf="lineaDeSolicitudParaCrear.length>0" (click)="crearOrdenSolicitud()"></button>
+    <button pButton type="button"  class="btn_crear_orden" label="Crear Órden" icon="pi pi-plus" *ngIf="lineaDeSolicitudParaCrear.length>0 && !estaEditandoOrden" (click)="crearOrdenSolicitud()"></button>
+    <button pButton type="button"  class="btn_crear_orden" label="Actualizar Órden" icon="pi pi-plus" *ngIf="lineaDeSolicitudParaCrear.length>0 && estaEditandoOrden" (click)="crearOrdenSolicitud()" ></button>
 </div>
 
         <!-- Termina la tabla de productos  -->    
@@ -346,14 +450,6 @@
     <div class="botones_cerrar_popUp">
         <button pButton type="button" label="" icon="pi pi-times" class="btn_cerrar" (click)="cerrarPopUpVerProductos()"></button>   
     </div>
-    <!-- <div class="contenedor__InputFiltros">
-
-      <input type="text">
-      <input type="text">
-      <input type="text">
-      <input type="text">
-      <input type="text">
-    </div> -->
       <p-table class="tabla"
         [value]="productosActivos!"
         styleClass="p-datatable-striped"
@@ -361,20 +457,20 @@
         scrollHeight="500px"
         >
         <ng-template pTemplate="header">
-            <tr>             
-                <th class="">
+          <tr>             
+              <th class="">
+                <div class="columna">
+                  Código Producto
+                <p-columnFilter type="text" field="codigoDeProducto" matchMode="contains"></p-columnFilter>
+              </div>
+            </th>
+              <th class="">
                   <div class="columna">
                     Nombre            
                     <p-columnFilter type="text" field="nombre" matchMode="contains" class="filter-input"></p-columnFilter>
                 </div>
               </th>
                 <th class=""><div class="columna">Unidad
-                </div>
-              </th>
-                <th class="">
-                  <div class="columna">
-                    Código Producto
-                  <p-columnFilter type="text" field="codigoDeProducto" matchMode="contains"></p-columnFilter>
                 </div>
               </th>
                 <th class="">
@@ -403,10 +499,6 @@
           </ng-template>
         </p-table>
       </div>
-
-
-
-
 
       <!-- PopUp ver Usuarios -->
 <div class="popUpVerProductos" *ngIf="mostrarUsuarios">
@@ -455,3 +547,87 @@
         </ng-template>
       </p-table>
     </div>
+
+    <!-- Cambiar Estado de Solicitud -->
+
+    <div class="popUpCrear popUpActualizarEstado" *ngIf="mostrarPopUpCambiarEstado">
+
+
+      <div class="botones_cerrar_popUp">
+        <button
+          pButton
+          type="button"
+          label=""
+          icon="pi pi-times"
+          class="btn_cerrarPopUp"
+          (click)="mostrarPopUpCambiarEstado = false"
+        ></button>
+      </div>
+    
+    
+      <div class="titulo">
+        <h1>ACTUALIZAR ESTADO DE SOLICITUD</h1>
+        </div>
+  
+
+        <div class="contenedor-campos divSelect prioridad contenedor__estado">
+          <label>ESTADO</label>
+          <select 
+              class="select"
+              id="estado" 
+              [(ngModel)]="idEstadoCambiar" 
+              name="estado"
+              required>
+              <option *ngFor="let estado of estadoDeSolicitud" [value]="estado.idEstadoDeSolicitud">
+              {{estado.nombre}}
+              </option>
+          </select>
+
+          
+<div class="contenedor__adjuntos" *ngIf="idEstadoCambiar == 6">
+
+  <div class="lblAdjunto">
+    Archivo Adjunto:
+  </div>
+  <input type="file"
+  (change)="seleccionarArchivoOrdenDeSolicitud($event)"
+  class="input-file"
+  id="fileInputEstado"
+  >
+
+  <button
+  pButton
+  type="button"
+  label="Subir"
+  icon="pi pi-upload"
+  class="btn_subirArchivo"
+  (click)="abrirSelectorDeArchivo('fileInputEstado')"
+></button>
+  
+</div>
+  
+        </div>
+       
+    
+          <button pButton type="button" label="Actualizar Estado" icon="pi pi-sync" class="btn_crear btn_ActualizarEstado" (click)="actualizarEstado()"></button>   
+    </div>
+
+ <!-- Para Ver Adjunto -->
+ <div class="contenedor__mostrarArchivoAdjunto" *ngIf="mostrarPopUpVerArchivoAdjunto">
+
+<div class="botones_cerrar_popUp">
+  <button
+    pButton
+    type="button"
+    label=""
+    icon="pi pi-times"
+    class="btn_cerrarPopUp"
+    (click)="mostrarPopUpVerArchivoAdjunto = false"
+  ></button>
+</div>
+
+
+<div class="contenedor__imagen">
+  <img [src]="'data:image/png;base64,' + archivoAdjuntoImagen" alt="Imagen" class="img" />
+</div>
+</div>

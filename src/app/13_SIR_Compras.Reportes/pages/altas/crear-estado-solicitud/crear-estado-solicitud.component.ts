@@ -16,7 +16,9 @@ export class CrearEstadoSolicitudComponent implements OnInit{
   mostrarEnPantalla: boolean = true;
   estadoExistente: EstadoDeSolicitud[] = [];
   estadoCrear!: EstadoDeSolicitud;
-  mostrarPopUp: boolean = true;
+  mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
   
   async ngOnInit(): Promise<void> {
 
@@ -53,6 +55,14 @@ export class CrearEstadoSolicitudComponent implements OnInit{
       
     }
   }
+  async editarEstadoDeSolicitud(estado: EstadoDeSolicitud): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarEstadoDeSolicitud(estado));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
   async borrarFilaDelete(id: number): Promise<void> {
     try {
@@ -71,6 +81,25 @@ export class CrearEstadoSolicitudComponent implements OnInit{
       return;
     }
     
+
+    if(this.estaEditando == true){
+
+        this.estadoCrear = {
+        idEstadoDeSolicitud: this.filaSeleccionada.idEstadoDeSolicitud,
+        nombre: this.nombre,
+        color: this.color,
+        mostrarEnPantalla: this.mostrarEnPantalla,
+        orden:0
+      }
+
+      await this.editarEstadoDeSolicitud(this.estadoCrear);
+
+
+    }else{
+
+   
+
+
     if(this.estadoExiste() == true){
       return;
     }
@@ -83,9 +112,12 @@ export class CrearEstadoSolicitudComponent implements OnInit{
     }
 
     await this.crearEstadoDeSolicitudInsert(this.estadoCrear);
+  }
     await this.iniciar();
     this.mostrarPopUp = false;
     this.nombre = "";
+    this.filaSeleccionada = null;
+    this.estaEditando = false;
     
   }
 
@@ -109,14 +141,41 @@ export class CrearEstadoSolicitudComponent implements OnInit{
   }
   cerrarPopUpEstadoSolicitud(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre = "";
+    this.color = "";
+
+
   }
 
-  async borrarFila(id: number){
+  
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  async borrarFila(){
 
-    await this.borrarFilaDelete(id);
-    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el estado de solicitud?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+
+    await this.borrarFilaDelete(this.filaSeleccionada.idEstadoDeSolicitud);
     await this.iniciar();
+    this.filaSeleccionada = null;
+  }
 
+
+  editarFila(){
+    this.estaEditando = true;
+    console.log(this.filaSeleccionada);
+    this.nombre = this.filaSeleccionada.nombre;
+    this.color = this.filaSeleccionada.color;
+    this.mostrarEnPantalla = this.filaSeleccionada.mostrarEnPantalla;
+    this.mostrarPopUp = true;
   }
 
 }

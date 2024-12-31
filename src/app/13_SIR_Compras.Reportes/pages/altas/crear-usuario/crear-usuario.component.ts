@@ -29,8 +29,10 @@ export class CrearUsuarioComponent implements OnInit{
   usuarioExistente: Usuario[] = [];
   //listaUsuariosSir: 
   usuarioCrear!: Usuario;
-  mostrarPopUp: boolean = true;
+  mostrarPopUp: boolean = false;
   mostrarPopUpUsuarios: boolean = false
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
  
   async ngOnInit(): Promise<void> {
 
@@ -93,6 +95,22 @@ export class CrearUsuarioComponent implements OnInit{
       
     }
   }
+  async editarUsuario(usuario: Usuario): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarUsuario(usuario));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  async eliminarUsuario(idUsuario: number): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.eliminarUsuario(idUsuario));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
 
 
   // async borrarFilaDelete(id: number): Promise<void> {
@@ -110,6 +128,20 @@ export class CrearUsuarioComponent implements OnInit{
     }
 
 
+    if(this.estaEditando == true){
+      this.usuarioCrear = {
+        idUsuarioSolicitante: this.filaSeleccionada.idUsuarioSolicitante,
+        idDepartamento: this.idDepartamento,
+        idRol: this.idRol,
+        idUsuarioSir:this.filaSeleccionada.idUsuarioSir,
+        correoElectronico: this.correoElectronico
+        }
+
+        await this.editarUsuario(this.usuarioCrear);
+    }else{
+
+    
+
     this.usuarioCrear = {
     idUsuarioSolicitante: 0,
     idDepartamento: this.idDepartamento,
@@ -119,11 +151,14 @@ export class CrearUsuarioComponent implements OnInit{
     }
 
     await this.crearUsuarioInsert(this.usuarioCrear);
+  }
     await this.iniciar();
     this.mostrarPopUp = false;
     this.nombreCompleto ="";
     this.idRol = 0;
     this.idDepartamento = 0;
+    this.filaSeleccionada = null;
+    this.estaEditando = false;
     
   }
 
@@ -151,6 +186,11 @@ export class CrearUsuarioComponent implements OnInit{
 
   cerrarPopUpUsuario(){
     this.mostrarPopUp = false;
+    this.nombreCompleto = "";
+    this.correoElectronico = "";
+    this.idRol = -1;
+    this.idDepartamento = -1;
+    this.estaEditando = false;
   }
 
   getNombreDesdeId(array: any[],id: number,nombrePropiedadId:string,nombrePropiedadNombre:string): string {
@@ -174,6 +214,38 @@ export class CrearUsuarioComponent implements OnInit{
     this.idUsuarioSir = idUsuarioSir;
     this.nombreCompleto = nombreCompleto;
     this.mostrarPopUpUsuarios = false;
+  }
+
+
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+  async borrarFila(){
+    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el usuario?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.eliminarUsuario(this.filaSeleccionada.idUsuarioSolicitante);
+    await this.iniciar();
+    this.filaSeleccionada = null;
+
+  }
+
+  editarFila(){
+    this.estaEditando = true;
+    // Obtengo nombre
+    const nombre = this.listaUsuariosSirFiltrada.find( u => u.id_usuario == this.filaSeleccionada.idUsuarioSir) ;
+    let nombreCompleto = nombre?.nombre_completo;
+    this.nombreCompleto = nombreCompleto!;
+    this.correoElectronico = this.filaSeleccionada.correoElectronico;
+    this.idRol = this.filaSeleccionada.idRol;
+    this.idDepartamento = this.filaSeleccionada.idDepartamento;
+    this.mostrarPopUp = true;
   }
 
     

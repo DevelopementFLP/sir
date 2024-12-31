@@ -7,10 +7,17 @@
         <!-- <form #productoForm="ngForm"> -->
             
           
-          <button pButton type="button" label="Crear Rol" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpRol()"></button>   
-          <div class="titulo">
-              <h1>LISTADO DE ROLES</h1>
-              </div>
+          <button pButton type="button" label="Crear Rol" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpRol()"></button>           
+          
+          <div class="contenedor__tituloBotones">
+            <div class="titulo">
+            <h1>LISTADO DE ROLES</h1>
+            </div>  
+            <div class="contenedor__botones">
+              <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+              <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+            </div>
+        </div>
           <!-- Tabla para ver los datos actuales antes de crear uno  -->
       <div class="tablaMostrar">
         <p-table
@@ -22,6 +29,9 @@
           styleClass="p-datatable-striped"
           [scrollable]="true"
           scrollHeight="500px"
+          [selectionMode]="'single'"
+          (onRowSelect)="seleccionarFila($event)"
+          (onRowUnselect)="desSeleccionarFila($event)"
         >
           <ng-template pTemplate="header">
             <tr>
@@ -30,7 +40,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rol>
-            <tr>
+            <tr [pSelectableRow]="rol" [class.selected-row]="filaSeleccionada === rol">
                 <td class="">
                   <div class="valor">{{rol.nombre}}</div>
                 </td>
@@ -61,8 +71,9 @@
         ></button>
       </div>
 
-      <div class="titulo">
-        <h1> CREAR ROL</h1>
+      <div class="titulo tituloPopUp">
+        <h1 *ngIf="!estaEditando"> CREAR ROL</h1>
+        <h1 *ngIf="estaEditando"> ACTUALIZAR ROL</h1>
         </div>
 
     <div class="contenedor-campos">
@@ -75,6 +86,7 @@
           required> 
     </div>
 
-      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearRol()"></button>   
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearRol()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Actualizar" icon="pi pi-save" class="btn_crear" (click)="crearRol()" *ngIf="estaEditando"></button>   
     </div>
     <!-- </form> -->

@@ -20,6 +20,8 @@ export class CrearCentroDeCostoComponent implements OnInit{
   centroExistente: CentroDeCosto[] = [];
   centroCrear!: CentroDeCosto;
   mostrarPopUp: boolean = false;
+  filaSeleccionada: any = null; // Almacena La fila seleccionada
+  estaEditando: boolean = false;
  
   async ngOnInit(): Promise<void> {
 
@@ -31,6 +33,25 @@ export class CrearCentroDeCostoComponent implements OnInit{
 
     if(this.validarDatos()==false)
       return;
+
+
+    if(this.estaEditando == true){
+
+
+this.centroCrear = {
+      idCentroDeCosto: this.filaSeleccionada.idCentroDeCosto,
+      idEmpresa: Number(this.idEmpresa),
+      codigo: this.codigo,
+      codigoAlternativo: this.codigoAlernativo,
+      nombre: this.nombre
+    }
+
+    await this.editarCentroDeCosto(this.centroCrear);
+
+    }else{
+
+    
+
 
     if(this.existeCentro()==true)
       return;
@@ -47,12 +68,15 @@ export class CrearCentroDeCostoComponent implements OnInit{
     }
 
     await this.crearCentroDeCostoInsert(this.centroCrear);
+  }
     await this.iniciar();
     this.mostrarPopUp = false;
     this.nombre="";
     this.idEmpresa = -1;
     this.codigo = 0;
     this.codigoAlernativo = "";
+    this.filaSeleccionada = null;
+    this.estaEditando = false;
 
 
 
@@ -83,6 +107,14 @@ export class CrearCentroDeCostoComponent implements OnInit{
   async crearCentroDeCostoInsert(centro:CentroDeCosto): Promise<void> {
     try {
       await lastValueFrom(this.comprasService.crearCentroDeCosto(centro));
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  async editarCentroDeCosto(centro:CentroDeCosto): Promise<void> {
+    try {
+      await lastValueFrom(this.comprasService.editarCentroDeCosto(centro));
     } catch (error) {
       console.error(error);
       
@@ -151,6 +183,11 @@ export class CrearCentroDeCostoComponent implements OnInit{
 
   cerrarPopUpCentroCosto(){
     this.mostrarPopUp = false;
+    this.estaEditando = false;
+    this.nombre = "";
+    this.idEmpresa = -1;
+    this.codigo = 0;
+    this.codigoAlernativo = "";
   }
 
 
@@ -161,12 +198,35 @@ export class CrearCentroDeCostoComponent implements OnInit{
   }
 
 
-  async borrarFila(id: number){
+  async borrarFila(){
 
-    await this.borrarFilaDelete(id);
-    
+    const confirmaEliminar = await this.comprasService.mostrarConfirmacion('¿Seguro que desea eliminar el centro de costo?','No podrás revertir esta acción','warning',true,'Sí, Eliminar','Cancelar');
+    // Si da cancelar sale de la función, de lo contrario sigue el código
+    if(!confirmaEliminar)
+      return;
+    await this.borrarFilaDelete(this.filaSeleccionada.idCentroDeCosto);
     await this.iniciar();
+    this.filaSeleccionada = null;
+    
 
   }
+
+  editarFila(){
+    this.estaEditando = true;
+    this.nombre = this.filaSeleccionada.nombre;
+    this.idEmpresa = this.filaSeleccionada.idEmpresa;
+    this.codigo = this.filaSeleccionada.codigo;
+    this.codigoAlernativo = this.filaSeleccionada.codigoAlternativo
+    this.mostrarPopUp = true;
+  }
+
+  seleccionarFila(event: any): void {
+    this.filaSeleccionada = event.data; // Guarda el objeto seleccionado
+  }
+  
+  desSeleccionarFila(event: any): void {
+    this.filaSeleccionada = null; // Limpia la selección
+  }
+
   
 }
