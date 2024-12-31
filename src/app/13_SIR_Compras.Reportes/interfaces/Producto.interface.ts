@@ -1,11 +1,12 @@
 export interface Producto{
     idProducto: number;
-    codigoProducto: string;
-    codigoProductoAlternativo: string;
-    codigoProductoAlternativo2: string;
-    fechaCreacion: Date;
-    fechaActualizacion: Date;
+    codigoDeProducto: string;
+    codigoDeProductoAlternativo: string;
+    codigoDeProductoAlternativo2: string;
+    fechaDeRegistro: Date;
+    fechaDeActualizacion: Date;
     nombre: string;
     idUnidad: number;
     descripcion: string;
+    activo: boolean;
 }

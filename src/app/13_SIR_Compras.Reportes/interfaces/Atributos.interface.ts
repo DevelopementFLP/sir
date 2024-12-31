@@ -1,5 +1,5 @@
 export interface Atributos{
     idAtributo: number;
-    codigoAtributo: string;
+    codigoDeAtributo: string;
     nombre: string;
 }

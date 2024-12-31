@@ -1,0 +1,138 @@
+
+
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
+    
+    
+    <div class="seccion-formulario">
+
+        <button pButton type="button" label="Crear Centro de Costo" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpCentroCosto()"></button>   
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE CENTROS DE COSTO</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
+          </div>
+
+
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla"
+      [value]="centroExistente!"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,40]"
+      styleClass="p-datatable-striped"
+      [scrollable]="true"
+      scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Nombre</div></th>
+          <th class=""><div class="columna">Empresa</div></th>
+          <th class=""><div class="columna">Código Centro</div></th>
+          <th class=""><div class="columna">Código Alternativo</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-centro>
+        <tr [pSelectableRow]="centro" [class.selected-row]="filaSeleccionada === centro">
+          <td class="">
+            <div class="valor">{{centro.nombre}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{getNombreEmpresa(centro.idEmpresa)}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{centro.codigo}}</div>
+          </td>
+          <td class="">
+            <div class="valor">{{centro.codigoAlternativo}}</div>
+          </td>
+          <td class="">
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(centro.idCentroDeCosto)"></button> -->
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Cierra tabla -->
+
+
+  </div>
+  </div>
+
+  <div class="popUpCrear" *ngIf="mostrarPopUp">
+
+
+    <div class="botones_cerrar_popUp">
+      <button
+        pButton
+        type="button"
+        label=""
+        icon="pi pi-times"
+        class="btn_cerrarPopUp"
+        (click)="cerrarPopUpCentroCosto()"
+      ></button>
+    </div>
+
+
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR CENTRO DE COSTO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR CENTRO DE COSTO</h1>
+      </div>
+    <div class="contenedor-campos">
+      <label>Nombre del Centro</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreCentro"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+    <div class="contenedor-campos divSelect">
+        <label>Empresa</label>
+        <select 
+            class="select"
+            id="unidades" 
+            [(ngModel)]="idEmpresa" 
+            name="empresa"
+            required>
+            <option *ngFor="let empresa of empresas" [value]="empresa.idEmpresa">
+            {{empresa.nombre}}
+            </option>
+        </select>
+
+      </div>
+
+    
+    <div class="contenedor-campos">
+      <label>Código del Centro</label>
+      <input 
+          type="number" 
+          [(ngModel)]="codigo" 
+          name="codigoCentro"
+          placeholder="Ingrese el código del departamento"  
+          required> 
+    </div>
+    <div class="contenedor-campos">
+      <label>Código Alernativo del Centro</label>
+      <input 
+          type="text" 
+          [(ngModel)]="codigoAlernativo" 
+          name="codigoAlternativo"
+          placeholder="Ingrese el código alernativo del departamento"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearCentroDeCosto()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearCentroDeCosto()" *ngIf="estaEditando"></button>   
+    <!-- </form> -->
+  </div>

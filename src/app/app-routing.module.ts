@@ -76,6 +76,10 @@ import { ComparativoCodigosPageComponent } from './03_SIR.Produccion.Reportes/pa
 import { CrearCajaComponent } from './03_SIR.Produccion.Reportes/pages/stock-cajas/pages/crear-caja/crear-caja.component';
 import { SolicitudCompraComponent } from './13_SIR_Compras.Reportes/pages/solicitud-compra/solicitud-compra.component';
 import { ListaDePlantillasComponent } from './11_SIR_Produccion.Ficha.Tecnica/components/ListaDePlantillas/lista-de-plantillas.component';
+import { ComprasConfiguracionComponent } from './13_SIR_Compras.Reportes/pages/compras-configuracion/compras-configuracion.component';
+import { MenuComprasComponent } from './13_SIR_Compras.Reportes/pages/menu-compras/menu-compras.component';
+import { CrearProductoComponent } from './13_SIR_Compras.Reportes/pages/altas/crear-producto/crear-producto.component';
+import { VerProductosComponent } from './13_SIR_Compras.Reportes/pages/altas/ver-productos/ver-productos.component';
 
 
 
@@ -86,6 +90,7 @@ const routes: Routes = [
   { path: 'principal', component: MainPageComponent, children: [
     { path: '', redirectTo: 'welcome', pathMatch: 'full' },
     { path: 'welcome', component: WelcomeComponent},
+    { path: 'compras', redirectTo: 'welcome'},
     { path: 'produccion/angusFLP', component: AngusFLPComponent },
     { path: 'produccion/hilton', component: InformeHiltonComponent },
     { path: 'produccion/chile', component: InformeChileComponent },
@@ -117,9 +122,12 @@ const routes: Routes = [
       { path: 'editarPedido/:id', component: EditarPedidoComponent },
       { path: '**', redirectTo: '', pathMatch: 'full'}
     ] },
-    { path: 'compras/solicitudDeCompra', component: SolicitudCompraComponent, children: [
-      { path: '', component: SolicitudCompraComponent },
-      { path: '**', redirectTo: '', pathMatch: 'full'}
+    { path: 'compras', component: MenuComprasComponent, children: [
+      { path: 'solicitudDeCompra', component: SolicitudCompraComponent },
+      { path: 'configuraciones', component: ComprasConfiguracionComponent },
+      { path: 'crearProducto', component: CrearProductoComponent },
+      { path: 'verProductos', component: VerProductosComponent },
+      { path: '**', redirectTo: 'solicitudDeCompra', pathMatch: 'full'},
     ] },
     { path: 'exportaciones/detalleEmbarque', component: DetalleEmbarqueComponent},
     { path: 'carga/packingList', component: PreciosKosherComponent},

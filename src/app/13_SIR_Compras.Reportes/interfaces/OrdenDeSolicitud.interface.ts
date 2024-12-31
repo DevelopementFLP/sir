@@ -1,9 +1,12 @@
 export interface OrdenDeSolicitud{
     idOrdenDeSolicitud: number;
-    fechaCreacion: Date;
-    idEstado: number;
-    idUsuario: number;
-    idPrioridad: number;
+    fechaDecreacion: Date;
+    idEstadoDeSolicitud: number;
+    idUsuarioSolicitante: number;
+    idPriodidadDeOrden: number;
     idCentroDeCosto: number;
     idEmpresa: number;
+    fechaDeNecesidad: Date;
+    idUsuarioParaNotificar: number;
 }
+

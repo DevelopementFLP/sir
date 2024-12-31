@@ -1,0 +1,93 @@
+
+
+<div class="contenedor-pagina" [ngClass]="{ foco: mostrarPopUp }">
+    
+    
+    <div class="seccion-formulario">
+        <!-- <form #productoForm="ngForm"> -->
+            
+          
+          <button pButton type="button" label="Crear Empresa" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpEmpresa()"></button>   
+        
+          <div class="contenedor__tituloBotones">
+            <div class="titulo">
+              <h1>LISTADO DE EMPRESAS</h1>
+            </div>  
+            <div class="contenedor__botones">
+              <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+              <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+            </div>
+        </div>
+
+          <!-- Tabla para ver los datos actuales antes de crear uno  -->
+      <div class="tablaMostrar">
+        <p-table
+          class="tabla"
+          [value]="empresasExistentes!"
+          [paginator]="true"
+          [rows]="10"
+          [rowsPerPageOptions]="[10,20,40]"
+          styleClass="p-datatable-striped"
+          [scrollable]="true"
+          scrollHeight="500px"
+          [selectionMode]="'single'"
+          (onRowSelect)="seleccionarFila($event)"
+          (onRowUnselect)="desSeleccionarFila($event)"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+                <th class=""><div class="columna">Nombre</div></th>
+                <th class=""><div class="columna">Id Empresa</div></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-empresa>
+            <tr [pSelectableRow]="empresa" [class.selected-row]="filaSeleccionada === empresa">
+                <td class="">
+                  <div class="valor">{{empresa.nombre}}</div>
+                </td>
+              <td class="">
+                <div class="valor">{{empresa.idEmpresa}}</div>
+              </td>
+              <!-- <td class="">
+                <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(empresa.idEmpresa)"></button>
+              </td> -->
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <!-- Cierra tabla -->
+
+    </div>
+    </div>
+<div class="popUpCrear" *ngIf="mostrarPopUp">
+
+    <div class="botones_cerrar_popUp">
+        <button
+          pButton
+          type="button"
+          label=""
+          icon="pi pi-times"
+          class="btn_cerrarPopUp"
+          (click)="cerrarPopUpEmpresa()"
+        ></button>
+      </div>
+
+      <div class="titulo tituloPopUp">
+        <h1 *ngIf="!estaEditando" > CREAR EMPRESA</h1>
+        <h1 *ngIf="estaEditando" > ACTUALIZAR EMPRESA</h1>
+        </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre de la empresa</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreEmpresa"
+          placeholder="Ingrese el Nombre"  
+          required> 
+    </div>
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearEmpresa()" *ngIf="!estaEditando" ></button>   
+      <button pButton type="button" label="Actualizar" icon="pi pi-pencil" class="btn_crear" (click)="crearEmpresa()" *ngIf="estaEditando" ></button>   
+    </div>
+    <!-- </form> -->

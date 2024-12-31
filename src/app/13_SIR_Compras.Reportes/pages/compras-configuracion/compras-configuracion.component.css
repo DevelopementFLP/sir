@@ -1,0 +1,5 @@
+.configuracion-titulo{
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+}

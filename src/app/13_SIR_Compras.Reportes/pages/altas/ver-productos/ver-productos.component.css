@@ -1,0 +1,14 @@
+.titulo{
+    display: flex;
+    justify-content: start;
+    /* margin-bottom: 2rem; */
+}
+
+.btn_crearProducto{
+    display: flex;
+    width: max-content;
+    justify-self: start;
+    margin-left: 0rem;
+    margin-top: 0rem;
+    
+}

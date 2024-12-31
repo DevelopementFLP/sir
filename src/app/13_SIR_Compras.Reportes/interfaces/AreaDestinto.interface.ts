@@ -1,4 +1,4 @@
 export interface AreaDestino{
-    idArea: number;
+    idAreaDestino: number;
     nombre: string;
 }

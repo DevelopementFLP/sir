@@ -1,0 +1,97 @@
+
+
+<div class="contenedor-pagina"  [ngClass]="{ foco: mostrarPopUp }">
+    
+    
+    <div class="seccion-formulario">           
+        <button pButton type="button" label="Crear Área de Destino" icon="pi pi-plus" class="btn_mostrarPopUp" (click)="mostrarPopUpAreaDestino()"></button>   
+        
+        <div class="contenedor__tituloBotones">
+          <div class="titulo">
+            <h1>LISTADO DE ÁREA DE DESTINO</h1>
+              </div>  
+              <div class="contenedor__botones">
+                <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarFila()"></button>
+                <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="borrarFila()"></button>
+              </div>
+          </div>
+
+
+        <!-- Tabla para ver los datos actuales antes de crear uno  -->
+  <div class="tablaMostrar">
+    <p-table
+      class="tabla"
+      [value]="areaExistente!"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,40]"
+      styleClass="p-datatable-striped"
+      [scrollable]="true"
+      scrollHeight="500px"
+      [selectionMode]="'single'"
+      (onRowSelect)="seleccionarFila($event)"
+      (onRowUnselect)="desSeleccionarFila($event)"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th class=""><div class="columna">Nombre</div></th>
+          <th class=""><div class="columna">Id</div></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-area>
+        <tr [pSelectableRow]="area" [class.selected-row]="filaSeleccionada === area">
+          <td class="">
+            <div class="valor">{{area.nombre}}</div>
+          </td>
+        
+          <td class="">
+            <div class="valor">{{area.idAreaDestino}}</div>
+          </td>
+          <td class="">
+            <!-- <button pButton type="button" label="" icon="pi pi-trash" class="btn_borrar" (click)="borrarFila(area.idAreaDestino)"></button> -->
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- Cierra tabla -->
+
+  <div class="popUpCrear" *ngIf="mostrarPopUp">
+
+
+    <div class="botones_cerrar_popUp">
+      <button
+        pButton
+        type="button"
+        label=""
+        icon="pi pi-times"
+        class="btn_cerrarPopUp"
+        (click)="cerrarPopUpAreaDestino()"
+      ></button>
+    </div>
+
+
+    <div class="titulo tituloPopUp">
+      <h1 *ngIf="!estaEditando">CREAR ÁREA DE DESTINO</h1>
+      <h1 *ngIf="estaEditando">ACTUALIZAR ÁREA DE DESTINO</h1>
+      </div>
+
+    <div class="contenedor-campos">
+      <label>Nombre del área de destino</label>
+      <input 
+          type="text" 
+          [(ngModel)]="nombre" 
+          name="nombreArea"
+          placeholder="Ingrese el nombre"  
+          required> 
+    </div>
+
+   
+
+      <button pButton type="button" label="Crear" icon="pi pi-plus" class="btn_crear" (click)="crearAreaDestino()" *ngIf="!estaEditando"></button>   
+      <button pButton type="button" label="Guardar" icon="pi pi-save" class="btn_crear" (click)="crearAreaDestino()" *ngIf="estaEditando"></button>   
+    </div>

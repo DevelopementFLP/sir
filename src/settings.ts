@@ -3,13 +3,13 @@
 //export const urlAPI: string = "http://192.168.0.107:82/api/";
 
 // DESARROLLO
-export const urlAPI: string = "http://localhost:5205/api/";
+// export const urlAPI: string = "http://localhost:5205/api/";
 
 //TESTING 
 //export const urlAPI: string = "http://192.168.0.107:90/api/";
 
 // API que apunta a la bd de testing
-// export const urlAPI: string = "http://192.168.0.107:98/api/";
+export const urlAPI: string = "http://192.168.0.107:98/api/";
 
 
 export const urlUsuarios: string = urlAPI + "Usuarios";
@@ -153,6 +153,8 @@ export const urlUpdateOrdenEntregaCajasEntregadas: string = urlStockCajas + "Upd
 export const urlUpdateOrdenEntrega: string = urlStockCajas + "UpdateOrdenEntregaAsync";
 export const urlUpdateStock: string = urlStockCajas + "UpdateStockAsync";
 export const urlDeletePedido: string = urlStockCajas + "DeletePedidoAsync";
+
+
 
 // Gecos
 export const gecosAPI: string = "http://192.168.0.249:4477/";
@@ -382,3 +384,70 @@ export const urlEliminarPresentacionDeEnvaseFichaTecnica: string = urlFichaTecni
 // Control de Calidad
 export const urlControlDeCalidad: string = urlAPI + "Trazabilidad/";
 export const urlGetListaDeIncidentes: string = urlControlDeCalidad + "ListaDeIncidentes";
+
+// Gestión de Compras
+
+export const urlListaDeProductos: string = urlAPI + "SpProducto/SpListaDeProductos/";
+export const urlCrearProducto: string = urlAPI + "SpProducto/SpCrearProducto";
+export const urlEditarProducto: string = urlAPI + "SpProducto/SpEditarProducto";
+export const urlEliminarProducto: string = urlAPI + "SpProducto/SpEliminarProducto";
+export const urlListaDeEmpresas: string = urlAPI + "SpEmpresa/SpListaDeEmpresas";
+export const urlCrearEmpresa: string = urlAPI + "SpEmpresa/SpCrearEmpresa";
+export const urlEditarEmpresa: string = urlAPI + "SpEmpresa/SpEditarEmpresa"; 
+export const urlEliminarEmpresa: string = urlAPI + "SpEmpresa/SpEliminarEmpresa";
+export const urlListaDeAtributos: string = urlAPI + "SpAtributos/SpListaDeAtributos";
+export const urlCrearAtributo: string = urlAPI + "SpAtributos/SpCrearAtributo";
+export const urlEditarAtributo: string = urlAPI + "SpAtributos/SpEditarAtributo";
+export const urlEliminarAtributo: string = urlAPI + "SpAtributos/SpEliminarAtributo";
+export const urlListaDeDepartamentos: string = urlAPI + "SpDepartamento/SpListaDeDepartamentos";
+export const urlCrearDepartamento: string = urlAPI + "SpDepartamento/SpCrearDepartamento";
+export const urlEditarDepartamento: string = urlAPI + "SpDepartamento/SpEditarDepartamento";
+export const urlEliminarDepartamento: string = urlAPI + "SpDepartamento/SpEliminarDepartamento";
+export const urlListaDeCentroDeCostos: string = urlAPI + "SpCentroDeCosto/SpListaDeCentroDeCostos";
+export const urlCrearCentroDeCosto: string = urlAPI + "SpCentroDeCosto/SpCrearCentroDeCosto";
+export const urlEditarCentroDeCosto: string = urlAPI + "SpCentroDeCosto/SpEditarCentroDeCosto";
+export const urlEliminarCentroDeCosto: string = urlAPI + "SpCentroDeCosto/SpEliminarCentroDeCosto";
+export const urlListaDeAreaDestinos: string = urlAPI + "SpAreaDestino/SpListaDeAreaDestinos";
+export const urlCrearAreaDestino: string = urlAPI + "SpAreaDestino/SpCrearAreaDestino";
+export const urlEditarAreaDestino: string = urlAPI + "SpAreaDestino/SpEditarAreaDestino";
+export const urlEliminarAreaDestino: string = urlAPI + "SpAreaDestino/SpEliminarAreaDestino";
+export const urlListaDeAlmacenes: string = urlAPI + "SpAlmacen/SpListaDeAlmacenes";
+export const urlCrearAlmacen: string = urlAPI + "SpAlmacen/SpCrearAlmacen";
+export const urlEditarAlmacen: string = urlAPI + "SpAlmacen/SpEditarAlmacen";
+export const urlEliminarAlmacen: string = urlAPI + "SpAlmacen/SpEliminarAlmacen";
+export const urlListaDeUnidadProducto: string = urlAPI + "SpUnidadProducto/SpListaDeUnidadProducto";
+export const urlCrearUnidadProducto: string = urlAPI + "SpUnidadProducto/SpCrearUnidadProducto";
+export const urlEditarUnidadProducto: string = urlAPI + "SpUnidadProducto/SpEditarUnidadProducto";
+export const urlEliminarUnidadProducto: string = urlAPI + "SpUnidadProducto/SpEliminarUnidadProducto";
+export const urlListaDeUsuarios: string = urlAPI + "SpUsuarioSolicitante/SpListaDeUsuarios";
+export const urlCrearUsuario: string = urlAPI + "SpUsuarioSolicitante/SpCrearUsuario";
+export const urlEditarUsuario: string = urlAPI + "SpUsuarioSolicitante/SpEditarUsuario";
+export const urlEliminarUsuario: string = urlAPI + "SpUsuarioSolicitante/SpEliminarUsuarioSolicitante";
+export const urlListaDeRolesDeUsuario: string = urlAPI + "SpRolDeUsuario/SpListaDeRolesDeUsuario";
+export const urlCrearRolDeUsuario: string = urlAPI + "SpRolDeUsuario/SpCrearRolDeUsuario";
+export const urlEditarRolDeUsuario: string = urlAPI + "SpRolDeUsuario/SpEditarRolDeUsuario";
+export const urlEliminarRolDeUsuario: string = urlAPI + "SpRolDeUsuario/SpEliminarRolDeUsuario";
+export const urlListaDeEstadoDeSolicitudes: string = urlAPI + "SpEstadoDeSolicitud/SpListaDeEstadoDeSolicitudes";
+export const urlCrearEstadoDeSolicitud: string = urlAPI + "SpEstadoDeSolicitud/SpCrearEstadoDeSolicitud";
+export const urlEditarEstadoDeSolicitud: string = urlAPI + "SpEstadoDeSolicitud/SpEditarEstadoDeSolicitud";
+export const urlEliminarEstadoDeSolicitud: string = urlAPI + "SpEstadoDeSolicitud/SpEliminarEstadoDeSolicitud";
+export const urlListaDePrioridadesDeOrden: string = urlAPI + "SpPrioridadDeOrden/SpListaDePrioridadesDeOrden";
+export const urlCrearPrioridadDeOrden: string = urlAPI + "SpPrioridadDeOrden/SpCrearPrioridadDeOrden";
+export const urlEditarPrioridadDeOrden: string = urlAPI + "SpPrioridadDeOrden/SpEditarPrioridadDeOrden";
+export const urlEliminarPrioridadDeOrden: string = urlAPI + "SpPrioridadDeOrden/SpEliminarPrioridadDeOrden";
+export const urlListaDeOrdenesDeSolicitud: string = urlAPI + "SpOrdenDeSolicitud/SpListaDeOrdenesDeSolicitud";
+export const urlCrearOrdenDeSolicitud: string = urlAPI + "SpOrdenDeSolicitud/SpCrearOrdenDeSolicitud";
+export const urlEditarOrdenDeSolicitud: string = urlAPI + "SpOrdenDeSolicitud/SpEditarOrdenDeSolicitud";
+export const urlEliminarOrdenDeSolicitud: string = urlAPI + "SpOrdenDeSolicitud/SpEliminarOrdenDeSolicitud";
+export const urlListaDeLineasDeSolicitud: string = urlAPI + "SpLineaDeSolicitud/SpListaDeLineasDeSolicitud";
+export const urlCrearLineaDeSolicitud: string = urlAPI + "SpLineaDeSolicitud/SpCrearLineasDeSolicitud";
+export const urlEditarLineaDeSolicitud: string = urlAPI + "SpLineaDeSolicitud/SpEditarLineaDeSolicitud";
+export const urlEliminarLineaDeSolicitud: string = urlAPI + "SpLineaDeSolicitud/SpEliminarLineaDeSolicitud";
+export const urlListaDeProductoAtributo: string = urlAPI + "SpProductoAtributo/SpListaDeProductoAtributo";
+export const urlCrearProductoAtributo: string = urlAPI + "SpProductoAtributo/SpCrearProductoAtributo";
+export const urlEditarProductoAtributo: string = urlAPI + "SpProductoAtributo/SpEditarProductoAtributo";
+export const urlEliminarProductoAtributo: string = urlAPI + "SpProductoAtributo/SpEliminarProductoAtributo";
+export const urlListaArchivosAdjuntos: string = urlAPI + "SpArchivosAdjuntos/SpListaArchivosAdjuntos";
+export const urlCrearArchivoAdjunto: string = urlAPI + "SpArchivosAdjuntos/SpCrearArchivoAdjunto";
+export const urlEditarArchivoAdjunto: string = urlAPI + "SpArchivosAdjuntos/SpEditarArchivoAdjunto";
+

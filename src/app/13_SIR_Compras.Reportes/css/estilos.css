@@ -1,0 +1,201 @@
+.titulo{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+
+}
+h1 {
+    color: #333; /* Color del texto */
+    text-align: center;
+}
+
+.contenedor-campos {
+    margin-bottom: 15px; /* Espacio entre los campos */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold; /* Texto en negrita para las etiquetas */
+}
+
+input, textarea, .select{
+    width: 100%; /* Ancho completo para los inputs */
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordes suaves */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: border-color 0.3s; /* Transición para el borde */
+}
+
+input:focus, textarea:focus{
+    border-color: #007ad9; /* Color del borde en foco */
+    outline: none; /* Quitar el contorno por defecto */
+}
+
+button {
+    margin-top: 2rem; /* Espacio superior para el primer botón */
+    display: flex;
+    justify-self: center;
+
+}
+
+.contenedor-columnas{
+    display: flex;
+    flex-direction: row;
+    column-gap: 6rem;
+}
+
+.divSelect{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.select{
+    display: flex;
+    width: 100%;
+    text-align: center;   
+}
+
+.tablaMostrar{
+    margin-top: 2rem;
+}
+/* achicar espacios en la tabla */
+.tablaMostrar ::ng-deep .p-datatable-tbody > tr {
+    height: auto; /* Ajusta automáticamente la altura */
+    line-height: 1; /* Reducir la altura de las filas */
+}
+
+/* Ajustar el padding de las celdas */
+.tablaMostrar ::ng-deep .p-datatable-tbody > tr > td {
+    padding: 2px 4px; /* Reducir el espacio interno */
+}
+
+.columna,
+.valor{
+    text-align: start;
+    justify-content: flex-start;
+    align-self: flex-start;
+    padding: 0.2rem;
+}
+
+.columna{
+    margin-left: 0.4rem;
+    padding: 0rem;
+}
+
+.valor{
+    align-items: flex-start;
+    margin-left: 1rem;
+    width: max-content;
+}
+
+.popUpCrear{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 2rem;
+  
+    /* Flotante */
+    position: fixed; /* Posición fija en la ventana del navegador */
+    top: 50%;
+    left: 50%;
+    z-index: 1000; /* Z-index alto para asegurar que esté sobre otros elementos */
+    transform: translate(-50%, -50%);
+    background-image: linear-gradient(to top, #ffffff 0%, #fcfcfc 100%);
+    border: 1px solid #ccc; /* Borde del popup */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Sombra suave */
+    padding: 20px; /* Espaciado interno del popup */
+    /*max-width: 400px; /* Ancho máximo del popup */
+    width: 40%;
+    overflow-y: auto; /* Scroll vertical si el contenido es largo */
+    max-width: 90vw; /* Ajusta el ancho máximo al 90% del ancho de la ventana */
+    max-height: 90vh; /* Ajusta la altura máxima al 90% del alto de la ventana */
+    /* overflow: auto;  */
+}
+
+.btn_mostrarPopUp{
+    display: flex;
+    width: max-content;
+    justify-self: start;
+}
+.btn_orden_solicitud{
+    margin-left: 1rem;
+}
+
+.btn_cerrarPopUp{
+    display: flex;
+    justify-self: end;
+    margin-top: 0rem;
+    background-color: red;
+    border-color: rgba(0, 0, 0, 0);
+    margin-bottom: 0rem;
+    width: 2rem;
+    height: 2rem;
+}
+/* Estilos para el fondo cuando se muestra el popup */
+.contenedor-pagina.foco {
+    opacity: 0.1; /* Reduce la opacidad para dar efecto de desactivación */
+    pointer-events: none; /* Evita interacciones con el contenido */
+  }
+
+  .btn_crear{
+    display: flex;
+    width: max-content;
+    align-self: center;
+}
+
+.btn_borrar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    text-align: center;
+    justify-items: center;
+    justify-self: center;
+}
+
+button {
+    margin: 0;
+}
+
+.btn_borrar{
+    background-color: rgb(255, 0, 0);
+    border-color: transparent;
+}
+
+input, select {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 6px 10px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+input:focus, select:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.selected-row {
+    background-color: #d9f7be; /* Color de fondo para la fila seleccionada */
+    font-weight: bold;
+  }
+
+  .contenedor__botones{
+    display: flex;
+    align-self: center;
+    margin-left: auto;
+    gap: 0.2rem;
+  }
+
+  .contenedor__tituloBotones{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .tituloPopUp{
+    justify-content: center;
+  }

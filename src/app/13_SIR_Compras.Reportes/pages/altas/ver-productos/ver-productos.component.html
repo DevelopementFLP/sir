@@ -1,0 +1,81 @@
+<div class="seccion-formulario">
+  
+  <button pButton type="button" label="Crear Producto" icon="pi pi-plus" class="btn_crearProducto" routerLink="../crearProducto"></button>
+  
+  <div class="contenedor__tituloBotones">
+    <div class="titulo">
+      <h1>LISTADO DE PRODUCTOS</h1>
+    </div>
+    
+    <div class="contenedor__botones">
+      <button pButton type="button" label="Editar" icon="pi pi-pencil" [disabled]="!filaSeleccionada" (click)="editarProducto()" ></button>
+      <button pButton type="button" label="Eliminar" icon="pi pi-trash" class="btn_borrar" [disabled]="!filaSeleccionada" (click)="eliminarProducto()"></button>
+    </div>
+  </div>
+    
+    <!-- Tabla para ver los datos actuales antes de crear uno  -->
+    <div class="tablaMostrar">
+      <p-table
+        class="tabla" 
+        *ngIf="productoExistente.length>0; else noProducto"
+        [value]="productoExistente!"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10,20,40]"
+        styleClass="p-datatable-striped"
+        [scrollable]="true"
+        scrollHeight="500px"
+        [totalRecords]="productoExistente.length"
+        [currentPageReportTemplate]="'{first}-{last} de {totalRecords} artículos'"
+       [showCurrentPageReport]="true"
+        [selectionMode]="'single'"
+        (onRowSelect)="seleccionarFila($event)"
+    (onRowUnselect)="desSeleccionarFila($event)"
+       >
+        <ng-template pTemplate="header">
+          <tr>
+            <th class=""><div class="columna">Nombre</div></th>
+            <th class=""><div class="columna">Unidad</div></th>
+            <th class=""><div class="columna">Código Producto</div></th>
+            <th class=""><div class="columna">Código Alernativo</div></th>
+            <th class=""><div class="columna">Código Alternativo 2</div></th>
+            <th class=""><div class="columna"></div></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto>
+          <tr [pSelectableRow]="producto" [class.selected-row]="filaSeleccionada === producto">
+            <td class="">
+              <div class="valor">{{producto.nombre}}</div>
+            </td>
+            <td class="">
+              <div class="valor">
+                {{getNombreDesdeId(unidades,producto.idTipoDeUnidad,'IdUnidad','nombre')}}
+              </div>
+            </td>
+            <td class="">
+              <div class="valor">{{ producto.codigoDeProducto }}</div>
+            </td>
+            <td class="">
+              <div class="valor">
+                {{ producto.codigoDeProductoAlternativo}}
+              </div>
+            </td>
+            <td class="">
+              <div class="valor">
+                {{ producto.codigoDeProductoAlternativo2}}
+              </div>
+            </td>
+            <td class="">
+            </td>
+          </tr>
+        </ng-template>          
+      </p-table>
+    </div>
+    <!-- Cierra tabla -->
+</div>
+
+<ng-template #noProducto>
+    NO HAY PRODUCTOS DISPONIBLES
+</ng-template>
+
+    <app-crear-producto *ngIf="editarProductoLlamarComponente" [productoEditar]="filaSeleccionada" ></app-crear-producto>
